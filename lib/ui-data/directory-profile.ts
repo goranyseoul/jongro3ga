@@ -151,7 +151,7 @@ function buildProfile(clinic: DirectoryClinic, index: number): DirectoryProfile 
   const doctorCount = 1 + (index % 3 === 0 ? 2 : 1);
   const doctors: DirectoryDoctor[] = Array.from({ length: doctorCount }, (_, d) => {
     const family = FAMILY[(index + d * 3) % FAMILY.length]!;
-    const given = GIVEN[(index * 3 + d * 5) % GIVEN.length]!;
+    const given = GIVEN[(index * 3 + d * 7) % GIVEN.length]!;
     return {
       name: { ko: `${family.ko}${given.ko}`, en: `${given.en} ${family.en}`, ja: `${family.en} ${given.en}`, "zh-CN": `${given.en} ${family.en}` },
       title: d === 0 ? TITLE_DIRECTOR : TITLE_DOCTOR,

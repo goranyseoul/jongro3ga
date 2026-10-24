@@ -43,3 +43,12 @@ describe("mock clinic directory", () => {
     expect(findProcedure("써마지 맞고 싶어")?.id).toBe("thermage_flx");
   });
 });
+
+describe("generated doctors", () => {
+  it("never gives two doctors of one clinic the same name", () => {
+    for (const profile of DIRECTORY_PROFILES) {
+      const names = profile.doctors.map((d) => d.name.en);
+      expect(new Set(names).size, profile.id).toBe(names.length);
+    }
+  });
+});
