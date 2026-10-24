@@ -137,7 +137,7 @@ export function ProxyQueueView() {
         ]}
       />
 
-      <p role="status" aria-live="polite" className="min-h-sp-6 text-body text-muted">
+      <p role="status" aria-live="polite" className={result ? "text-body text-muted" : "sr-only"}>
         {result}
       </p>
 
