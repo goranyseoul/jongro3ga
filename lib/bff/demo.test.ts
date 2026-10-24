@@ -163,7 +163,7 @@ describe("demo scenario driver", () => {
       (result.verdicts as { quoteId: string; label: string }[]).map((v) => [result.quotes.find((q) => q.quoteId === v.quoteId)!.clinicId, v.label]),
     );
     expect(labels).toEqual({ cln_mint: "underdosed", cln_seoul_glow: "fair", cln_ara: "fair" });
-    expect(result.booking?.state).toBe("TASK_STATE_WORKING");
+    expect(result.booking?.state).toBe("requested");
     const confirmed = await (await confirmRoute.POST(post({}))).json();
     expect(confirmed.clinicId).toBe("cln_seoul_glow");
 
