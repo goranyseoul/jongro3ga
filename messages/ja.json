@@ -412,7 +412,9 @@
       "last": "前回 {date}",
       "total": "合計 {amount}",
       "more": "もっと見る ({n})",
-      "less": "閉じる"
+      "less": "閉じる",
+      "prev": "前へ",
+      "next": "次へ"
     }
   },
   "recordsNew": {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button, buttonStyles, Card, ChipGroup, Input, Timeline } from "@/components/ui";
 import { formatMonth, moneyText } from "@/components/customer/format";
@@ -21,7 +21,6 @@ import {
 } from "@/lib/ui-data/customer";
 
 const STATUSES: RecordStatus[] = ["active", "paused", "stopped"];
-const TOP_COUNT = 3;
 const PLAN_COUNT = 4;
 const PAGE_SIZE = 10;
 const ALL = "all";
@@ -40,7 +39,8 @@ export function RecordsView() {
   const { locale, records } = useCustomer();
   const [filter, setFilter] = useState<string>(ALL);
   const [query, setQuery] = useState("");
-  const [showAllTop, setShowAllTop] = useState(false);
+  const topRail = useRef<HTMLUListElement>(null);
+  const [topEdges, setTopEdges] = useState({ start: true, end: true });
   const [showAllPlan, setShowAllPlan] = useState(false);
   const [page, setPage] = useState(0);
 
@@ -62,6 +62,19 @@ export function RecordsView() {
 
   const setStatus = (record: TreatmentRecord, status: RecordStatus) =>
     updateDemoState((state) => ({ ...state, recordStatus: { ...state.recordStatus, [record.id]: status } }));
+
+  // The top procedures rail scrolls sideways (swipe on phones, arrows next to the heading).
+  const updateTopEdges = () => {
+    const rail = topRail.current;
+    if (!rail) return;
+    setTopEdges({ start: rail.scrollLeft <= 1, end: rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 1 });
+  };
+  const scrollTop = (direction: 1 | -1) => topRail.current?.scrollBy({ left: direction * topRail.current.clientWidth, behavior: "smooth" });
+  useEffect(() => {
+    updateTopEdges();
+    window.addEventListener("resize", updateTopEdges);
+    return () => window.removeEventListener("resize", updateTopEdges);
+  }, [summaries.length]);
 
   const openProcedure = (procedureId: string) => {
     setFilter(procedureId);
@@ -107,12 +120,29 @@ export function RecordsView() {
 
       {summaries.length > 0 ? (
         <section aria-labelledby="rec-top" className="flex flex-col gap-sp-3">
-          <h2 id="rec-top" className="text-title font-semi">
-            {t("top.title")}
-          </h2>
-          <ul className="grid grid-cols-1 gap-sp-3 sm:grid-cols-3">
-            {(showAllTop ? summaries : summaries.slice(0, TOP_COUNT)).map((summary) => (
-              <li key={summary.procedureId}>
+          <div className="flex items-center justify-between gap-sp-2">
+            <h2 id="rec-top" className="text-title font-semi">
+              {t("top.title")}
+            </h2>
+            {topEdges.start && topEdges.end ? null : (
+              <div className="flex items-center">
+                <Button variant="ghost" aria-label={t("top.prev")} disabled={topEdges.start} onClick={() => scrollTop(-1)}>
+                  {"<"}
+                </Button>
+                <Button variant="ghost" aria-label={t("top.next")} disabled={topEdges.end} onClick={() => scrollTop(1)}>
+                  {">"}
+                </Button>
+              </div>
+            )}
+          </div>
+          <ul
+            ref={topRail}
+            onScroll={updateTopEdges}
+            className="-me-sp-3 flex snap-x snap-mandatory overflow-x-auto"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {summaries.map((summary) => (
+              <li key={summary.procedureId} className="shrink-0 basis-4/5 snap-start pe-sp-3 sm:basis-1/3">
                 <button
                   type="button"
                   onClick={() => openProcedure(summary.procedureId)}
@@ -132,11 +162,6 @@ export function RecordsView() {
               </li>
             ))}
           </ul>
-          {summaries.length > TOP_COUNT ? (
-            <Button variant="ghost" className="self-start" onClick={() => setShowAllTop(!showAllTop)}>
-              {showAllTop ? t("top.less") : t("top.more", { n: summaries.length - TOP_COUNT })}
-            </Button>
-          ) : null}
         </section>
       ) : null}
 

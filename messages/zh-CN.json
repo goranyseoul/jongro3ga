@@ -412,7 +412,9 @@
       "last": "上次 {date}",
       "total": "共 {amount}",
       "more": "查看更多 ({n})",
-      "less": "收起"
+      "less": "收起",
+      "prev": "上一个",
+      "next": "下一个"
     }
   },
   "recordsNew": {

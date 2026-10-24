@@ -412,7 +412,9 @@
       "last": "마지막 {date}",
       "total": "총 {amount}",
       "more": "더보기 ({n})",
-      "less": "접기"
+      "less": "접기",
+      "prev": "이전 시술",
+      "next": "다음 시술"
     }
   },
   "recordsNew": {

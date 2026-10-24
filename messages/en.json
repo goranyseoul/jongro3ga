@@ -412,7 +412,9 @@
       "last": "Last {date}",
       "total": "Total {amount}",
       "more": "Show more ({n})",
-      "less": "Show less"
+      "less": "Show less",
+      "prev": "Previous",
+      "next": "Next"
     }
   },
   "recordsNew": {
