@@ -60,7 +60,7 @@ export type InboxTask = {
   slot?: string;
   /** Safety answers the guest consented to share with a booking request; empty means nothing to flag. */
   safetyFlags?: string[];
-  /** Contact is released only after confirmation, within the consent scope. */
+  /** Contact is released only after confirmation, within the consent scope: the UI hides it until then. */
   contact?: { channel: string; handle: string };
   /** Quote: seconds the agent took to answer. */
   respondedInSec?: number;
@@ -85,6 +85,7 @@ export const INBOX_TASKS: InboxTask[] = [
     priceKrw: 340000,
     slot: "2026-10-27T11:00:00+09:00",
     safetyFlags: [],
+    contact: { channel: "LINE", handle: "yuki_demo" },
   },
   {
     id: "tsk_bk_5524",
@@ -100,6 +101,7 @@ export const INBOX_TASKS: InboxTask[] = [
     priceKrw: 180000,
     slot: "2026-10-28T15:00:00+09:00",
     safetyFlags: ["알레르기: 리도카인 과민 반응 이력"],
+    contact: { channel: "WeChat", handle: "lin_demo" },
   },
   {
     id: "tsk_bk_5519",
@@ -115,6 +117,7 @@ export const INBOX_TASKS: InboxTask[] = [
     priceKrw: 890000,
     slot: "2026-10-29T14:00:00+09:00",
     safetyFlags: [],
+    contact: { channel: "WhatsApp", handle: "emily_demo" },
     requestedFields: ["직전 울쎄라 시술일"],
   },
   {
@@ -356,4 +359,14 @@ export const OFFERS: Offer[] = [
     validUntil: "2026-11-30",
     conditions: "평일 오전 예약 한정",
   },
+];
+
+// Reference open times for the "시간 제안" sheet (clinic.availability would supply these).
+export const PROPOSAL_SLOTS = [
+  "2026-10-27T14:00:00+09:00",
+  "2026-10-27T16:00:00+09:00",
+  "2026-10-28T11:00:00+09:00",
+  "2026-10-29T10:00:00+09:00",
+  "2026-10-29T16:00:00+09:00",
+  "2026-10-30T14:00:00+09:00",
 ];
