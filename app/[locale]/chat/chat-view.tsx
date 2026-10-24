@@ -13,54 +13,16 @@ import type { StoredRequest } from "@/lib/agents/customer/store";
 import type { Locale } from "@/lib/domain/common";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
-import { PROCEDURES, detectProcedure } from "@/lib/ui-data/customer";
+import { PROCEDURES } from "@/lib/ui-data/customer";
 
 type Message = { id: string; from: "agent" | "user"; text: string };
 
 type IntentDraft = Partial<Condition> & { procedureId: string };
 
-/** Finds a procedure-request-like object in the /api/intent response (LLM track), whatever its wrapper. */
-function intentDraft(body: unknown): IntentDraft | null {
-  if (!body || typeof body !== "object") return null;
-  const record = body as Record<string, unknown>;
-  const toolInput = Array.isArray(record.toolCalls)
-    ? (record.toolCalls as { name?: string; input?: unknown }[]).find((call) => call.name === "draft_procedure_request")?.input
-    : undefined;
-  const candidates = [record.request, record.draft, record.procedureRequest, record.condition, record.data, toolInput, record];
-  for (const candidate of candidates) {
-    if (!candidate || typeof candidate !== "object") continue;
-    const c = candidate as Record<string, unknown>;
-    if (typeof c.procedureId !== "string" || !c.procedureId) continue;
-    const budget = c.budgetKrw as { max?: number } | number | undefined;
-    return {
-      procedureId: c.procedureId,
-      ...(c.amount && typeof c.amount === "object" ? { amount: c.amount as Condition["amount"] } : {}),
-      ...(typeof budget === "number" ? { budgetKrw: budget } : budget?.max ? { budgetKrw: budget.max } : {}),
-      ...(Array.isArray(c.areas) ? { areas: c.areas as Condition["areas"] } : {}),
-      ...(Array.isArray(c.languages) && c.languages.length > 0 ? { languages: c.languages as Locale[] } : {}),
-      ...(c.dateWindow && typeof c.dateWindow === "object" ? { dateWindow: c.dateWindow as Condition["dateWindow"] } : {}),
-    };
-  }
-  return null;
-}
-
-/** The LLM track's intent endpoint when it exists, otherwise the same draft from the procedure name. */
+/** The sentence as a condition draft: the BFF asks POST /api/intent (LLM track) and falls back to the procedure name. */
 async function draftFromText(text: string, locale: Locale): Promise<IntentDraft | null> {
-  try {
-    const response = await fetch("/api/intent", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ message: text, text, locale }),
-    });
-    if (response.ok) {
-      const draft = intentDraft(await response.json());
-      if (draft) return draft;
-    }
-  } catch {
-    // intent endpoint not available: local fallback below
-  }
-  const procedure = detectProcedure(text);
-  return procedure ? { procedureId: procedure.id } : null;
+  const { draft } = await api<{ draft: IntentDraft | null }>("/api/customer/intent", { method: "POST", json: { message: text, locale } });
+  return draft;
 }
 
 function toCondition(request: StoredRequest["request"]): Condition {
@@ -75,7 +37,7 @@ function toCondition(request: StoredRequest["request"]): Condition {
 }
 
 // The customer agent turns the sentence into pibu/procedure-request@1 (02 "요청 정리"): the intent comes from
-// POST /api/intent (or the local fallback), the defaults and the usual amount (platform.recipe) from the BFF.
+// POST /api/intent through the BFF (local fallback there), the defaults and the usual amount (platform.recipe) from the agent.
 export function ChatView() {
   const t = useTranslations("chat");
   const router = useRouter();
