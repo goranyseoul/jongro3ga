@@ -1,0 +1,273 @@
+/* Clinic explore screen (app/[locale]/clinics). Every value is a token from app/globals.css. */
+
+/* Phones: one column, the list and the map take turns. From lg: list left, sticky map right. */
+.ex-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-4);
+}
+@media (min-width: 1024px) {
+  .ex-layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--sp-6);
+    align-items: start;
+  }
+  .ex-map-slot {
+    position: sticky;
+    top: var(--sp-4);
+  }
+}
+.ex-map-slot {
+  scroll-margin-top: var(--sp-4);
+}
+
+/* Space kept while the filters (read from the URL on the client) are not rendered yet */
+.ex-fallback {
+  min-height: calc(var(--sp-16) * 6);
+}
+
+/* Native select: the popup list follows the dark surface */
+.ex-select option,
+.ex-select optgroup {
+  background: var(--popover);
+  color: var(--text);
+}
+
+.ex-chevron {
+  display: inline-flex;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.ex-chevron-open {
+  transform: rotate(180deg);
+}
+
+/* Clinic cards: the pointer or focus on a card (or its pin) lights the card, a tapped pin selects it */
+.ex-card {
+  transition:
+    border-color var(--dur-press) var(--ease-out),
+    background-color var(--dur-press) var(--ease-out);
+  scroll-margin-top: var(--sp-6);
+}
+.ex-card[data-state="hover"] {
+  border-color: var(--input);
+  background-color: var(--bg-sunken);
+}
+.ex-card[data-state="selected"] {
+  border-color: var(--brand);
+}
+
+/* Map panel: a quiet grid on the sunken surface, markers placed by percentage */
+.ex-map {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 5 / 6;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-card);
+  background-color: var(--bg-sunken);
+  background-image:
+    linear-gradient(var(--border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+  background-size: var(--sp-8) var(--sp-8);
+}
+/* Tablets are wide: a shorter panel than the phone shape keeps the map from filling the whole screen */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .ex-map {
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (min-width: 1024px) {
+  .ex-map {
+    aspect-ratio: auto;
+    height: min(calc(100dvh - var(--sp-16)), calc(var(--sp-16) * 9));
+    min-height: calc(var(--sp-16) * 6);
+  }
+}
+
+.ex-map-top {
+  position: absolute;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  right: var(--sp-3);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  pointer-events: none;
+}
+.ex-map-top > * {
+  pointer-events: auto;
+}
+.ex-map-zoomed {
+  font-size: var(--t-sm);
+  font-weight: var(--w-med);
+  color: var(--text-muted);
+}
+
+.ex-map-hint {
+  position: absolute;
+  left: var(--sp-3);
+  bottom: var(--sp-3);
+  font-size: var(--t-sm);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+.ex-map-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6);
+  text-align: center;
+  font-size: var(--t-body);
+  color: var(--text-muted);
+}
+
+/* Pin: a 44px target whose bottom centre is the clinic's position; the drop is drawn in the brand colour */
+.ex-pin {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: var(--touch);
+  height: var(--touch);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+}
+.ex-pin svg {
+  width: var(--sp-6);
+  height: calc(var(--sp-6) * 1.25);
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.ex-pin-body {
+  fill: var(--brand);
+  stroke: var(--bg-sunken);
+  stroke-width: 1;
+}
+.ex-pin-hole {
+  fill: var(--bg-sunken);
+}
+.ex-pin[data-active="true"] {
+  z-index: 2;
+}
+.ex-pin[data-active="true"] svg {
+  transform: scale(1.25);
+}
+.ex-pin[data-selected="true"] .ex-pin-body {
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+.ex-pin:focus-visible,
+.ex-bubble:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--r-md);
+}
+.ex-pin-name {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  z-index: 3;
+  margin-bottom: var(--sp-1);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-sm);
+  background: var(--popover);
+  box-shadow: var(--sh-pop);
+  color: var(--text);
+  font-size: var(--t-sm);
+  line-height: var(--lh-snug);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.ex-pin[data-align="start"] .ex-pin-name {
+  left: 0;
+  transform: none;
+}
+.ex-pin[data-align="end"] .ex-pin-name {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* Area marker of the overview: a count in the brand colour, the area name light underneath */
+.ex-bubble {
+  position: absolute;
+  z-index: 1;
+  width: var(--touch);
+  height: var(--touch);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+.ex-bubble-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--bg-sunken);
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  color: var(--accent-fg);
+  font-size: var(--t-body);
+  font-weight: var(--w-semi);
+  font-variant-numeric: tabular-nums;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.ex-bubble-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: var(--sp-1);
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.ex-bubble[data-active="true"] {
+  z-index: 2;
+}
+.ex-bubble[data-active="true"] .ex-bubble-dot {
+  border-color: var(--text);
+  transform: scale(1.15);
+}
+
+/* Mini card of the selected clinic: one row, kept on the side of the panel away from its pin */
+.ex-mini {
+  position: absolute;
+  left: var(--sp-3);
+  right: var(--sp-3);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  background: var(--popover);
+  box-shadow: var(--sh-pop);
+}
+.ex-mini[data-edge="bottom"] {
+  bottom: var(--sp-3);
+}
+.ex-mini[data-edge="top"] {
+  top: calc(var(--touch) + var(--sp-3) * 2);
+}
+.ex-mini-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+}

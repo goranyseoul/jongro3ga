@@ -1,0 +1,7 @@
+/* Clinic detail page (app/[locale]/clinics/[slug]). Only token values; no colors, sizes or spacing here. */
+
+/* Japanese has no spaces: where the browser supports it, break the main call to action at phrase
+   boundaries so a word such as the procedure name or "estimate" is never split across two lines. */
+.cd-phrase:lang(ja) {
+  word-break: auto-phrase;
+}

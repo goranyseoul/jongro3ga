@@ -12,6 +12,7 @@ export type AuthUiCopy = {
   loginTitle: string;
   loginLead: string;
   loginSubmit: string;
+  rememberMe: string;
   googleLogin: string;
   googleSignup: string;
   noAccount: string;
@@ -41,6 +42,7 @@ export const AUTH_COPY: Record<Locale, AuthUiCopy> = {
     loginTitle: "ログイン",
     loginLead: "登録したメールアドレスとパスワードでログインします。",
     loginSubmit: "ログイン",
+    rememberMe: "ログイン状態を保持",
     googleLogin: "Googleでログイン",
     googleSignup: "Googleで登録",
     noAccount: "アカウントをお持ちでないですか？",
@@ -68,6 +70,7 @@ export const AUTH_COPY: Record<Locale, AuthUiCopy> = {
     loginTitle: "登录",
     loginLead: "使用注册时的邮箱和密码登录。",
     loginSubmit: "登录",
+    rememberMe: "保持登录",
     googleLogin: "使用 Google 登录",
     googleSignup: "使用 Google 注册",
     noAccount: "还没有账号？",
@@ -95,6 +98,7 @@ export const AUTH_COPY: Record<Locale, AuthUiCopy> = {
     loginTitle: "Log in",
     loginLead: "Log in with the email and password you signed up with.",
     loginSubmit: "Log in",
+    rememberMe: "Remember me",
     googleLogin: "Log in with Google",
     googleSignup: "Sign up with Google",
     noAccount: "Don't have an account?",
@@ -122,6 +126,7 @@ export const AUTH_COPY: Record<Locale, AuthUiCopy> = {
     loginTitle: "로그인",
     loginLead: "가입한 이메일과 비밀번호로 로그인합니다.",
     loginSubmit: "로그인",
+    rememberMe: "로그인 상태 유지",
     googleLogin: "Google로 로그인",
     googleSignup: "Google로 가입",
     noAccount: "계정이 없으신가요?",

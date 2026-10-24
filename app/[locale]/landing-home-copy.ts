@@ -4,7 +4,22 @@ import type { Locale } from "@/lib/domain/common";
 // so each section also carries the sentence it sends.
 export type LandingHomeCopy = {
   categories: { title: string; sub: string; count: (n: number) => string };
-  overview: { eyebrow: string; title: (clinics: number, areas: number) => string; ask: string };
+  overview: { title: (clinics: number, areas: number) => string; ask: string };
+  flow: {
+    title: string;
+    sub: string;
+    /** Three steps, each paired with one mock screen. */
+    steps: { title: string; body: string }[];
+    mock: {
+      screens: { chat: string; cards: string; plan: string };
+      user: string;
+      agent: string;
+      clinic: (letter: string) => string;
+      passed: (checked: number, total: number) => string;
+      plan: { at: string; title: string }[];
+      booking: string;
+    };
+  };
   treatments: { title: string; sub: string; count: (n: number) => string; noDowntime: string; downtime: (range: string) => string };
   courses: {
     title: string;
@@ -29,9 +44,30 @@ export const LANDING_HOME_COPY: Record<Locale, LandingHomeCopy> = {
   ko: {
     categories: { title: "어떤 고민이세요?", sub: "누르면 에이전트가 기준을 통과한 클리닉을 보여 드려요", count: (n) => `${n}곳` },
     overview: {
-      eyebrow: "기준을 통과한 클리닉 전체",
       title: (c, a) => `${a}개 지역, ${c}곳을 에이전트와 함께 보기`,
       ask: "기준을 통과한 클리닉을 모두 보여 주세요",
+    },
+    flow: {
+      title: "에이전트는 이렇게 일해요",
+      sub: "한 번의 대화로 세 단계가 이어져요",
+      steps: [
+        { title: "원하는 걸 말하세요", body: "평소 쓰는 말, 내 언어 그대로 말하면 돼요." },
+        { title: "통과한 클리닉만 봐요", body: "기준을 모두 통과한 곳만 카드로 보여 드려요." },
+        { title: "일정까지 한 번에", body: "시술, 날짜, 예약을 하나의 타임라인으로 묶어요." },
+      ],
+      mock: {
+        screens: { chat: "대화", cards: "기준을 통과한 클리닉", plan: "내 일정" },
+        user: "주말에 바로 일상으로 돌아올 수 있는 리프팅이 좋아요.",
+        agent: "알겠어요. 다운타임이 짧은 곳을 찾고, 기준 통과 여부도 확인할게요.",
+        clinic: (l) => `클리닉 ${l}`,
+        passed: (n, t) => `기준 ${t}개 중 ${n}개 통과`,
+        plan: [
+          { at: "1일차", title: "상담" },
+          { at: "2일차", title: "시술" },
+          { at: "5일차", title: "경과 확인" },
+        ],
+        booking: "예약 요청하기",
+      },
     },
     treatments: {
       title: "해외 방문객이 찾는 시술",
@@ -87,9 +123,30 @@ export const LANDING_HOME_COPY: Record<Locale, LandingHomeCopy> = {
   ja: {
     categories: { title: "どんなお悩みですか？", sub: "タップすると、基準を通過したクリニックをエージェントがお見せします", count: (n) => `${n}院` },
     overview: {
-      eyebrow: "基準を通過したクリニックすべて",
       title: (c, a) => `${a}つのエリア、${c}院をエージェントと一緒に見る`,
       ask: "基準を通過したクリニックをすべて見せてください",
+    },
+    flow: {
+      title: "エージェントの使い方",
+      sub: "ひとつの会話で3つのステップがつながります",
+      steps: [
+        { title: "希望を伝える", body: "ふだんの言葉、ご自分の言語でそのまま話せます。" },
+        { title: "通過した院だけを見る", body: "すべての基準を通過した院だけをカードでお見せします。" },
+        { title: "日程までひとつに", body: "施術・日程・予約をひとつのタイムラインにまとめます。" },
+      ],
+      mock: {
+        screens: { chat: "会話", cards: "基準を通過した院", plan: "旅の予定" },
+        user: "週末だけで戻れるリフトアップがいいです。",
+        agent: "かしこまりました。ダウンタイムの短い院を探し、基準も確認します。",
+        clinic: (l) => `クリニック ${l}`,
+        passed: (n, t) => `基準${t}件中${n}件を通過`,
+        plan: [
+          { at: "1日目", title: "カウンセリング" },
+          { at: "2日目", title: "施術" },
+          { at: "5日目", title: "経過チェック" },
+        ],
+        booking: "予約をリクエスト",
+      },
     },
     treatments: {
       title: "海外からの方が選ぶ施術",
@@ -145,9 +202,30 @@ export const LANDING_HOME_COPY: Record<Locale, LandingHomeCopy> = {
   "zh-CN": {
     categories: { title: "您有哪方面的困扰?", sub: "点一下,代理就会列出通过标准的诊所", count: (n) => `${n}家` },
     overview: {
-      eyebrow: "全部通过标准的诊所",
       title: (c, a) => `和代理一起看 ${a} 个地区的 ${c} 家诊所`,
       ask: "请列出所有通过标准的诊所",
+    },
+    flow: {
+      title: "代理是这样帮您的",
+      sub: "一次对话,三个步骤连在一起",
+      steps: [
+        { title: "说出您的需求", body: "用您平时的话、您的语言直接说就行。" },
+        { title: "只看通过标准的诊所", body: "只有全部通过标准的诊所,才会以卡片显示。" },
+        { title: "行程一并安排", body: "项目、日期和预约合成一条时间线。" },
+      ],
+      mock: {
+        screens: { chat: "对话", cards: "通过标准的诊所", plan: "我的行程" },
+        user: "我想做周末就能恢复的提拉。",
+        agent: "好的。我会找恢复期短的诊所,并核对是否通过标准。",
+        clinic: (l) => `诊所 ${l}`,
+        passed: (n, t) => `${t} 项标准通过 ${n} 项`,
+        plan: [
+          { at: "第1天", title: "咨询" },
+          { at: "第2天", title: "项目" },
+          { at: "第5天", title: "复查" },
+        ],
+        booking: "申请预约",
+      },
     },
     treatments: {
       title: "海外访客常选的项目",
@@ -203,9 +281,30 @@ export const LANDING_HOME_COPY: Record<Locale, LandingHomeCopy> = {
   en: {
     categories: { title: "What would you like to work on?", sub: "Tap one and your agent shows the clinics that pass our standards", count: (n) => `${n} clinics` },
     overview: {
-      eyebrow: "Every clinic that passes",
       title: (c, a) => `Browse ${c} clinics in ${a} areas with your agent`,
       ask: "Show me every clinic that passes the standards",
+    },
+    flow: {
+      title: "How your agent works",
+      sub: "Three steps, one conversation",
+      steps: [
+        { title: "Tell it what you want", body: "Say it in your own words, in your own language." },
+        { title: "See clinics that pass", body: "Only clinics that meet every standard show up, as cards." },
+        { title: "Plan the whole trip", body: "Treatments, dates and booking come together in one timeline." },
+      ],
+      mock: {
+        screens: { chat: "Conversation", cards: "Clinics that pass", plan: "Your trip" },
+        user: "I want a lift that leaves my weekend free.",
+        agent: "Got it. I'll look for short downtime and check each clinic against the standards.",
+        clinic: (l) => `Clinic ${l}`,
+        passed: (n, t) => `${n} of ${t} standards passed`,
+        plan: [
+          { at: "Day 1", title: "Consultation" },
+          { at: "Day 2", title: "Treatment" },
+          { at: "Day 5", title: "Follow-up check" },
+        ],
+        booking: "Request booking",
+      },
     },
     treatments: {
       title: "What visitors come for",

@@ -2,7 +2,10 @@
 
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { AgentFlow } from "@/components/customer/agent-flow";
+import { CategoryCard } from "@/components/customer/category-card";
 import { CategoryGlyph } from "@/components/customer/category-glyph";
+import { StandardsBento } from "@/components/customer/standards-bento";
 import type { Locale } from "@/lib/domain/common";
 import { procedureMaster } from "@/lib/domain/procedure-master";
 import { cn } from "@/lib/cn";
@@ -33,7 +36,7 @@ const section = "mx-auto w-full max-w-5xl px-sp-4 md:px-sp-6";
 const snapRow =
   "cu-snap-row -mx-sp-4 flex snap-x snap-mandatory gap-sp-3 overflow-x-auto px-sp-4 pb-sp-1 md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0";
 
-// The landing under the hero: categories, an overview card, the treatment rail, visitor courses,
+// The landing under the hero: categories, how the agent works, the treatment rail, visitor courses,
 // standards, figures and areas. Nothing here links away: every tap becomes a message to the agent,
 // which answers in the chat on this same screen. No clinic names or prices appear on this page.
 export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingAsk }) {
@@ -50,7 +53,7 @@ export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingA
     <div className="relative flex flex-col gap-sp-12 pb-sp-16 pt-sp-8">
       <section aria-labelledby="home-categories" data-tour="topics" className={section}>
         <SectionHead id="home-categories" title={c.categories.title} sub={c.categories.sub} />
-        <ul className="mt-sp-4 grid grid-cols-2 gap-sp-3 md:grid-cols-3 lg:grid-cols-5">
+        <ul className={cn(snapRow, "mt-sp-3 pt-sp-1 md:grid-cols-3 md:pt-0 lg:grid-cols-5")}>
           {CATEGORY_ORDER.map((area) => {
             const name = CATEGORY_NAME[area][locale] ?? CATEGORY_NAME[area].en ?? area;
             const sample = proceduresInCategory(area)
@@ -58,42 +61,28 @@ export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingA
               .map((p) => procedureLabel(p.id, locale))
               .join(" · ");
             return (
-              <li key={area}>
-                <button
-                  type="button"
-                  onClick={() => onAsk(c.ask.category(name), { kind: "category", id: area })}
-                  className={cn(card, "group relative flex min-h-touch w-full flex-col justify-between gap-sp-6 overflow-hidden p-sp-4")}
-                >
-                  <CategoryGlyph
-                    area={area}
-                    className="pointer-events-none absolute -bottom-sp-3 -right-sp-3 size-sp-16 text-subtle opacity-50 transition duration-dropdown ease-out group-hover:text-brand group-active:text-brand"
-                  />
-                  <span className="relative flex min-w-0 flex-col gap-sp-1">
-                    <span className="text-title font-semi">{name}</span>
-                    <span className="text-caption text-muted">{sample}</span>
-                  </span>
-                  <span className="relative text-label tabular-nums text-muted">
-                    <span className="font-semi text-brand">{c.categories.count(clinicsForCategory(area).length)}</span>
-                  </span>
-                </button>
+              <li key={area} className="shrink-0 basis-3/5 snap-start sm:basis-2/5 md:basis-auto">
+                <CategoryCard
+                  area={area}
+                  name={name}
+                  sample={sample}
+                  cta={c.categories.count(clinicsForCategory(area).length)}
+                  onSelect={() => onAsk(c.ask.category(name), { kind: "category", id: area })}
+                />
               </li>
             );
           })}
         </ul>
       </section>
 
-      <section className={section}>
-        <button
-          type="button"
-          onClick={() => onAsk(c.overview.ask, { kind: "all" })}
-          className={cn(card, "cu-dot-grid flex min-h-touch w-full items-end justify-between gap-sp-4 p-sp-6")}
-        >
-          <span className="flex flex-col gap-sp-1">
-            <span className="text-label text-muted">{c.overview.eyebrow}</span>
-            <span className="text-h2 font-semi">{c.overview.title(DIRECTORY.length, DIRECTORY_AREAS.length)}</span>
-          </span>
-          <Chevron />
-        </button>
+      <section aria-labelledby="home-flow" className={section}>
+        <SectionHead id="home-flow" title={c.flow.title} sub={c.flow.sub} />
+        <div className="mt-sp-4">
+          <AgentFlow
+            copy={c.flow}
+            cta={{ label: c.overview.title(DIRECTORY.length, DIRECTORY_AREAS.length), onClick: () => onAsk(c.overview.ask, { kind: "all" }) }}
+          />
+        </div>
       </section>
 
       <section aria-labelledby="home-treatments" className={section}>
@@ -153,37 +142,19 @@ export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingA
       </section>
 
       <section aria-labelledby="home-standards" className={section}>
-        <p className="text-label font-med text-muted">{c.standards.eyebrow}</p>
-        <SectionHead id="home-standards" title={c.standards.title(DIRECTORY.length)} sub={c.standards.sub} />
-        <ul className="mt-sp-4 grid grid-cols-1 gap-sp-3 md:grid-cols-3">
-          {c.standards.principles.map((p) => (
-            <li key={p.title} className="rounded-card border border-border-soft bg-elev p-sp-4">
-              <p className="text-body font-semi">{p.title}</p>
-              <p className="mt-sp-1 text-label text-muted">{p.body}</p>
-            </li>
-          ))}
-        </ul>
-        <ol className="mt-sp-4 overflow-hidden rounded-card border border-border-soft bg-elev">
-          {STANDARD_ORDER.map((key, i) => (
-            <li key={key} className="flex items-baseline gap-sp-3 border-t border-border-soft px-sp-4 py-sp-3 first:border-t-0">
-              <span className="w-sp-6 shrink-0 text-title font-semi tabular-nums text-brand">{String(i + 1).padStart(2, "0")}</span>
-              <span className="min-w-0 flex-1 text-body font-med">{STANDARD_TEXT[key].label[locale] ?? STANDARD_TEXT[key].label.en}</span>
-              <span className="shrink-0 text-label text-muted">{STANDARD_TEXT[key].cycle[locale] ?? STANDARD_TEXT[key].cycle.en}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className={section}>
-        <dl className="grid grid-cols-2 gap-x-sp-6 gap-y-sp-6 md:grid-cols-4">
-          {c.stats.items.map((s) => (
-            <div key={s.caption} className="flex flex-col gap-sp-1">
-              <dt className="order-2 text-label text-muted">{s.caption}</dt>
-              <dd className="order-1 text-display font-semi tabular-nums">{s.value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-sp-3 text-caption text-subtle">{c.stats.source}</p>
+        <StandardsBento
+          headingId="home-standards"
+          eyebrow={c.standards.eyebrow}
+          title={c.standards.title(DIRECTORY.length)}
+          sub={c.standards.sub}
+          principles={c.standards.principles}
+          stats={c.stats.items}
+          source={c.stats.source}
+          standards={STANDARD_ORDER.map((key) => ({
+            label: STANDARD_TEXT[key].label[locale] ?? STANDARD_TEXT[key].label.en ?? key,
+            cycle: STANDARD_TEXT[key].cycle[locale] ?? STANDARD_TEXT[key].cycle.en ?? "",
+          }))}
+        />
       </section>
 
       <section aria-labelledby="home-areas" className={section}>

@@ -31,8 +31,9 @@ export function signUpEmail(email: string, password: string): Promise<AuthResult
   return post("/sign-up/email", { email: email.trim(), password, name: "" });
 }
 
-export function signInEmail(email: string, password: string): Promise<AuthResult> {
-  return post("/sign-in/email", { email: email.trim(), password });
+// rememberMe false keeps the session for this browser session only (better-auth default: true).
+export function signInEmail(email: string, password: string, rememberMe = true): Promise<AuthResult> {
+  return post("/sign-in/email", { email: email.trim(), password, rememberMe });
 }
 
 export function signOut(): Promise<AuthResult> {
@@ -71,6 +72,18 @@ export async function fetchAuthOptions(): Promise<AuthOptions> {
     // fall through
   }
   return { google: false, demo: false, demoAccounts: [] };
+}
+
+/** Whether there is a session, without logging an error response when signed out (get-session answers 200 null). */
+export async function hasSession(): Promise<boolean> {
+  try {
+    const res = await fetch("/api/auth/get-session", { cache: "no-store", credentials: "same-origin" });
+    if (!res.ok) return false;
+    const body = (await res.json()) as { user?: unknown } | null;
+    return Boolean(body?.user);
+  } catch {
+    return false;
+  }
 }
 
 /** GET /api/me, or null when signed out. */

@@ -2,10 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useLocale } from "next-intl";
-import { FcGoogle } from "react-icons/fc";
 import { Button, Input } from "@/components/ui";
 import { authCopy } from "@/components/auth/copy";
-import { errorMessage, fetchAuthOptions, fetchMe, safeNext, signInEmail, signInGoogle } from "@/components/auth/client";
+import { errorMessage, fetchMe, safeNext, signInEmail } from "@/components/auth/client";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
@@ -19,7 +18,6 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [google, setGoogle] = useState(false);
   const [next, setNext] = useState<string | null>(null);
   const [denied, setDenied] = useState(false);
 
@@ -27,7 +25,6 @@ export function LoginForm() {
     const params = new URLSearchParams(window.location.search);
     setNext(safeNext(params.get("next")));
     setDenied(params.get("denied") === "1");
-    void fetchAuthOptions().then((options) => setGoogle(options.google));
   }, []);
 
   const submit = async (event: FormEvent) => {
@@ -84,12 +81,6 @@ export function LoginForm() {
       <Button type="submit" size="lg" fullWidth disabled={pending} aria-busy={pending || undefined}>
         {pending ? ui.pending : ui.loginSubmit}
       </Button>
-      {google ? (
-        <Button type="button" variant="secondary" size="lg" fullWidth disabled={pending} onClick={() => void signInGoogle(next ?? `/${locale}/home`, next ?? `/${locale}/onboarding`)}>
-          <FcGoogle aria-hidden className="size-sp-5" />
-          {ui.googleLogin}
-        </Button>
-      ) : null}
       <p className="flex flex-wrap items-center justify-center gap-x-sp-1 text-label text-muted">
         <span>{ui.noAccount}</span>
         <Link href="/signup" className={cn("inline-flex min-h-touch items-center px-sp-1 font-med text-brand hover:underline", focusRing)}>

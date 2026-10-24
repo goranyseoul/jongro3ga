@@ -9,7 +9,6 @@ import { SiteFooter } from "./site-chrome";
 const WORDMARK = "PibooK";
 // demo accounts from 05-screens.md (/[locale]/signup)
 const DEMO_PERSONAS = ["Yuki", "Lin", "Emily", "지수"];
-
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
