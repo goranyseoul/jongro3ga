@@ -1,3 +1,4 @@
+import type { AgentCard } from "@/components/ui";
 import type { IsoDate, Locale } from "@/lib/domain/common";
 
 // Mock data for the clinic console (docs/spec/05-screens.md, 병원 콘솔). Shapes follow
@@ -370,3 +371,67 @@ export const PROPOSAL_SLOTS = [
   "2026-10-29T16:00:00+09:00",
   "2026-10-30T14:00:00+09:00",
 ];
+
+export const AGENT_ENDPOINT = "https://pibu.example/a2a/clinics/mint/rpc";
+
+export const OPERATION_SOURCE_TEXT: Record<string, string> = {
+  clinic_console: "병원 콘솔",
+  sms: "문자",
+  public_web: "공개 웹",
+};
+
+// Operation facts that the clinic-operation extension carries (03-a2a-protocol.md 확장).
+export const CLINIC_OPERATION = {
+  mode: CLINIC.operationMode,
+  dataSources: ["clinic_console"],
+  lastVerifiedAt: "2026-10-22" as IsoDate,
+  foreignPatientFacilityRegistered: true,
+};
+
+// Same URL, skill ids and schemas as the proxy-operated card, so taking over changes no caller code (02-agents.md).
+export const AGENT_CARD: AgentCard = {
+  name: "Mint Dermatology Clinic Agent",
+  description:
+    "Answers prices, doses, monthly offers and available times for Mint Dermatology Clinic (Gangnam), and accepts booking requests referred by Pibu.",
+  supportedInterfaces: [{ url: AGENT_ENDPOINT, protocolBinding: "JSONRPC", protocolVersion: "1.0" }],
+  provider: { organization: "Mint Dermatology Clinic", url: "https://pibu.example" },
+  version: "0.1.0",
+  capabilities: {
+    streaming: false,
+    pushNotifications: false,
+    extensions: [
+      {
+        uri: "https://pibu.app/ext/clinic-operation/v1",
+        description: "Operation mode and data provenance of this clinic agent",
+        required: false,
+        params: CLINIC_OPERATION,
+      },
+      {
+        uri: "https://pibu.app/ext/referral/v1",
+        description: "quote and book requests must carry a Pibu referral token in metadata.referralToken",
+        required: false,
+      },
+    ],
+  },
+  securitySchemes: { pibuBearer: { httpAuthSecurityScheme: { scheme: "bearer", bearerFormat: "JWT" } } },
+  securityRequirements: [{ schemes: { pibuBearer: { list: [] } } }],
+  defaultInputModes: ["application/json", "text/plain"],
+  defaultOutputModes: ["application/json", "text/plain"],
+  skills: [
+    { id: "clinic.offers", name: "Monthly offers", description: "Lists this month's offers and regular menu prices.", tags: ["price", "event"] },
+    {
+      id: "clinic.quote",
+      name: "Quote",
+      description: "Quotes total price, unit price, dose, product, inclusions and slots for a procedure request.",
+      tags: ["price", "quote"],
+    },
+    { id: "clinic.availability", name: "Availability", description: "Returns open slots for a procedure in a date range.", tags: ["schedule"] },
+    {
+      id: "clinic.book",
+      name: "Book",
+      description: "Requests a booking. The clinic confirms from its inbox, so the task stays working until confirmed.",
+      tags: ["booking"],
+    },
+    { id: "clinic.cancel", name: "Cancel booking", description: "Cancels a booking made through Pibu.", tags: ["booking"] },
+  ],
+};
