@@ -66,7 +66,7 @@
 | --- | --- |
 | `DATABASE_URL` | Neon Postgres 연결 문자열. 없으면 PGlite |
 | `PGLITE_DIR` | PGlite 폴더(기본 `.data/pglite`), `memory`면 메모리 |
-| `BETTER_AUTH_SECRET` | 세션 서명 비밀값(32바이트 이상, `openssl rand -base64 32`). 비어 있으면 DEMO_MODE나 개발에서만 코드의 dev 전용 값을 쓰고 경고, 프로덕션+DEMO_MODE 아님이면 시작 시 에러 |
+| `BETTER_AUTH_SECRET` | 세션 서명 비밀값(32바이트 이상, `openssl rand -base64 32`). 비어 있으면 DEMO_MODE나 개발에서만 코드의 dev 전용 값을 쓰고 경고, 프로덕션이면서 DEMO_MODE가 아니면 첫 인증 요청에서 에러 |
 | `BETTER_AUTH_URL` | 공개 주소(예: `https://pibook.vercel.app`). 비우면 요청에서 추론(로컬은 그대로 둬도 됨). Google 콜백이 정확하려면 배포에선 설정 |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | 둘 다 있을 때만 Google 로그인 |
 | `PIBOOK_STORE` | `memory` 또는 `pg`로 저장소 강제(디버그용) |
