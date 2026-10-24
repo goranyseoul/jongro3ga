@@ -16,7 +16,7 @@
 
 ## 태스크 순서
 
-의존: T00 → T01 → T02 → T03 → T04 → T05 → T06 → T07 → T08 → T09 → T10 → (T11, T12 병렬 가능) → T13 → T14 → T15 (T05와 T06은 서로의 스킬을 A2A로 부르므로 직렬)
+의존: T00 → T01 → T02 → T03 → T04 → T05 → T06 → T07 → T08 → T09 → T10 → (T11, T12 병렬 가능) → T13 → T14 → T15 → T16 → T17 → T18 (T16~T18은 ZK 확장, T08~T10 이후 아무 때나 시작 가능하고 T14 시나리오에 4행·6행·린 행을 더한다. T05와 T06은 서로의 스킬을 A2A로 부르므로 직렬)
 
 ### T00 · 프로젝트 셋업
 
@@ -112,6 +112,24 @@
 - 할 일: README.md 실행 방법·데모 계정 갱신, `docs/spec/BUILD-LOG.md` 정리 (구현과 스펙 차이), `.env.example` 최종
 - 수용 기준: 새 클론에서 `npm install && npm run gate && npm run e2e` 통과
 
+### T16 · ZK 스키마와 lib/zk
+
+- 읽을 문서: [INTEGRATION.md](../INTEGRATION.md), [03-a2a-protocol.md](03-a2a-protocol.md) (ZK 확장 스키마), [06-data-model.md](06-data-model.md) (ZK 타입)
+- 할 일: `lib/a2a/schemas.ts`에 스키마 3개 추가 (`pibu/offer-proof@1`, `pibu/record-anchor@1`, `pibu/review@1`), `zkClauses`·`offerApplied`·`verifiedVisits`·`reviewStats` 필드, `SKILL_ROUTES`에 `platform.anchor_record`·`platform.submit_review` 2개, `lib/zk/` (`codes.ts`, `clauses.ts` 의 `clauseHolds`, `client.ts`, `types.ts`)
+- 수용 기준: 새 필드와 스키마의 스키마 테스트 · `clauseHolds` 테스트 (첫 방문, 2회차, 단골, 날짜 범위) · `npm run typecheck`, `npm test`, `npm run build` 통과
+
+### T17 · ZK 화면 접점
+
+- 읽을 문서: [05-screens.md](05-screens.md) (ZK 확장 표기), [INTEGRATION.md](../INTEGRATION.md) 0절
+- 할 일: `/[locale]/records`의 출처 표시 ("병원 확인 · 체인 기록 v{n}" 또는 "직접 입력 · 증명에 쓰이지 않음"), `/[locale]/requests/[id]`의 오퍼 매칭·검증 타임라인 단계와 "조건 충족 증명됨" 라벨·병원 셀의 방문 수·후기 집계, `/[locale]/settings/data`의 기록 지갑 카드, 병원 콘솔 이벤트 시트의 증명 조건 프리셋, `/demo/ledger`, 메시지 키 4개 언어
+- 수용 기준: 빌드 가드(`check:tokens`, `check:boundaries`) 통과 · 위 페이지가 4개 언어로 렌더링됨
+
+### T18 · 에이전트 훅과 브라우저 지갑
+
+- 읽을 문서: [INTEGRATION.md](../INTEGRATION.md) 4~6절, [09-architecture.md](09-architecture.md) (모듈 경계, 환경 변수)
+- 할 일: 병원 에이전트 `clinic.quote`의 오퍼 증명 검증 훅 (통과 시 `event` + `offerApplied`, 실패 시 정가 견적), 고객 오케스트레이터의 기기 안 매칭과 증명 첨부 (해당 없는 병원에는 증명을 보내지 않음), 플랫폼 `platform.anchor_record`·`platform.submit_review` 실행기, `match_clinics` 응답의 `verifiedVisits`·`reviewStats`. 로드맵: 브라우저 지갑 (localStorage + bb.js WASM)으로 서버 지갑 제거
+- 수용 기준: 데모 시나리오 4행·6행·린 행이 e2e로 통과 · 증명 검증 실패 시 정가 견적이 나오는 테스트
+
 ## 데모 시나리오 (3분, 픽스처 모드 기준 기대값)
 
 | # | 화면 | 동작 | 기대 결과 |
@@ -120,11 +138,12 @@
 | 1 | `/ja/onboarding` | Yuki 온보딩 (픽스처 대화 자동 진행 버튼 허용) | 오른쪽 에이전트 카드가 슬롯마다 채워짐, 완료 후 `/ja/home` |
 | 2 | `/ja/chat` | "リジュラン受けたい" | 로그에 `platform.recipe`. 조건 카드: リジュラン 2cc (통상 최솟값) · ₩450,000 以下 · 新沙・江南・狎鴎亭 (숙소 지역 그룹) · 日本語 · 11/13~11/15 |
 | 3 | `/ja/requests/[id]` | [この条件で探す] | 가운데 로그에 match_clinics → quote × 3 (서울글로우, 민트, 아라) → judge_quote 순서로 흐름 (recipe는 2행에서 이미 호출). 진행 문장 3줄. 한빛(명동)·다혜(홍대)는 지역 필터로 제외 |
-| 4 | 비교 화면 | 확인 | 민트 `量が少なめ` (1cc, 통상 2~3cc), 서울글로우 `適正`, 아라 `適正` + "見積もりより支払額が高かった記録があります" |
+| 4 | 비교 화면 | 확인 | 민트 `量が少なめ` (1cc, 통상 2~3cc), 서울글로우 `適正`, 아라 `適正` + "見積もりより支払額が高かった記録があります". 민트 행에 조건 충족 증명됨 라벨, 서울글로우 행에 피북 사용자 1,240명 · 검증 후기 18건 (ZK 확장) |
 | 5 | 비교 화면 | 서울글로우 11/14 11:00 [予約] | 상태 "クリニック確認中" → 오른쪽 병원 요청함에서 [확정] (또는 데모 확정 버튼) → "予約確定" |
-| 6 | `/demo` → `/ja/outcomes/[bookingId]` | [시계 이동: 11/14 13:00] → D0: ₩340,000 · 2cc · 満足 5 | 플랫폼 로그에 submit_outcome, 내 기록에 "2回目: 2026-12-14" |
+| 6 | `/demo` → `/ja/outcomes/[bookingId]` | [시계 이동: 11/14 13:00] → D0: ₩340,000 · 2cc · 満足 5 | 플랫폼 로그에 submit_outcome, 내 기록에 "2回目: 2026-12-14". 로그에 platform.anchor_record, 내 기록에 병원 확인 · 체인 기록 v1 (ZK 확장) |
 | 7 | `/demo` | [결과 20건 주입] → `/ops/rules` [규칙 제안 실행] | 제안: "아라의원 · 일본 고객 · 매칭 제외 · 근거: 견적 대비 실결제 평균 +31% (n=20)" |
 | 8 | `/ops/rules` | [승인] → 고객 화면에서 같은 요청 재실행 | 후보에서 아라 제외, 로그의 shortlist에 `appliedRuleIds: ["rule_..."]` |
+| 9 | `/zh-CN/requests/[id]` (ZK 확장, 린 2회차) | 린으로 리쥬란 요청 | 린의 기록 (리쥬란 1회 @ 한빛, 병원 확인)을 기기 안에서 매칭해 서울글로우 2회차 패키지와 한빛 이어서 2회차 오퍼 증명을 첨부. 병원은 검증 후 `offerApplied`, 이력 원본은 로그에 없음 |
 
 ## 결정 기록
 
@@ -134,6 +153,9 @@
 | 2 | 한국 사용자용 "이달 이벤트 비교" 화면 | 만들지 않는다. 메인 기능만 | 오너 지시 |
 | 3 | 타깃 연령·성별 | 기능을 나누지 않는다 | 오너 지시 |
 | 4 | 후기 공개 피드·후기 보상 | 보류 (결과는 비공개 신호로만) | [08-compliance.md](08-compliance.md) 3절 |
+| 5 | 시나리오·id 정본 | `docs/spec`이 정본 (오너 2026-10-24). BUILD-LOG 13의 "`DEMO.md`가 데모 기준"을 재결정. DEMO.md는 기획 서사 | 구현과 데이터의 기준이 둘이면 갈라진다 |
+| 6 | ZK 확장 | 채택: 2회차 오퍼, 첫 방문 오퍼, 검증 후기 (02, 03, 05~09의 ZK 확장 표기) | [INTEGRATION.md](../INTEGRATION.md) |
+| 7 | 후기 처리 | 집계(n >= 5)와 로그인 고객 1:1 요약만. 공개 피드·보상 없음 | [08-compliance.md](08-compliance.md) 3절 |
 
 ## 미결
 
