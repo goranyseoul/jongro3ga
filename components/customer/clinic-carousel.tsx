@@ -57,9 +57,15 @@ export function ClinicCarousel({ clinics, locale, areaName, focus = [], labels }
                 </header>
                 <p className="text-label">{procedures.map((id) => procedureLabel(id, locale)).join(" · ")}</p>
                 <div className="flex items-center justify-between gap-sp-2">
-                  <span className="text-caption tabular-nums">
-                    <span className="font-semi text-brand">{labels.standards(clinic.passes.length, STANDARD_ORDER.length)}</span>
-                  </span>
+                  {/* the count reads like a link, so it opens the same list as the button below */}
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setOpen(isOpen ? null : clinic.id)}
+                    className={cn("inline-flex min-h-touch items-center text-caption font-semi text-brand tabular-nums hover:underline", focusRing)}
+                  >
+                    {labels.standards(clinic.passes.length, STANDARD_ORDER.length)}
+                  </button>
                   <span className="text-caption text-subtle">{clinic.operationMode === "proxy" ? labels.proxy : labels.direct}</span>
                 </div>
                 {isOpen ? (
