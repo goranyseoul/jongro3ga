@@ -32,8 +32,8 @@ describe("mock clinic directory", () => {
   });
 
   it("finds procedures typed in any language", () => {
-    expect(findProcedure("リジュラン受けたい")?.id).toBe("rejuran");
+    expect(findProcedure("リジュラン受けたい")?.id).toBe("rejuran_healer");
     expect(findProcedure("I want Ulthera")?.id).toBe("ulthera");
-    expect(findProcedure("써마지 맞고 싶어")?.id).toBe("thermage");
+    expect(findProcedure("써마지 맞고 싶어")?.id).toBe("thermage_flx");
   });
 });

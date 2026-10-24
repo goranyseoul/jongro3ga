@@ -171,7 +171,7 @@ function buildProfile(clinic: DirectoryClinic, index: number): DirectoryProfile 
     lat: Number((center.lat + Math.sin(angle) * radius).toFixed(5)),
     lng: Number((center.lng + Math.cos(angle) * radius).toFixed(5)),
     doctors,
-    signature: clinic.procedures[0] ?? "rejuran",
+    signature: clinic.procedures[0] ?? "rejuran_healer",
     priceFromKrw: Object.fromEntries(clinic.procedures.map((id) => [id, priceFor(id, index)])),
     verifications,
     tagline: TAGLINES[index % TAGLINES.length]!,

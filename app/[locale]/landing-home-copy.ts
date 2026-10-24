@@ -262,18 +262,18 @@ export const LANDING_HOME_COPY: Record<Locale, LandingHomeCopy> = {
 
 /** Procedure ids of each visitor course, from the procedure master. */
 export const COURSE_PROCEDURES: Record<"weekend" | "series" | "first", string[]> = {
-  weekend: ["rejuran", "skin_booster", "skin_botox"],
-  series: ["ulthera", "thermage", "rejuran"],
+  weekend: ["rejuran_healer", "skin_booster", "skin_botox"],
+  series: ["ulthera", "thermage_flx", "rejuran_healer"],
   first: ["aqua_peel", "pico_toning", "skin_booster"],
 };
 
 /** Procedures in the treatment rail, in display order. */
 export const FEATURED_PROCEDURES = [
   "ulthera",
-  "thermage",
-  "shrink",
-  "rejuran",
-  "juvelook",
+  "thermage_flx",
+  "shrink_universe",
+  "rejuran_healer",
+  "skin_booster_juvelook",
   "skin_booster",
   "skin_botox",
   "pico_toning",
