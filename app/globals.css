@@ -1,0 +1,136 @@
+/* Design tokens. Names follow docs/spec/05-screens.md (UI rules, item 2), values follow
+   the IRONACT design system (tokens/tokens.css + tokens/themes/pa.css, origin/main).
+   Components use these through tailwind.config.ts only: no hex, no arbitrary px. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* surface */
+  --bg: oklch(0.12 0.005 240);
+  --bg-elev: oklch(1 0 0 / 5%);
+  --bg-sunken: oklch(0.269 0 0);
+  --popover: oklch(0.18 0.01 240);
+  --scrim: oklch(0 0 0 / 55%);
+
+  /* line */
+  --border: oklch(1 0 0 / 8%);
+  --border-soft: oklch(1 0 0 / 6%);
+  --input: oklch(1 0 0 / 15%);
+
+  /* text */
+  --text: oklch(0.985 0 0);
+  --text-muted: oklch(0.708 0 0);
+  --text-subtle: oklch(0.556 0 0);
+
+  /* accent: neutral core, the theme block below sets the brand */
+  --brand: oklch(0.985 0 0);
+  --accent-fg: oklch(0.205 0 0);
+  --highlight: oklch(0.70 0 0);
+
+  /* semantic: flat text colors only */
+  --success: oklch(0.65 0.15 160);
+  --warning: oklch(0.72 0.14 38);
+  --danger: oklch(0.704 0.191 22.216);
+  --info: oklch(0.985 0 0);
+
+  /* type */
+  --font: var(--font-geist-sans), 'Geist', -apple-system, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  --t-display: 36px;
+  --t-h1: 30px;
+  --t-h2: 24px;
+  --t-title: 16px;
+  --t-body: 14px;
+  --t-sm: 12px;
+  --t-xs: 11px;
+  --t-micro: 10px;
+  --w-reg: 400;
+  --w-med: 500;
+  --w-semi: 600;
+  --lh-tight: 1.1;
+  --lh-snug: 1.3;
+  --lh-normal: 1.5;
+
+  /* space (4px grid) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* minimum touch target (05-screens.md rule 7) */
+  --touch: 44px;
+
+  /* radius */
+  --radius: 0.625rem;
+  --r-sm: calc(var(--radius) * 0.6);
+  --r-md: calc(var(--radius) * 0.8);
+  --r-card: var(--radius);
+  --r-xl: calc(var(--radius) * 1.4);
+  --r-2xl: calc(var(--radius) * 1.8);
+  --r-3xl: calc(var(--radius) * 2.2);
+  --r-4xl: calc(var(--radius) * 2.6);
+  --r-pill: 999px;
+
+  /* shadow */
+  --sh-card: 0 1px 2px rgb(0 0 0 / 30%), 0 1px 1px rgb(0 0 0 / 20%);
+  --sh-pop: 0 8px 24px rgb(0 0 0 / 35%);
+
+  /* motion: enter and exit ease-out, UI under 300ms, sheets and modals 400ms */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-press: 160ms;
+  --dur-tooltip: 125ms;
+  --dur-dropdown: 200ms;
+  --dur-modal: 400ms;
+  --press-scale: 0.97;
+}
+
+/* theme: PA (brand = blue). Only the brand slot changes. */
+:root {
+  --brand: oklch(0.58 0.16 245);
+  --accent-fg: oklch(0.985 0 0);
+  --highlight: oklch(0.72 0.14 38);
+  --info: oklch(0.58 0.16 245);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-press: 1ms;
+    --dur-tooltip: 1ms;
+    --dur-dropdown: 1ms;
+    --dur-modal: 1ms;
+    --press-scale: 1;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --bg-elev: var(--bg-sunken);
+    --scrim: oklch(0 0 0 / 80%);
+  }
+}
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: var(--t-body);
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Tailwind's preflight placeholder color is a gray hex fallback */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-subtle);
+  }
+}
