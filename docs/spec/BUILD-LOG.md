@@ -40,3 +40,20 @@
 - 접근성: 푸터 언어 링크 폭을 44px로 맞췄다.
 - 알려진 남은 것: 병원 콘솔 `/clinic/inbox` 데스크톱 폭의 체크박스 20px (병원 콘솔 세션 영역). 채팅 입력창은 바 전체가 터치 영역이다.
 - 검사: CI와 같은 순서(`npm ci`, `typecheck`, `test` 112개, `build`와 가드 3종, `verify-spec`) 통과. 55개 라우트를 3개 폭으로 연 브라우저 검사에서 pageerror 0, 가로 넘침 0.
+
+## 트랙 CLINIC (2026-10-24, `feat/track-clinic`)
+
+병원 에이전트(`lib/agents/clinic/**`)와 병원 콘솔 연결(`app/clinic/**`, `app/api/clinic/**`, `components/clinic/**`, `lib/ui-data/clinic.ts`).
+
+| # | 영역 | 스펙 | 구현 | 이유 / 다른 트랙이 할 일 |
+| --- | --- | --- | --- | --- |
+| C1 | 병원 저장소 컬렉션 | 06: 엔티티 이름만 | 네임스페이스 `clinic`의 컬렉션: `profiles`, `operation`(카드 확장 params), `menu_items`, `offers`(+ `active`), `slot_policies`(id = 병원 id), `slots`, `bookings`, `tasks`, `quotes`. `CLINIC_COLLECTIONS`(`lib/agents/clinic/store.ts`) | A2A 트랙의 `loadSeed`는 `writeClinicSeed(store, seeds, slots)`(`lib/agents/clinic/seed.ts`)를 부르면 된다. 시드가 아직 없으면 `DEMO_MODE=true`에서만 06 시드 값(`fixtures.ts`)을 한 번 넣는다 |
+| C2 | 시술 id | 06·03 예시는 `rejuran_healer`, 마스터는 `rejuran` (BUILD-LOG 10) | 픽스처는 06 값(`rejuran_healer`). 견적은 `procedureId` 문자열 일치로 고른다 | 시드와 고객 요청이 같은 id 체계를 써야 한다. 통일은 결정 6 이후 |
+| C3 | 민트 메뉴 | 06: "1cc 이벤트만" | 이벤트(99,000, 정상가 150,000) + 같은 용량 정가 메뉴 1cc 150,000 | `Offer`에 `vatIncluded`, `product`, `includes`가 없어서 견적의 이 필드를 같은 시술·용량 메뉴에서 가져온다. 이벤트가 끝나면 정가 1cc로 답한다 |
+| C4 | 카드 URL | 03: `/a2a/clinics/{slug}`, `cardUrl()`은 병원 id를 경로에 씀 | `card(agentId)`는 요청받은 경로 조각을 그대로 rpc URL에 쓰고, `exists`·`card`·스킬은 id와 slug를 모두 받는다 | 어느 쪽으로 불러도 그 카드의 rpc URL이 실제로 닿는다 |
+| C5 | 추가 정보 요청 | 02: "추가 정보 필요 시 INPUT_REQUIRED" | `safetyInfo` 없이 온 `clinic.book`은 `INPUT_REQUIRED`(임신·수유, 알레르기). 콘솔의 [시간 제안]·[추가 정보 요청]도 `taskCompleter.complete`로 `INPUT_REQUIRED`를 써 넣고, 고객 답(`pibu/input-response@1`)을 받으면 다시 `WORKING` | `TaskCompleter.complete`를 종료 아닌 상태 전이에도 쓴다. A2A 코어 구현이 `INPUT_REQUIRED`와 `inputRequest`(status.message DataPart)를 받아야 한다 |
+| C6 | 추천 토큰 검사 | 03: 서명·만료·aud | 더해서 `scope`(quote/book), `requestId` 일치, 견적은 `sub` = `customerAgentId` 일치. 검증 함수가 예외를 던지면 `FAILED` | 토큰은 요청 단위로 발급되므로 다른 요청에 재사용하면 거절 |
+| C7 | ZK 오퍼 증명 | INTEGRATION 4절: `offerApplied` 필드 | `zkEnabled()`이고 `metadata.zkOfferProof`(번들 또는 `pibu/offer-proof@1` 래퍼)가 있을 때만 `verifyOffer` 후 `ok`면 이벤트가, 아니면 정가. ZK가 꺼져 있으면 동작 변화 없음 | `QuoteV1Schema`가 strict라 `offerApplied`를 넣지 못한다. 이벤트 유무가 할인 적용 여부. 필드가 필요하면 `lib/a2a/schemas.ts` 변경 요청 |
+| C8 | 견적 유효기간 | 03 예시만 | 오늘 + 7일, 이벤트 종료일이 더 빠르면 종료일 | |
+| C9 | 콘솔 되돌리기 | 목업: 확정 후 8초 되돌리기 | 제거 | 확정은 A2A 태스크 완료, 플랫폼 보고, 고객 알림까지 실제로 일어나서 되돌릴 수 없다 |
+| C10 | 테스트 alias | | vitest 설정이 없어 `@/` alias가 테스트에서 안 풀린다. `lib/agents/clinic/**`는 상대 경로 import | 오케스트레이터가 `vitest.config.ts`(tsconfig paths)를 추가하면 다른 트랙도 편해진다 |
