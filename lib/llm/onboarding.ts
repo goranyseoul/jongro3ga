@@ -80,6 +80,8 @@ export async function runOnboardingTurn(input: OnboardingTurnInput): Promise<Onb
     });
     mode = reply.mode;
     text += reply.text;
+    // Keep the history exactly as it went out (per turn context included) so it stays append-only.
+    messages.splice(0, messages.length, ...reply.sentMessages);
     messages.push({ role: "assistant", content: reply.content });
     if (reply.toolCalls.length === 0) break;
 

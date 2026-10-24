@@ -110,7 +110,8 @@ describe("tool JSON Schemas", () => {
     expect(Array.isArray(schema.required)).toBe(true);
     expect(openObjectPaths(schema)).toEqual([]);
     expect(unsupportedKeywordPaths(schema)).toEqual([]);
-    expect(toolDefinition(name).strict).toBe(true);
+    // update_profile has 41 optional slots and the API caps strict grammars at 24 optionals; zod still checks it.
+    expect(toolDefinition(name).strict).toBe(name !== "update_profile");
   });
 
   it("keeps the procedure master enum so Claude cannot invent an id", () => {

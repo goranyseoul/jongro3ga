@@ -318,7 +318,9 @@ describe("live path (fetch stubbed)", () => {
     expect(body).not.toHaveProperty("temperature");
     const tools = body.tools as Array<{ name: string; strict: boolean; input_schema: { additionalProperties: boolean } }>;
     expect(tools.map((tool) => tool.name)).toEqual(["update_profile", "show_widget", "request_consent", "finish_onboarding"]);
-    expect(tools.every((tool) => tool.strict && tool.input_schema.additionalProperties === false)).toBe(true);
+    expect(tools.every((tool) => tool.input_schema.additionalProperties === false)).toBe(true);
+    // update_profile exceeds the API's 24 optional parameter cap for strict grammars (rehearsal 2026-10-24).
+    expect(tools.map((tool) => tool.strict)).toEqual([false, true, true, true]);
   });
 
   it("falls back to the fixture on a 429 and records why", async () => {

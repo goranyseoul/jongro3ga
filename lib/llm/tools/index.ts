@@ -108,13 +108,20 @@ export function toolJsonSchema(name: ToolName, options: ToolOptions = {}): JsonS
   return cached;
 }
 
-/** The tool as sent to the Messages API: strict, so inputs always match the schema's shape. */
+/**
+ * Tools whose schema the API refuses in strict mode: strict grammars allow at most 24 optional parameters and the
+ * profile patch has 41 (rehearsal 2026-10-24, "Schemas contains too many optional parameters"). They go out
+ * non strict and rely on the zod check in validateToolInput, which every tool input passes through anyway.
+ */
+const NEVER_STRICT: ReadonlySet<ToolName> = new Set<ToolName>(["update_profile"]);
+
+/** The tool as sent to the Messages API: strict where the API allows it, so inputs match the schema's shape. */
 export function toolDefinition(name: ToolName, options: ToolOptions = {}): Anthropic.Tool {
   return {
     name,
     description: DESCRIPTIONS[name],
     input_schema: toolJsonSchema(name, options) as Anthropic.Tool.InputSchema,
-    strict: true,
+    strict: !NEVER_STRICT.has(name),
   };
 }
 

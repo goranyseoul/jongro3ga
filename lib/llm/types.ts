@@ -54,6 +54,12 @@ export interface CompleteResult {
   stopReason: Anthropic.StopReason | null;
   /** The assistant turn to append to `messages` before sending tool results back. */
   content: Anthropic.ContentBlockParam[];
+  /**
+   * The messages as they were actually sent (the per turn context is appended to the last user message, see
+   * withDynamicContext). Continue the conversation from these, not from the input, so the history stays
+   * append-only and earlier thinking blocks keep their binding.
+   */
+  sentMessages: Anthropic.MessageParam[];
 }
 
 export interface ExtractRequest<T> {

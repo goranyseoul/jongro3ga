@@ -60,6 +60,15 @@ const DEFAULT_MAX_TOKENS: Record<LlmPurpose, number> = {
   proposer: 16000,
 };
 
+/**
+ * Per request deadline. Long structured outputs (menu extraction, a whole notepad, rule proposals) take several
+ * minutes on a non streaming call, which the 60 s client default cut off in rehearsal (2026-10-24).
+ */
+const LONG_OUTPUT_TIMEOUT_MS = 300_000;
+function requestOptions(purpose: LlmPurpose): { timeout: number; maxRetries: number } {
+  return DEFAULT_MAX_TOKENS[purpose] >= 16000 ? { timeout: LONG_OUTPUT_TIMEOUT_MS, maxRetries: 0 } : { timeout: 60_000, maxRetries: 1 };
+}
+
 export function modelFor(purpose: LlmPurpose): string {
   const { env, fallback } = TIER_ENV[PURPOSE_TIER[purpose]];
   return process.env[env] || fallback;
@@ -71,11 +80,27 @@ export function isFixtureMode(): boolean {
   return process.env.DEMO_MODE === "true";
 }
 
+/** The cached, frozen system prompt. Only the stable part goes into `system` (see withDynamicContext). */
 export function systemBlocks(system: string | SystemPrompt): Anthropic.TextBlockParam[] {
   const prompt = typeof system === "string" ? { stable: system } : system;
-  const blocks: Anthropic.TextBlockParam[] = [{ type: "text", text: prompt.stable, cache_control: { type: "ephemeral" } }];
-  if (prompt.dynamic) blocks.push({ type: "text", text: prompt.dynamic });
-  return blocks;
+  return [{ type: "text", text: prompt.stable, cache_control: { type: "ephemeral" } }];
+}
+
+/**
+ * The per turn context (current profile, missing slots, a schema) rides in the last user message instead of the
+ * system prompt. Thinking blocks the model returned earlier are bound to the system prompt they were created
+ * with: a system prompt that changes every turn made the API reject the second onboarding turn with
+ * "The system prompt differs from the one this block was created with" (rehearsal 2026-10-24). Appending to the
+ * conversation keeps it append-only, so earlier blocks stay valid and the system prefix stays cached.
+ */
+export function withDynamicContext(messages: Anthropic.MessageParam[], system: string | SystemPrompt): Anthropic.MessageParam[] {
+  const dynamic = typeof system === "string" ? undefined : system.dynamic;
+  if (!dynamic) return messages;
+  const block: Anthropic.TextBlockParam = { type: "text", text: dynamic };
+  const last = messages[messages.length - 1];
+  if (!last || last.role !== "user") return [...messages, { role: "user", content: [block] }];
+  const content = typeof last.content === "string" ? [{ type: "text" as const, text: last.content }] : last.content;
+  return [...messages.slice(0, -1), { role: "user", content: [...content, block] }];
 }
 
 function lastJsonObject(text: string): unknown {
@@ -132,6 +157,7 @@ export function createLlm(options: LlmClientOptions = {}): Llm {
     return {
       mode: "fixture",
       model,
+      sentMessages: request.messages,
       text: turn.text,
       toolCalls,
       stopReason: toolCalls.length > 0 ? "tool_use" : "end_turn",
@@ -147,9 +173,10 @@ export function createLlm(options: LlmClientOptions = {}): Llm {
     return { mode: "fixture", model, data };
   }
 
-  async function send(params: Anthropic.MessageCreateParamsNonStreaming, onText?: (delta: string) => void): Promise<Anthropic.Message> {
-    if (!onText) return anthropic().messages.create(params);
-    const stream = anthropic().messages.stream(params);
+  async function send(purpose: LlmPurpose, params: Anthropic.MessageCreateParamsNonStreaming, onText?: (delta: string) => void): Promise<Anthropic.Message> {
+    const options = requestOptions(purpose);
+    if (!onText) return anthropic().messages.create(params, options);
+    const stream = anthropic().messages.stream(params, options);
     stream.on("text", (delta) => onText(delta));
     return stream.finalMessage();
   }
@@ -160,24 +187,25 @@ export function createLlm(options: LlmClientOptions = {}): Llm {
     if (isFixtureMode()) return fixtureTurn(request, model, started);
 
     const kind = request.purpose === "onboarding_clinic" ? "clinic" : "customer";
+    const sent = withDynamicContext(request.messages, request.system);
     const build = (strict: boolean): Anthropic.MessageCreateParamsNonStreaming => ({
       model,
       max_tokens: request.maxTokens ?? DEFAULT_MAX_TOKENS[request.purpose],
       system: systemBlocks(request.system),
-      messages: request.messages,
+      messages: sent,
       ...(request.tools?.length
-        ? { tools: toolDefinitions(request.tools, { kind }).map((tool) => ({ ...tool, strict })), tool_choice: { type: "auto" as const } }
+        ? { tools: toolDefinitions(request.tools, { kind }).map((tool) => ({ ...tool, strict: strict && tool.strict !== false })), tool_choice: { type: "auto" as const } }
         : {}),
     });
 
     try {
       let message: Anthropic.Message;
       try {
-        message = await send(build(!strictRefused.has(request.purpose)), request.onText);
+        message = await send(request.purpose, build(!strictRefused.has(request.purpose)), request.onText);
       } catch (error) {
         if (!(error instanceof Anthropic.BadRequestError) || !request.tools?.length || strictRefused.has(request.purpose)) throw error;
         strictRefused.add(request.purpose);
-        message = await send(build(false), request.onText);
+        message = await send(request.purpose, build(false), request.onText);
       }
       if (message.stop_reason === "refusal") return fixtureTurn(request, model, started, "refusal");
 
@@ -199,6 +227,7 @@ export function createLlm(options: LlmClientOptions = {}): Llm {
       return {
         mode: "live",
         model,
+      sentMessages: sent,
         text,
         toolCalls,
         stopReason: message.stop_reason,
@@ -230,11 +259,15 @@ export function createLlm(options: LlmClientOptions = {}): Llm {
         let stopReason: Anthropic.StopReason | null;
         if (!strictRefused.has(request.purpose)) {
           try {
-            const message = await anthropic().messages.parse({
-              ...base,
-              system: systemBlocks(request.system),
-              output_config: { format: strictOutputFormat(request.schema) },
-            });
+            const message = await anthropic().messages.parse(
+              {
+                ...base,
+                system: systemBlocks(request.system),
+                messages: withDynamicContext(base.messages, request.system),
+                output_config: { format: strictOutputFormat(request.schema) },
+              },
+              requestOptions(request.purpose),
+            );
             inputTokens += message.usage.input_tokens;
             outputTokens += message.usage.output_tokens;
             data = message.parsed_output;
@@ -248,13 +281,18 @@ export function createLlm(options: LlmClientOptions = {}): Llm {
         } else {
           // Structured output refused: the schema goes into the prompt and the reply is validated here.
           const system = typeof request.system === "string" ? { stable: request.system } : request.system;
-          const message = await anthropic().messages.create({
-            ...base,
-            system: systemBlocks({
-              ...system,
-              dynamic: `${system.dynamic ?? ""}\n\nReply with one JSON object only, matching this JSON Schema:\n${JSON.stringify(toStrictJsonSchema(request.schema))}`,
-            }),
-          });
+          const withSchema = {
+            ...system,
+            dynamic: `${system.dynamic ?? ""}\n\nReply with one JSON object only, matching this JSON Schema:\n${JSON.stringify(toStrictJsonSchema(request.schema))}`,
+          };
+          const message = await anthropic().messages.create(
+            {
+              ...base,
+              system: systemBlocks(withSchema),
+              messages: withDynamicContext(base.messages, withSchema),
+            },
+            requestOptions(request.purpose),
+          );
           inputTokens += message.usage.input_tokens;
           outputTokens += message.usage.output_tokens;
           stopReason = message.stop_reason;
