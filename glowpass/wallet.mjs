@@ -7,7 +7,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { baseSepolia } from 'viem/chains';
 import { createProver, emptyChart, loadChart, saveChart, clauseHolds } from '../chain/records.mjs';
 import { newVisitIdentity, importVisitIdentity, writeReview } from '../chain/reviews.mjs';
-import { PERSONAS, PROCEDURES, CLINICS, OFFERS, SELF_REPORTED, BASELINE_RECORDS, offerById, describeClause } from './catalog.mjs';
+import { PERSONAS, PROCEDURES, CLINICS, OFFERS, SELF_REPORTED, BASELINE_RECORDS, offerById, describeClause, resolvePersona } from './catalog.mjs';
 
 const CHAIN_DIR = new URL('../chain/', import.meta.url);
 const dep = JSON.parse(readFileSync(new URL('deployments/base-sepolia.json', CHAIN_DIR)));
@@ -59,8 +59,9 @@ export async function publicLedger() {
 
 // ---------- patient wallet (on-device in the product) ----------
 const walletFile = (p) => new URL(`wallets/${p}.json`, CHAIN_DIR);
-function loadWallet(persona) {
-  if (!PERSONAS[persona]) throw new Error(`unknown persona ${persona}`);
+function loadWallet(id) {
+  const persona = resolvePersona(id);
+  if (!PERSONAS[persona]) throw new Error(`unknown persona ${id}`);
   const base = { persona, subjectId: keccak256(toHex(`${persona}:${crypto.randomUUID()}`)), chart: emptyChart(), records: [], tickets: [], selfReported: SELF_REPORTED[persona] ?? [] };
   if (!existsSync(walletFile(persona))) return base;
   const w = JSON.parse(readFileSync(walletFile(persona)));
@@ -180,8 +181,9 @@ export async function submitPatientReview(persona, clinicId, procedureId, review
 
 /** Demo reset: archive the wallet, start over under a fresh pseudonym, re-anchor the baseline records.
  *  The old pseudonym's history stays on-chain forever (by design) — it is simply no longer this wallet. */
-export async function resetPersona(persona, reviewBoard) {
-  if (!PERSONAS[persona]) throw new Error(`unknown persona ${persona}`);
+export async function resetPersona(id, reviewBoard) {
+  const persona = resolvePersona(id);
+  if (!PERSONAS[persona]) throw new Error(`unknown persona ${id}`);
   if (existsSync(walletFile(persona))) {
     mkdirSync(new URL('wallets/archive/', CHAIN_DIR), { recursive: true });
     renameSync(walletFile(persona), new URL(`wallets/archive/${persona}-${Date.now()}.json`, CHAIN_DIR));

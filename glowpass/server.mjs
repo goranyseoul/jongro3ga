@@ -1,5 +1,6 @@
-// PiBoo-K ZK privacy layer: HTTP API for the A2A agents + demo console UI + SSE event stream.
-// Usage: node server.mjs   (relayer key for /api/records/visit comes from chain/.env)
+// Pibu ZK record layer: HTTP API for the A2A agents + demo console UI + SSE event stream.
+// Usage: cd glowpass && npm start   (port 4000 so it can run next to the Next.js app on 3000;
+// the relayer key for /api/records/visit comes from chain/.env)
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -10,7 +11,7 @@ import { seedReviewBoard } from './reviews-seed.mjs';
 const chainEnv = new URL('../chain/.env', import.meta.url);
 if (existsSync(chainEnv)) process.loadEnvFile(chainEnv);
 
-const PORT = Number(process.env.PORT ?? 3000);
+const PORT = Number(process.env.PORT ?? 4000);
 const { board, ready } = seedReviewBoard();
 ready.then(() => console.log('seed reviews proven'));
 
@@ -32,13 +33,17 @@ function stats() {
   const s = board.stats();
   const clinics = Object.entries(CLINICS).map(([clinicId, c]) => {
     const x = s.find((y) => y.clinicId === clinicId) ?? { verifiedVisits: 0, procedures: {} };
-    const reviews = Object.entries(x.procedures).flatMap(([procedureId, p]) => p.reviews.map((r) => ({ ...r, procedureId, procedure: PROCEDURES[procedureId].ko })));
+    // 08-compliance: no public review feed. Only aggregates leave this server (n, average); the text
+    // stays in the board for the logged-in 1:1 summary path (platform.submit_review consumer).
+    const reviews = Object.entries(x.procedures).flatMap(([procedureId, p]) => p.reviews.map((r) => ({ rating: r.rating, procedureId })));
+    const reviewStats = Object.fromEntries(Object.entries(x.procedures).map(([p, v]) => [p, { n: v.reviews.length, avgRating: v.avgRating === null ? null : +v.avgRating.toFixed(1), pending: v.pendingReviews }]));
     return {
       clinicId, clinic: c.ko, area: c.area, languages: c.languages,
       verifiedVisits: x.verifiedVisits,
       byProcedure: Object.fromEntries(Object.entries(x.procedures).map(([p, v]) => [p, v.verifiedVisits])),
       avgRating: reviews.length ? +(reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1) : null,
-      reviews,
+      reviewCount: reviews.length,
+      reviewStats,
     };
   }).sort((a, b) => b.verifiedVisits - a.verifiedVisits);
   const procedures = Object.fromEntries(Object.keys(PROCEDURES).map((p) => [p, clinics.reduce((a, c) => a + (c.byProcedure[p] ?? 0), 0)]));
@@ -133,4 +138,4 @@ const server = createServer(async (req, res) => {
     json(res, 500, { error: e.message.split('\n')[0] });
   }
 });
-server.listen(PORT, () => console.log(`PiBoo-K ZK layer on http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Pibu ZK record layer on http://localhost:${PORT}`));

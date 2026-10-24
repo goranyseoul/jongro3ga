@@ -1,12 +1,11 @@
 {
-  "name": "app",
+  "name": "glowpass",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "node --env-file-if-exists=.env.local server.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.3.0",
     "viem": "^2.57.10"
   }
 }
