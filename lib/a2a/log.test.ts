@@ -51,6 +51,16 @@ describe("recordA2ALog", () => {
     expect(JSON.stringify(original.request)).toContain("yuki_demo");
   });
 
+  it("compacts long proofs in the stored entry and leaves the caller's object untouched", async () => {
+    const long = "0x" + "ab".repeat(14000);
+    const request = { metadata: { offerProof: { proofs: [{ proof: long, publicInputs: ["1"] }] } } };
+    const stored = await recordA2ALog(store, entry({ id: "log_p", at: "2026-11-12T10:00:00+09:00", request }));
+    const persisted = (await store.get("shared", "a2a_log", "log_p")) as A2ALogEntry;
+    expect(JSON.stringify(persisted)).not.toContain(long);
+    expect(JSON.stringify(stored.request)).toContain("[proof 14.0KB]");
+    expect(request.metadata.offerProof.proofs[0]!.proof).toBe(long);
+  });
+
   it("applies extra masked fields and replaces an entry recorded twice with the same id", async () => {
     const first = await recordA2ALog(store, entry({ id: "log_1", at: "2026-11-12T10:00:00+09:00", request: { visaNumber: "M123", note: "ok" } }), {
       extraFields: ["visaNumber"],
