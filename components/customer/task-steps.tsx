@@ -36,7 +36,7 @@ export function TaskSteps({ steps, label, statusLabels, className }: TaskStepsPr
           <span className="sr-only">{statusLabels[step.status]}</span>
           <span
             className={cn(
-              "min-w-0 flex-1 text-body transition-colors duration-dropdown ease-out",
+              "shrink-0 text-body transition-colors duration-dropdown ease-out",
               step.status === "pending" && "text-subtle",
               step.status === "active" && "font-med text-text",
               step.status === "done" && "text-muted",
@@ -46,8 +46,10 @@ export function TaskSteps({ steps, label, statusLabels, className }: TaskStepsPr
             {step.label}
           </span>
           {step.value ? (
-            <span className="max-w-40 truncate text-end text-label tabular-nums text-muted">{step.value}</span>
-          ) : null}
+            <span className="min-w-0 flex-1 truncate text-end text-label tabular-nums text-muted">{step.value}</span>
+          ) : (
+            <span className="flex-1" />
+          )}
         </li>
       ))}
     </ol>
