@@ -54,6 +54,7 @@ export type OnboardingCopy = {
   };
   summary: { title: string; create: string; edit: string };
   doneTitle: string;
+  taskStatus: { pending: string; active: string; done: string; error: string };
   goHome: string;
   slots: Record<SlotKey, string>;
   consents: Record<ConsentType, { title: string; description: string }>;
@@ -124,6 +125,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     },
     summary: { title: "에이전트 요약", create: "만들기", edit: "수정하기" },
     doneTitle: "에이전트 활성화됨",
+    taskStatus: { pending: "대기", active: "진행 중", done: "완료", error: "확인 필요" },
     goHome: "홈으로 가기",
     slots: {
       locale: "언어",
@@ -226,6 +228,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     },
     summary: { title: "エージェントの内容", create: "作成する", edit: "修正する" },
     doneTitle: "エージェント有効",
+    taskStatus: { pending: "待機", active: "進行中", done: "完了", error: "要確認" },
     goHome: "ホームへ",
     slots: {
       locale: "言語",
@@ -328,6 +331,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     },
     summary: { title: "Agent summary", create: "Create", edit: "Edit" },
     doneTitle: "Agent active",
+    taskStatus: { pending: "Pending", active: "In progress", done: "Done", error: "Needs attention" },
     goHome: "Go to home",
     slots: {
       locale: "Language",
@@ -436,6 +440,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     },
     summary: { title: "代理概要", create: "创建", edit: "修改" },
     doneTitle: "代理已启用",
+    taskStatus: { pending: "待处理", active: "进行中", done: "已完成", error: "需处理" },
     goHome: "进入首页",
     slots: {
       locale: "语言",

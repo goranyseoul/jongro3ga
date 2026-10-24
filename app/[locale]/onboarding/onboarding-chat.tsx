@@ -12,7 +12,6 @@ import {
   Chip,
   ChipGroup,
   ConsentCard,
-  Input,
   Money,
   Sheet,
   WidgetCurrency,
@@ -21,12 +20,14 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
+import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
 import { cn } from "@/lib/cn";
 import { DEMO_TODAY } from "@/lib/ui-data/customer";
-import { LOCALES, LOCALE_NAME, wordBreak } from "../locales";
+import { LOCALES, LOCALE_NAME } from "../locales";
 import { FaceParticles } from "../hero/face-particles";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
@@ -127,15 +128,7 @@ export type OnboardingIntro = {
   suggestions: string[];
   startPlain: string;
   suggestionsLabel: string;
-  signup: {
-    toggle: string;
-    title: string;
-    email: string;
-    submit: string;
-    demo: string;
-    personas: string[];
-    close: string;
-  };
+  signup: AuthCopy & { toggle: string; personas: string[] };
 };
 
 export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intro: OnboardingIntro; footer: ReactNode }) {
@@ -144,7 +137,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
 
   const [started, setStarted] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
-  const [email, setEmail] = useState("");
+  const [engaged, setEngaged] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [step, setStep] = useState<StepId>("locale");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -559,118 +552,87 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     }
   };
 
+  // Checklist of the onboarding slots: answered or passed steps are done, the open one is active, and a
+  // declined required consent shows as an error.
+  const currentIndex = STEP_ORDER.indexOf(step);
+  const declinedRequired = BLOCKING_CONSENTS.some((type) => draft.consents[type] === false);
+  const taskSteps: TaskStep[] = [
+    ...(draft.firstIntent
+      ? [{ id: "firstIntent", label: c.slots.firstIntent, value: draft.firstIntent, status: "done" as const }]
+      : []),
+    ...STEP_ORDER.filter((s) => STEP_SLOT[s] && isStepApplicable(s, draft)).map((s): TaskStep => {
+      const answer = slotValue(s, draft, c, locale);
+      const agreed = CONSENTS.filter((type) => draft.consents[type]).length;
+      const passed = STEP_ORDER.indexOf(s) < currentIndex;
+      // the language answer is pre-filled from the page language, so it only counts once the step was reached
+      const answered = answer !== undefined && (s !== "languages" || passed);
+      let status: TaskStep["status"] = s === step ? "active" : answered || passed ? "done" : "pending";
+      if (s === "consent" && declinedRequired) status = "error";
+      return {
+        id: s,
+        label: c.slots[STEP_SLOT[s] ?? "nickname"],
+        value: s === "consent" ? (agreed > 0 ? `${agreed}/${CONSENTS.length}` : undefined) : s === "languages" && !passed && s !== step ? undefined : answer,
+        status,
+      };
+    }),
+  ];
+
+  const checklist = (
+    <Card className="flex flex-col gap-sp-3">
+      <CardHeader title={done ? c.doneTitle : c.previewTitle} description={c.progress(percent)} />
+      <TaskSteps steps={taskSteps} label={c.previewTitle} statusLabels={c.taskStatus} />
+    </Card>
+  );
+
   const preview = (
     <div className="flex flex-col gap-sp-4">
-      <Card className="flex flex-col gap-sp-4">
-        <CardHeader title={done ? c.doneTitle : c.previewTitle} description={c.progress(percent)} />
-        <p className="text-label text-subtle">{c.previewCaption}</p>
-        <SlotList draft={draft} copy={c} locale={locale} />
-      </Card>
+      {checklist}
       <AgentCardView card={card} labels={c.agentCard} />
     </div>
   );
 
-  if (!started) {
-    const kw = wordBreak(locale);
-    return (
-      <div lang={locale} className="flex min-h-dvh flex-col">
-        <Splash wordmark={intro.wordmark} />
-        <section className="theme-sunrise flex min-h-dvh flex-col">
-        <header className="flex justify-end px-sp-4 py-sp-2 md:px-sp-6">
-          <Button
-            variant="secondary"
-            aria-expanded={signupOpen}
-            aria-haspopup="dialog"
-            onClick={() => setSignupOpen((open) => !open)}
-          >
-            {intro.signup.toggle}
-          </Button>
-        </header>
-        <main className="flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12">
-          <div className="flex w-full max-w-2xl flex-col gap-sp-6">
-            <FaceParticles />
-            <div className="flex flex-col items-center gap-sp-3 text-center">
-              <h1 className="type-wordmark">{intro.wordmark}</h1>
-              <p className={cn(kw, "type-hero")}>{intro.title}</p>
-              <p className={cn(kw, "text-body text-muted")}>{intro.body}</p>
-            </div>
-            <ChatInput
-              onSend={(text) => start(text)}
-              label={c.inputLabel}
-              sendLabel={c.send}
-              placeholder={c.placeholder}
-              hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-            />
-            <div role="group" aria-label={intro.suggestionsLabel} className="flex flex-wrap justify-center gap-sp-2">
-              {intro.suggestions.map((suggestion) => (
-                <Chip key={suggestion} onClick={() => start(suggestion)}>
-                  {suggestion}
-                </Chip>
-              ))}
-            </div>
-            <Button variant="ghost" className="self-center" onClick={() => start()}>
-              {intro.startPlain}
-            </Button>
-          </div>
-        </main>
-        </section>
-        {footer}
-        <Sheet open={signupOpen} onClose={() => setSignupOpen(false)} title={intro.signup.title} closeLabel={intro.signup.close}>
-          {/* mock: no account backend yet, signing up simply starts the conversation */}
-          <form
-            className="flex flex-col gap-sp-4"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSignupOpen(false);
-              start();
-            }}
-          >
-            <Input
-              label={intro.signup.email}
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <Button type="submit" fullWidth>
-              {intro.signup.submit}
-            </Button>
-          </form>
-          <div className="mt-sp-6 flex flex-col gap-sp-2">
-            <p className="text-label text-muted">{intro.signup.demo}</p>
-            <div className="flex flex-wrap gap-sp-2">
-              {intro.signup.personas.map((persona) => (
-                <Chip
-                  key={persona}
-                  onClick={() => {
-                    setSignupOpen(false);
-                    start();
-                  }}
-                >
-                  {persona}
-                </Chip>
-              ))}
-            </div>
-          </div>
-        </Sheet>
+  // One screen for both phases: the sunrise backdrop and the face stay mounted, the hero copy turns into
+  // the conversation in place, and the input stays where it was.
+  const heroMain = (
+    <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-16">
+      <h1 className="sr-only">
+        {intro.wordmark} · {intro.title}
+      </h1>
+      <p className="sr-only">{intro.body}</p>
+      <div
+        className="flex w-full max-w-2xl flex-col gap-sp-6"
+        onFocus={() => setEngaged(true)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setEngaged(false);
+        }}
+      >
+        <ChatInput
+          onSend={(text) => start(text)}
+          label={c.inputLabel}
+          sendLabel={c.send}
+          placeholder={c.placeholder}
+          hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+        />
+        <div role="group" aria-label={intro.suggestionsLabel} className="flex flex-wrap justify-center gap-sp-2">
+          {intro.suggestions.map((suggestion) => (
+            <Chip key={suggestion} onClick={() => start(suggestion)}>
+              {suggestion}
+            </Chip>
+          ))}
+        </div>
+        <Button variant="ghost" className="self-center" onClick={() => start()}>
+          {intro.startPlain}
+        </Button>
       </div>
-    );
-  }
+    </main>
+  );
 
-  return (
-    <main lang={locale} className="mx-auto flex h-dvh max-w-screen-xl flex-col lg:grid lg:grid-cols-5 lg:grid-rows-1">
-      <section className="flex min-h-0 flex-1 flex-col lg:col-span-3 lg:border-e lg:border-border-soft">
-        <header className="flex items-center justify-between gap-sp-3 border-b border-border-soft px-sp-4 py-sp-2">
-          <h1 className="text-title font-semi">{c.title}</h1>
-          <Button variant="secondary" className="lg:hidden" onClick={() => setSheetOpen(true)}>
-            <span className="tabular-nums">{c.progress(percent)}</span>
-          </Button>
-          <span className="hidden text-label text-muted tabular-nums lg:inline">{c.progress(percent)}</span>
-        </header>
-
-        <div className="min-h-0 flex-1 overflow-y-auto px-sp-4 py-sp-4">
-          <div role="log" aria-live="polite" className="mx-auto flex max-w-2xl flex-col gap-sp-3">
+  const chatMain = (
+    <main className="relative flex min-h-0 flex-1 px-sp-4 lg:gap-sp-8 lg:px-sp-6">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col items-center">
+        <h1 className="sr-only">{c.title}</h1>
+        <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">
+          <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
             {messages.map((m) => (
               <ChatBubble key={m.id} from={m.from}>
                 {m.text}
@@ -681,77 +643,116 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             <div ref={endRef} />
           </div>
         </div>
-
-        <div className="border-t border-border-soft px-sp-4 py-sp-3">
-          <div className="mx-auto max-w-2xl">
-            <ChatInput
-              onSend={handleText}
-              label={c.inputLabel}
-              sendLabel={c.send}
-              placeholder={c.placeholder}
-              disabled={typing || done}
-              hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-            />
-          </div>
+        <div className="w-full max-w-2xl pb-sp-6 pt-sp-2">
+          <ChatInput
+            onSend={handleText}
+            label={c.inputLabel}
+            sendLabel={c.send}
+            placeholder={c.placeholder}
+            disabled={typing || done}
+            hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+          />
         </div>
+      </div>
+      <aside className="hidden w-80 shrink-0 overflow-y-auto py-sp-4 lg:block">{checklist}</aside>
+    </main>
+  );
+
+  return (
+    <div lang={locale} className={cn("flex flex-col", started ? "h-dvh" : "min-h-dvh")}>
+      {started ? null : <Splash wordmark={intro.wordmark} />}
+      <section className={cn("theme-sunrise relative flex flex-col overflow-hidden", started ? "min-h-0 flex-1" : "min-h-dvh")}>
+        <FaceParticles className="absolute inset-0" shrink={engaged || started} />
+        <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+          <span className="type-hero">{intro.wordmark}</span>
+          {started ? (
+            <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
+              <span className="tabular-nums">{c.progress(percent)}</span>
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              aria-expanded={signupOpen}
+              aria-haspopup="dialog"
+              onClick={() => setSignupOpen((open) => !open)}
+            >
+              {intro.signup.toggle}
+            </Button>
+          )}
+        </header>
+        {started ? chatMain : heroMain}
       </section>
-
-      <aside className="hidden min-h-0 overflow-y-auto p-sp-6 lg:col-span-2 lg:block">{preview}</aside>
-
+      {started ? null : footer}
+      {/* dialogs sit outside the sunrise section so they keep the default dark tokens */}
+      <AuthDialog
+        open={signupOpen}
+        onClose={() => setSignupOpen(false)}
+        brand={intro.wordmark}
+        copy={intro.signup}
+        personas={intro.signup.personas}
+        // mock: no account backend yet, signing up or in simply starts the conversation
+        onDone={() => {
+          setSignupOpen(false);
+          start();
+        }}
+      />
       <Sheet open={sheetOpen} onClose={() => setSheetOpen(false)} title={c.previewTitle} closeLabel={c.close}>
         {preview}
       </Sheet>
-    </main>
+    </div>
   );
+}
+
+// What the customer answered for a step, or undefined while it is open.
+function slotValue(step: StepId, draft: Draft, c: OnboardingCopy, locale: Locale): ReactNode {
+  switch (step) {
+    case "locale":
+      return draft.locale ? LOCALE_NAME[draft.locale] : undefined;
+    case "consent": {
+      const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
+      return agreed.length > 0 ? agreed.join(" · ") : undefined;
+    }
+    case "nickname":
+      return draft.nickname;
+    case "nationality":
+      return draft.nationality ? c.nationality[draft.nationality] : undefined;
+    case "residency":
+      return draft.residency ? c.residency[draft.residency] : undefined;
+    case "ageBand":
+      return draft.ageBand ? c.ageBand[draft.ageBand] : undefined;
+    case "trip":
+      return draft.trip.arrival && draft.trip.departure ? `${draft.trip.arrival} ~ ${draft.trip.departure}` : undefined;
+    case "stayArea":
+      return draft.trip.stayArea ? c.area[draft.trip.stayArea] : undefined;
+    case "concerns":
+      return draft.concerns.length > 0 ? draft.concerns.map((v) => c.concern[v]).join(" · ") : undefined;
+    case "history":
+      return draft.history;
+    case "pregnant":
+      return draft.pregnant === undefined ? undefined : draft.pregnant ? c.yes : c.no;
+    case "budget": {
+      if (!draft.budget) return undefined;
+      const { currency, amount } = draft.budget;
+      const krw = Math.round(amount * FX_RATES[currency]);
+      const reference = currency === "KRW" ? undefined : { currency: currency as ReferenceCurrency, amount };
+      return <Money krw={krw} reference={reference} locale={locale} />;
+    }
+    case "downtime":
+      return draft.downtime === undefined ? undefined : c.days(draft.downtime);
+    case "languages":
+      return draft.languages.length > 0 ? draft.languages.map((v) => LOCALE_NAME[v]).join(" · ") : undefined;
+    case "channel":
+      return draft.channel ? c.channel[draft.channel] : undefined;
+    case "handle":
+      return draft.handle;
+    default:
+      return undefined;
+  }
 }
 
 // Live slot rows for the agent preview and the summary card. Empty values show a middle dot.
 function SlotList({ draft, copy: c, locale }: { draft: Draft; copy: OnboardingCopy; locale: Locale }) {
-  const value = (step: StepId) => {
-    switch (step) {
-      case "locale":
-        return draft.locale ? LOCALE_NAME[draft.locale] : undefined;
-      case "consent": {
-        const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
-        return agreed.length > 0 ? agreed.join(" · ") : undefined;
-      }
-      case "nickname":
-        return draft.nickname;
-      case "nationality":
-        return draft.nationality ? c.nationality[draft.nationality] : undefined;
-      case "residency":
-        return draft.residency ? c.residency[draft.residency] : undefined;
-      case "ageBand":
-        return draft.ageBand ? c.ageBand[draft.ageBand] : undefined;
-      case "trip":
-        return draft.trip.arrival && draft.trip.departure ? `${draft.trip.arrival} ~ ${draft.trip.departure}` : undefined;
-      case "stayArea":
-        return draft.trip.stayArea ? c.area[draft.trip.stayArea] : undefined;
-      case "concerns":
-        return draft.concerns.length > 0 ? draft.concerns.map((v) => c.concern[v]).join(" · ") : undefined;
-      case "history":
-        return draft.history;
-      case "pregnant":
-        return draft.pregnant === undefined ? undefined : draft.pregnant ? c.yes : c.no;
-      case "budget": {
-        if (!draft.budget) return undefined;
-        const { currency, amount } = draft.budget;
-        const krw = Math.round(amount * FX_RATES[currency]);
-        const reference = currency === "KRW" ? undefined : { currency: currency as ReferenceCurrency, amount };
-        return <Money krw={krw} reference={reference} locale={locale} />;
-      }
-      case "downtime":
-        return draft.downtime === undefined ? undefined : c.days(draft.downtime);
-      case "languages":
-        return draft.languages.length > 0 ? draft.languages.map((v) => LOCALE_NAME[v]).join(" · ") : undefined;
-      case "channel":
-        return draft.channel ? c.channel[draft.channel] : undefined;
-      case "handle":
-        return draft.handle;
-      default:
-        return undefined;
-    }
-  };
+  const value = (step: StepId) => slotValue(step, draft, c, locale);
 
   const rows = STEP_ORDER.filter((step) => STEP_SLOT[step] && isStepApplicable(step, draft));
 

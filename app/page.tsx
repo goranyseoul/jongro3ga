@@ -1,24 +1,9 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import type { Locale } from "@/lib/domain/common";
+import { routing } from "@/i18n/routing";
 
-// "/" sends the visitor to the landing in their browser language (04-onboarding-chat.md: browser
-// language is the default). Chinese variants fall back to zh-CN, anything unknown to English.
-function pickLocale(acceptLanguage: string): Locale {
-  const tags = acceptLanguage
-    .split(",")
-    .map((part) => part.split(";")[0].trim().toLowerCase())
-    .filter(Boolean);
-  for (const tag of tags) {
-    if (tag.startsWith("ja")) return "ja";
-    if (tag.startsWith("zh")) return "zh-CN";
-    if (tag.startsWith("ko")) return "ko";
-    if (tag.startsWith("en")) return "en";
-  }
-  return "en";
-}
-
-export default async function Root() {
-  const acceptLanguage = (await headers()).get("accept-language") ?? "";
-  redirect(`/${pickLocale(acceptLanguage)}`);
+// "/" opens the English landing for every visitor (owner decision 2026-10-24: English is the default
+// for now). Detecting the browser language (04-onboarding-chat.md) was removed on purpose; to bring it
+// back, restore pickLocale() from the previous version of this file.
+export default function Root() {
+  redirect(`/${routing.defaultLocale}`);
 }

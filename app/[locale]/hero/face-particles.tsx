@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Component, useEffect, useState, type ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 // three.js runs in the browser only and loads after the page, so the hero text never waits for it.
 const FaceParticlesScene = dynamic(() => import("./face-particles-scene"), { ssr: false });
@@ -27,8 +28,8 @@ class ParticlesBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 }
 
-/** Hero visual: a woman's head in profile made of particles. Reduced motion shows it still. */
-export function FaceParticles() {
+/** Hero backdrop: a woman's face mask made of particles behind the chat. Reduced motion shows it still. */
+export function FaceParticles({ className, shrink = false }: { className?: string; shrink?: boolean }) {
   const [supported, setSupported] = useState(false);
   const [still, setStill] = useState(false);
 
@@ -42,10 +43,10 @@ export function FaceParticles() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none mx-auto aspect-square w-full max-w-md md:max-w-xl">
+    <div aria-hidden="true" className={cn("pointer-events-none", className)}>
       {supported ? (
         <ParticlesBoundary>
-          <FaceParticlesScene still={still} />
+          <FaceParticlesScene still={still} shrink={shrink} />
         </ParticlesBoundary>
       ) : null}
     </div>

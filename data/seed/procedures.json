@@ -1,0 +1,1339 @@
+[
+  {
+    "id": "ulthera",
+    "name": {
+      "ko": "울쎄라",
+      "en": "Ulthera"
+    },
+    "areas": [
+      "lifting"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "hifu"
+    ],
+    "unit": "shot",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "high",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 300,
+        "max": 400
+      }
+    },
+    "priceKrw": {
+      "min": 1000000,
+      "max": 2000000,
+      "basis": "300샷"
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "리프팅",
+      "method": "초음파(HIFU)",
+      "unit": "샷",
+      "onset": "서서히(1~3개월)",
+      "duration": "약 1년",
+      "downtime": "거의 없음",
+      "pain": "높음",
+      "cycle": "★ 연 1회",
+      "price": "300샷 100~200만"
+    }
+  },
+  {
+    "id": "thermage",
+    "name": {
+      "ko": "써마지",
+      "en": "Thermage"
+    },
+    "areas": [
+      "lifting",
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "rf"
+    ],
+    "unit": "shot",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "high",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 300,
+        "max": 400
+      }
+    },
+    "priceKrw": {
+      "min": 1000000,
+      "max": 2000000,
+      "basis": "300샷"
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "리프팅·피부결",
+      "method": "고주파(RF)",
+      "unit": "샷",
+      "onset": "서서히",
+      "duration": "약 1년",
+      "downtime": "거의 없음",
+      "pain": "중~높음",
+      "cycle": "★ 연 1회 (1~2회)",
+      "price": "300샷 100~200만"
+    }
+  },
+  {
+    "id": "shrink",
+    "name": {
+      "ko": "슈링크",
+      "en": "Shrink"
+    },
+    "areas": [
+      "lifting",
+      "contouring"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "hifu"
+    ],
+    "unit": "shot",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "mid",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 180
+      }
+    },
+    "priceKrw": {
+      "min": 50000,
+      "max": 150000,
+      "basis": "300샷"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "리프팅·윤곽",
+      "method": "초음파(HIFU)",
+      "unit": "샷",
+      "onset": "서서히",
+      "duration": "3~6개월",
+      "downtime": "거의 없음",
+      "pain": "중간",
+      "cycle": "3~6개월",
+      "price": "300샷 5~15만"
+    }
+  },
+  {
+    "id": "inmode",
+    "name": {
+      "ko": "인모드",
+      "en": "InMode"
+    },
+    "areas": [
+      "lifting",
+      "contouring"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "rf"
+    ],
+    "unit": "session",
+    "effectOnset": "instant",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "mid",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 90
+      }
+    },
+    "priceKrw": {
+      "min": 100000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "리프팅·윤곽",
+      "method": "고주파(RF)",
+      "unit": "회",
+      "onset": "바로~서서히",
+      "duration": "1~3개월",
+      "downtime": "거의 없음",
+      "pain": "낮음~중간",
+      "cycle": "★ 고객마다 다름, 보통 약 3개월마다",
+      "price": "10~30만"
+    }
+  },
+  {
+    "id": "oligio",
+    "name": {
+      "ko": "올리지오",
+      "en": "Oligio"
+    },
+    "areas": [
+      "lifting"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "rf"
+    ],
+    "unit": "shot",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "mid",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 180,
+        "max": 365
+      }
+    },
+    "priceKrw": {
+      "min": 300000,
+      "max": 700000,
+      "basis": "300샷"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "리프팅",
+      "method": "고주파(RF)",
+      "unit": "샷",
+      "onset": "서서히",
+      "duration": "6개월~1년",
+      "downtime": "거의 없음",
+      "pain": "중간",
+      "cycle": "6개월~1년",
+      "price": "300샷 30~70만"
+    }
+  },
+  {
+    "id": "thread_lift",
+    "name": {
+      "ko": "실리프팅",
+      "en": "Thread lift"
+    },
+    "areas": [
+      "lifting"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "thread"
+    ],
+    "unit": "line",
+    "effectOnset": "instant",
+    "downtimeDays": {
+      "min": 3,
+      "max": 7
+    },
+    "downtimeNote": "붓기·멍",
+    "pain": "mid",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 365,
+        "max": 365
+      }
+    },
+    "priceKrw": {
+      "min": 500000,
+      "max": 2000000,
+      "basis": "얼굴"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "리프팅",
+      "method": "실",
+      "unit": "줄",
+      "onset": "바로",
+      "duration": "6개월~1년 이상",
+      "downtime": "3~7일 (붓기·멍)",
+      "pain": "중간",
+      "cycle": "약 1년",
+      "price": "얼굴 50~200만"
+    }
+  },
+  {
+    "id": "rejuran",
+    "name": {
+      "ko": "리쥬란",
+      "en": "Rejuran",
+      "ja": "リジュラン",
+      "zh-CN": "丽珠兰"
+    },
+    "areas": [
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "cc",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 1,
+      "max": 3
+    },
+    "downtimeNote": "엠보",
+    "pain": "high",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 30
+      },
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 120
+      }
+    },
+    "priceKrw": {
+      "min": 150000,
+      "max": 350000,
+      "basis": "2cc"
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "피부결·재생",
+      "method": "주사",
+      "unit": "cc",
+      "onset": "2~4주",
+      "duration": "3~4개월",
+      "downtime": "1~3일 (엠보)",
+      "pain": "높음",
+      "cycle": "★ 한 달 간격 3회 → 이후 3~4개월마다",
+      "price": "2cc 15~35만"
+    }
+  },
+  {
+    "id": "juvelook",
+    "name": {
+      "ko": "쥬베룩",
+      "en": "Juvelook"
+    },
+    "areas": [
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "vial",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 1,
+      "max": 3
+    },
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 30
+      },
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 120
+      }
+    },
+    "priceKrw": {
+      "min": 150000,
+      "max": 350000,
+      "basis": null
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "피부결·재생",
+      "method": "주사",
+      "unit": "바이알",
+      "onset": "서서히",
+      "duration": "3~4개월 (반복 시 길어짐)",
+      "downtime": "1~3일",
+      "pain": "중간",
+      "cycle": "★ 매달 3회 → 이후 3~4개월마다",
+      "price": "15~35만"
+    }
+  },
+  {
+    "id": "juvelook_eye",
+    "name": {
+      "ko": "쥬베룩 아이",
+      "en": "Juvelook Eye"
+    },
+    "areas": [
+      "texture_renewal"
+    ],
+    "bodyParts": [
+      "eyes"
+    ],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "vial",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 1,
+      "max": 3
+    },
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 30
+      },
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 120
+      }
+    },
+    "priceKrw": {
+      "min": 150000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "피부결 (눈가)",
+      "method": "주사",
+      "unit": "바이알",
+      "onset": "서서히",
+      "duration": "3~4개월",
+      "downtime": "1~3일",
+      "pain": "중간",
+      "cycle": "★ 매달 3회 → 이후 3~4개월마다",
+      "price": "15~30만"
+    }
+  },
+  {
+    "id": "juvelook_volume",
+    "name": {
+      "ko": "쥬베룩 볼륨",
+      "en": "Juvelook Volume"
+    },
+    "areas": [
+      "volume"
+    ],
+    "bodyParts": [
+      "nasolabial"
+    ],
+    "recommendedParts": [
+      "nasolabial"
+    ],
+    "avoidParts": [
+      {
+        "part": "under_eye",
+        "reason": "결절 위험"
+      }
+    ],
+    "methods": [
+      "injection"
+    ],
+    "unit": "vial",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 2,
+      "max": 5
+    },
+    "downtimeNote": "붓기",
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 30
+      },
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 120
+      }
+    },
+    "priceKrw": {
+      "min": 300000,
+      "max": 600000,
+      "basis": null
+    },
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "볼륨 (★ 팔자 추천 / ★ 눈밑 금지: 결절 위험)",
+      "method": "주사",
+      "unit": "바이알",
+      "onset": "서서히",
+      "duration": "3~4개월 (반복 시 길어짐)",
+      "downtime": "수일 (붓기)",
+      "pain": "중간",
+      "cycle": "★ 볼륨 채울 때 매달 3회 → 이후 3~4개월마다",
+      "price": "30~60만"
+    }
+  },
+  {
+    "id": "skin_booster",
+    "name": {
+      "ko": "스킨부스터 (물광)",
+      "en": "Skin booster"
+    },
+    "areas": [
+      "hydration_glow",
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "cc",
+    "effectOnset": "1w",
+    "downtimeDays": {
+      "min": 1,
+      "max": 2
+    },
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 30
+      },
+      "maintenanceIntervalDays": {
+        "min": 60,
+        "max": 90
+      }
+    },
+    "priceKrw": {
+      "min": 100000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "수분·광채·피부결",
+      "method": "주사",
+      "unit": "cc",
+      "onset": "1~2주",
+      "duration": "1~2개월",
+      "downtime": "1~2일",
+      "pain": "중간",
+      "cycle": "월 1회 3회 → 2~3개월마다",
+      "price": "10~30만"
+    }
+  },
+  {
+    "id": "lituo",
+    "name": {
+      "ko": "리투오"
+    },
+    "areas": [
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": null,
+    "effectOnset": "2-4w",
+    "downtimeDays": null,
+    "pain": "high",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 90
+      }
+    },
+    "priceKrw": null,
+    "cycleSource": "founder",
+    "verified": false,
+    "source": {
+      "area": "피부결·재생",
+      "method": "주사",
+      "unit": "[확인]",
+      "onset": "★ 3~4주 후",
+      "duration": "약 3개월",
+      "downtime": "[확인]",
+      "pain": "★ 높음 (\"아파\")",
+      "cycle": "★ 3개월마다",
+      "price": "[확인]"
+    }
+  },
+  {
+    "id": "exosome",
+    "name": {
+      "ko": "엑소좀",
+      "en": "Exosome"
+    },
+    "areas": [
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection",
+      "laser"
+    ],
+    "unit": "session",
+    "effectOnset": "1w",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "low",
+    "cycle": {
+      "initial": {
+        "count": null,
+        "intervalDays": 14
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 100000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "피부결·재생",
+      "method": "도포·주사 (레이저 병행)",
+      "unit": "회",
+      "onset": "1~2주",
+      "duration": "1~2개월",
+      "downtime": "거의 없음",
+      "pain": "낮음",
+      "cycle": "2~4주 간격 여러 회",
+      "price": "10~30만"
+    }
+  },
+  {
+    "id": "filler",
+    "name": {
+      "ko": "필러",
+      "en": "Filler"
+    },
+    "areas": [
+      "volume"
+    ],
+    "bodyParts": [
+      "nasolabial"
+    ],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "cc",
+    "effectOnset": "instant",
+    "downtimeDays": {
+      "min": 2,
+      "max": 5
+    },
+    "downtimeNote": "붓기",
+    "pain": "mid",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 180,
+        "max": 365
+      }
+    },
+    "priceKrw": {
+      "min": 50000,
+      "max": 500000,
+      "basis": "1cc 국산·수입 합산"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "볼륨",
+      "method": "주사",
+      "unit": "cc",
+      "onset": "바로",
+      "duration": "6개월~1년 이상 (제품별)",
+      "downtime": "수일 (붓기)",
+      "pain": "중간",
+      "cycle": "제품별 6개월~1년",
+      "price": "1cc 국산 5~20만 / 수입 20~50만"
+    }
+  },
+  {
+    "id": "sculptra",
+    "name": {
+      "ko": "스컬트라",
+      "en": "Sculptra"
+    },
+    "areas": [
+      "volume"
+    ],
+    "bodyParts": [
+      "nasolabial"
+    ],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "vial",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 2,
+      "max": 5
+    },
+    "downtimeNote": "붓기",
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 28
+      },
+      "maintenanceIntervalDays": {
+        "min": 365,
+        "max": 730
+      }
+    },
+    "priceKrw": {
+      "min": 400000,
+      "max": 800000,
+      "basis": "1바이알"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "볼륨",
+      "method": "주사",
+      "unit": "바이알",
+      "onset": "서서히(수주~수개월)",
+      "duration": "1~2년",
+      "downtime": "수일 (붓기)",
+      "pain": "중간",
+      "cycle": "4~6주 간격 2~3회 → 1~2년마다",
+      "price": "1바이알 40~80만"
+    }
+  },
+  {
+    "id": "botox_wrinkle",
+    "name": {
+      "ko": "보톡스 (주름)",
+      "en": "Botox (wrinkles)"
+    },
+    "areas": [
+      "wrinkles"
+    ],
+    "bodyParts": [
+      "forehead",
+      "glabella",
+      "eyes"
+    ],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "unit",
+    "effectOnset": "1w",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "low",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 90,
+        "max": 120
+      }
+    },
+    "priceKrw": {
+      "min": 30000,
+      "max": 250000,
+      "basis": "부위당 국산·수입 합산"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "주름",
+      "method": "주사",
+      "unit": "유닛",
+      "onset": "3~7일",
+      "duration": "3~4개월",
+      "downtime": "거의 없음",
+      "pain": "낮음",
+      "cycle": "3~4개월",
+      "price": "부위당 국산 3~10만 / 수입 10~25만"
+    }
+  },
+  {
+    "id": "botox_square_jaw",
+    "name": {
+      "ko": "사각턱 보톡스",
+      "en": "Square jaw botox"
+    },
+    "areas": [
+      "contouring"
+    ],
+    "bodyParts": [
+      "square_jaw"
+    ],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "unit",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "low",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 120,
+        "max": 180
+      }
+    },
+    "priceKrw": {
+      "min": 30000,
+      "max": 300000,
+      "basis": "국산·수입 합산"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "윤곽",
+      "method": "주사",
+      "unit": "유닛",
+      "onset": "2~4주",
+      "duration": "4~6개월",
+      "downtime": "거의 없음",
+      "pain": "낮음",
+      "cycle": "4~6개월",
+      "price": "국산 3~10만 / 수입 15~30만"
+    }
+  },
+  {
+    "id": "skin_botox",
+    "name": {
+      "ko": "스킨보톡스",
+      "en": "Skin botox"
+    },
+    "areas": [
+      "pores_oil",
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "unit",
+    "effectOnset": "1w",
+    "downtimeDays": {
+      "min": 1,
+      "max": 1
+    },
+    "pain": "mid",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 60,
+        "max": 90
+      }
+    },
+    "priceKrw": {
+      "min": 100000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "모공·피부결",
+      "method": "주사",
+      "unit": "유닛·cc",
+      "onset": "약 1주",
+      "duration": "2~3개월",
+      "downtime": "1일",
+      "pain": "중간",
+      "cycle": "2~3개월",
+      "price": "10~30만"
+    }
+  },
+  {
+    "id": "contour_injection",
+    "name": {
+      "ko": "윤곽주사",
+      "en": "Contouring injection"
+    },
+    "areas": [
+      "contouring"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "injection"
+    ],
+    "unit": "cc",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 2,
+      "max": 5
+    },
+    "downtimeNote": "붓기",
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": null,
+        "intervalDays": 7
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 50000,
+      "max": 200000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "윤곽",
+      "method": "주사",
+      "unit": "cc",
+      "onset": "2~4주 (여러 회)",
+      "duration": "수개월",
+      "downtime": "수일 (붓기)",
+      "pain": "중간",
+      "cycle": "1~2주 간격 여러 회",
+      "price": "5~20만"
+    }
+  },
+  {
+    "id": "laser_toning",
+    "name": {
+      "ko": "레이저토닝",
+      "en": "Laser toning"
+    },
+    "areas": [
+      "pigment_tone"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "laser"
+    ],
+    "unit": "session",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "low",
+    "cycle": {
+      "initial": {
+        "count": 10,
+        "intervalDays": 7
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 30000,
+      "max": 100000,
+      "basis": "1회"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "색소·톤",
+      "method": "레이저",
+      "unit": "회",
+      "onset": "여러 회 후",
+      "duration": "관리형 (지속 관리)",
+      "downtime": "거의 없음",
+      "pain": "낮음",
+      "cycle": "1~2주 간격 10회 내외",
+      "price": "1회 3~10만 / 10회 30~80만"
+    }
+  },
+  {
+    "id": "pico_toning",
+    "name": {
+      "ko": "피코토닝",
+      "en": "Pico toning"
+    },
+    "areas": [
+      "pigment_tone"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "laser"
+    ],
+    "unit": "session",
+    "effectOnset": "gradual",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "low",
+    "cycle": {
+      "initial": {
+        "count": null,
+        "intervalDays": 7
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 50000,
+      "max": 150000,
+      "basis": "1회"
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "색소·톤",
+      "method": "레이저",
+      "unit": "회",
+      "onset": "여러 회 후",
+      "duration": "관리형",
+      "downtime": "거의 없음",
+      "pain": "낮음",
+      "cycle": "1~2주 간격 여러 회",
+      "price": "1회 5~15만"
+    }
+  },
+  {
+    "id": "ipl",
+    "name": {
+      "ko": "IPL",
+      "en": "IPL"
+    },
+    "areas": [
+      "pigment_tone",
+      "redness"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "laser"
+    ],
+    "unit": "session",
+    "effectOnset": "1w",
+    "downtimeDays": {
+      "min": 7,
+      "max": 7
+    },
+    "downtimeNote": "딱지",
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 5,
+        "intervalDays": 21
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 50000,
+      "max": 150000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "색소·홍조",
+      "method": "광(IPL)",
+      "unit": "회",
+      "onset": "1~2주",
+      "duration": "관리형",
+      "downtime": "약 1주 (딱지)",
+      "pain": "낮음~중간",
+      "cycle": "3~4주 간격 3~5회",
+      "price": "5~15만"
+    }
+  },
+  {
+    "id": "fraxel",
+    "name": {
+      "ko": "프락셀",
+      "en": "Fraxel"
+    },
+    "areas": [
+      "pores_oil",
+      "acne_scars",
+      "texture_renewal"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "laser"
+    ],
+    "unit": "session",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 3,
+      "max": 7
+    },
+    "downtimeNote": "붉음",
+    "pain": "high",
+    "cycle": {
+      "initial": {
+        "count": 5,
+        "intervalDays": 28
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 100000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "모공·흉터·피부결",
+      "method": "레이저",
+      "unit": "회",
+      "onset": "수주",
+      "duration": "누적 개선",
+      "downtime": "3~7일 (붉음)",
+      "pain": "중~높음",
+      "cycle": "4~6주 간격 3~5회",
+      "price": "10~30만"
+    }
+  },
+  {
+    "id": "potenza_secret",
+    "name": {
+      "ko": "포텐자·시크릿",
+      "en": "Potenza / Secret"
+    },
+    "areas": [
+      "pores_oil",
+      "acne_scars"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "rf_microneedle"
+    ],
+    "unit": "session",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 2,
+      "max": 5
+    },
+    "pain": "high",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 28
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 200000,
+      "max": 500000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "모공·흉터",
+      "method": "RF 마이크로니들",
+      "unit": "회",
+      "onset": "수주",
+      "duration": "누적 개선",
+      "downtime": "2~5일",
+      "pain": "중~높음",
+      "cycle": "약 4주 간격 3회 이상",
+      "price": "20~50만"
+    }
+  },
+  {
+    "id": "agnes",
+    "name": {
+      "ko": "아그네스",
+      "en": "Agnes"
+    },
+    "areas": [
+      "acne_scars"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "rf"
+    ],
+    "unit": "session",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 2,
+      "max": 3
+    },
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": 3,
+        "intervalDays": 14
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 200000,
+      "max": 500000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "여드름",
+      "method": "고주파(RF)",
+      "unit": "회",
+      "onset": "수주",
+      "duration": "장기 (재발 감소)",
+      "downtime": "2~3일",
+      "pain": "중간",
+      "cycle": "2~4주 간격 2~3회",
+      "price": "20~50만"
+    }
+  },
+  {
+    "id": "vbeam",
+    "name": {
+      "ko": "브이빔",
+      "en": "V-Beam"
+    },
+    "areas": [
+      "redness"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "laser"
+    ],
+    "unit": "session",
+    "effectOnset": "2-4w",
+    "downtimeDays": {
+      "min": 0,
+      "max": 5
+    },
+    "downtimeNote": "멍 가능",
+    "pain": "mid",
+    "cycle": {
+      "initial": {
+        "count": null,
+        "intervalDays": 28
+      },
+      "maintenanceIntervalDays": null
+    },
+    "priceKrw": {
+      "min": 100000,
+      "max": 300000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "홍조·혈관",
+      "method": "레이저",
+      "unit": "회",
+      "onset": "수주",
+      "duration": "관리형",
+      "downtime": "0~수일 (멍 가능)",
+      "pain": "중간",
+      "cycle": "약 4주 간격 여러 회",
+      "price": "10~30만"
+    }
+  },
+  {
+    "id": "aqua_peel",
+    "name": {
+      "ko": "아쿠아필",
+      "en": "Aqua peel"
+    },
+    "areas": [
+      "hydration_glow",
+      "pores_oil"
+    ],
+    "bodyParts": [],
+    "recommendedParts": [],
+    "avoidParts": [],
+    "methods": [
+      "peel_care"
+    ],
+    "unit": "session",
+    "effectOnset": "instant",
+    "downtimeDays": {
+      "min": 0,
+      "max": 0
+    },
+    "pain": "low",
+    "cycle": {
+      "maintenanceIntervalDays": {
+        "min": 14,
+        "max": 28
+      }
+    },
+    "priceKrw": {
+      "min": 20000,
+      "max": 60000,
+      "basis": null
+    },
+    "cycleSource": "general",
+    "verified": false,
+    "source": {
+      "area": "수분·광채·모공",
+      "method": "필링·관리",
+      "unit": "회",
+      "onset": "바로",
+      "duration": "1~2주",
+      "downtime": "없음",
+      "pain": "낮음",
+      "cycle": "2~4주",
+      "price": "2~6만"
+    }
+  }
+]

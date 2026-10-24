@@ -1,24 +1,31 @@
-// Condition proof over a private procedure chart.
-// Proves: min_count <= #{ i : types[i] == target_type and min_days <= today - dates[i] <= max_days } <= max_count
-// Covers presence ("Rejuran >= 2 times, last one 60+ days ago") and absence ("no filler within 14 days").
-// The chart (types, dates, salt) stays private; it must hash to the registry commitment.
+// Condition proof over a private procedure chart. Each record = (procedure type, day, clinic).
+// Proves: min_count <= #{ i : record i is non-empty,
+//                             (target_type == 0 or types[i] == target_type),
+//                             (target_clinic == 0 or clinics[i] == target_clinic),
+//                             min_days <= today - dates[i] <= max_days } <= max_count
+// Examples: "Juvelook exactly once, none in the last 27 days" (2nd-session offer),
+//           "no record at clinic X" (first-visit offer), "no filler within 14 days" (safety).
+// The chart stays private; it must hash to the commitment anchored on-chain.
 global N: u32 = 8;
 
-fn commit(types: [Field; N], dates: [u32; N], salt: Field) -> Field {
-    let mut inputs: [Field; 2 * N + 1] = [0; 2 * N + 1];
+fn commit(types: [Field; N], dates: [u32; N], clinics: [Field; N], salt: Field) -> Field {
+    let mut inputs: [Field; 3 * N + 1] = [0; 3 * N + 1];
     for i in 0..N {
-        inputs[2 * i] = types[i];
-        inputs[2 * i + 1] = dates[i] as Field;
+        inputs[3 * i] = types[i];
+        inputs[3 * i + 1] = dates[i] as Field;
+        inputs[3 * i + 2] = clinics[i];
     }
-    inputs[2 * N] = salt;
+    inputs[3 * N] = salt;
     std::hash::pedersen_hash(inputs)
 }
 
 fn count_matches(
     types: [Field; N],
     dates: [u32; N],
+    clinics: [Field; N],
     today: u32,
     target_type: Field,
+    target_clinic: Field,
     min_days: u32,
     max_days: u32,
 ) -> u32 {
@@ -28,7 +35,10 @@ fn count_matches(
         let d = dates[i] as u64;
         let t = today as u64;
         let in_window = (d + min_days as u64 <= t) & (t <= d + max_days as u64);
-        if (types[i] == target_type) & in_window {
+        let type_ok = (target_type == 0) | (types[i] == target_type);
+        let clinic_ok = (target_clinic == 0) | (clinics[i] == target_clinic);
+        // type 0 marks an empty slot
+        if (types[i] != 0) & type_ok & clinic_ok & in_window {
             count += 1;
         }
     }
@@ -38,78 +48,75 @@ fn count_matches(
 fn main(
     types: [Field; N],
     dates: [u32; N],
+    clinics: [Field; N],
     salt: Field,
     commitment: pub Field,
     today: pub u32,
     target_type: pub Field,
+    target_clinic: pub Field,
     min_days: pub u32,
     max_days: pub u32,
     min_count: pub u32,
     max_count: pub u32,
 ) {
-    // type 0 marks an empty slot and must never be a target
-    assert(target_type != 0);
-    assert(commit(types, dates, salt) == commitment);
-    let count = count_matches(types, dates, today, target_type, min_days, max_days);
+    assert(commit(types, dates, clinics, salt) == commitment);
+    let count = count_matches(types, dates, clinics, today, target_type, target_clinic, min_days, max_days);
     assert(min_count <= count);
     assert(count <= max_count);
 }
 
-// Procedure codes used in tests: 1 = Rejuran, 2 = filler, 4 = Thermage
+// Test codes: types 1 = Juvelook, 2 = filler, 3 = Rejuran; clinics 10 = Hongdae A, 20 = Yeoksam I, 30 = Sinnonhyeon D
 global FOREVER: u32 = 100000;
 
 #[test]
-fn test_presence_rejuran_twice_60d() {
-    let types = [1, 1, 2, 0, 0, 0, 0, 0];
-    let dates = [50, 100, 160, 0, 0, 0, 0, 0];
-    let c = commit(types, dates, 42);
-    main(types, dates, 42, c, 170, 1, 60, FOREVER, 2, N);
+fn test_second_session_offer() {
+    // Juvelook once at Hongdae A, 30 days ago
+    let (t, d, c) = ([1, 0, 0, 0, 0, 0, 0, 0], [140, 0, 0, 0, 0, 0, 0, 0], [10, 0, 0, 0, 0, 0, 0, 0]);
+    let cm = commit(t, d, c, 42);
+    main(t, d, c, 42, cm, 170, 1, 0, 0, FOREVER, 1, 1); // exactly one Juvelook, ever
+    main(t, d, c, 42, cm, 170, 1, 0, 0, 27, 0, 0); // none in the last 27 days
 }
 
 #[test(should_fail)]
-fn test_presence_fails_when_too_recent() {
-    // second Rejuran only 20 days ago -> only 1 match with min_days = 60
-    let types = [1, 1, 0, 0, 0, 0, 0, 0];
-    let dates = [50, 150, 0, 0, 0, 0, 0, 0];
-    let c = commit(types, dates, 42);
-    main(types, dates, 42, c, 170, 1, 60, FOREVER, 2, N);
+fn test_second_session_too_early() {
+    let (t, d, c) = ([1, 0, 0, 0, 0, 0, 0, 0], [160, 0, 0, 0, 0, 0, 0, 0], [10, 0, 0, 0, 0, 0, 0, 0]);
+    let cm = commit(t, d, c, 42);
+    main(t, d, c, 42, cm, 170, 1, 0, 0, 27, 0, 0);
 }
 
 #[test]
-fn test_presence_thermage_ever() {
-    let types = [4, 0, 0, 0, 0, 0, 0, 0];
-    let dates = [10, 0, 0, 0, 0, 0, 0, 0];
-    let c = commit(types, dates, 7);
-    main(types, dates, 7, c, 170, 4, 0, FOREVER, 1, N);
+fn test_first_visit_at_clinic() {
+    // Rejuran at Sinnonhyeon D; never been to Yeoksam I
+    let (t, d, c) = ([3, 3, 0, 0, 0, 0, 0, 0], [100, 150, 0, 0, 0, 0, 0, 0], [30, 30, 0, 0, 0, 0, 0, 0]);
+    let cm = commit(t, d, c, 7);
+    main(t, d, c, 7, cm, 170, 0, 20, 0, FOREVER, 0, 0);
+}
+
+#[test(should_fail)]
+fn test_first_visit_fails_after_visiting() {
+    let (t, d, c) = ([3, 3, 0, 0, 0, 0, 0, 0], [100, 150, 0, 0, 0, 0, 0, 0], [30, 20, 0, 0, 0, 0, 0, 0]);
+    let cm = commit(t, d, c, 7);
+    main(t, d, c, 7, cm, 170, 0, 20, 0, FOREVER, 0, 0);
 }
 
 #[test]
 fn test_absence_no_filler_14d() {
-    let types = [1, 2, 0, 0, 0, 0, 0, 0];
-    let dates = [100, 150, 0, 0, 0, 0, 0, 0];
-    let c = commit(types, dates, 42);
-    main(types, dates, 42, c, 170, 2, 0, 14, 0, 0);
-}
-
-#[test(should_fail)]
-fn test_absence_fails_with_recent_filler() {
-    let types = [1, 2, 0, 0, 0, 0, 0, 0];
-    let dates = [100, 160, 0, 0, 0, 0, 0, 0];
-    let c = commit(types, dates, 42);
-    main(types, dates, 42, c, 170, 2, 0, 14, 0, 0);
+    let (t, d, c) = ([3, 2, 0, 0, 0, 0, 0, 0], [100, 150, 0, 0, 0, 0, 0, 0], [30, 10, 0, 0, 0, 0, 0, 0]);
+    let cm = commit(t, d, c, 42);
+    main(t, d, c, 42, cm, 170, 2, 0, 0, 14, 0, 0);
 }
 
 #[test(should_fail)]
 fn test_tampered_record_fails() {
-    let c = commit([1, 2, 0, 0, 0, 0, 0, 0], [100, 160, 0, 0, 0, 0, 0, 0], 42);
+    let cm = commit([3, 2, 0, 0, 0, 0, 0, 0], [100, 160, 0, 0, 0, 0, 0, 0], [30, 10, 0, 0, 0, 0, 0, 0], 42);
     // Dropping the filler record breaks the commitment match
-    main([1, 0, 0, 0, 0, 0, 0, 0], [100, 0, 0, 0, 0, 0, 0, 0], 42, c, 170, 2, 0, 14, 0, 0);
+    main([3, 0, 0, 0, 0, 0, 0, 0], [100, 0, 0, 0, 0, 0, 0, 0], [30, 0, 0, 0, 0, 0, 0, 0], 42, cm, 170, 2, 0, 0, 14, 0, 0);
 }
 
 #[test(should_fail)]
-fn test_empty_slot_target_rejected() {
-    let types = [1, 0, 0, 0, 0, 0, 0, 0];
-    let dates = [100, 0, 0, 0, 0, 0, 0, 0];
-    let c = commit(types, dates, 42);
-    main(types, dates, 42, c, 170, 0, 0, FOREVER, 1, N);
+fn test_empty_slots_never_count() {
+    // "any procedure, any clinic, at least 3" must not count the 6 empty slots
+    let (t, d, c) = ([3, 3, 0, 0, 0, 0, 0, 0], [100, 150, 0, 0, 0, 0, 0, 0], [30, 30, 0, 0, 0, 0, 0, 0]);
+    let cm = commit(t, d, c, 7);
+    main(t, d, c, 7, cm, 170, 0, 0, 0, FOREVER, 3, N);
 }
