@@ -39,7 +39,7 @@ import {
 } from "@/lib/ui-data/directory";
 import { LandingHome } from "../landing-home";
 import { LOCALES, LOCALE_NAME } from "../locales";
-import { FaceParticles } from "../hero/face-particles";
+import { ParticleField } from "../hero/particle-field";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
 import {
@@ -639,7 +639,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     </div>
   );
 
-  // One screen for both phases: the sunrise backdrop and the face stay mounted, the hero copy turns into
+  // One screen for both phases: the sunrise backdrop and the particle field stay mounted, the hero copy turns into
   // the conversation in place, and the input stays where it was.
   const heroMain = (
     <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-12">
@@ -720,7 +720,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
       {started ? null : <Splash wordmark={intro.wordmark} />}
       <div className={cn("theme-sunrise relative flex flex-col", started && "min-h-0 flex-1 overflow-hidden")}>
         <section className={cn("relative flex flex-col overflow-hidden", started && "min-h-0 flex-1")}>
-          <FaceParticles className="absolute inset-0" shrink={engaged || started} />
+          <ParticleField className="absolute inset-0" shrink={engaged || started} />
           <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
             <span className="type-hero">{intro.wordmark}</span>
             {started ? (

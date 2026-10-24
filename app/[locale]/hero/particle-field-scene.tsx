@@ -1,15 +1,13 @@
 "use client";
 
 // FBO curl-noise particles from the IRONACT design system (primitives/code/hero/fbo-particles-scene.tsx,
-// PA landing). Kept: the simulation shader and cursor push. Changed: the target is a procedural face mask
-// (./mask-target) that forms once and stays (owner: never fall back to the cloud), the mask
-// turns slowly all the way round, the colour comes from the --particle token, and the cursor is
-// measured against this canvas instead of the window.
+// PA landing). Kept: the simulation shader and cursor push. Changed: the colour comes from the --particle
+// token, the cursor is measured against this canvas instead of the window, and the cloud eases to a smaller
+// pose while the chat is in use. Owner decision 2026-10-24: plain particles, no shape forms out of them.
 
 import { Canvas, createPortal, extend, useFrame, type ThreeElement } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { buildMaskTarget } from "./mask-target";
 
 const simulationVertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -21,11 +19,8 @@ const simulationVertexShader = /* glsl */ `
 
 const simulationFragmentShader = /* glsl */ `
   uniform sampler2D positions;
-  uniform sampler2D uTargetPositions;
   uniform float uTime;
   uniform float uFrequency;
-  uniform float uMorph;
-  uniform float uYaw;
   uniform vec2  uMouse;
   uniform float uMouseStrength;
   varying vec2 vUv;
@@ -99,21 +94,11 @@ const simulationFragmentShader = /* glsl */ `
     return normalize(vec3(x, y, z) * (1.0 / (2.0 * e)));
   }
 
-  mat3 rotY(float a){
-    float c = cos(a), s = sin(a);
-    return mat3(c, 0.0, s, 0.0, 1.0, 0.0, -s, 0.0, c);
-  }
-
   void main() {
     vec3 lowCurl  = curlNoise(texture2D(positions, vUv).rgb * uFrequency + uTime * 0.1);
     vec3 highCurl = curlNoise(texture2D(positions, vUv).rgb * uFrequency + uTime * 0.1);
     highCurl += curlNoise(highCurl * uFrequency * 2.0) * 0.5;
-    vec3 noisePos = mix(lowCurl, highCurl, sin(uTime));
-
-    vec3 targetPos = rotY(uYaw) * texture2D(uTargetPositions, vUv).rgb;
-    vec3 shapePos = targetPos + snoiseVec3(targetPos * 3.0 + uTime * 0.4) * 0.012;
-
-    vec3 finalPos = mix(noisePos, shapePos, uMorph);
+    vec3 finalPos = mix(lowCurl, highCurl, sin(uTime));
 
     float mDist = distance(finalPos.xy, uMouse);
     float push  = smoothstep(0.9, 0.0, mDist) * uMouseStrength;
@@ -170,11 +155,8 @@ class SimulationMaterial extends THREE.ShaderMaterial {
     super({
       uniforms: {
         positions: { value: floatTexture(randomCloud(size), size) },
-        uTargetPositions: { value: floatTexture(buildMaskTarget(size * size), size) },
         uFrequency: { value: 0.25 },
         uTime: { value: 0 },
-        uMorph: { value: 0 },
-        uYaw: { value: 0 },
         uMouse: { value: new THREE.Vector2(9, 9) },
         uMouseStrength: { value: 0.6 },
       },
@@ -203,28 +185,21 @@ function readTokenColor(el: HTMLElement, token: string): THREE.Color {
   return new THREE.Color().setRGB(r / 255, g / 255, b / 255, THREE.SRGBColorSpace);
 }
 
-// The cloud gathers into the head once, then the head stays.
-function morphAt(t: number): number {
-  const x = Math.min(1, Math.max(0, (t - 0.4) / 1.6));
-  return x * x * (3 - 2 * x);
-}
+type FieldProps = { still: boolean; shrink: boolean; mouse: { current: { x: number; y: number } } };
 
-type FaceProps = { still: boolean; shrink: boolean; mouse: { current: { x: number; y: number } } };
+// Resting pose fills the hero behind its copy; while the chat is in use the cloud draws in and drifts up.
+const REST = { y: 0, scale: 1.5 };
+const ENGAGED = { y: 0.5, scale: 0.9 };
 
-// Rest pose above the chat, and the small swarm the face collapses into when the chat is in use.
-const FACE = { y: 1.18, scale: 0.52 };
-const SWARM = { y: 1.18, scale: 0.2 };
-
-function FaceParticles({ still, shrink, mouse }: FaceProps) {
+function ParticleField({ still, shrink, mouse }: FieldProps) {
   const points = useRef<THREE.Points>(null!);
   // eased state read inside useFrame, so a focus change never re-renders the canvas
   const shrinkRef = useRef(shrink);
-  const morphRef = useRef(0);
   const burstRef = useRef(0);
   useEffect(() => {
     if (shrink !== shrinkRef.current) {
       shrinkRef.current = shrink;
-      burstRef.current = 0.7; // dissolve, then re-form at the new size (PA phase choreography)
+      burstRef.current = 0.7; // dissolve, then settle at the new size (PA phase choreography)
     }
   }, [shrink]);
   const simulation = useRef<SimulationMaterial>(null!);
@@ -288,18 +263,19 @@ function FaceParticles({ still, shrink, mouse }: FaceProps) {
     const t = still ? 0 : clock.elapsedTime;
     const u = simulation.current.uniforms;
     u.uTime.value = t;
-    const goal = still ? 1 : shrinkRef.current ? 0 : morphAt(t);
-    morphRef.current += (goal - morphRef.current) * (still ? 1 : 0.08);
-    u.uMorph.value = morphRef.current;
     burstRef.current *= 0.92;
     u.uFrequency.value = 0.25 + burstRef.current * 1.3;
-    const pose = shrinkRef.current ? SWARM : FACE;
+    const pose = shrinkRef.current ? ENGAGED : REST;
     const p = points.current;
-    p.position.y += (pose.y - p.position.y) * 0.06;
-    p.scale.setScalar(p.scale.x + (pose.scale - p.scale.x) * 0.06);
-    u.uYaw.value = still ? 0 : t * 0.3; // one full turn about every 21 s
-    // world units visible at the face plane: camera z 4, fov 50 gives a half height near 1.86
+    // world units visible at the field plane: camera z 4, fov 50 gives a half height near 1.86
     const aspect = state.size.width / Math.max(1, state.size.height);
+    p.position.y += (pose.y - p.position.y) * 0.06;
+    // stretched across the width so the hero is filled edge to edge, not just a ball in the middle
+    const spread = pose.scale * Math.max(1, aspect * 0.75);
+    p.scale.x += (spread - p.scale.x) * 0.06;
+    p.scale.y += (pose.scale - p.scale.y) * 0.06;
+    p.scale.z = p.scale.y;
+    p.rotation.y = still ? 0 : Math.sin(t * 0.08) * 0.25; // sways instead of turning, so the stretch never shows its edge
     u.uMouse.value.set(mouse.current.x * 1.86 * aspect, mouse.current.y * 1.86);
   });
 
@@ -315,8 +291,7 @@ function FaceParticles({ still, shrink, mouse }: FaceProps) {
         </mesh>,
         scene,
       )}
-      {/* the mask spans Y -1.0..0.86 and turns about its own centre; it rests above the chat */}
-      <points ref={points} position={[0, FACE.y, 0]} scale={FACE.scale}>
+      <points ref={points} position={[0, REST.y, 0]} scale={REST.scale}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[lookup, 3]} />
         </bufferGeometry>
@@ -332,7 +307,7 @@ function FaceParticles({ still, shrink, mouse }: FaceProps) {
   );
 }
 
-export default function FaceParticlesScene({ still, shrink }: { still: boolean; shrink: boolean }) {
+export default function ParticleFieldScene({ still, shrink }: { still: boolean; shrink: boolean }) {
   const mouse = useRef({ x: 9, y: 9 }); // far away until the pointer moves
   const wrap = useRef<HTMLDivElement>(null);
 
@@ -354,7 +329,7 @@ export default function FaceParticlesScene({ still, shrink }: { still: boolean; 
         camera={{ position: [0, 0, 4], fov: 50 }}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       >
-        <FaceParticles still={still} shrink={shrink} mouse={mouse} />
+        <ParticleField still={still} shrink={shrink} mouse={mouse} />
       </Canvas>
     </div>
   );

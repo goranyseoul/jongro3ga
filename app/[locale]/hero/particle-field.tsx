@@ -5,9 +5,9 @@ import { Component, useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 // three.js runs in the browser only and loads after the page, so the hero text never waits for it.
-const FaceParticlesScene = dynamic(() => import("./face-particles-scene"), { ssr: false });
+const ParticleFieldScene = dynamic(() => import("./particle-field-scene"), { ssr: false });
 
-/** The simulation needs WebGL2 with float render targets; without them the hero simply has no face. */
+/** The simulation needs WebGL2 with float render targets; without them the hero simply has no particles. */
 function canRenderParticles(): boolean {
   try {
     const gl = document.createElement("canvas").getContext("webgl2");
@@ -28,8 +28,8 @@ class ParticlesBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 }
 
-/** Hero backdrop: a woman's face mask made of particles behind the chat. Reduced motion shows it still. */
-export function FaceParticles({ className, shrink = false }: { className?: string; shrink?: boolean }) {
+/** Hero backdrop: a field of drifting particles behind the chat. Reduced motion shows it still. */
+export function ParticleField({ className, shrink = false }: { className?: string; shrink?: boolean }) {
   const [supported, setSupported] = useState(false);
   const [still, setStill] = useState(false);
 
@@ -46,7 +46,7 @@ export function FaceParticles({ className, shrink = false }: { className?: strin
     <div aria-hidden="true" className={cn("pointer-events-none", className)}>
       {supported ? (
         <ParticlesBoundary>
-          <FaceParticlesScene still={still} shrink={shrink} />
+          <ParticleFieldScene still={still} shrink={shrink} />
         </ParticlesBoundary>
       ) : null}
     </div>
