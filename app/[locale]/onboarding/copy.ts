@@ -97,7 +97,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     widgetNudge: "위 입력 칸을 써 주세요.",
     agentCard: agentCardKo,
     say: {
-      locale: "안녕하세요, Pibuk 담당 에이전트예요. 한국어로 진행할까요?",
+      locale: "안녕하세요, PibooK 담당 에이전트예요. 한국어로 진행할까요?",
       consent: "시작하기 전에 동의가 필요해요. 하나씩 확인해 주세요.",
       consentBlocked: "이용약관, 개인정보, 국외 처리 동의가 있어야 진행할 수 있어요.",
       sensitiveDeclined: "괜찮아요. 피부와 시술 정보는 묻지 않을게요. 병원 매칭은 제한돼요.",
@@ -145,7 +145,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       firstIntent: "첫 요청",
     },
     consents: {
-      terms: { title: "이용약관", description: "Pibuk 서비스 이용 조건에 동의해요." },
+      terms: { title: "이용약관", description: "PibooK 서비스 이용 조건에 동의해요." },
       privacy: { title: "개인정보 수집·이용", description: "호칭, 국적, 나이대, 일정, 연락처를 에이전트 운영에 써요." },
       sensitiveHealth: {
         title: "피부·시술 정보",
@@ -199,7 +199,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     widgetNudge: "上の入力欄を使ってください。",
     agentCard: { version: "バージョン", skills: "スキル", endpoint: "エンドポイント", json: "JSONを表示" },
     say: {
-      locale: "はじめまして、Pibukの担当エージェントです。日本語で進めてもいいですか？",
+      locale: "はじめまして、PibooKの担当エージェントです。日本語で進めてもいいですか？",
       consent: "始める前に同意をお願いします。ひとつずつ確認してください。",
       consentBlocked: "利用規約、個人情報、海外からの情報処理への同意が必要です。",
       sensitiveDeclined: "わかりました。肌と施術の情報はお聞きしません。クリニックのご紹介は制限されます。",
@@ -247,7 +247,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       firstIntent: "最初の依頼",
     },
     consents: {
-      terms: { title: "利用規約", description: "Pibukのサービス利用条件に同意します。" },
+      terms: { title: "利用規約", description: "PibooKのサービス利用条件に同意します。" },
       privacy: { title: "個人情報", description: "呼び名、国籍、年代、日程、連絡先をエージェントの運用に使います。" },
       sensitiveHealth: {
         title: "肌と施術の情報",
@@ -301,7 +301,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     widgetNudge: "Please use the input above.",
     agentCard: { version: "Version", skills: "Skills", endpoint: "Endpoint", json: "Show JSON" },
     say: {
-      locale: "Hi, I'm your Pibuk agent. Shall we continue in English?",
+      locale: "Hi, I'm your PibooK agent. Shall we continue in English?",
       consent: "Before we start, I need your consent. Please review each item.",
       consentBlocked: "Consent to the terms, personal information and cross-border processing is needed to continue.",
       sensitiveDeclined: "No problem. I won't ask about your skin or procedures. Clinic matching will be limited.",
@@ -349,7 +349,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       firstIntent: "First request",
     },
     consents: {
-      terms: { title: "Terms of use", description: "I agree to the Pibuk terms of service." },
+      terms: { title: "Terms of use", description: "I agree to the PibooK terms of service." },
       privacy: {
         title: "Personal information",
         description: "Your name, nationality, age band, trip and contact are used to run your agent.",
@@ -409,7 +409,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     widgetNudge: "请使用上面的输入框。",
     agentCard: { version: "版本", skills: "技能", endpoint: "接口地址", json: "查看 JSON" },
     say: {
-      locale: "你好，我是 Pibuk 的专属代理。用中文继续可以吗？",
+      locale: "你好，我是 PibooK 的专属代理。用中文继续可以吗？",
       consent: "开始之前需要你的同意，请逐项确认。",
       consentBlocked: "需要同意使用条款、个人信息和跨境处理才能继续。",
       sensitiveDeclined: "好的，我不会询问皮肤和项目信息。诊所匹配会受到限制。",
@@ -457,7 +457,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       firstIntent: "首个需求",
     },
     consents: {
-      terms: { title: "使用条款", description: "同意 Pibuk 服务使用条件。" },
+      terms: { title: "使用条款", description: "同意 PibooK 服务使用条件。" },
       privacy: { title: "个人信息", description: "称呼、国籍、年龄段、行程和联系方式用于运行你的代理。" },
       sensitiveHealth: {
         title: "皮肤与项目信息",

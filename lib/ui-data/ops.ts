@@ -861,7 +861,7 @@ export const A2A_LOG: A2ALogEntry[] = [
     from: { agentId: "cln_ara", role: "clinic" },
     to: platformEndpoint,
     skillId: "platform.report_booking",
-    text: "Booking confirmed by Pibu operator after the clinic confirmed by phone.",
+    text: "Booking confirmed by PibooK operator after the clinic confirmed by phone.",
     data: {
       schema: "pibu/booking@1",
       bookingId: "bk_0087",

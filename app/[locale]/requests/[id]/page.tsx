@@ -16,7 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await peekLocale({ params });
   const t = await getTranslations({ locale, namespace: "requests" });
-  return { title: `${t("metaTitle")} · Pibu` };
+  return { title: `${t("metaTitle")} · PibooK` };
 }
 
 export default async function RequestPage({ params }: Props) {

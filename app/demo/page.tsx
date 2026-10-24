@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/ops.css";
 import { DemoConsole } from "./demo-console";
 
-export const metadata: Metadata = { title: "데모 컨트롤 · Pibu" };
+export const metadata: Metadata = { title: "데모 컨트롤 · PibooK" };
 
 // The wrapper lives here, not in a layout, so sibling routes such as /demo/ui keep their own look.
 export default function DemoPage() {

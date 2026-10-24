@@ -29,7 +29,7 @@ export function DataView() {
     const base = buildAgentCard(true);
     return {
       ...base,
-      name: `Pibu Customer Agent ${profile.agentId}`,
+      name: `PibooK Customer Agent ${profile.agentId}`,
       supportedInterfaces: base.supportedInterfaces.map((entry) => ({
         ...entry,
         url: `https://pibu.example/a2a/customers/${profile.agentId}/rpc`,

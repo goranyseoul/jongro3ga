@@ -102,7 +102,7 @@ export function Interactive() {
       <Card className="flex flex-col gap-sp-4">
         <CardHeader title="Chat" description="Enter로 전송, Shift+Enter로 줄바꿈" />
         <div className="flex flex-col gap-sp-3">
-          <ChatBubble from="agent" meta="Pibuk">
+          <ChatBubble from="agent" meta="PibooK">
             무엇을 받고 싶으세요?
           </ChatBubble>
           {messages.map((text, index) => (
