@@ -8,6 +8,10 @@ on:
 jobs:
   web:
     runs-on: ubuntu-latest
+    # The e2e server runs the production build: DEMO_MODE gives auth its dev-only secret and opens the demo
+    # surfaces, the same mode the deployed demo uses. No real secrets in CI.
+    env:
+      DEMO_MODE: "true"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
