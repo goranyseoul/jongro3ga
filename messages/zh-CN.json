@@ -338,5 +338,32 @@
       "viewRecords": "查看记录",
       "requests": "返回报价"
     }
+  },
+  "records": {
+    "metaTitle": "记录",
+    "title": "施术记录",
+    "add": "3秒记录",
+    "next": {
+      "title": "下次时间",
+      "overdue": "已过预定日期",
+      "paused": "暂停中",
+      "stopped": "已结束",
+      "statusLabel": "这项施术之后",
+      "status": {
+        "active": "继续",
+        "paused": "休息",
+        "stopped": "不再做"
+      },
+      "empty": "添加记录后,下次时间会显示在这里。"
+    },
+    "history": {
+      "title": "历史",
+      "empty": "还没有记录。先添加第一条吧。",
+      "session": "第{n}次",
+      "shared": "匿名共享: 开",
+      "notShared": "匿名共享: 关",
+      "fromBooking": "由预约自动记录",
+      "rating": "满意度 {n}/5"
+    }
   }
 }

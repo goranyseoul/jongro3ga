@@ -338,5 +338,32 @@
       "viewRecords": "기록 보기",
       "requests": "견적으로 돌아가기"
     }
+  },
+  "records": {
+    "metaTitle": "기록",
+    "title": "내 시술 기록",
+    "add": "3초 기록",
+    "next": {
+      "title": "다음 회차",
+      "overdue": "예정일이 지났어요",
+      "paused": "쉬는 중",
+      "stopped": "그만둠",
+      "statusLabel": "이 시술은 앞으로",
+      "status": {
+        "active": "계속",
+        "paused": "쉬기",
+        "stopped": "그만"
+      },
+      "empty": "기록을 남기면 다음 회차가 여기에 보여요."
+    },
+    "history": {
+      "title": "기록 목록",
+      "empty": "아직 기록이 없어요. 첫 기록을 추가해 보세요.",
+      "session": "{n}회차",
+      "shared": "익명 공유: 켬",
+      "notShared": "익명 공유: 끔",
+      "fromBooking": "예약에서 자동 기록",
+      "rating": "만족도 {n}/5"
+    }
   }
 }

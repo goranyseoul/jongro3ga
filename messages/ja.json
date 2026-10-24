@@ -338,5 +338,32 @@
       "viewRecords": "記録を見る",
       "requests": "見積もりに戻る"
     }
+  },
+  "records": {
+    "metaTitle": "記録",
+    "title": "施術の記録",
+    "add": "3秒で記録する",
+    "next": {
+      "title": "次回の目安",
+      "overdue": "予定日を過ぎています",
+      "paused": "休止中",
+      "stopped": "終了",
+      "statusLabel": "この施術のこれから",
+      "status": {
+        "active": "続ける",
+        "paused": "休む",
+        "stopped": "やめる"
+      },
+      "empty": "記録をつけると、次回の目安がここに表示されます。"
+    },
+    "history": {
+      "title": "履歴",
+      "empty": "まだ記録がありません。最初の1件を追加しましょう。",
+      "session": "{n}回目",
+      "shared": "匿名共有: オン",
+      "notShared": "匿名共有: オフ",
+      "fromBooking": "予約から自動で記録",
+      "rating": "満足度 {n}/5"
+    }
   }
 }

@@ -338,5 +338,32 @@
       "viewRecords": "View records",
       "requests": "Back to quotes"
     }
+  },
+  "records": {
+    "metaTitle": "Records",
+    "title": "Procedure records",
+    "add": "Log in 3 seconds",
+    "next": {
+      "title": "Next sessions",
+      "overdue": "Past the planned date",
+      "paused": "Paused",
+      "stopped": "Stopped",
+      "statusLabel": "What next for this procedure",
+      "status": {
+        "active": "Continue",
+        "paused": "Pause",
+        "stopped": "Stop"
+      },
+      "empty": "Add a record and your next session shows up here."
+    },
+    "history": {
+      "title": "History",
+      "empty": "No records yet. Add your first one.",
+      "session": "Session {n}",
+      "shared": "Anonymous sharing: on",
+      "notShared": "Anonymous sharing: off",
+      "fromBooking": "Recorded from your booking",
+      "rating": "Satisfaction {n}/5"
+    }
   }
 }
