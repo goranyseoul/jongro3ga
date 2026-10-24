@@ -22,6 +22,7 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { useAgent } from "@/components/customer/agent-context";
 import { AgentWindow } from "@/components/customer/agent-window";
 import { AgentOrb } from "@/components/customer/agent-orb";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
@@ -49,7 +50,7 @@ import {
 import type { LandingCopy } from "../landing-copy";
 import { LandingHome } from "../landing-home";
 import { LOCALES, LOCALE_NAME } from "../locales";
-import { ParticleField } from "../hero/particle-field";
+import { GatewayFlow } from "../hero/gateway-flow";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
 import {
@@ -301,6 +302,16 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     const resolved = topic ?? topicFromText(text);
     agentSays([resolved ? directoryAnswer(resolved) : c.say.intentAck(text)]);
   };
+
+  // Requests handed over from other screens (clinic list, clinic detail) through the agent context:
+  // they arrive here after AgentDock brings the customer back to the landing.
+  const { pending, clearPending } = useAgent();
+  useEffect(() => {
+    if (!pending) return;
+    ask(pending.text, pending.topic);
+    clearPending(pending.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
 
   const nudge = (userText: string, line: string) => {
     setMessages((prev) => [...prev, message("user", userText)]);
@@ -766,7 +777,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     </div>
   );
 
-  // One screen for both phases: the sunrise backdrop and the particle field stay mounted, the hero copy turns into
+  // One screen for both phases: the sunrise backdrop and the gateway flow stay mounted, the hero copy turns into
   // the conversation in place, and the input stays where it was.
   const heroMain = (
     <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-12">
@@ -874,7 +885,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
       {full || splashOver ? null : <Splash wordmark={intro.wordmark} />}
       <div className={cn("theme-sunrise relative flex flex-col", full && "min-h-0 flex-1 overflow-hidden")}>
         <section className={cn("relative flex flex-col overflow-hidden", full && "min-h-0 flex-1")}>
-          <ParticleField className="absolute inset-0" shrink={engaged || started} />
+          <GatewayFlow className="absolute inset-0" quiet={engaged || started} />
           <header className="relative z-10 flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
             {/* signed in: the customer's home. Otherwise back to a fresh landing; a full load drops the conversation */}
             {signedIn ? (

@@ -108,9 +108,9 @@ describe("customer app routes", () => {
     expect(location.searchParams.get("next")).toBe("/ja/requests/req_1?tab=quotes");
   });
 
-  it("redirect in DEMO_MODE too (the demo buttons sign in without a password)", async () => {
+  it("let signed-out visitors through in DEMO_MODE (screens fall back to the demo customer)", async () => {
     process.env.DEMO_MODE = "true";
-    expect((await proxy(req("/en/home"))).status).toBe(307);
+    expect(isPassThrough(await proxy(req("/en/home")))).toBe(true);
   });
 
   it("let signed-in visitors through", async () => {
