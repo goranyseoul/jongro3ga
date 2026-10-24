@@ -143,7 +143,7 @@ export async function verifyOfferBundle(clinicId, bundle) {
 // ---------- platform relayer: record a completed visit ----------
 export async function recordVisit(persona, clinicId, procName, reviewBoard) {
   const pk = process.env.DEPLOYER_PRIVATE_KEY;
-  if (!pk) throw new Error('DEPLOYER_PRIVATE_KEY missing (app/.env.local)');
+  if (!pk) throw new Error('DEPLOYER_PRIVATE_KEY missing (glowpass/.env.local)');
   const type = PROCEDURES[procName];
   if (!type) throw new Error(`unknown procedure ${procName}`);
   const w = loadWallet(persona);

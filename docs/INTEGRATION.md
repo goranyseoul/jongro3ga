@@ -7,9 +7,9 @@
 
 ```bash
 # 최초 1회
-(cd zk && npm i) && (cd chain && npm i) && (cd app && npm i)
+(cd zk && npm i) && (cd chain && npm i) && (cd glowpass && npm i)
 # 서버 (http://localhost:3000)
-cd app && node server.mjs
+cd glowpass && PORT=4000 node server.mjs
 ```
 
 - 컴파일된 회로(`zk/*/target/*.json`)와 컨트랙트 ABI(`chain/build/`)가 커밋돼 있어서 **Noir 설치 없이 `npm i`만으로 동작**합니다.
@@ -73,7 +73,7 @@ cd app && node server.mjs
 
 ## 3. A2A 메시지 규약 (제안)
 
-증명은 A2A 메시지의 `data` part로 첨부합니다. 이 데모의 `app/agents.mjs`가 이 형태로 구현돼 있으니 참고하세요.
+증명은 A2A 메시지의 `data` part로 첨부합니다. 이 데모의 `glowpass/agents.mjs`가 이 형태로 구현돼 있으니 참고하세요.
 
 ```json
 {
@@ -107,7 +107,7 @@ cd app && node server.mjs
 ## 5. 데모 데이터 (Base Sepolia)
 
 - Registry: [`0x8f9d9665d7bc1a19606a1f1302d29df353e6f241`](https://sepolia.basescan.org/address/0x8f9d9665d7bc1a19606a1f1302d29df353e6f241) · 데모 시계 1 day = 60초
-- 오퍼 규칙과 병원 데이터: `app/clinics.mjs`
+- 오퍼 규칙과 병원 데이터: `glowpass/clinics.mjs`
 
 | 페르소나 | 이력 | 대상 오퍼 |
 |---|---|---|

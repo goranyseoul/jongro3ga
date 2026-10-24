@@ -1,5 +1,5 @@
 // Demo server: static UI, A2A endpoints for clinic agents, concierge chat, SSE event stream.
-// Usage: npm start   (reads app/.env.local for ANTHROPIC_API_KEY, chain/.env for the relayer key)
+// Usage: npm start   (reads glowpass/.env.local for ANTHROPIC_API_KEY, chain/.env for the relayer key)
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
