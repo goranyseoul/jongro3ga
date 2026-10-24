@@ -8,14 +8,16 @@ export type ChatBubbleProps = {
   meta?: ReactNode;
 };
 
+// Agent lines read as plain text, the customer's own lines sit in a neutral bubble
+// (after 21st.dev serafimcloud/agent-chat). No brand fill: the core stays achromatic.
 export function ChatBubble({ from, children, meta }: ChatBubbleProps) {
   const isUser = from === "user";
   return (
     <div className={cn("flex flex-col gap-sp-1", isUser ? "items-end" : "items-start")}>
       <div
         className={cn(
-          "max-w-md whitespace-pre-wrap break-words rounded-xl px-sp-4 py-sp-3 text-body",
-          isUser ? "bg-brand text-on-brand" : "border border-border-soft bg-elev text-text",
+          "whitespace-pre-wrap break-words text-body",
+          isUser ? "max-w-md rounded-2xl bg-sunken px-sp-4 py-sp-2 text-text" : "max-w-xl py-sp-1 text-text",
         )}
       >
         {children}
