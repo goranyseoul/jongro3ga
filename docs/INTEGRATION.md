@@ -64,6 +64,7 @@ cd app && node server.mjs   # http://localhost:3000  (데모 콘솔 + API), /led
 | GET | `/api/stats` | – | `verifiedUsersByProcedure` ("피북 사용자 N명 받음"), 병원별 검증 방문·평점·후기 |
 | GET | `/api/ledger` | – | 체인에 공개된 전체 이벤트 (가명·해시·버전·tx) |
 | GET | `/api/events` | – | SSE. 외부 에이전트의 검증·기록도 데모 콘솔 로그에 표시됨 |
+| POST | `/api/wallet/:customerId/reset` | – | **리허설용 초기화**: 새 가명 + 기본 기록 재앵커 (~10초/건). 이전 가명 기록은 체인에 남지만 지갑과 끊김. 유키는 1회차 시각이 다시 찍혀 장면 ①이 28분 뒤에 열림 |
 
 ### bundle
 

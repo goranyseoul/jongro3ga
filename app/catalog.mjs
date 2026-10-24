@@ -97,6 +97,14 @@ export const PERSONAS = {
 // memo lines that carried an explicit year ("26/…"); the rest were year-inferred by the import
 const EXPLICIT_YEAR = new Set(['2026-02-15', '2026-03-21', '2026-04-30', '2026-09-11']);
 
+/** Clinic-confirmed records a persona starts from (re-anchored on reset under a fresh pseudonym). */
+export const BASELINE_RECORDS = {
+  cus_yuki: [['cln_hongdae_a', 'skin_booster_juvelook']], // DEMO.md ⑤ 1회차
+  cus_jisoo: [['cln_sinnonhyeon_d', 'rejuran_healer']], // 자주 가는 곳
+  cus_grace: [],
+  cus_lin: [],
+};
+
 /** Records a patient typed in herself (memo import). Shown, but never anchored and never provable. */
 export const SELF_REPORTED = {
   cus_jisoo: [

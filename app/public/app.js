@@ -190,6 +190,15 @@ const ACTIONS = {
     await claim('ofr_sinnonhyeon_d_rejuran_loyal', 'cln_sinnonhyeon_d');
   },
   async claimOffer(btn) { await claim(btn.dataset.offer, btn.dataset.clinic); },
+  async reset() {
+    const p = state.wallet.profile;
+    const warn = persona === 'cus_yuki' ? '\n\n⚠️ 유키의 쥬베룩 1회차도 지금 시각으로 다시 기록되어, 장면 ① 2회차 오퍼는 28분 뒤에 다시 열립니다.' : '';
+    if (!confirm(`${p.name}을(를) 새 가명으로 초기화하고 기본 기록을 다시 체인에 올립니다 (약 10~20초).\n이전 가명의 기록은 체인에 그대로 남지만 더 이상 이 지갑과 연결되지 않습니다.${warn}`)) return;
+    ev('local', `↺ ${esc(p.name)} 초기화 중`, '새 가명 생성 → 기본 기록 append 증명 → Base Sepolia');
+    const r = await api(`/api/wallet/${persona}/reset`, {});
+    state.match = null;
+    ev('chain', `⛓ ${esc(p.name)} 초기화 완료`, `새 가명 ${short(r.subjectId, 6)} · 기본 기록 ${r.baseline.length}건 ${r.baseline.map((b) => `<a href="https://sepolia.basescan.org/tx/${b.tx}" target="_blank">${short(b.tx, 4)}</a>`).join(' ')}`);
+  },
 };
 
 async function reviewOnce(clinicId, procedureId, text) {

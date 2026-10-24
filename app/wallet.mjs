@@ -1,13 +1,13 @@
 // Patient wallet + clinic verifier + platform relayer, wired to the Base Sepolia registry.
 // In the product the wallet runs on the patient's phone; for the demo it runs in this server,
 // and the UI makes the boundary explicit (what stays on-device vs. what a clinic receives).
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, renameSync } from 'node:fs';
 import { createPublicClient, createWalletClient, http, keccak256, toHex, hexToBytes } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { baseSepolia } from 'viem/chains';
 import { createProver, emptyChart, loadChart, saveChart, clauseHolds } from '../chain/records.mjs';
 import { newVisitIdentity, importVisitIdentity, writeReview } from '../chain/reviews.mjs';
-import { PERSONAS, PROCEDURES, CLINICS, OFFERS, SELF_REPORTED, offerById, describeClause } from './catalog.mjs';
+import { PERSONAS, PROCEDURES, CLINICS, OFFERS, SELF_REPORTED, BASELINE_RECORDS, offerById, describeClause } from './catalog.mjs';
 
 const CHAIN_DIR = new URL('../chain/', import.meta.url);
 const dep = JSON.parse(readFileSync(new URL('deployments/base-sepolia.json', CHAIN_DIR)));
@@ -176,4 +176,18 @@ export async function submitPatientReview(persona, clinicId, procedureId, review
   const res = await reviewBoard.submitReview(r);
   if (res.ok) { t.reviewed = true; saveWallet(w); }
   return res;
+}
+
+/** Demo reset: archive the wallet, start over under a fresh pseudonym, re-anchor the baseline records.
+ *  The old pseudonym's history stays on-chain forever (by design) — it is simply no longer this wallet. */
+export async function resetPersona(persona, reviewBoard) {
+  if (!PERSONAS[persona]) throw new Error(`unknown persona ${persona}`);
+  if (existsSync(walletFile(persona))) {
+    mkdirSync(new URL('wallets/archive/', CHAIN_DIR), { recursive: true });
+    renameSync(walletFile(persona), new URL(`wallets/archive/${persona}-${Date.now()}.json`, CHAIN_DIR));
+  }
+  const txs = [];
+  for (const [clinicId, procedureId] of BASELINE_RECORDS[persona] ?? []) txs.push(await recordVisit(persona, clinicId, procedureId, reviewBoard));
+  if (!txs.length) saveWallet(loadWallet(persona));
+  return { subjectId: loadWallet(persona).subjectId, baseline: txs };
 }

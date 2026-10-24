@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { PERSONAS, PROCEDURES, CLINICS, OFFERS, describeClause } from './catalog.mjs';
-import { publicLedger, walletView, importSelfReported, matchOffers, proveOffer, verifyOfferBundle, recordVisit, submitPatientReview, deployment } from './wallet.mjs';
+import { publicLedger, walletView, importSelfReported, resetPersona, matchOffers, proveOffer, verifyOfferBundle, recordVisit, submitPatientReview, deployment } from './wallet.mjs';
 import { seedReviewBoard } from './reviews-seed.mjs';
 
 const chainEnv = new URL('../chain/.env', import.meta.url);
@@ -78,6 +78,12 @@ const server = createServer(async (req, res) => {
     if (m && req.method === 'POST') {
       const { records } = await readBody(req);
       return json(res, 200, importSelfReported(m[1], records));
+    }
+    m = path.match(/^\/api\/wallet\/(\w+)\/reset$/);
+    if (m && req.method === 'POST') {
+      const r = await resetPersona(m[1], board);
+      send({ type: 'reset', persona: m[1], ...r });
+      return json(res, 200, r);
     }
     if (path === '/api/zk/match-offers' && req.method === 'POST') {
       const { persona } = await readBody(req);
