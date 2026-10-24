@@ -24,6 +24,7 @@ export type OnboardingCopy = {
   yes: string;
   no: string;
   historyNone: string;
+  historyYes: string;
   nudge: string;
   widgetNudge: string;
   agentCard: { version: string; skills: string; endpoint: string; json: string };
@@ -41,6 +42,7 @@ export type OnboardingCopy = {
     stayArea: (range: string) => string;
     concerns: string;
     history: string;
+    historyDetail: string;
     pregnant: string;
     budget: string;
     downtime: string;
@@ -99,6 +101,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     yes: "예",
     no: "아니오",
     historyNone: "없음",
+    historyYes: "있음",
     nudge: "위 선택지에서 골라 주시거나 그대로 입력해 주세요.",
     widgetNudge: "위 입력 칸을 써 주세요.",
     agentCard: agentCardKo,
@@ -116,6 +119,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       stayArea: (r) => `${r} 일정이군요. 숙소는 어느 지역인가요?`,
       concerns: "신경 쓰이는 피부 고민을 모두 골라 주세요.",
       history: "전에 받아 본 시술이 있나요? 없으면 '없음'을 눌러 주세요.",
+      historyDetail: "어떤 시술을 언제 받았는지 적어 주세요. 날짜가 기억 안 나면 달만 적어도 돼요. 예: 리쥬란 2024년 12월, 보톡스 올해 3월",
       pregnant: "병원에 전달할 안전 정보예요. 현재 임신 중이거나 수유 중인가요?",
       budget: "예산 상한이 있으면 알려 주세요. 없으면 건너뛰어도 돼요.",
       downtime: "시술 후 붉어짐 같은 회복 기간은 며칠까지 괜찮으세요?",
@@ -215,6 +219,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     yes: "はい",
     no: "いいえ",
     historyNone: "なし",
+    historyYes: "あり",
     nudge: "上の選択肢から選ぶか、そのまま入力してください。",
     widgetNudge: "上の入力欄を使ってください。",
     agentCard: { version: "バージョン", skills: "スキル", endpoint: "エンドポイント", json: "JSONを表示" },
@@ -232,6 +237,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       stayArea: (r) => `${r}ですね。宿泊はどのエリアですか？`,
       concerns: "気になる肌の悩みをすべて選んでください。",
       history: "これまでに受けた施術はありますか？なければ「なし」を押してください。",
+      historyDetail: "受けた施術と時期を書いてください。日付が分からなければ月だけで大丈夫です。例: リジュラン 2024年12月、ボトックス 今年3月",
       pregnant: "クリニックに伝える安全情報です。現在、妊娠中または授乳中ですか？",
       budget: "予算の上限があれば教えてください。なければスキップできます。",
       downtime: "施術後の赤みなど、回復期間は何日まで大丈夫ですか？",
@@ -331,6 +337,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     yes: "Yes",
     no: "No",
     historyNone: "None",
+    historyYes: "Yes",
     nudge: "Pick one of the options above, or type it.",
     widgetNudge: "Please use the input above.",
     agentCard: { version: "Version", skills: "Skills", endpoint: "Endpoint", json: "Show JSON" },
@@ -348,6 +355,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       stayArea: (r) => `${r}, got it. Which area are you staying in?`,
       concerns: "Pick every skin concern you have.",
       history: "Have you had any procedures before? If not, tap None.",
+      historyDetail: "Tell me which procedures and when. The month is enough if you do not remember the day. e.g. Rejuran Dec 2024, Botox March this year",
       pregnant: "This is safety information for the clinic. Are you pregnant or breastfeeding?",
       budget: "Do you have a budget limit? You can skip this.",
       downtime: "How many days of recovery, such as redness, are fine for you?",
@@ -453,6 +461,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     yes: "是",
     no: "否",
     historyNone: "没有",
+    historyYes: "有",
     nudge: "请从上面的选项中选择，或直接输入。",
     widgetNudge: "请使用上面的输入框。",
     agentCard: { version: "版本", skills: "技能", endpoint: "接口地址", json: "查看 JSON" },
@@ -470,6 +479,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       stayArea: (r) => `${r}，明白了。你住在哪个区域？`,
       concerns: "请选择所有在意的皮肤问题。",
       history: "以前做过项目吗？没有的话请点「没有」。",
+      historyDetail: "请写下做过的项目和时间。不记得具体日期写月份也可以。例: 丽珠兰 2024年12月，肉毒素 今年3月",
       pregnant: "这是要告知诊所的安全信息。你目前是否怀孕或哺乳？",
       budget: "如有预算上限请告诉我，也可以跳过。",
       downtime: "术后泛红等恢复期最多可以接受几天？",

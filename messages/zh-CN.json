@@ -477,7 +477,10 @@
       "another": "继续添加"
     },
     "month": "做项目的月份",
-    "dateUnknown": "不记得具体日期 (只记月份)"
+    "dateUnknown": "不记得具体日期 (只记月份)",
+    "note": "备注",
+    "notePlaceholder": "感受、副作用、下次想调整的地方等，随意填写。",
+    "noteHint": "只有你能看到这条备注。"
   },
   "outcomes": {
     "metaTitle": "施术记录",

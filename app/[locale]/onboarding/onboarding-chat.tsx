@@ -453,9 +453,15 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         return (
           <ChipGroup
             label={c.slots.history}
-            options={[{ value: "none", label: c.historyNone }]}
+            options={[
+              { value: "yes", label: c.historyYes },
+              { value: "none", label: c.historyNone },
+            ]}
             value={null}
-            onChange={() => advance({ ...draft, history: c.historyNone }, c.historyNone)}
+            // "yes" asks for the details; the typed answer then fills the history slot
+            onChange={(value) =>
+              value === "yes" ? nudge(c.historyYes, c.say.historyDetail) : advance({ ...draft, history: c.historyNone }, c.historyNone)
+            }
           />
         );
       case "pregnant":
