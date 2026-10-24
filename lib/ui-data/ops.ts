@@ -279,3 +279,147 @@ export const PROXY_BOOKINGS: ProxyBooking[] = [
     note: "해당 시간 예약 마감",
   },
 ];
+
+// ---- Routing rules (RoutingRule, 06-data-model.md, 07-platform-intelligence.md section 4) ----
+
+export const PROCEDURE_LABEL: Record<string, string> = {
+  rejuran_healer: "리쥬란 힐러",
+  thermage_flx: "써마지 FLX",
+  ulthera: "울쎄라",
+  botox_forehead: "이마 보톡스",
+  shrink_universe: "슈링크 유니버스",
+  skin_booster_juvelook: "쥬베룩 스킨부스터",
+};
+
+export type RuleStatus = "proposed" | "active" | "rejected" | "retired";
+
+export const RULE_STATUS_LABEL: Record<RuleStatus, string> = {
+  proposed: "제안",
+  active: "활성",
+  rejected: "반려",
+  retired: "폐기",
+};
+
+// Health information is not a field here on purpose (07 guardrail 2).
+export type RuleCondition = {
+  procedureIds?: string[];
+  nationalities?: string[];
+  languages?: Locale[];
+  areas?: Area[];
+  ageBands?: string[];
+  firstKProcedure?: boolean;
+  budgetMaxBelowKrw?: number;
+};
+
+export type RuleAction =
+  | { kind: "exclude_clinic"; clinicIds: string[] }
+  | { kind: "boost_clinic"; clinicIds: string[]; delta: number }
+  | { kind: "demote_clinic"; clinicIds: string[]; delta: number }
+  | { kind: "prefer_area"; areas: Area[]; delta: number }
+  | { kind: "require_language"; languages: Locale[] };
+
+export type OpsRule = {
+  id: string;
+  version: number;
+  status: RuleStatus;
+  when: RuleCondition;
+  then: RuleAction;
+  /** Human readable reason (ko). */
+  reason: string;
+  evidence: { outcomeIds: string[]; signalIds: string[]; summary: string };
+  source: "operator" | "auto_proposal";
+  proposedBy?: string;
+  approvedBy?: string;
+  createdAt: string;
+  activatedAt?: string;
+  expiresAt?: IsoDate;
+  /** UI only: when the rule was rejected or retired. */
+  closedAt?: string;
+  appliedCount: number;
+};
+
+/** exclude_clinic rules expire after 90 days unless renewed (07 guardrail 3). */
+export const EXCLUDE_RULE_TTL_DAYS = 90;
+/** A rule is flagged for review this many days before it expires. */
+export const RULE_REVIEW_DAYS = 7;
+
+// rules.json seed: two active rules, no proposals. Neither matches Yuki's Rejuran request.
+export const SEED_RULES: OpsRule[] = [
+  {
+    id: "rule_001",
+    version: 1,
+    status: "active",
+    when: { nationalities: ["CN"] },
+    then: { kind: "require_language", languages: ["zh-CN"] },
+    reason: "중국 고객에게는 중국어 응대가 되는 병원만 보여줘요.",
+    evidence: { outcomeIds: [], signalIds: [], summary: "운영 정책이라 결과 근거는 없어요." },
+    source: "operator",
+    approvedBy: "운영자",
+    createdAt: "2026-10-01T10:00:00+09:00",
+    activatedAt: "2026-10-01T10:00:00+09:00",
+    appliedCount: 9,
+  },
+  {
+    id: "rule_002",
+    version: 1,
+    status: "active",
+    when: { procedureIds: ["ulthera"] },
+    then: { kind: "demote_clinic", clinicIds: ["cln_dahye"], delta: 0.1 },
+    reason: "울쎄라 요청에서 다혜피부과의원 순위를 조금 낮춰요.",
+    evidence: { outcomeIds: [], signalIds: ["sig_0211", "sig_0214", "sig_0219"], summary: "최근 30일 응답 시간 초과 신호 3건" },
+    source: "operator",
+    approvedBy: "운영자",
+    createdAt: "2026-10-08T14:30:00+09:00",
+    activatedAt: "2026-10-08T14:30:00+09:00",
+    appliedCount: 3,
+  },
+];
+
+// outcomes-ara-burst.json: 20 outcomes with quoteGapRatio from 0.25 to 0.37 in equal steps,
+// mean exactly 0.31 (06-data-model.md seed table).
+export const ARA_BURST_COUNT = 20;
+export const ARA_BURST_GAPS: number[] = Array.from({ length: ARA_BURST_COUNT }, (_, i) => 0.25 + (0.12 * i) / (ARA_BURST_COUNT - 1));
+export const ARA_BURST_MEAN_GAP = ARA_BURST_GAPS.reduce((sum, gap) => sum + gap, 0) / ARA_BURST_COUNT;
+export const ARA_BURST_OUTCOME_IDS: string[] = ARA_BURST_GAPS.map((_, i) => `out_ara_b${String(i + 1).padStart(2, "0")}`);
+
+/** What "[규칙 제안 실행]" produces once the burst is injected (demo scenario step 7). */
+export function buildAraProposal(): OpsRule {
+  return {
+    id: "rule_003",
+    version: 1,
+    status: "proposed",
+    when: { nationalities: ["JP"] },
+    then: { kind: "exclude_clinic", clinicIds: ["cln_ara"] },
+    reason: "일본 고객이 아라의원에서 견적보다 더 많이 결제했어요. 같은 일이 이어지는 동안 일본 고객 매칭에서 제외해요.",
+    evidence: {
+      outcomeIds: ARA_BURST_OUTCOME_IDS,
+      signalIds: [],
+      summary: `최근 30일 견적 대비 실결제 평균 +${Math.round(ARA_BURST_MEAN_GAP * 100)}% (n=${ARA_BURST_COUNT})`,
+    },
+    source: "auto_proposal",
+    proposedBy: "claude-opus-5-5",
+    createdAt: OPS_NOW,
+    appliedCount: 0,
+  };
+}
+
+// The demo controls and /ops/rules run in separate pages, so the "burst injected" fact travels
+// through sessionStorage. Both ends tolerate storage being unavailable.
+const OUTCOMES_INJECTED_KEY = "pibu:demo:outcomes-injected";
+
+export function readOutcomesInjected(): boolean {
+  try {
+    return window.sessionStorage.getItem(OUTCOMES_INJECTED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function writeOutcomesInjected(injected: boolean): void {
+  try {
+    if (injected) window.sessionStorage.setItem(OUTCOMES_INJECTED_KEY, "1");
+    else window.sessionStorage.removeItem(OUTCOMES_INJECTED_KEY);
+  } catch {
+    // storage blocked: the demo falls back to "not injected"
+  }
+}
