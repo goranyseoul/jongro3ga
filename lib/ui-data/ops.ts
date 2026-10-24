@@ -1131,3 +1131,46 @@ export function buildDemoBookings(): DemoBooking[] {
     ...proxy,
   ];
 }
+
+// ---- Operator accounts (mock until the platform has staff accounts) ----
+// Demo sign-in for /ops/login and the profile in /ops/account. Permissions are a read-only summary;
+// nothing in the console checks them yet.
+
+export type OperatorRole = "admin" | "operator" | "viewer";
+
+export const OPERATOR_ROLE_LABEL: Record<OperatorRole, string> = {
+  admin: "관리자",
+  operator: "운영 담당",
+  viewer: "조회 전용",
+};
+
+export type OpsPermission = "clinics_edit" | "proxy_confirm" | "rules_approve" | "a2a_log_read" | "operators_manage";
+
+export const OPS_PERMISSION_LABEL: Record<OpsPermission, { label: string; description: string }> = {
+  clinics_edit: { label: "병원 레지스트리 편집", description: "운영 모드, 등록 상태, 검증일 변경" },
+  proxy_confirm: { label: "대행 예약 확정", description: "병원 확인 뒤 대행 응답 큐에서 확정 또는 거절" },
+  rules_approve: { label: "연결 규칙 승인", description: "제안된 규칙 승인, 반려, 폐기" },
+  a2a_log_read: { label: "A2A 로그 조회", description: "요청·응답 원문 열람 (개인정보는 마스킹)" },
+  operators_manage: { label: "운영자 관리", description: "운영자 초대, 역할 변경, 세션 종료" },
+};
+
+export const ROLE_PERMISSIONS: Record<OperatorRole, OpsPermission[]> = {
+  admin: ["clinics_edit", "proxy_confirm", "rules_approve", "a2a_log_read", "operators_manage"],
+  operator: ["clinics_edit", "proxy_confirm", "a2a_log_read"],
+  viewer: ["a2a_log_read"],
+};
+
+export type OperatorAccount = {
+  id: string;
+  name: string;
+  email: string;
+  role: OperatorRole;
+  team: string;
+  lastSignInAt: string;
+};
+
+export const OPERATOR_ACCOUNTS: OperatorAccount[] = [
+  { id: "opr_jiyeon", name: "한지연", email: "jiyeon@pibook.example", role: "admin", team: "플랫폼 운영", lastSignInAt: "2026-11-11T18:42:00+09:00" },
+  { id: "opr_minho", name: "오민호", email: "minho@pibook.example", role: "operator", team: "대행 응답", lastSignInAt: "2026-11-12T08:55:00+09:00" },
+  { id: "opr_yuna", name: "서유나", email: "yuna@pibook.example", role: "viewer", team: "데이터 분석", lastSignInAt: "2026-11-10T14:10:00+09:00" },
+];

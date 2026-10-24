@@ -443,3 +443,116 @@ export const AGENT_CARD: AgentCard = {
     { id: "clinic.cancel", name: "Cancel booking", description: "Cancels a booking made through PibooK.", tags: ["booking"] },
   ],
 };
+
+// ---- Accounts (mock until the backend has clinic staff accounts) ----
+// Demo sign-in for /clinic/login and the profile shown in /clinic/settings. Three clinics that run
+// their own agent (operation mode "clinic"); proxy clinics have no console login, PibooK answers for them.
+
+export type StaffRole = "owner" | "manager" | "coordinator";
+
+export const STAFF_ROLE_TEXT: Record<StaffRole, string> = {
+  owner: "대표원장",
+  manager: "실장",
+  coordinator: "코디네이터",
+};
+
+/** How a language is covered at the front desk (06-data-model.md ClinicLanguage.mode). */
+export type LanguageCoverage = "staff" | "interpreter" | "app_translation" | "none";
+
+export const LANGUAGE_COVERAGE_TEXT: Record<LanguageCoverage, string> = {
+  staff: "상주 직원",
+  interpreter: "통역사 동행",
+  app_translation: "앱 번역",
+  none: "응대 안 함",
+};
+
+export type ClinicStaff = {
+  id: string;
+  name: string;
+  role: StaffRole;
+  email: string;
+};
+
+export type ClinicAccount = {
+  id: string;
+  name: string;
+  area: string;
+  address: string;
+  operationMode: ClinicOperationMode;
+  languages: { locale: Locale; coverage: LanguageCoverage }[];
+  foreignPatientFacility: { registered: boolean; registeredOn?: IsoDate; renewBy?: IsoDate };
+  agentCardUrl: string;
+  staff: ClinicStaff[];
+};
+
+export const CLINIC_ACCOUNTS: ClinicAccount[] = [
+  {
+    id: CLINIC.id,
+    name: CLINIC.name,
+    area: CLINIC.area,
+    address: "서울 강남구 강남대로 000, 5층",
+    operationMode: CLINIC.operationMode,
+    languages: [
+      { locale: "ko", coverage: "staff" },
+      { locale: "ja", coverage: "interpreter" },
+      { locale: "en", coverage: "app_translation" },
+      { locale: "zh-CN", coverage: "none" },
+    ],
+    foreignPatientFacility: { registered: CLINIC_OPERATION.foreignPatientFacilityRegistered, registeredOn: "2025-03-14", renewBy: "2028-03-13" },
+    agentCardUrl: "https://pibu.example/a2a/clinics/mint/.well-known/agent-card.json",
+    staff: [
+      { id: "stf_mint_harin", name: "김하린", role: "coordinator", email: "harin@mint.example" },
+      { id: "stf_mint_seojun", name: "박서준", role: "manager", email: "seojun@mint.example" },
+    ],
+  },
+  {
+    id: "cln_seoul_glow",
+    name: "서울글로우의원",
+    area: "신사",
+    address: "서울 강남구 도산대로 000, 3층",
+    operationMode: "clinic",
+    languages: [
+      { locale: "ko", coverage: "staff" },
+      { locale: "ja", coverage: "staff" },
+      { locale: "en", coverage: "app_translation" },
+      { locale: "zh-CN", coverage: "none" },
+    ],
+    foreignPatientFacility: { registered: true, registeredOn: "2024-11-02", renewBy: "2027-11-01" },
+    agentCardUrl: "https://pibu.example/a2a/clinics/seoul-glow/.well-known/agent-card.json",
+    staff: [
+      { id: "stf_glow_mina", name: "이미나", role: "coordinator", email: "mina@seoulglow.example" },
+      { id: "stf_glow_jiwoo", name: "정지우", role: "owner", email: "jiwoo@seoulglow.example" },
+    ],
+  },
+  {
+    id: "cln_dahye",
+    name: "다혜피부과의원",
+    area: "홍대",
+    address: "서울 마포구 양화로 000, 2층",
+    operationMode: "clinic",
+    languages: [
+      { locale: "ko", coverage: "staff" },
+      { locale: "en", coverage: "staff" },
+      { locale: "ja", coverage: "none" },
+      { locale: "zh-CN", coverage: "none" },
+    ],
+    foreignPatientFacility: { registered: false },
+    agentCardUrl: "https://pibu.example/a2a/clinics/dahye/.well-known/agent-card.json",
+    staff: [{ id: "stf_dahye_sora", name: "최소라", role: "coordinator", email: "sora@dahye.example" }],
+  },
+];
+
+export type NotifyChannel = "console" | "kakao" | "phone";
+
+// Console notices are P0. Kakao alimtalk and phone calls need a sender contract, so they are P1.
+export const NOTIFY_CHANNELS: { id: NotifyChannel; label: string; description: string; available: boolean }[] = [
+  { id: "console", label: "콘솔 알림", description: "새 예약 요청과 추가 정보 응답을 요청함에 표시해요", available: true },
+  { id: "kakao", label: "카카오 알림톡", description: "담당자 휴대폰으로 예약 요청을 알려요", available: false },
+  { id: "phone", label: "전화", description: "30분 안에 확인하지 않은 예약 요청을 전화로 알려요", available: false },
+];
+
+/**
+ * The console's platform token, as the settings screen shows it. Not a credential: the demo has no
+ * real token, and the revealed value says so. A real token would stay on the server.
+ */
+export const DEMO_AGENT_TOKEN = { masked: "pbk_demo_••••••••", revealed: "pbk_demo_0000_placeholder_not_a_secret", issuedOn: "2026-10-01" as IsoDate };
