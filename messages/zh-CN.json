@@ -365,5 +365,32 @@
       "fromBooking": "由预约自动记录",
       "rating": "满意度 {n}/5"
     }
+  },
+  "recordsNew": {
+    "metaTitle": "添加记录",
+    "title": "3秒记录",
+    "lead": "把做过的施术留下来,方便日后查看。",
+    "procedure": "项目",
+    "amount": "用量",
+    "amountNote": "常见用量为{range}。{demo}",
+    "clinic": "诊所",
+    "clinicHint": "可从候选中选择,也可直接输入名称。",
+    "currency": "币种",
+    "price": "金额",
+    "rateNote": "参考汇率",
+    "date": "施术日",
+    "optional": "选填",
+    "receipt": "收据照片",
+    "receiptSoon": "计划后续支持。",
+    "rating": "满意度",
+    "submit": "记录",
+    "shareOn": "这条记录会匿名后用作价格参考(可在设置中关闭)。",
+    "shareOff": "这条记录不会被共享。",
+    "saved": {
+      "title": "已记录",
+      "next": "下次时间",
+      "all": "查看记录",
+      "another": "继续添加"
+    }
   }
 }

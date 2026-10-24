@@ -508,7 +508,7 @@ export function consentsFor(profile: CustomerProfile): ConsentEntry[] {
     entry(1, "privacy", true, ["profile.*", "contact.*"], "platform"),
     entry(2, "sensitiveHealth", true, ["skin.*", "safety.*", "history.*"], "platform"),
     entry(3, "crossBorder", true, ["profile.*", "skin.*", "safety.*"], "platform"),
-    entry(4, "shareAnonymizedRecords", profile.nationality === "KR", ["records.*"], "platform"),
+    entry(4, "shareAnonymizedRecords", profile.id !== "cus_emily", ["records.*"], "platform"),
   ];
   if (canMatch(profile)) {
     entries.push(entry(5, "shareWithClinic", true, ["safetyInfo.*", "contact.handle"], "clinic"));

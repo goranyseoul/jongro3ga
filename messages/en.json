@@ -365,5 +365,32 @@
       "fromBooking": "Recorded from your booking",
       "rating": "Satisfaction {n}/5"
     }
+  },
+  "recordsNew": {
+    "metaTitle": "Add a record",
+    "title": "Log in 3 seconds",
+    "lead": "Keep a note of the procedure you had so you can look back later.",
+    "procedure": "Procedure",
+    "amount": "Amount",
+    "amountNote": "Usually {range}. {demo}",
+    "clinic": "Clinic",
+    "clinicHint": "Pick from the suggestions or type the name.",
+    "currency": "Currency",
+    "price": "Amount paid",
+    "rateNote": "Reference rate",
+    "date": "Procedure date",
+    "optional": "Optional",
+    "receipt": "Receipt photo",
+    "receiptSoon": "Planned for a later version.",
+    "rating": "Satisfaction",
+    "submit": "Save record",
+    "shareOn": "This record is anonymized and used as a price reference (you can turn this off in settings).",
+    "shareOff": "This record is not shared.",
+    "saved": {
+      "title": "Saved",
+      "next": "Next session",
+      "all": "View records",
+      "another": "Add another"
+    }
   }
 }

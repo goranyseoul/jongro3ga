@@ -365,5 +365,32 @@
       "fromBooking": "予約から自動で記録",
       "rating": "満足度 {n}/5"
     }
+  },
+  "recordsNew": {
+    "metaTitle": "記録を追加",
+    "title": "3秒で記録",
+    "lead": "受けた施術を、あとから見返せるように残します。",
+    "procedure": "施術",
+    "amount": "量",
+    "amountNote": "通常は{range}です。{demo}",
+    "clinic": "クリニック",
+    "clinicHint": "候補から選ぶか、名前をそのまま入力してください。",
+    "currency": "通貨",
+    "price": "金額",
+    "rateNote": "参考レート",
+    "date": "施術日",
+    "optional": "任意",
+    "receipt": "領収書の写真",
+    "receiptSoon": "今後対応する予定です。",
+    "rating": "満足度",
+    "submit": "記録する",
+    "shareOn": "この記録は、匿名にして価格の参考値に使われます(設定でオフにできます)。",
+    "shareOff": "この記録は共有されません。",
+    "saved": {
+      "title": "記録しました",
+      "next": "次回の目安",
+      "all": "記録を見る",
+      "another": "続けて追加"
+    }
   }
 }

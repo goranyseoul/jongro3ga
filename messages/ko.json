@@ -365,5 +365,32 @@
       "fromBooking": "예약에서 자동 기록",
       "rating": "만족도 {n}/5"
     }
+  },
+  "recordsNew": {
+    "metaTitle": "기록 추가",
+    "title": "3초 기록",
+    "lead": "받은 시술을 나중에 다시 볼 수 있게 남겨요.",
+    "procedure": "시술",
+    "amount": "용량",
+    "amountNote": "보통 {range}예요. {demo}",
+    "clinic": "병원",
+    "clinicHint": "후보에서 고르거나 이름을 그대로 입력해 주세요.",
+    "currency": "통화",
+    "price": "결제 금액",
+    "rateNote": "참고 환율",
+    "date": "시술일",
+    "optional": "선택",
+    "receipt": "영수증 사진",
+    "receiptSoon": "다음 버전에서 지원할 예정이에요.",
+    "rating": "만족도",
+    "submit": "기록하기",
+    "shareOn": "이 기록은 익명으로 처리돼 가격 참고값에 쓰여요(설정에서 끌 수 있어요).",
+    "shareOff": "이 기록은 공유되지 않아요.",
+    "saved": {
+      "title": "기록했어요",
+      "next": "다음 회차",
+      "all": "기록 보기",
+      "another": "계속 추가"
+    }
   }
 }
