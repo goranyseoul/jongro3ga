@@ -7,10 +7,11 @@ import type { MenuItem, Offer } from "@/lib/ui-data/clinic";
 import { formatAmount } from "./format";
 import { parseWon } from "./price-sheet";
 
-export type EventTarget = { offer: Offer | null };
+// `offer` edits an existing event; `preset` starts a new one from a copy (prices and conditions kept, period left empty).
+export type EventTarget = { offer: Offer | null; preset?: Offer };
 
 export type EventSheetProps = {
-  /** null closes the sheet, `{ offer: null }` starts a new event. */
+  /** null closes the sheet, `{ offer: null }` starts a new event, `{ offer: null, preset }` a copy of one. */
   target: EventTarget | null;
   items: MenuItem[];
   onClose: () => void;
@@ -22,28 +23,45 @@ export function EventSheet({ target, items, onClose, onSave }: EventSheetProps) 
     <Sheet
       open={target !== null}
       onClose={onClose}
-      title={target?.offer ? "이벤트 수정" : "이벤트 추가"}
+      title={target?.offer ? "이벤트 수정" : target?.preset ? "이벤트 복제" : "이벤트 추가"}
       closeLabel="닫기"
     >
-      {target ? <EventForm key={target.offer?.id ?? "new"} offer={target.offer} items={items} onSave={onSave} /> : null}
+      {target ? <EventForm
+          key={target.offer?.id ?? (target.preset ? `copy-${target.preset.id}` : "new")}
+          offer={target.offer}
+          preset={target.preset}
+          items={items}
+          onSave={onSave}
+        /> : null}
     </Sheet>
   );
 }
 
 type Errors = Partial<Record<"item" | "title" | "price" | "regular" | "from" | "until" | "conditions", string>>;
 
-function EventForm({ offer, items, onSave }: { offer: Offer | null; items: MenuItem[]; onSave: EventSheetProps["onSave"] }) {
-  const initialItem = offer
-    ? items.find((item) => item.procedureId === offer.procedureId && item.amount.value === offer.amount.value)
+function EventForm({
+  offer,
+  preset,
+  items,
+  onSave,
+}: {
+  offer: Offer | null;
+  preset?: Offer;
+  items: MenuItem[];
+  onSave: EventSheetProps["onSave"];
+}) {
+  const base = offer ?? preset ?? null;
+  const initialItem = base
+    ? items.find((item) => item.procedureId === base.procedureId && item.amount.value === base.amount.value)
     : undefined;
 
   const [itemId, setItemId] = useState<string | null>(initialItem?.id ?? null);
-  const [title, setTitle] = useState(offer?.title ?? "");
-  const [price, setPrice] = useState(offer ? String(offer.priceKrw) : "");
-  const [regular, setRegular] = useState(offer ? String(offer.regularPriceKrw) : "");
+  const [title, setTitle] = useState(offer ? offer.title : preset ? `${preset.title} (복사)` : "");
+  const [price, setPrice] = useState(base ? String(base.priceKrw) : "");
+  const [regular, setRegular] = useState(base ? String(base.regularPriceKrw) : "");
   const [from, setFrom] = useState(offer?.validFrom ?? "");
   const [until, setUntil] = useState(offer?.validUntil ?? "");
-  const [conditions, setConditions] = useState(offer?.conditions ?? "");
+  const [conditions, setConditions] = useState(base?.conditions ?? "");
   const [submitted, setSubmitted] = useState(false);
 
   const item = items.find((candidate) => candidate.id === itemId);
@@ -84,6 +102,7 @@ function EventForm({ offer, items, onSave }: { offer: Offer | null; items: MenuI
       validFrom: from,
       validUntil: until,
       conditions: conditions.trim(),
+      active: offer?.active ?? true,
     });
   };
 

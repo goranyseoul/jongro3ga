@@ -4,11 +4,14 @@ import { useState } from "react";
 import { Button, Card, CardHeader, Money, Table, type TableColumn } from "@/components/ui";
 import { MENU_ITEMS, OFFERS, TODAY, type MenuItem, type Offer } from "@/lib/ui-data/clinic";
 import { formatCurrency } from "@/lib/money";
+import { ConfirmSheet } from "./confirm-sheet";
 import { EventSheet, type EventTarget } from "./event-sheet";
 import { formatAmount, formatDate } from "./format";
 import { PriceSheet } from "./price-sheet";
+import { Switch } from "./switch";
 
 function offerStatus(offer: Offer): { text: string; tone: string } {
+  if (!offer.active) return { text: "노출 중지", tone: "text-muted" };
   if (offer.validUntil < TODAY) return { text: "종료", tone: "text-muted" };
   if (offer.validFrom > TODAY) return { text: "시작 전", tone: "text-muted" };
   return { text: "진행 중", tone: "text-success" };
@@ -21,24 +24,35 @@ export function MenuEditor() {
   const [offers, setOffers] = useState<Offer[]>(OFFERS);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [eventTarget, setEventTarget] = useState<EventTarget | null>(null);
+  const [deleting, setDeleting] = useState<Offer | null>(null);
   const [notice, setNotice] = useState("");
 
   const saveItem = (next: MenuItem) => {
     setItems((current) => current.map((item) => (item.id === next.id ? next : item)));
     setEditingItem(null);
-    setNotice(`${next.nameKo} ${formatAmount(next.amount)} 가격을 ${formatCurrency(next.priceKrw, "KRW")}으로 저장했어요`);
+    setNotice(`${next.nameKo} ${formatAmount(next.amount)} 가격 저장: ${formatCurrency(next.priceKrw, "KRW")}`);
   };
 
   const saveOffer = (next: Offer) => {
     const exists = offers.some((offer) => offer.id === next.id);
     setOffers((current) => (exists ? current.map((offer) => (offer.id === next.id ? next : offer)) : [...current, next]));
     setEventTarget(null);
-    setNotice(`이벤트 "${next.title}"을 ${exists ? "수정" : "추가"}했어요`);
+    setNotice(`이벤트 "${next.title}" ${exists ? "수정" : "추가"}했어요`);
   };
 
   const removeOffer = (offer: Offer) => {
     setOffers((current) => current.filter((candidate) => candidate.id !== offer.id));
-    setNotice(`이벤트 "${offer.title}"을 삭제했어요`);
+    setDeleting(null);
+    setNotice(`이벤트 "${offer.title}" 삭제했어요`);
+  };
+
+  const toggleOffer = (offer: Offer, active: boolean) => {
+    setOffers((current) => current.map((candidate) => (candidate.id === offer.id ? { ...candidate, active } : candidate)));
+    setNotice(
+      active
+        ? `이벤트 "${offer.title}" 노출을 다시 켰어요`
+        : `이벤트 "${offer.title}" 노출을 껐어요. 고객 에이전트에게 전달되지 않아요`,
+    );
   };
 
   const nameOf = (procedureId: string) => items.find((item) => item.procedureId === procedureId)?.nameKo ?? procedureId;
@@ -113,6 +127,11 @@ export function MenuEditor() {
     },
     { key: "conditions", header: "조건", cell: (offer) => offer.conditions },
     {
+      key: "active",
+      header: "노출",
+      cell: (offer) => <Switch checked={offer.active} onChange={(next) => toggleOffer(offer, next)} label={`${offer.title} 노출`} />,
+    },
+    {
       key: "status",
       header: "상태",
       cell: (offer) => {
@@ -129,7 +148,10 @@ export function MenuEditor() {
           <Button variant="secondary" onClick={() => setEventTarget({ offer })}>
             수정
           </Button>
-          <Button variant="ghost" onClick={() => removeOffer(offer)}>
+          <Button variant="secondary" onClick={() => setEventTarget({ offer: null, preset: offer })}>
+            복제
+          </Button>
+          <Button variant="ghost" onClick={() => setDeleting(offer)}>
             삭제
           </Button>
         </div>
@@ -171,6 +193,18 @@ export function MenuEditor() {
       <p className="text-caption text-subtle">데모 데이터예요. 변경은 이 화면을 닫을 때까지만 유지돼요</p>
 
       <PriceSheet item={editingItem} onClose={() => setEditingItem(null)} onSave={saveItem} />
+      <ConfirmSheet
+        open={deleting !== null}
+        title="이벤트 삭제"
+        message={
+          deleting
+            ? `"${deleting.title}" 이벤트를 삭제하면 되돌릴 수 없어요. 잠시 숨기려면 노출을 꺼 두세요`
+            : ""
+        }
+        confirmLabel="삭제"
+        onConfirm={() => deleting && removeOffer(deleting)}
+        onClose={() => setDeleting(null)}
+      />
       <EventSheet target={eventTarget} items={items} onClose={() => setEventTarget(null)} onSave={saveOffer} />
     </div>
   );
