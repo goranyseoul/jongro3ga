@@ -52,5 +52,27 @@
       "doctor": "Doctors decide on diagnosis and whether a procedure suits you. Pibu does not provide medical care.",
       "records": "Price checks appear as a one-to-one answer to your own request, never as a public advertisement."
     }
+  },
+  "signup": {
+    "metaTitle": "Get started",
+    "title": "Get started",
+    "lead": "Sign up with your email, or pick a demo account.",
+    "emailLabel": "Email address",
+    "emailHint": "No email is sent in the demo.",
+    "emailError": "Check the format of the email address.",
+    "submit": "Continue with email",
+    "or": "or",
+    "demoTitle": "Try a demo account",
+    "demoLead": "These are fictional people. Picking one switches the screens to their language.",
+    "startLabel": {
+      "onboarding": "Starts with creating the agent",
+      "home": "Starts with a finished agent"
+    },
+    "accounts": {
+      "yuki": "Tokyo · 29 · Japanese",
+      "lin": "Shanghai · 33 · Chinese",
+      "emily": "Los Angeles · 26 · English",
+      "jisoo": "Seoul · 34 · Korean · records only"
+    }
   }
 }
