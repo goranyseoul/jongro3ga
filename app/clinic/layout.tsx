@@ -5,7 +5,7 @@ import { CLINIC, OPERATION_MODE_TEXT } from "@/lib/ui-data/clinic";
 import "@/styles/clinic.css";
 
 export const metadata: Metadata = {
-  title: { default: "병원 콘솔 · Pibu", template: "%s · 병원 콘솔 · Pibu" },
+  title: { default: "병원 콘솔 · PibooK", template: "%s · 병원 콘솔 · PibooK" },
 };
 
 export default function ClinicLayout({ children }: { children: ReactNode }) {
@@ -15,7 +15,7 @@ export default function ClinicLayout({ children }: { children: ReactNode }) {
         <div className="clinic-brand">
           <p className="text-title font-semi">{CLINIC.name}</p>
           <p className="text-caption text-subtle">
-            Pibu 병원 콘솔 · {OPERATION_MODE_TEXT[CLINIC.operationMode]}
+            PibooK 병원 콘솔 · {OPERATION_MODE_TEXT[CLINIC.operationMode]}
           </p>
         </div>
         <ClinicNav />
