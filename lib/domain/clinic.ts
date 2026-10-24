@@ -1,4 +1,4 @@
-import type { BookingRequestV1, BookingV1 } from "../a2a/schemas";
+import type { BookingRequestV1, BookingV1, ZkClause } from "../a2a/schemas";
 import type { Amount, Area, I18nText, IsoDate, IsoDateTime, Krw, Locale } from "./common";
 
 // Entities of the `clinic` store namespace, docs/spec/06-data-model.md.
@@ -47,6 +47,8 @@ export interface Offer {
   validFrom: IsoDate;
   validUntil: IsoDate;
   conditions: string;
+  /** Set when the event applies by proof alone. */
+  zkClauses?: ZkClause[];
 }
 
 export type Weekday = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
