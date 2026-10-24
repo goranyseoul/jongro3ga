@@ -24,9 +24,8 @@ import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
-import { cn } from "@/lib/cn";
 import { DEMO_TODAY } from "@/lib/ui-data/customer";
-import { LOCALES, LOCALE_NAME, wordBreak } from "../locales";
+import { LOCALES, LOCALE_NAME } from "../locales";
 import { FaceParticles } from "../hero/face-particles";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
@@ -136,6 +135,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
 
   const [started, setStarted] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
+  const [engaged, setEngaged] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [step, setStep] = useState<StepId>("locale");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -562,12 +562,13 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   );
 
   if (!started) {
-    const kw = wordBreak(locale);
     return (
       <div lang={locale} className="flex min-h-dvh flex-col">
         <Splash wordmark={intro.wordmark} />
-        <section className="theme-sunrise flex min-h-dvh flex-col">
-        <header className="flex justify-end px-sp-4 py-sp-2 md:px-sp-6">
+        <section className="theme-sunrise relative flex min-h-dvh flex-col overflow-hidden">
+        <FaceParticles className="absolute inset-0" shrink={engaged} />
+        <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+          <span className="type-hero">{intro.wordmark}</span>
           <Button
             variant="secondary"
             aria-expanded={signupOpen}
@@ -577,14 +578,20 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             {intro.signup.toggle}
           </Button>
         </header>
-        <main className="flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12">
-          <div className="flex w-full max-w-2xl flex-col gap-sp-6">
-            <FaceParticles />
-            <div className="flex flex-col items-center gap-sp-3 text-center">
-              <h1 className="type-wordmark">{intro.wordmark}</h1>
-              <p className={cn(kw, "type-hero")}>{intro.title}</p>
-              <p className={cn(kw, "text-body text-muted")}>{intro.body}</p>
-            </div>
+        {/* only the chat on the first screen (owner reference: jahed/ai-chat-input); the face floats above it
+            and shrinks into particles while the chat has focus */}
+        <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-16">
+          <h1 className="sr-only">
+            {intro.wordmark} · {intro.title}
+          </h1>
+          <p className="sr-only">{intro.body}</p>
+          <div
+            className="flex w-full max-w-2xl flex-col gap-sp-6"
+            onFocus={() => setEngaged(true)}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setEngaged(false);
+            }}
+          >
             <ChatInput
               onSend={(text) => start(text)}
               label={c.inputLabel}
