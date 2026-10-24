@@ -56,6 +56,35 @@
       "completed": "Completed"
     }
   },
+  "account": {
+    "logIn": "Log in",
+    "signUp": "Sign up",
+    "menuLabel": "Account",
+    "menuFor": "Account menu for {name}",
+    "myPage": "My page",
+    "records": "My records",
+    "data": "Data and consents",
+    "logOut": "Log out",
+    "guestName": "Guest",
+    "demoAccount": "Demo account",
+    "login": {
+      "metaTitle": "Log in",
+      "title": "Log in",
+      "lead": "Welcome back. Your agent and your records are where you left them.",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "emailError": "Enter your email address.",
+      "passwordError": "Enter your password.",
+      "submit": "Log in",
+      "noAccount": "New to PibooK?",
+      "signupLink": "Create an account",
+      "demoTitle": "Or use a demo account",
+      "demoLead": "Fictional people with their records already filled in.",
+      "demoNote": "This is a demo. Any email and password will sign you in, and nothing is sent.",
+      "signedIn": "You are logged in as {name}.",
+      "continue": "Continue"
+    }
+  },
   "landing": {
     "metaTitle": "Your agent talks to Korean clinics for you",
     "metaDescription": "Tell your agent what you want. It organizes your conditions, gathers quotes, checks prices, books and keeps your records.",

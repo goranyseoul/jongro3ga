@@ -56,6 +56,35 @@
       "completed": "已施术"
     }
   },
+  "account": {
+    "logIn": "登录",
+    "signUp": "注册",
+    "menuLabel": "账户",
+    "menuFor": "{name}的账户菜单",
+    "myPage": "我的主页",
+    "records": "我的记录",
+    "data": "数据与授权",
+    "logOut": "退出登录",
+    "guestName": "访客",
+    "demoAccount": "演示账户",
+    "login": {
+      "metaTitle": "登录",
+      "title": "登录",
+      "lead": "欢迎回来。你的代理和记录都还在原处。",
+      "emailLabel": "邮箱地址",
+      "passwordLabel": "密码",
+      "emailError": "请输入邮箱地址。",
+      "passwordError": "请输入密码。",
+      "submit": "登录",
+      "noAccount": "第一次使用 PibooK？",
+      "signupLink": "立即注册",
+      "demoTitle": "或使用演示账户",
+      "demoLead": "虚构的人物，记录已经预先填好。",
+      "demoNote": "这是演示版本，任意邮箱和密码都可以登录，不会发送任何邮件。",
+      "signedIn": "你已登录为 {name}。",
+      "continue": "继续"
+    }
+  },
   "landing": {
     "metaTitle": "由您的专属代理,代您与韩国诊所沟通",
     "metaDescription": "只需说出想做的项目。整理条件、获取报价、核对价格、预约与记录,都由您的代理完成。",

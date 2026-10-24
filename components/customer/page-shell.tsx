@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
+import { AccountMenu } from "./account-menu";
 import { AppNav, SettingsLink } from "./app-nav";
 import { LocaleSwitcher } from "./locale-switcher";
 
@@ -43,7 +44,13 @@ export async function PageShell({ children, variant = "app", width = "narrow" }:
           ) : null}
           <div className="flex items-center gap-sp-1">
             <LocaleSwitcher label={t("language")} />
-            {isApp ? <SettingsLink href="/settings/data" label={t("nav.settings")} /> : null}
+            {/* below sm the gear moves into the account menu, the header has no room for both */}
+            {isApp ? (
+              <div className="hidden sm:flex">
+                <SettingsLink href="/settings/data" label={t("nav.settings")} />
+              </div>
+            ) : null}
+            <AccountMenu settingsHref={isApp ? "/settings/data" : undefined} />
           </div>
         </div>
       </header>
