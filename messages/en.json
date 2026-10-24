@@ -449,5 +449,42 @@
       "d30": "In 30 days",
       "questions": "Actual downtime · how it feels · whether you would return"
     }
+  },
+  "settings": {
+    "metaTitle": "My data",
+    "title": "My data",
+    "consents": {
+      "title": "Consent settings",
+      "lead": "You can switch each consent on or off at any time. A change is recorded as a new consent.",
+      "on": "On",
+      "off": "Off",
+      "fixed": "Required · always on",
+      "scope": "What is shared",
+      "version": "Text version {version}",
+      "at": "Agreed on {date}",
+      "shareWithClinic": {
+        "title": "Sharing with clinics",
+        "description": "Your safety information and contact details are passed to a clinic only when you send a booking."
+      }
+    },
+    "agent": {
+      "title": "My agent card",
+      "lead": "This is what your agent shows to other agents."
+    },
+    "export": {
+      "title": "Export your data",
+      "body": "Save your profile, consents and procedure records as JSON.",
+      "button": "Export JSON"
+    },
+    "remove": {
+      "title": "Delete everything",
+      "body": "This deletes your profile, consent history, procedure records and conversations. It cannot be undone.",
+      "button": "Delete everything",
+      "confirmTitle": "Delete everything?",
+      "confirmBody": "Your agent will also be deactivated. This cannot be undone.",
+      "confirm": "Delete",
+      "done": "Deleted. In this demo, the actions saved in this browser were cleared.",
+      "top": "Back to start"
+    }
   }
 }

@@ -449,5 +449,42 @@
       "d30": "30天后",
       "questions": "实际恢复期 · 效果感受 · 是否愿意再做"
     }
+  },
+  "settings": {
+    "metaTitle": "数据",
+    "title": "我的数据",
+    "consents": {
+      "title": "同意设置",
+      "lead": "同意可以随时开启或关闭。变更会作为新的同意被记录。",
+      "on": "开",
+      "off": "关",
+      "fixed": "必需 · 始终开启",
+      "scope": "共享范围",
+      "version": "文本版本 {version}",
+      "at": "{date} 同意",
+      "shareWithClinic": {
+        "title": "向诊所共享信息",
+        "description": "仅在发送预约时,才会把安全信息和联系方式交给诊所。"
+      }
+    },
+    "agent": {
+      "title": "我的代理卡",
+      "lead": "这是您的代理向其他代理展示的信息。"
+    },
+    "export": {
+      "title": "导出数据",
+      "body": "以 JSON 保存个人资料、同意记录和施术记录。",
+      "button": "导出 JSON"
+    },
+    "remove": {
+      "title": "全部删除",
+      "body": "将删除个人资料、同意历史、施术记录和对话。无法恢复。",
+      "button": "全部删除",
+      "confirmTitle": "确定要删除吗?",
+      "confirmBody": "删除后,代理也会停用。此操作无法恢复。",
+      "confirm": "删除",
+      "done": "已删除。在本演示中,已清除保存在此浏览器中的操作内容。",
+      "top": "返回首页"
+    }
   }
 }
