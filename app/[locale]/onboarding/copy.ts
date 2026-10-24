@@ -12,6 +12,7 @@ export type OnboardingCopy = {
   inputLabel: string;
   placeholder: string;
   send: string;
+  inputHint: string;
   next: string;
   skip: string;
   typing: string;
@@ -78,6 +79,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     inputLabel: "메시지",
     placeholder: "메시지를 입력하세요",
     send: "보내기",
+    inputHint: "Enter 보내기 · Shift+Enter 줄바꿈",
     next: "다음",
     skip: "건너뛰기",
     typing: "입력 중",
@@ -175,6 +177,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     inputLabel: "メッセージ",
     placeholder: "メッセージを入力",
     send: "送信",
+    inputHint: "Enterで送信 · Shift+Enterで改行",
     next: "次へ",
     skip: "スキップ",
     typing: "入力中",
@@ -272,6 +275,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     inputLabel: "Message",
     placeholder: "Type a message",
     send: "Send",
+    inputHint: "Enter to send · Shift+Enter for a new line",
     next: "Next",
     skip: "Skip",
     typing: "Typing",
@@ -375,6 +379,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     inputLabel: "消息",
     placeholder: "输入消息",
     send: "发送",
+    inputHint: "Enter 发送 · Shift+Enter 换行",
     next: "下一步",
     skip: "跳过",
     typing: "正在输入",

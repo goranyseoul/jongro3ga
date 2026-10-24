@@ -547,6 +547,7 @@ export function OnboardingChat({ locale }: { locale: Locale }) {
               sendLabel={c.send}
               placeholder={c.placeholder}
               disabled={typing || done}
+              hint={<span className="hidden sm:inline">{c.inputHint}</span>}
             />
           </div>
         </div>
