@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/ops.css";
 import { WalletView } from "./wallet-view";
 
-export const metadata: Metadata = { title: "브라우저 지갑 · PibooK" };
+export const metadata: Metadata = { title: "브라우저 보관함 · PibooK" };
 
 // The wallet reads localStorage and loads the WASM prover, so everything below the frame is client side.
 export default function DemoWalletPage() {
