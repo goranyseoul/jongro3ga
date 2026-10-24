@@ -1,6 +1,6 @@
 {
   "common": {
-    "brand": "Pibu",
+    "brand": "Pibuk",
     "language": "Language",
     "nav": {
       "label": "Main menu",
@@ -13,7 +13,7 @@
       "regLabel": "Foreign patient referral agency registration no.",
       "regDemo": "Demo (not registered)",
       "patientRights": "Notice on the protection of foreign patients' rights",
-      "notice": "Pibu is a service where an AI agent helps you contact and compare clinics. Doctors decide on diagnosis and whether a procedure is suitable."
+      "notice": "Pibuk is a service where an AI agent helps you contact and compare clinics. Doctors decide on diagnosis and whether a procedure is suitable."
     },
     "demoValue": "Demo value",
     "back": "Back",
@@ -80,7 +80,7 @@
     "careTitle": "What to know",
     "care": {
       "consent": "Your information goes to a clinic only within the scope you agreed to.",
-      "doctor": "Doctors decide on diagnosis and whether a procedure suits you. Pibu does not provide medical care.",
+      "doctor": "Doctors decide on diagnosis and whether a procedure suits you. Pibuk does not provide medical care.",
       "records": "Price checks appear as a one-to-one answer to your own request, never as a public advertisement."
     }
   },
@@ -152,7 +152,7 @@
     "send": "Send",
     "typing": "Typing",
     "agent": {
-      "greeting": "Hello, I'm your Pibu agent. Tell me which procedure you'd like.",
+      "greeting": "Hello, I'm your Pibuk agent. Tell me which procedure you'd like.",
       "askProcedure": "Which procedure is it about? Pick one below or just type it.",
       "summary": "Got it, {procedure}. I organized your conditions. Tap any item to change it.",
       "updated": "I updated the conditions for {procedure}."
@@ -237,7 +237,7 @@
       "action": "Book"
     },
     "mode": {
-      "proxy": "Pibu is answering for the clinic · reference price",
+      "proxy": "Pibuk is answering for the clinic · reference price",
       "clinic": "Answered by the clinic · confirmed price"
     },
     "vat": {
@@ -290,7 +290,7 @@
     "title": "Booking details",
     "statusNote": {
       "pending_clinic_clinic": "The clinic is checking your booking. It will show here once confirmed.",
-      "pending_clinic_proxy": "Pibu is checking with the clinic by phone or message. It will show here once confirmed.",
+      "pending_clinic_proxy": "Pibuk is checking with the clinic by phone or message. It will show here once confirmed.",
       "confirmed": "Your booking is confirmed.",
       "completed": "Your procedure record has been received."
     },
@@ -307,7 +307,7 @@
       "confirmedBy": "Confirmed by",
       "by": {
         "clinic_staff": "Clinic staff",
-        "pibu_operator": "Pibu operations",
+        "pibu_operator": "Pibuk operations",
         "auto": "Automatic"
       }
     },
@@ -327,12 +327,12 @@
       "contract": "The terms of the treatment agreement",
       "cost": "The expected treatment cost",
       "dispute": "How a dispute is resolved",
-      "doctor": "The doctor decides on diagnosis and whether the procedure suits you. Pibu does not explain these on the clinic's behalf."
+      "doctor": "The doctor decides on diagnosis and whether the procedure suits you. Pibuk does not explain these on the clinic's behalf."
     },
     "downtime": "Recovery may not be over before you leave Korea.",
     "actions": {
       "simulate": "Demo: simulate the clinic's confirmation",
-      "simulateNote": "In the real service the clinic or Pibu operations confirm the booking.",
+      "simulateNote": "In the real service the clinic or Pibuk operations confirm the booking.",
       "record": "Record the procedure day",
       "recordNote": "After the procedure you can record what you paid and the amount you received.",
       "viewRecords": "View records",
@@ -490,7 +490,7 @@
   "legal": {
     "metaTitle": "Notice on the protection of foreign patients' rights",
     "title": "Notice on the protection of foreign patients' rights",
-    "lead": "Pibu is a foreign patient referral agency. This page explains what you should know before you use it.",
+    "lead": "Pibuk is a foreign patient referral agency. This page explains what you should know before you use it.",
     "demoNotice": "This is demo text. Before the real service opens it will be replaced with text reviewed by legal counsel.",
     "reg": {
       "label": "Registration no.",
@@ -499,18 +499,18 @@
     "english": "English (required text)",
     "service": {
       "title": "What the service is and its terms",
-      "content": "Pibu's AI agent organizes your request, asks clinics for quotes, checks the prices against past payment records, and passes your booking request to the clinic.",
-      "noMedical": "Pibu does not provide medical care. Diagnosis, whether a procedure suits you, and the procedure itself are the responsibility of the clinic's doctors.",
-      "price": "Amounts shown are quotes. A reference price that Pibu gives on a clinic's behalf may differ from the actual price. The clinic confirms the final amount.",
+      "content": "Pibuk's AI agent organizes your request, asks clinics for quotes, checks the prices against past payment records, and passes your booking request to the clinic.",
+      "noMedical": "Pibuk does not provide medical care. Diagnosis, whether a procedure suits you, and the procedure itself are the responsibility of the clinic's doctors.",
+      "price": "Amounts shown are quotes. A reference price that Pibuk gives on a clinic's behalf may differ from the actual price. The clinic confirms the final amount.",
       "explain": "Before a procedure the clinic explains the diagnosis, the treatment method, possible side effects, the treatment agreement, the expected cost, and how disputes are resolved.",
-      "fee": "Pibu may receive a referral fee from a clinic within the limit set by law. That fee does not affect which clinics are shown or how prices are checked. Pibu does not charge customers.",
+      "fee": "Pibuk may receive a referral fee from a clinic within the limit set by law. That fee does not affect which clinics are shown or how prices are checked. Pibuk does not charge customers.",
       "eligibility": "Clinic matching and booking are available only to foreign nationals on a short stay. They are not available to Korean nationals or to people living in Korea with an alien registration or residence report."
     },
     "dispute": {
       "title": "How disputes are resolved",
-      "contact": "Send questions and complaints to Pibu first. The contact details will be shown here before the service opens (demo).",
+      "contact": "Send questions and complaints to Pibuk first. The contact details will be shown here before the service opens (demo).",
       "mediation": "You can also consult public bodies such as the Korea Medical Dispute Mediation and Arbitration Agency (KOMEDI) about medical disputes. The Korea Health Industry Development Institute (KHIDI) also has a support desk for foreign patients.",
-      "records": "To help review a complaint, Pibu keeps records of your requests, quotes and bookings, and passes them to the clinic if you ask."
+      "records": "To help review a complaint, Pibuk keeps records of your requests, quotes and bookings, and passes them to the clinic if you ask."
     },
     "privacy": {
       "title": "Protection of personal information",

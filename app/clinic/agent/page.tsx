@@ -19,7 +19,7 @@ const CARD_LABELS = { version: "버전", skills: "스킬", endpoint: "엔드포�
 // 02-agents.md: clinic.quote answers from menu data, clinic.book waits for the clinic (direct mode).
 const MODE_NOTE: Record<typeof CLINIC_OPERATION.mode, string> = {
   clinic: "병원이 직접 운영해요. 견적은 메뉴·가격 데이터로 자동 응답하고, 예약은 요청함에서 직접 확정해요",
-  proxy: "Pibu가 대신 운영해요. 가격은 참고가로 안내되고, 예약은 병원 확인 뒤 확정돼요",
+  proxy: "Pibuk이 대신 운영해요. 가격은 참고가로 안내되고, 예약은 병원 확인 뒤 확정돼요",
 };
 
 export default function ClinicAgentPage() {
@@ -37,7 +37,7 @@ export default function ClinicAgentPage() {
       value: `${formatDate(CLINIC_OPERATION.lastVerifiedAt)} (${age === 0 ? "오늘" : `${age}일 전`})`,
     },
     { label: "외국인환자 유치 등록", value: CLINIC_OPERATION.foreignPatientFacilityRegistered ? "등록됨" : "미등록" },
-    { label: "호출 인증", value: "Pibu 발급 토큰과 추천 토큰" },
+    { label: "호출 인증", value: "Pibuk 발급 토큰과 추천 토큰" },
   ];
 
   return (

@@ -9,7 +9,7 @@ export function OpsShell({ children }: { children: ReactNode }) {
     <div className="ops-shell">
       <aside className="ops-sidebar flex flex-col border-b border-border-soft bg-bg lg:border-b-0 lg:border-e">
         <div className="flex items-baseline justify-between gap-sp-3 px-sp-4 py-sp-3 lg:flex-col lg:items-start lg:gap-sp-1 lg:py-sp-6">
-          <p className="text-title font-semi">Pibu 운영</p>
+          <p className="text-title font-semi">Pibuk 운영</p>
           <Link href="/demo" className={`flex min-h-touch items-center text-label text-muted hover:text-text ${focusRing}`}>
             데모 컨트롤
           </Link>

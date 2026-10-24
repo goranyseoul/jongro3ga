@@ -50,7 +50,7 @@ export function HomeView() {
       <Card className="flex flex-col gap-sp-4">
         <CardHeader
           title={t("agent.title")}
-          description={`Pibu Customer Agent ${profile.agentId}`}
+          description={`Pibuk Customer Agent ${profile.agentId}`}
           as="h2"
         />
         <div className="grid grid-cols-2 gap-sp-4 sm:grid-cols-3">

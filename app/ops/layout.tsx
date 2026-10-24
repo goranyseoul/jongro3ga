@@ -4,7 +4,7 @@ import { OpsShell } from "@/components/ops";
 import "@/styles/ops.css";
 
 export const metadata: Metadata = {
-  title: { default: "운영 콘솔 · Pibu", template: "%s · 운영 콘솔 · Pibu" },
+  title: { default: "운영 콘솔 · Pibuk", template: "%s · 운영 콘솔 · Pibuk" },
 };
 
 export default function OpsLayout({ children }: { children: ReactNode }) {

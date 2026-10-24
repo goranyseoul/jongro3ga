@@ -11,7 +11,7 @@ export const TODAY: IsoDate = "2026-10-24";
 export type ClinicOperationMode = "proxy" | "clinic";
 
 export const OPERATION_MODE_TEXT: Record<ClinicOperationMode, string> = {
-  proxy: "Pibu 대행",
+  proxy: "Pibuk 대행",
   clinic: "직접 운영",
 };
 
@@ -400,7 +400,7 @@ export const CLINIC_OPERATION = {
 export const AGENT_CARD: AgentCard = {
   name: "Mint Dermatology Clinic Agent",
   description:
-    "Answers prices, doses, monthly offers and available times for Mint Dermatology Clinic (Gangnam), and accepts booking requests referred by Pibu.",
+    "Answers prices, doses, monthly offers and available times for Mint Dermatology Clinic (Gangnam), and accepts booking requests referred by Pibuk.",
   supportedInterfaces: [{ url: AGENT_ENDPOINT, protocolBinding: "JSONRPC", protocolVersion: "1.0" }],
   provider: { organization: "Mint Dermatology Clinic", url: "https://pibu.example" },
   version: "0.1.0",
@@ -416,7 +416,7 @@ export const AGENT_CARD: AgentCard = {
       },
       {
         uri: "https://pibu.app/ext/referral/v1",
-        description: "quote and book requests must carry a Pibu referral token in metadata.referralToken",
+        description: "quote and book requests must carry a Pibuk referral token in metadata.referralToken",
         required: false,
       },
     ],
@@ -440,6 +440,6 @@ export const AGENT_CARD: AgentCard = {
       description: "Requests a booking. The clinic confirms from its inbox, so the task stays working until confirmed.",
       tags: ["booking"],
     },
-    { id: "clinic.cancel", name: "Cancel booking", description: "Cancels a booking made through Pibu.", tags: ["booking"] },
+    { id: "clinic.cancel", name: "Cancel booking", description: "Cancels a booking made through Pibuk.", tags: ["booking"] },
   ],
 };
