@@ -364,6 +364,18 @@
       "notShared": "匿名共有: オフ",
       "fromBooking": "予約から自動で記録",
       "rating": "満足度 {n}/5"
+    },
+    "calendar": {
+      "title": "カレンダー",
+      "prev": "前の月",
+      "next": "次の月",
+      "done": "施術した日",
+      "planned": "次回",
+      "overdue": "予定日超過",
+      "empty": "この日の記録はありません。",
+      "hasEvents": "予定{n}件",
+      "doneSession": "{n}回目 済み",
+      "plannedSession": "{n}回目 予定"
     }
   },
   "recordsNew": {

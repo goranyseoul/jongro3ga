@@ -364,6 +364,18 @@
       "notShared": "Anonymous sharing: off",
       "fromBooking": "Recorded from your booking",
       "rating": "Satisfaction {n}/5"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "prev": "Previous month",
+      "next": "Next month",
+      "done": "Treated",
+      "planned": "Next session",
+      "overdue": "Past due",
+      "empty": "Nothing on this day.",
+      "hasEvents": "{n} items",
+      "doneSession": "Session {n} done",
+      "plannedSession": "Session {n} planned"
     }
   },
   "recordsNew": {
