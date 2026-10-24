@@ -17,6 +17,39 @@
   flex: 1;
 }
 
+/* Below lg: title and account menu on one row, tabs under them. From lg: a sidebar with the
+   account menu pinned to the bottom. */
+.ops-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "head account"
+    "nav nav";
+  align-items: center;
+}
+
+.ops-sidebar-head {
+  grid-area: head;
+}
+
+.ops-sidebar > nav {
+  grid-area: nav;
+}
+
+.ops-sidebar-account {
+  grid-area: account;
+  min-width: 0;
+}
+
+/* /ops/login: no shell, one centred column */
+.ops-auth {
+  display: flex;
+  min-height: 100svh;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--sp-8) var(--sp-4) var(--sp-12);
+}
+
 @media (min-width: 1024px) {
   .ops-shell {
     display: grid;
@@ -28,6 +61,21 @@
     top: 0;
     height: 100svh;
     overflow-y: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "nav"
+      "account";
+    align-items: start;
+  }
+
+  .ops-sidebar-account {
+    align-self: end;
+  }
+
+  .ops-auth {
+    align-items: center;
   }
 }
 
