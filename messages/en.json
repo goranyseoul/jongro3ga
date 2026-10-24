@@ -1,0 +1,527 @@
+{
+  "common": {
+    "brand": "Pibu",
+    "language": "Language",
+    "nav": {
+      "label": "Main menu",
+      "home": "Home",
+      "chat": "Chat",
+      "records": "Records",
+      "settings": "My data"
+    },
+    "footer": {
+      "regLabel": "Foreign patient referral agency registration no.",
+      "regDemo": "Demo (not registered)",
+      "patientRights": "Notice on the protection of foreign patients' rights",
+      "notice": "Pibu is a service where an AI agent helps you contact and compare clinics. Doctors decide on diagnosis and whether a procedure is suitable."
+    },
+    "demoValue": "Demo value",
+    "back": "Back",
+    "close": "Close",
+    "cancel": "Cancel",
+    "next": "Next",
+    "save": "Save",
+    "optional": "Optional",
+    "required": "Required",
+    "approx": "Reference",
+    "session": "Session {n}: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "shot",
+      "unit": "unit",
+      "line": "line",
+      "session": "session"
+    },
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value, plural, one {# shot} other {# shots}}",
+      "unit": "{value, plural, one {# unit} other {# units}}",
+      "line": "{value, plural, one {# line} other {# lines}}",
+      "session": "{value, plural, one {# session} other {# sessions}}"
+    },
+    "area": {
+      "gangnam": "Gangnam",
+      "sinsa": "Sinsa",
+      "apgujeong": "Apgujeong",
+      "myeongdong": "Myeongdong",
+      "hongdae": "Hongdae",
+      "other": "Other"
+    },
+    "bookingStatus": {
+      "requested": "Request sent",
+      "pending_clinic": "Waiting for the clinic",
+      "confirmed": "Booking confirmed",
+      "canceled": "Canceled",
+      "no_show": "No show",
+      "completed": "Completed"
+    }
+  },
+  "landing": {
+    "metaTitle": "Your agent talks to Korean clinics for you",
+    "metaDescription": "Tell your agent what you want. It organizes your conditions, gathers quotes, checks prices, books and keeps your records.",
+    "title": "Your agent talks to Korean clinics for you",
+    "lead": "Tell your agent what you want. It organizes your conditions, asks clinics for quotes, checks the prices and handles the booking.",
+    "start": "Get started",
+    "stepsTitle": "Three steps",
+    "steps": {
+      "tell": {
+        "title": "Tell your agent",
+        "body": "Chat about what you want. Your agent turns it into a condition card with the procedure, amount, budget, area, language and dates."
+      },
+      "compare": {
+        "title": "Your agent compares",
+        "body": "Your agent asks clinics for quotes, and the platform checks them against past payment records."
+      },
+      "book": {
+        "title": "Choose, book and keep records",
+        "body": "Compare the quotes and book. Your record after the visit also helps you time the next session."
+      }
+    },
+    "careTitle": "What to know",
+    "care": {
+      "consent": "Your information goes to a clinic only within the scope you agreed to.",
+      "doctor": "Doctors decide on diagnosis and whether a procedure suits you. Pibu does not provide medical care.",
+      "records": "Price checks appear as a one-to-one answer to your own request, never as a public advertisement."
+    }
+  },
+  "signup": {
+    "metaTitle": "Get started",
+    "title": "Get started",
+    "lead": "Sign up with your email, or pick a demo account.",
+    "emailLabel": "Email address",
+    "emailHint": "No email is sent in the demo.",
+    "emailError": "Check the format of the email address.",
+    "submit": "Continue with email",
+    "or": "or",
+    "demoTitle": "Try a demo account",
+    "demoLead": "These are fictional people. Picking one switches the screens to their language.",
+    "startLabel": {
+      "onboarding": "Starts with creating the agent",
+      "home": "Starts with a finished agent"
+    },
+    "accounts": {
+      "yuki": "Tokyo · 29 · Japanese",
+      "lin": "Shanghai · 33 · Chinese",
+      "emily": "Los Angeles · 26 · English",
+      "jisoo": "Seoul · 34 · Korean · records only"
+    }
+  },
+  "home": {
+    "metaTitle": "Home",
+    "greeting": "Hello, {name}",
+    "agent": {
+      "title": "My agent",
+      "active": "Active",
+      "status": "Status",
+      "languages": "Languages needed",
+      "stay": "Stay",
+      "cardLink": "View agent card"
+    },
+    "ask": {
+      "label": "What would you like to have done?",
+      "placeholder": "For example: I want Rejuran",
+      "submit": "Ask",
+      "quick": "Pick a procedure"
+    },
+    "locked": {
+      "title": "About clinic matching and booking",
+      "body": "Clinic matching and booking are available only to foreign nationals on a short stay. Procedure records and next-session reminders are fully available."
+    },
+    "requests": {
+      "title": "Requests in progress",
+      "count": "Quotes from {count} clinics have arrived",
+      "open": "View quotes"
+    },
+    "booking": {
+      "title": "Upcoming booking",
+      "open": "Booking details"
+    },
+    "next": {
+      "title": "Next sessions",
+      "empty": "No records yet",
+      "overdue": "Past the planned date",
+      "all": "View all records",
+      "add": "Log in 3 seconds"
+    }
+  },
+  "chat": {
+    "metaTitle": "Chat",
+    "title": "Talk to your agent",
+    "inputLabel": "Message",
+    "placeholder": "For example: I want Rejuran",
+    "send": "Send",
+    "typing": "Typing",
+    "agent": {
+      "greeting": "Hello, I'm your Pibu agent. Tell me which procedure you'd like.",
+      "askProcedure": "Which procedure is it about? Pick one below or just type it.",
+      "summary": "Got it, {procedure}. I organized your conditions. Tap any item to change it.",
+      "updated": "I updated the conditions for {procedure}."
+    },
+    "locked": {
+      "title": "About clinic matching and booking",
+      "body": "Clinic matching and booking are available only to foreign nationals on a short stay. Procedure records and next-session reminders are available.",
+      "records": "View records"
+    },
+    "condition": {
+      "title": "Condition card",
+      "hint": "Tap an item to change it.",
+      "rows": {
+        "procedure": "Procedure",
+        "amount": "Amount",
+        "budget": "Budget",
+        "area": "Area",
+        "language": "Language",
+        "dates": "Dates"
+      },
+      "amountNote": "Usually {range}. The lowest amount is filled in.",
+      "budgetValue": "Up to {amount}",
+      "budgetNone": "No limit",
+      "privacy": "Only the procedure, amount, area, language and dates are sent to clinics. Your budget is not sent.",
+      "find": "Find with these conditions",
+      "done": "Done",
+      "currency": "Currency",
+      "amountInput": "Amount",
+      "rateNote": "Reference rate",
+      "from": "From",
+      "to": "To"
+    }
+  },
+  "requests": {
+    "metaTitle": "Compare quotes",
+    "title": "Compare quotes",
+    "summary": {
+      "title": "Request",
+      "procedure": "Procedure",
+      "dates": "Dates",
+      "languages": "Language",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Draft",
+      "matching": "Finding clinics",
+      "quoting": "Collecting quotes",
+      "judging": "Checking prices",
+      "comparing": "Ready to compare",
+      "booking": "Booking requested",
+      "booked": "Booked",
+      "closed": "Closed",
+      "failed": "Something went wrong"
+    },
+    "progress": {
+      "title": "What your agent did",
+      "raw": "View A2A JSON"
+    },
+    "reference": {
+      "title": "Market payment records",
+      "body": "In {count} records from the last {days} days, the price is {p25}~{p75} per {unit} (median {p50}). This is a reference from past records, not a guaranteed price."
+    },
+    "compare": {
+      "title": "Compare quotes",
+      "caption": "Quotes by clinic",
+      "hint": "You can change the order. Quotes that need attention are shown, never hidden."
+    },
+    "sort": {
+      "label": "Sort by",
+      "match": "Match",
+      "unit": "Unit price",
+      "total": "Total"
+    },
+    "columns": {
+      "clinic": "Clinic",
+      "total": "Total",
+      "unit": "Unit price",
+      "amount": "Amount",
+      "verdict": "Verdict",
+      "includes": "Included",
+      "slots": "Available times",
+      "action": "Book"
+    },
+    "mode": {
+      "proxy": "Pibu is answering for the clinic · reference price",
+      "clinic": "Answered by the clinic · confirmed price"
+    },
+    "vat": {
+      "included": "VAT included",
+      "excluded": "VAT not included ({total} with VAT)"
+    },
+    "event": {
+      "regular": "Regular price {price}",
+      "conditions": "Conditions: {text}"
+    },
+    "perUnit": "{price} per {unit}",
+    "typical": "Usually {range}",
+    "includes": {
+      "numbing_cream": "Numbing cream",
+      "soothing_mask": "Soothing mask",
+      "none": "None",
+      "excluded": "Not included: {items}"
+    },
+    "warn": {
+      "label": "Note",
+      "paidMore": "Past customers paid more than quoted (average +{pct}% in the last 90 days)",
+      "downtime": "Recovery may not be over before you leave Korea"
+    },
+    "validUntil": "Quote valid until {date}",
+    "book": "Book this clinic",
+    "pickSlot": "Pick a time to book",
+    "requested": "Booking requested",
+    "openBooking": "View booking",
+    "sheet": {
+      "title": "Confirm your booking request",
+      "clinic": "Clinic",
+      "when": "Date and time",
+      "procedure": "Procedure",
+      "total": "Total",
+      "sharedTitle": "Information shared with the clinic",
+      "name": "Name",
+      "safety": "Safety information",
+      "safetyValue": "Pregnant or breastfeeding: {pregnant} / Allergies: {allergies}",
+      "contact": "Contact",
+      "yes": "Yes",
+      "no": "No",
+      "none": "None",
+      "doctor": "The clinic's doctor decides on diagnosis and whether the procedure suits you.",
+      "send": "Send booking request",
+      "back": "Back"
+    }
+  },
+  "bookings": {
+    "metaTitle": "Booking details",
+    "title": "Booking details",
+    "statusNote": {
+      "pending_clinic_clinic": "The clinic is checking your booking. It will show here once confirmed.",
+      "pending_clinic_proxy": "Pibu is checking with the clinic by phone or message. It will show here once confirmed.",
+      "confirmed": "Your booking is confirmed.",
+      "completed": "Your procedure record has been received."
+    },
+    "info": {
+      "title": "Booking",
+      "clinic": "Clinic",
+      "when": "Date and time",
+      "address": "Address",
+      "map": "Open in maps",
+      "procedure": "Procedure",
+      "price": "Quoted price",
+      "priceNote": "This is the quoted amount. You can record what you actually paid on the day of the procedure.",
+      "id": "Booking no.",
+      "confirmedBy": "Confirmed by",
+      "by": {
+        "clinic_staff": "Clinic staff",
+        "pibu_operator": "Pibu operations",
+        "auto": "Automatic"
+      }
+    },
+    "steps": {
+      "title": "Booking progress",
+      "requested": "Booking request sent",
+      "pending": "Waiting for the clinic",
+      "confirmed": "Booking confirmed"
+    },
+    "notes": {
+      "title": "Notes from the clinic",
+      "empty": "Instructions for your visit will arrive here once the booking is confirmed."
+    },
+    "explain": {
+      "title": "What the clinic explains before the procedure",
+      "diagnosis": "The diagnosis, the treatment method and possible side effects",
+      "contract": "The terms of the treatment agreement",
+      "cost": "The expected treatment cost",
+      "dispute": "How a dispute is resolved",
+      "doctor": "The doctor decides on diagnosis and whether the procedure suits you. Pibu does not explain these on the clinic's behalf."
+    },
+    "downtime": "Recovery may not be over before you leave Korea.",
+    "actions": {
+      "simulate": "Demo: simulate the clinic's confirmation",
+      "simulateNote": "In the real service the clinic or Pibu operations confirm the booking.",
+      "record": "Record the procedure day",
+      "recordNote": "After the procedure you can record what you paid and the amount you received.",
+      "viewRecords": "View records",
+      "requests": "Back to quotes"
+    }
+  },
+  "records": {
+    "metaTitle": "Records",
+    "title": "Procedure records",
+    "add": "Log in 3 seconds",
+    "next": {
+      "title": "Next sessions",
+      "overdue": "Past the planned date",
+      "paused": "Paused",
+      "stopped": "Stopped",
+      "statusLabel": "What next for this procedure",
+      "status": {
+        "active": "Continue",
+        "paused": "Pause",
+        "stopped": "Stop"
+      },
+      "empty": "Add a record and your next session shows up here."
+    },
+    "history": {
+      "title": "History",
+      "empty": "No records yet. Add your first one.",
+      "session": "Session {n}",
+      "shared": "Anonymous sharing: on",
+      "notShared": "Anonymous sharing: off",
+      "fromBooking": "Recorded from your booking",
+      "rating": "Satisfaction {n}/5"
+    }
+  },
+  "recordsNew": {
+    "metaTitle": "Add a record",
+    "title": "Log in 3 seconds",
+    "lead": "Keep a note of the procedure you had so you can look back later.",
+    "procedure": "Procedure",
+    "amount": "Amount",
+    "amountNote": "Usually {range}. {demo}",
+    "clinic": "Clinic",
+    "clinicHint": "Pick from the suggestions or type the name.",
+    "currency": "Currency",
+    "price": "Amount paid",
+    "rateNote": "Reference rate",
+    "date": "Procedure date",
+    "optional": "Optional",
+    "receipt": "Receipt photo",
+    "receiptSoon": "Planned for a later version.",
+    "rating": "Satisfaction",
+    "submit": "Save record",
+    "shareOn": "This record is anonymized and used as a price reference (you can turn this off in settings).",
+    "shareOff": "This record is not shared.",
+    "saved": {
+      "title": "Saved",
+      "next": "Next session",
+      "all": "View records",
+      "another": "Add another"
+    }
+  },
+  "outcomes": {
+    "metaTitle": "Procedure record",
+    "title": "Record the procedure day",
+    "lead": "After the procedure, record what you actually paid and the amount you received.",
+    "wait": {
+      "title": "You can record once the booking is confirmed",
+      "body": "Please wait until the clinic has confirmed.",
+      "open": "View booking"
+    },
+    "summary": {
+      "clinic": "Clinic",
+      "when": "Procedure date",
+      "quoted": "Quoted price"
+    },
+    "fields": {
+      "currency": "Currency",
+      "paid": "Amount you actually paid",
+      "rateNote": "Reference rate",
+      "received": "Amount you received",
+      "verified": "How the product was checked",
+      "satisfaction": "Satisfaction",
+      "pain": "Pain",
+      "comment": "One line (optional)"
+    },
+    "verified": {
+      "vial_shown": "Shown the vial",
+      "packaging_shown": "Checked the packaging",
+      "explained_verbally": "Explained verbally",
+      "not_checked": "Not checked"
+    },
+    "scale": {
+      "low": "Low",
+      "high": "High",
+      "satisfactionLow": "Unhappy",
+      "satisfactionHigh": "Happy"
+    },
+    "gap": {
+      "same": "Same as the quote.",
+      "higher": "{amount} more than the quote.",
+      "lower": "{amount} less than the quote."
+    },
+    "share": "These results are used to check prices and to connect you with clinics. Your individual answers are not passed to the clinic.",
+    "submit": "Send record",
+    "saved": {
+      "title": "Record sent",
+      "body": "Thank you. Your next session has been added to your records.",
+      "next": "Next session",
+      "records": "View records"
+    },
+    "later": {
+      "title": "Check-ins to come",
+      "note": "Planned for a later version.",
+      "d7": "In 7 days",
+      "d30": "In 30 days",
+      "questions": "Actual downtime · how it feels · whether you would return"
+    }
+  },
+  "settings": {
+    "metaTitle": "My data",
+    "title": "My data",
+    "consents": {
+      "title": "Consent settings",
+      "lead": "You can switch each consent on or off at any time. A change is recorded as a new consent.",
+      "on": "On",
+      "off": "Off",
+      "fixed": "Required · always on",
+      "scope": "What is shared",
+      "version": "Text version {version}",
+      "at": "Agreed on {date}",
+      "shareWithClinic": {
+        "title": "Sharing with clinics",
+        "description": "Your safety information and contact details are passed to a clinic only when you send a booking."
+      }
+    },
+    "agent": {
+      "title": "My agent card",
+      "lead": "This is what your agent shows to other agents."
+    },
+    "export": {
+      "title": "Export your data",
+      "body": "Save your profile, consents and procedure records as JSON.",
+      "button": "Export JSON"
+    },
+    "remove": {
+      "title": "Delete everything",
+      "body": "This deletes your profile, consent history, procedure records and conversations. It cannot be undone.",
+      "button": "Delete everything",
+      "confirmTitle": "Delete everything?",
+      "confirmBody": "Your agent will also be deactivated. This cannot be undone.",
+      "confirm": "Delete",
+      "done": "Deleted. In this demo, the actions saved in this browser were cleared.",
+      "top": "Back to start"
+    }
+  },
+  "legal": {
+    "metaTitle": "Notice on the protection of foreign patients' rights",
+    "title": "Notice on the protection of foreign patients' rights",
+    "lead": "Pibu is a foreign patient referral agency. This page explains what you should know before you use it.",
+    "demoNotice": "This is demo text. Before the real service opens it will be replaced with text reviewed by legal counsel.",
+    "reg": {
+      "label": "Registration no.",
+      "demo": "Demo (not registered)"
+    },
+    "english": "English (required text)",
+    "service": {
+      "title": "What the service is and its terms",
+      "content": "Pibu's AI agent organizes your request, asks clinics for quotes, checks the prices against past payment records, and passes your booking request to the clinic.",
+      "noMedical": "Pibu does not provide medical care. Diagnosis, whether a procedure suits you, and the procedure itself are the responsibility of the clinic's doctors.",
+      "price": "Amounts shown are quotes. A reference price that Pibu gives on a clinic's behalf may differ from the actual price. The clinic confirms the final amount.",
+      "explain": "Before a procedure the clinic explains the diagnosis, the treatment method, possible side effects, the treatment agreement, the expected cost, and how disputes are resolved.",
+      "fee": "Pibu may receive a referral fee from a clinic within the limit set by law. That fee does not affect which clinics are shown or how prices are checked. Pibu does not charge customers.",
+      "eligibility": "Clinic matching and booking are available only to foreign nationals on a short stay. They are not available to Korean nationals or to people living in Korea with an alien registration or residence report."
+    },
+    "dispute": {
+      "title": "How disputes are resolved",
+      "contact": "Send questions and complaints to Pibu first. The contact details will be shown here before the service opens (demo).",
+      "mediation": "You can also consult public bodies such as the Korea Medical Dispute Mediation and Arbitration Agency (KOMEDI) about medical disputes. The Korea Health Industry Development Institute (KHIDI) also has a support desk for foreign patients.",
+      "records": "To help review a complaint, Pibu keeps records of your requests, quotes and bookings, and passes them to the clinic if you ask."
+    },
+    "privacy": {
+      "title": "Protection of personal information",
+      "collected": "We handle your nickname, nationality, age band, dates, contact details, skin concerns, past procedures, safety information and procedure records.",
+      "purpose": "We use them to run your agent, find clinics, request quotes, make bookings and check prices.",
+      "sensitive": "Skin, procedure and safety information is health information, which is sensitive. We ask for your consent to it separately from the other consents. A clinic receives only what you agreed to share, when you send a booking.",
+      "crossBorder": "Information entered outside Korea is processed on servers in Korea. We may use overseas providers for AI processing and storage. We ask for a separate consent for this as well.",
+      "retention": "Your information is kept until you delete it in My data.",
+      "rights": "In My data you can view your agent card, export your data as JSON, switch consents on or off, and delete everything.",
+      "anonymous": "Only if you agree to anonymous sharing are your records anonymized and used as a price reference. We never publish results as public reviews."
+    },
+    "rightsLink": "Go to My data"
+  }
+}

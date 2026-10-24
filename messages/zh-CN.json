@@ -1,0 +1,527 @@
+{
+  "common": {
+    "brand": "Pibu",
+    "language": "语言",
+    "nav": {
+      "label": "主菜单",
+      "home": "首页",
+      "chat": "咨询",
+      "records": "记录",
+      "settings": "数据"
+    },
+    "footer": {
+      "regLabel": "外国患者引荐机构登记号",
+      "regDemo": "演示(未登记)",
+      "patientRights": "外国患者权益保护说明",
+      "notice": "Pibu 是由 AI 代理协助联系与比较的服务。诊断及能否施术由医生判断。"
+    },
+    "demoValue": "演示用数值",
+    "back": "返回",
+    "close": "关闭",
+    "cancel": "取消",
+    "next": "下一步",
+    "save": "保存",
+    "optional": "选填",
+    "required": "必填",
+    "approx": "参考",
+    "session": "第{n}次: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "发",
+      "unit": "单位",
+      "line": "条",
+      "session": "次"
+    },
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value}发",
+      "unit": "{value}单位",
+      "line": "{value}条",
+      "session": "{value}次"
+    },
+    "area": {
+      "gangnam": "江南",
+      "sinsa": "新沙",
+      "apgujeong": "狎鸥亭",
+      "myeongdong": "明洞",
+      "hongdae": "弘大",
+      "other": "其他"
+    },
+    "bookingStatus": {
+      "requested": "已发送请求",
+      "pending_clinic": "诊所确认中",
+      "confirmed": "预约已确认",
+      "canceled": "已取消",
+      "no_show": "未到诊",
+      "completed": "已施术"
+    }
+  },
+  "landing": {
+    "metaTitle": "由您的专属代理,代您与韩国诊所沟通",
+    "metaDescription": "只需说出想做的项目。整理条件、获取报价、核对价格、预约与记录,都由您的代理完成。",
+    "title": "由您的专属代理,代您与韩国诊所沟通",
+    "lead": "只需说出想做的项目。整理条件、获取报价、核对价格直到预约,都由您的代理推进。",
+    "start": "开始使用",
+    "stepsTitle": "三个步骤",
+    "steps": {
+      "tell": {
+        "title": "说出您的需求",
+        "body": "在聊天中告诉代理,它会整理成包含项目、用量、预算、地区、语言和日期的条件卡。"
+      },
+      "compare": {
+        "title": "代理帮您比较",
+        "body": "代理向诊所请求报价,平台再对照过往支付记录进行核对。"
+      },
+      "book": {
+        "title": "选择、预约并记录",
+        "body": "比较报价后预约。施术后的记录也能帮您判断下一次的时间。"
+      }
+    },
+    "careTitle": "请您放心",
+    "care": {
+      "consent": "您的信息只会在您同意的范围内提供给诊所。",
+      "doctor": "诊断及能否施术由医生判断。Pibu 不提供医疗行为。",
+      "records": "价格核对结果只会作为发给您本人的一对一回复显示,不会作为公开广告展示。"
+    }
+  },
+  "signup": {
+    "metaTitle": "开始使用",
+    "title": "开始使用",
+    "lead": "请用邮箱注册,或选择一个演示账号。",
+    "emailLabel": "电子邮箱",
+    "emailHint": "演示中不会真正发送邮件。",
+    "emailError": "请检查邮箱格式。",
+    "submit": "用邮箱继续",
+    "or": "或",
+    "demoTitle": "用演示账号体验",
+    "demoLead": "这些是虚构人物的账号。选择后会切换到对应语言的界面。",
+    "startLabel": {
+      "onboarding": "从创建代理开始",
+      "home": "使用已创建的代理开始"
+    },
+    "accounts": {
+      "yuki": "东京 · 29岁 · 日语",
+      "lin": "上海 · 33岁 · 中文",
+      "emily": "洛杉矶 · 26岁 · 英语",
+      "jisoo": "首尔 · 34岁 · 韩语 · 以记录为主"
+    }
+  },
+  "home": {
+    "metaTitle": "首页",
+    "greeting": "{name},你好",
+    "agent": {
+      "title": "我的代理",
+      "active": "已启用",
+      "status": "状态",
+      "languages": "需要的语言",
+      "stay": "停留",
+      "cardLink": "查看代理卡"
+    },
+    "ask": {
+      "label": "您想做什么项目?",
+      "placeholder": "例如: 想做丽珠兰",
+      "submit": "去咨询",
+      "quick": "按项目选择"
+    },
+    "locked": {
+      "title": "关于诊所介绍与预约",
+      "body": "诊所介绍与预约仅面向外国籍短期停留的用户。施术记录和下次时间提醒可以完整使用。"
+    },
+    "requests": {
+      "title": "进行中的请求",
+      "count": "已收到{count}家诊所的报价",
+      "open": "查看报价"
+    },
+    "booking": {
+      "title": "即将到来的预约",
+      "open": "预约详情"
+    },
+    "next": {
+      "title": "下次时间",
+      "empty": "还没有记录",
+      "overdue": "已过预定日期",
+      "all": "查看全部记录",
+      "add": "3秒记录"
+    }
+  },
+  "chat": {
+    "metaTitle": "咨询",
+    "title": "向专属代理咨询",
+    "inputLabel": "消息",
+    "placeholder": "例如: 想做丽珠兰",
+    "send": "发送",
+    "typing": "正在输入",
+    "agent": {
+      "greeting": "您好,我是 Pibu 的专属代理。请告诉我您想做的项目。",
+      "askProcedure": "您想咨询哪个项目?可以从下方选择,也可以直接输入。",
+      "summary": "好的,是{procedure}。我已整理好条件,想修改的项目点一下即可。",
+      "updated": "已把条件更新为{procedure}。"
+    },
+    "locked": {
+      "title": "关于诊所介绍与预约",
+      "body": "诊所介绍与预约仅面向外国籍短期停留的用户。施术记录和下次时间提醒可以使用。",
+      "records": "查看记录"
+    },
+    "condition": {
+      "title": "条件卡",
+      "hint": "点击各项即可修改。",
+      "rows": {
+        "procedure": "项目",
+        "amount": "用量",
+        "budget": "预算",
+        "area": "地区",
+        "language": "语言",
+        "dates": "日期"
+      },
+      "amountNote": "常见用量为{range}。已填入最小值。",
+      "budgetValue": "{amount}以内",
+      "budgetNone": "不限",
+      "privacy": "发给诊所的只有项目、用量、地区、语言和日期。预算不会发送。",
+      "find": "按此条件查找",
+      "done": "完成",
+      "currency": "币种",
+      "amountInput": "金额",
+      "rateNote": "参考汇率",
+      "from": "开始日",
+      "to": "结束日"
+    }
+  },
+  "requests": {
+    "metaTitle": "报价比较",
+    "title": "报价比较",
+    "summary": {
+      "title": "请求",
+      "procedure": "项目",
+      "dates": "日期",
+      "languages": "语言",
+      "status": "状态"
+    },
+    "status": {
+      "draft": "草稿",
+      "matching": "正在寻找诊所",
+      "quoting": "正在收集报价",
+      "judging": "正在核对价格",
+      "comparing": "可以比较报价",
+      "booking": "正在请求预约",
+      "booked": "已预约",
+      "closed": "已结束",
+      "failed": "未能完成"
+    },
+    "progress": {
+      "title": "代理的进展",
+      "raw": "查看 A2A JSON"
+    },
+    "reference": {
+      "title": "市场支付记录",
+      "body": "最近{days}天的{count}条记录显示,每{unit}为{p25}~{p75}(中位数 {p50})。这是基于过往记录的参考值,不保证价格。"
+    },
+    "compare": {
+      "title": "比较报价",
+      "caption": "各诊所的报价",
+      "hint": "排序可以更换。需要留意的报价也不会隐藏。"
+    },
+    "sort": {
+      "label": "排序",
+      "match": "按匹配度",
+      "unit": "按单价",
+      "total": "按总价"
+    },
+    "columns": {
+      "clinic": "诊所",
+      "total": "总价",
+      "unit": "单价",
+      "amount": "用量",
+      "verdict": "判定",
+      "includes": "包含内容",
+      "slots": "可预约时间",
+      "action": "预约"
+    },
+    "mode": {
+      "proxy": "Pibu 代为答复 · 参考价",
+      "clinic": "诊所直接答复 · 确定价"
+    },
+    "vat": {
+      "included": "含增值税",
+      "excluded": "不含增值税(含税换算为 {total})"
+    },
+    "event": {
+      "regular": "原价 {price}",
+      "conditions": "条件: {text}"
+    },
+    "perUnit": "每{unit} {price}",
+    "typical": "常见用量为{range}",
+    "includes": {
+      "numbing_cream": "麻醉膏",
+      "soothing_mask": "镇静面膜",
+      "none": "无",
+      "excluded": "不含: {items}"
+    },
+    "warn": {
+      "label": "注意",
+      "paidMore": "有实际支付高于报价的记录(最近90天平均 +{pct}%)",
+      "downtime": "离境前恢复期可能尚未结束"
+    },
+    "validUntil": "报价有效期至 {date}",
+    "book": "预约这家诊所",
+    "pickSlot": "选择时间后即可预约",
+    "requested": "已发送预约请求",
+    "openBooking": "查看预约",
+    "sheet": {
+      "title": "确认预约请求",
+      "clinic": "诊所",
+      "when": "日期时间",
+      "procedure": "项目",
+      "total": "总价",
+      "sharedTitle": "将提供给诊所的信息",
+      "name": "姓名",
+      "safety": "安全信息",
+      "safetyValue": "怀孕或哺乳: {pregnant} / 过敏: {allergies}",
+      "contact": "联系方式",
+      "yes": "是",
+      "no": "否",
+      "none": "无",
+      "doctor": "诊断及能否施术由诊所医生判断。",
+      "send": "发送预约请求",
+      "back": "返回"
+    }
+  },
+  "bookings": {
+    "metaTitle": "预约详情",
+    "title": "预约详情",
+    "statusNote": {
+      "pending_clinic_clinic": "诊所正在确认预约。确认后会显示在这里。",
+      "pending_clinic_proxy": "Pibu 正在通过电话或消息向诊所确认。确认后会显示在这里。",
+      "confirmed": "预约已确认。",
+      "completed": "已收到您的施术记录。"
+    },
+    "info": {
+      "title": "预约内容",
+      "clinic": "诊所",
+      "when": "日期时间",
+      "address": "地址",
+      "map": "在地图中打开",
+      "procedure": "项目",
+      "price": "报价金额",
+      "priceNote": "这是报价金额。实际支付金额可在施术当天记录。",
+      "id": "预约编号",
+      "confirmedBy": "确认方",
+      "by": {
+        "clinic_staff": "诊所工作人员",
+        "pibu_operator": "Pibu 运营",
+        "auto": "自动确认"
+      }
+    },
+    "steps": {
+      "title": "预约进度",
+      "requested": "已发送预约请求",
+      "pending": "等待诊所确认",
+      "confirmed": "预约已确认"
+    },
+    "notes": {
+      "title": "诊所的提示",
+      "empty": "确认后,到诊前的提示会显示在这里。"
+    },
+    "explain": {
+      "title": "施术前诊所会说明的内容",
+      "diagnosis": "诊断名称、治疗方法、可能的副作用",
+      "contract": "诊疗合同的内容",
+      "cost": "预计的诊疗费用",
+      "dispute": "发生纠纷时的解决程序",
+      "doctor": "诊断及能否施术由医生判断。Pibu 不会代替诊所进行说明。"
+    },
+    "downtime": "离境前恢复期可能尚未结束。",
+    "actions": {
+      "simulate": "演示: 模拟诊所确认",
+      "simulateNote": "实际服务中由诊所或运营方确认。",
+      "record": "记录施术当天",
+      "recordNote": "施术后可以记录实际支付金额和用量。",
+      "viewRecords": "查看记录",
+      "requests": "返回报价"
+    }
+  },
+  "records": {
+    "metaTitle": "记录",
+    "title": "施术记录",
+    "add": "3秒记录",
+    "next": {
+      "title": "下次时间",
+      "overdue": "已过预定日期",
+      "paused": "暂停中",
+      "stopped": "已结束",
+      "statusLabel": "这项施术之后",
+      "status": {
+        "active": "继续",
+        "paused": "休息",
+        "stopped": "不再做"
+      },
+      "empty": "添加记录后,下次时间会显示在这里。"
+    },
+    "history": {
+      "title": "历史",
+      "empty": "还没有记录。先添加第一条吧。",
+      "session": "第{n}次",
+      "shared": "匿名共享: 开",
+      "notShared": "匿名共享: 关",
+      "fromBooking": "由预约自动记录",
+      "rating": "满意度 {n}/5"
+    }
+  },
+  "recordsNew": {
+    "metaTitle": "添加记录",
+    "title": "3秒记录",
+    "lead": "把做过的施术留下来,方便日后查看。",
+    "procedure": "项目",
+    "amount": "用量",
+    "amountNote": "常见用量为{range}。{demo}",
+    "clinic": "诊所",
+    "clinicHint": "可从候选中选择,也可直接输入名称。",
+    "currency": "币种",
+    "price": "金额",
+    "rateNote": "参考汇率",
+    "date": "施术日",
+    "optional": "选填",
+    "receipt": "收据照片",
+    "receiptSoon": "计划后续支持。",
+    "rating": "满意度",
+    "submit": "记录",
+    "shareOn": "这条记录会匿名后用作价格参考(可在设置中关闭)。",
+    "shareOff": "这条记录不会被共享。",
+    "saved": {
+      "title": "已记录",
+      "next": "下次时间",
+      "all": "查看记录",
+      "another": "继续添加"
+    }
+  },
+  "outcomes": {
+    "metaTitle": "施术记录",
+    "title": "施术当天的记录",
+    "lead": "施术后,记录实际支付金额和用量。",
+    "wait": {
+      "title": "预约确认后才能记录",
+      "body": "请等待诊所确认完成。",
+      "open": "查看预约"
+    },
+    "summary": {
+      "clinic": "诊所",
+      "when": "施术日",
+      "quoted": "报价金额"
+    },
+    "fields": {
+      "currency": "币种",
+      "paid": "实际支付金额",
+      "rateNote": "参考汇率",
+      "received": "实际用量",
+      "verified": "药剂确认方式",
+      "satisfaction": "满意度",
+      "pain": "疼痛程度",
+      "comment": "一句话(选填)"
+    },
+    "verified": {
+      "vial_shown": "看到了药剂瓶",
+      "packaging_shown": "确认了包装",
+      "explained_verbally": "口头说明",
+      "not_checked": "未确认"
+    },
+    "scale": {
+      "low": "低",
+      "high": "高",
+      "satisfactionLow": "不满意",
+      "satisfactionHigh": "满意"
+    },
+    "gap": {
+      "same": "与报价金额相同。",
+      "higher": "比报价高 {amount}。",
+      "lower": "比报价低 {amount}。"
+    },
+    "share": "这些结果将用于价格核对和诊所对接。个人的回答不会传达给诊所。",
+    "submit": "提交记录",
+    "saved": {
+      "title": "已提交记录",
+      "body": "谢谢。下次时间已加入您的记录。",
+      "next": "下次时间",
+      "records": "查看记录"
+    },
+    "later": {
+      "title": "之后的回访",
+      "note": "计划后续支持。",
+      "d7": "7天后",
+      "d30": "30天后",
+      "questions": "实际恢复期 · 效果感受 · 是否愿意再做"
+    }
+  },
+  "settings": {
+    "metaTitle": "数据",
+    "title": "我的数据",
+    "consents": {
+      "title": "同意设置",
+      "lead": "同意可以随时开启或关闭。变更会作为新的同意被记录。",
+      "on": "开",
+      "off": "关",
+      "fixed": "必需 · 始终开启",
+      "scope": "共享范围",
+      "version": "文本版本 {version}",
+      "at": "{date} 同意",
+      "shareWithClinic": {
+        "title": "向诊所共享信息",
+        "description": "仅在发送预约时,才会把安全信息和联系方式交给诊所。"
+      }
+    },
+    "agent": {
+      "title": "我的代理卡",
+      "lead": "这是您的代理向其他代理展示的信息。"
+    },
+    "export": {
+      "title": "导出数据",
+      "body": "以 JSON 保存个人资料、同意记录和施术记录。",
+      "button": "导出 JSON"
+    },
+    "remove": {
+      "title": "全部删除",
+      "body": "将删除个人资料、同意历史、施术记录和对话。无法恢复。",
+      "button": "全部删除",
+      "confirmTitle": "确定要删除吗?",
+      "confirmBody": "删除后,代理也会停用。此操作无法恢复。",
+      "confirm": "删除",
+      "done": "已删除。在本演示中,已清除保存在此浏览器中的操作内容。",
+      "top": "返回首页"
+    }
+  },
+  "legal": {
+    "metaTitle": "外国患者权益保护说明",
+    "title": "外国患者权益保护说明",
+    "lead": "Pibu 作为外国患者引荐机构,在您使用前向您说明以下内容。",
+    "demoNotice": "这是演示用文本。正式服务上线时,将替换为经法务审核的文本。",
+    "reg": {
+      "label": "登记号",
+      "demo": "演示(未登记)"
+    },
+    "english": "English(必须刊载的文本)",
+    "service": {
+      "title": "服务内容与条件",
+      "content": "Pibu 的 AI 代理会整理您的需求,向诊所请求报价,对照过往支付记录核对价格,并把您的预约请求转达给诊所。",
+      "noMedical": "Pibu 不提供医疗行为。诊断、能否施术以及施术均由诊所的医生负责,责任在诊所。",
+      "price": "显示的金额为报价。Pibu 代诊所答复的参考价可能与实际金额不同。最终金额由诊所确认。",
+      "explain": "施术前,诊所会说明诊断名称、治疗方法、可能的副作用、诊疗合同、预计诊疗费用以及发生纠纷时的解决程序。",
+      "fee": "Pibu 可能在法律规定的上限内从诊所收取引荐费用。该费用不会影响诊所的选择和价格核对。Pibu 不向顾客收取费用。",
+      "eligibility": "诊所介绍与预约仅面向外国籍短期停留的用户。韩国国籍用户,以及已在韩国办理外国人登记或居留申报并居住的用户不在范围内。"
+    },
+    "dispute": {
+      "title": "纠纷解决程序",
+      "contact": "如有疑问或投诉,请先联系 Pibu。联系方式将在服务开通前刊载于此(演示)。",
+      "mediation": "医疗纠纷可向韩国医疗纠纷调解仲裁院(KOMEDI)等公共机构咨询。韩国保健产业振兴院(KHIDI)也设有面向外国患者的咨询窗口。",
+      "records": "为便于核查,Pibu 会保存请求、报价和预约的记录,并在您希望时把内容转达给诊所。"
+    },
+    "privacy": {
+      "title": "个人信息保护",
+      "collected": "我们会处理昵称、国籍、年龄段、日期、联系方式、皮肤困扰、过往施术、安全信息和施术记录。",
+      "purpose": "用于运行您的代理、查找诊所、请求报价、预约以及价格核对。",
+      "sensitive": "皮肤、施术和安全相关信息属于敏感个人信息(健康信息),会与其他同意分开征求您的同意。提交预约时,只会向诊所提供您同意的范围。",
+      "crossBorder": "在境外输入的信息会在韩国的服务器上处理。为进行 AI 处理和保管,可能会使用境外服务商的服务。这一点同样会单独征求您的同意。",
+      "retention": "信息会保存到您在“我的数据”中将其删除为止。",
+      "rights": "在“我的数据”中,您可以查看代理卡、导出 JSON、开启或关闭同意,以及全部删除。",
+      "anonymous": "仅在您同意匿名共享记录时,才会把记录匿名后用作价格参考。我们不会把结果作为公开评价发布。"
+    },
+    "rightsLink": "前往我的数据"
+  }
+}

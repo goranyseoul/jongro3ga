@@ -21,9 +21,11 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
 import { cn } from "@/lib/cn";
+import { DEMO_TODAY } from "@/lib/ui-data/customer";
 import { LOCALES, LOCALE_NAME, wordBreak } from "../locales";
 import { FaceParticles } from "../hero/face-particles";
 import { Splash } from "../hero/splash";
@@ -289,7 +291,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const percent = progressPercent(draft);
   const done = step === "done";
   const card = buildAgentCard(done);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = DEMO_TODAY;
 
   const widget = () => {
     switch (step) {
@@ -539,6 +541,18 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
               </div>
             )}
           </Card>
+        );
+      case "done":
+        return (
+          <Button
+            fullWidth
+            onClick={() => {
+              updateDemoState((state) => ({ ...state, nickname: draft.nickname }));
+              router.push(`/${locale}/home`);
+            }}
+          >
+            {c.goHome}
+          </Button>
         );
       default:
         return null;
