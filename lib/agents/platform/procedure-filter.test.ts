@@ -7,9 +7,11 @@ const rates = (table: Record<string, number>) => (id: string) => table[id] ?? 0;
 const reasonCodes = (result: ReturnType<typeof filterProcedures>, id: string) =>
   result.excluded.find((e) => e.procedure.id === id)?.reasons.map((r) => r.code).sort();
 
-// DEMO.md scenario 1: Yuki, volume area, nasolabial fold. Her 10/11 to 10/13 trip is moved +28 days (11/8 to 11/10).
+// DEMO.md scenario 1: Yuki, volume area, nasolabial fold. Her trip is the spec 10 stay, 11/13 to 11/15, the days right
+// after the 11-12 demo clock. It has the same two night span as the earlier DEMO.md +28 day dates (11/8 to 11/10), so
+// every day count below is unchanged; only the dates moved +5 days.
 describe("scenario: Yuki asks about the nasolabial fold", () => {
-  const input = { areas: ["volume" as const], parts: ["nasolabial" as const], trip: { arrival: "2026-11-08", departure: "2026-11-10" } };
+  const input = { areas: ["volume" as const], parts: ["nasolabial" as const], trip: { arrival: "2026-11-13", departure: "2026-11-15" } };
   const context = { selectionRate: rates({ juvelook_volume: 0.5, filler: 0.3, sculptra: 0.1 }) };
 
   it("shows Juvelook Volume, filler and Sculptra, the three cards of the script, Juvelook first", () => {
@@ -28,11 +30,12 @@ describe("scenario: Yuki asks about the nasolabial fold", () => {
   });
 
   it("warns that downtime may last past the flight and tells the agent to check a stay extension, but only warns", () => {
+    // all three are "수일" downtime, read as 2~5 days: arrival 11/13 + 5 = 11/18, 3 days past the 11/15 departure
     for (const card of filterProcedures(input, context).ranked) {
       expect(card.warnings).toContainEqual({
         code: "downtime_may_overlap_departure",
-        latestEnd: "2026-11-13",
-        departure: "2026-11-10",
+        latestEnd: "2026-11-18",
+        departure: "2026-11-15",
         daysOver: 3,
         suggestion: "check_stay_extension",
       });
@@ -42,19 +45,21 @@ describe("scenario: Yuki asks about the nasolabial fold", () => {
   it("drops what cannot work even when treated on arrival, says how many days of extension would fix it, and the boundary is the departure day itself", () => {
     const sameDay = filterProcedures(input, context);
     expect(sameDay.ranked).toHaveLength(3);
-    const oneNightShort = filterProcedures({ ...input, trip: { arrival: "2026-11-08", departure: "2026-11-09" } }, context);
+    // best case 11/13 + 2 = 11/15, 1 day past an 11/14 departure
+    const oneNightShort = filterProcedures({ ...input, trip: { arrival: "2026-11-13", departure: "2026-11-14" } }, context);
     expect(oneNightShort.ranked).toEqual([]);
     expect(oneNightShort.excluded).toHaveLength(3);
     for (const { reasons } of oneNightShort.excluded) {
       expect(reasons[0]).toEqual({
         code: "downtime_after_departure",
-        earliestEnd: "2026-11-10",
-        departure: "2026-11-09",
+        earliestEnd: "2026-11-15",
+        departure: "2026-11-14",
         extendDays: 1,
         suggestion: "check_stay_extension",
       });
     }
-    const threeDaysShort = filterProcedures({ ...input, trip: { arrival: "2026-11-08", departure: "2026-11-08" } }, context);
+    // leaving on the arrival day: 11/13 + 2 = 11/15, 2 days past 11/13
+    const threeDaysShort = filterProcedures({ ...input, trip: { arrival: "2026-11-13", departure: "2026-11-13" } }, context);
     expect(threeDaysShort.excluded[0]!.reasons[0]).toMatchObject({ extendDays: 2 });
   });
 
@@ -67,7 +72,8 @@ describe("scenario: Yuki asks about the nasolabial fold", () => {
   });
 });
 
-// DEMO.md scenario 3: Grace, lifting once a year, no downtime, no needles or threads, a week in Seoul (moved +28 days).
+// DEMO.md scenario 3: Grace, lifting once a year, no downtime, no needles or threads, a week in Seoul. 11/17 to 11/24 is
+// the DEMO.md trip moved +28 days; it already sits after the 11-12 demo clock, so it stays.
 describe("scenario: Grace wants lifting once a year without downtime", () => {
   const input = {
     areas: ["lifting" as const],
@@ -198,6 +204,6 @@ describe("conditions", () => {
 
   it("rejects an empty area list and a trip that ends before it starts", () => {
     expect(() => filterProcedures({ areas: [] })).toThrow(TypeError);
-    expect(() => filterProcedures({ areas: ["lifting"], trip: { arrival: "2026-10-13", departure: "2026-10-11" } })).toThrow(TypeError);
+    expect(() => filterProcedures({ areas: ["lifting"], trip: { arrival: "2026-11-15", departure: "2026-11-13" } })).toThrow(TypeError);
   });
 });

@@ -5,9 +5,10 @@ import type { ZkClause } from "./customer";
 // Mock data for the clinic console (docs/spec/05-screens.md, 병원 콘솔). Shapes follow
 // 06-data-model.md "병원 네임스페이스" and 03-a2a-protocol.md until the backend exists.
 
-// Fixed clock so every screen agrees on "today" and "this week" (06-data-model.md 시계).
-export const NOW = "2026-10-24T10:30:00+09:00";
-export const TODAY: IsoDate = "2026-10-24";
+// Fixed clock so every screen agrees on "today" and "this week": the spec demo day, the same day as
+// DEFAULT_DEMO_NOW in lib/clock.ts (06-data-model.md 시계). The task dates below keep their spacing to it.
+export const NOW = "2026-11-12T10:30:00+09:00";
+export const TODAY: IsoDate = "2026-11-12";
 
 export type ClinicOperationMode = "proxy" | "clinic";
 
@@ -79,13 +80,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_WORKING",
-    receivedAt: "2026-10-24T10:12:00+09:00",
+    receivedAt: "2026-11-12T10:12:00+09:00",
     from: "Yuki T.",
     language: "ja",
     product: "Rejuran Healer",
     amount: { value: 2, unit: "cc" },
     priceKrw: 340000,
-    slot: "2026-10-27T11:00:00+09:00",
+    slot: "2026-11-15T11:00:00+09:00",
     safetyFlags: [],
     contact: { channel: "LINE", handle: "yuki_demo" },
   },
@@ -95,13 +96,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_WORKING",
-    receivedAt: "2026-10-24T09:41:00+09:00",
+    receivedAt: "2026-11-12T09:41:00+09:00",
     from: "Lin W.",
     language: "zh-CN",
     product: "Skin Botox",
     amount: { value: 40, unit: "unit" },
     priceKrw: 180000,
-    slot: "2026-10-28T15:00:00+09:00",
+    slot: "2026-11-16T15:00:00+09:00",
     safetyFlags: ["알레르기: 리도카인 과민 반응 이력"],
     contact: { channel: "WeChat", handle: "lin_demo" },
   },
@@ -111,13 +112,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_INPUT_REQUIRED",
-    receivedAt: "2026-10-23T18:05:00+09:00",
+    receivedAt: "2026-11-11T18:05:00+09:00",
     from: "Emily R.",
     language: "en",
     product: "Ulthera",
     amount: { value: 300, unit: "shot" },
     priceKrw: 890000,
-    slot: "2026-10-29T14:00:00+09:00",
+    slot: "2026-11-17T14:00:00+09:00",
     safetyFlags: [],
     contact: { channel: "WhatsApp", handle: "emily_demo" },
     requestedFields: ["직전 울쎄라 시술일"],
@@ -128,13 +129,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-22T13:20:00+09:00",
+    receivedAt: "2026-11-10T13:20:00+09:00",
     from: "Mika S.",
     language: "ja",
     product: "Rejuran Healer",
     amount: { value: 1, unit: "cc" },
     priceKrw: 99000,
-    slot: "2026-10-26T14:00:00+09:00",
+    slot: "2026-11-14T14:00:00+09:00",
     safetyFlags: [],
     contact: { channel: "LINE", handle: "mika_demo" },
     outcome: "병원 직원이 확정",
@@ -145,13 +146,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-21T16:40:00+09:00",
+    receivedAt: "2026-11-09T16:40:00+09:00",
     from: "Chen J.",
     language: "zh-CN",
     product: "Shurink Universe",
     amount: { value: 300, unit: "shot" },
     priceKrw: 420000,
-    slot: "2026-10-30T10:00:00+09:00",
+    slot: "2026-11-18T10:00:00+09:00",
     safetyFlags: [],
     contact: { channel: "WeChat", handle: "chen_demo" },
     outcome: "병원 직원이 확정",
@@ -162,13 +163,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-20T11:02:00+09:00",
+    receivedAt: "2026-11-08T11:02:00+09:00",
     from: "Sara L.",
     language: "en",
     product: "Skin Botox",
     amount: { value: 40, unit: "unit" },
     priceKrw: 180000,
-    slot: "2026-11-03T16:00:00+09:00",
+    slot: "2026-11-22T16:00:00+09:00",
     safetyFlags: [],
     contact: { channel: "WhatsApp", handle: "sara_demo" },
     outcome: "병원 직원이 확정",
@@ -179,13 +180,13 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.book",
     kind: "booking",
     state: "TASK_STATE_REJECTED",
-    receivedAt: "2026-10-19T15:30:00+09:00",
+    receivedAt: "2026-11-07T15:30:00+09:00",
     from: "Anna P.",
     language: "en",
     product: "Ulthera",
     amount: { value: 300, unit: "shot" },
     priceKrw: 890000,
-    slot: "2026-10-21T10:00:00+09:00",
+    slot: "2026-11-09T10:00:00+09:00",
     safetyFlags: ["임신 또는 수유 중"],
     outcome: "거절: 시술 불가 (안전 정보)",
   },
@@ -195,7 +196,7 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.quote",
     kind: "quote",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-24T10:20:00+09:00",
+    receivedAt: "2026-11-12T10:20:00+09:00",
     from: "고객 에이전트 cag_7f3k2",
     language: "ja",
     product: "Rejuran Healer",
@@ -209,7 +210,7 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.quote",
     kind: "quote",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-24T09:58:00+09:00",
+    receivedAt: "2026-11-12T09:58:00+09:00",
     from: "고객 에이전트 cag_2m9xq",
     language: "zh-CN",
     product: "Skin Botox",
@@ -223,7 +224,7 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.quote",
     kind: "quote",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-24T09:12:00+09:00",
+    receivedAt: "2026-11-12T09:12:00+09:00",
     from: "고객 에이전트 cag_5h1ta",
     language: "en",
     product: "Ulthera",
@@ -237,7 +238,7 @@ export const INBOX_TASKS: InboxTask[] = [
     skillId: "clinic.quote",
     kind: "quote",
     state: "TASK_STATE_COMPLETED",
-    receivedAt: "2026-10-23T22:47:00+09:00",
+    receivedAt: "2026-11-11T22:47:00+09:00",
     from: "고객 에이전트 cag_8w4pn",
     language: "ja",
     product: "Shurink Universe",
@@ -330,6 +331,8 @@ export const MENU_ITEMS: MenuItem[] = [
 ];
 
 // An event always carries its regular price, period and conditions (05-screens.md, 병원 콘솔 메뉴·가격).
+// The first visit 1cc event is the Mint offer of the 06-data-model.md clinics seed (2026-11-01 ~ 11-30).
+// The Shurink event is the one that has not started yet.
 export type Offer = {
   id: string;
   procedureId: string;
@@ -390,21 +393,21 @@ export const OFFERS: Offer[] = [
     amount: { value: 1, unit: "cc" },
     priceKrw: 99000,
     regularPriceKrw: 150000,
-    validFrom: "2026-10-01",
-    validUntil: "2026-10-31",
+    validFrom: "2026-11-01",
+    validUntil: "2026-11-30",
     conditions: "첫 방문 고객만",
     active: true,
     zkClauses: [{ clinicId: "cln_mint", maxCount: 0 }],
   },
   {
-    id: "of_shurink_nov",
+    id: "of_shurink_dec",
     procedureId: "shrink_universe",
-    title: "11월 슈링크 300샷 이벤트",
+    title: "12월 슈링크 300샷 이벤트",
     amount: { value: 300, unit: "shot" },
     priceKrw: 380000,
     regularPriceKrw: 420000,
-    validFrom: "2026-11-01",
-    validUntil: "2026-11-30",
+    validFrom: "2026-12-01",
+    validUntil: "2026-12-31",
     conditions: "평일 오전 예약 한정",
     active: true,
   },
@@ -412,12 +415,12 @@ export const OFFERS: Offer[] = [
 
 // Reference open times for the "시간 제안" sheet (clinic.availability would supply these).
 export const PROPOSAL_SLOTS = [
-  "2026-10-27T14:00:00+09:00",
-  "2026-10-27T16:00:00+09:00",
-  "2026-10-28T11:00:00+09:00",
-  "2026-10-29T10:00:00+09:00",
-  "2026-10-29T16:00:00+09:00",
-  "2026-10-30T14:00:00+09:00",
+  "2026-11-15T14:00:00+09:00",
+  "2026-11-15T16:00:00+09:00",
+  "2026-11-16T11:00:00+09:00",
+  "2026-11-17T10:00:00+09:00",
+  "2026-11-17T16:00:00+09:00",
+  "2026-11-18T14:00:00+09:00",
 ];
 
 export const AGENT_ENDPOINT = "https://pibu.example/a2a/clinics/mint/rpc";
@@ -432,7 +435,7 @@ export const OPERATION_SOURCE_TEXT: Record<string, string> = {
 export const CLINIC_OPERATION = {
   mode: CLINIC.operationMode,
   dataSources: ["clinic_console"],
-  lastVerifiedAt: "2026-10-22" as IsoDate,
+  lastVerifiedAt: "2026-11-10" as IsoDate,
   foreignPatientFacilityRegistered: true,
 };
 
