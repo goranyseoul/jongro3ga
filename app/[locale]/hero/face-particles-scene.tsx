@@ -212,8 +212,8 @@ function morphAt(t: number): number {
 type FaceProps = { still: boolean; shrink: boolean; mouse: { current: { x: number; y: number } } };
 
 // Rest pose above the chat, and the small swarm the face collapses into when the chat is in use.
-const FACE = { y: 1.25, scale: 0.6 };
-const SWARM = { y: 1.25, scale: 0.2 };
+const FACE = { y: 1.18, scale: 0.52 };
+const SWARM = { y: 1.18, scale: 0.2 };
 
 function FaceParticles({ still, shrink, mouse }: FaceProps) {
   const points = useRef<THREE.Points>(null!);
