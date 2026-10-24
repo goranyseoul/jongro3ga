@@ -250,6 +250,10 @@ export const INBOX_TASKS: InboxTask[] = [
 // the customer agent waits (02-agents.md 대화 대행).
 export const RESPONSE_STATS = { windowDays: 7, quoteRequests: 38, answeredWithin20s: 36 };
 
+// Comparison values for the dashboard deltas: quotes are compared with yesterday up to the same time of day,
+// the weekly figures with the previous 7 days.
+export const PREVIOUS_PERIOD = { quotesYesterdayByNow: 2, bookingsLastWeek: 1, responseRateLastWeek: 92 };
+
 export function responseRatePercent(stats = RESPONSE_STATS): number {
   return Math.round((stats.answeredWithin20s / stats.quoteRequests) * 100);
 }
@@ -335,6 +339,8 @@ export type Offer = {
   validFrom: IsoDate;
   validUntil: IsoDate;
   conditions: string;
+  /** Off means the offer is kept but not sent to customer agents (clinic.offers skips it). */
+  active: boolean;
 };
 
 export const OFFERS: Offer[] = [
@@ -348,6 +354,7 @@ export const OFFERS: Offer[] = [
     validFrom: "2026-10-01",
     validUntil: "2026-10-31",
     conditions: "첫 방문 고객만",
+    active: true,
   },
   {
     id: "of_shurink_nov",
@@ -359,6 +366,7 @@ export const OFFERS: Offer[] = [
     validFrom: "2026-11-01",
     validUntil: "2026-11-30",
     conditions: "평일 오전 예약 한정",
+    active: true,
   },
 ];
 
