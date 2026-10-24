@@ -1,5 +1,6 @@
 import type { AgentCard } from "@/components/ui";
 import type { IsoDate, Locale } from "@/lib/domain/common";
+import type { ZkClause } from "./customer";
 
 // Mock data for the clinic console (docs/spec/05-screens.md, 병원 콘솔). Shapes follow
 // 06-data-model.md "병원 네임스페이스" and 03-a2a-protocol.md until the backend exists.
@@ -341,7 +342,45 @@ export type Offer = {
   conditions: string;
   /** Off means the offer is kept but not sent to customer agents (clinic.offers skips it). */
   active: boolean;
+  /** Proof conditions: the event applies only to a customer agent that proves them. `conditions` stays required. */
+  zkClauses?: ZkClause[];
 };
+
+// Proof condition presets of the event sheet (05-screens.md ZK 확장, INTEGRATION.md section 3).
+export type ZkPreset = "none" | "first_visit" | "second_session" | "regular";
+
+export const ZK_PRESETS: ZkPreset[] = ["none", "first_visit", "second_session", "regular"];
+
+export const ZK_PRESET_TEXT: Record<ZkPreset, { option: string; short: string }> = {
+  none: { option: "없음", short: "없음" },
+  first_visit: { option: "첫 방문 (우리 병원 기록 0건)", short: "첫 방문" },
+  second_session: { option: "2회차 (해당 시술 정확히 1회)", short: "2회차" },
+  regular: { option: "단골 (해당 시술 3회 이상)", short: "단골" },
+};
+
+/** The clauses a preset writes for an event on `procedureId`. "none" writes nothing. */
+export function zkClausesFor(preset: ZkPreset, procedureId: string): ZkClause[] | undefined {
+  switch (preset) {
+    case "first_visit":
+      return [{ clinicId: CLINIC.id, maxCount: 0 }];
+    case "second_session":
+      return [{ type: procedureId, minCount: 1, maxCount: 1 }];
+    case "regular":
+      return [{ type: procedureId, minCount: 3 }];
+    case "none":
+      return undefined;
+  }
+}
+
+const clauseKey = (clauses: ZkClause[]) =>
+  JSON.stringify(clauses.map((clause) => Object.entries(clause).filter(([, value]) => value !== undefined).sort(([a], [b]) => a.localeCompare(b))));
+
+/** Reads the preset back from stored clauses; any other shape (date windows, several clauses) is "custom". */
+export function zkPresetOf(clauses: ZkClause[] | undefined, procedureId: string): ZkPreset | "custom" {
+  if (!clauses || clauses.length === 0) return "none";
+  const key = clauseKey(clauses);
+  return ZK_PRESETS.find((preset) => preset !== "none" && clauseKey(zkClausesFor(preset, procedureId) ?? []) === key) ?? "custom";
+}
 
 export const OFFERS: Offer[] = [
   {
@@ -355,6 +394,7 @@ export const OFFERS: Offer[] = [
     validUntil: "2026-10-31",
     conditions: "첫 방문 고객만",
     active: true,
+    zkClauses: [{ clinicId: "cln_mint", maxCount: 0 }],
   },
   {
     id: "of_shurink_nov",
