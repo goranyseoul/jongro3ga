@@ -248,6 +248,14 @@
       "regular": "Regular price {price}",
       "conditions": "Conditions: {text}"
     },
+    "offer": {
+      "verified": "Eligibility proven",
+      "note": "Proven without sending your treatment history"
+    },
+    "stats": {
+      "visits": "Visited by {visits, number} PibooK users",
+      "reviews": "{reviews} verified reviews, rated {avg}"
+    },
     "perUnit": "{price} per {unit}",
     "typical": "Usually {range}",
     "includes": {
@@ -277,6 +285,9 @@
       "safety": "Safety information",
       "safetyValue": "Pregnant or breastfeeding: {pregnant} / Allergies: {allergies}",
       "contact": "Contact",
+      "history": "Treatment history",
+      "historyValue": "Not shared (only offer eligibility is proven)",
+      "historyValuePlain": "Not shared",
       "yes": "Yes",
       "no": "No",
       "none": "None",
@@ -362,7 +373,10 @@
       "session": "Session {n}",
       "shared": "Anonymous sharing: on",
       "notShared": "Anonymous sharing: off",
-      "fromBooking": "Recorded from your booking",
+      "anchored": "Confirmed by clinic · on-chain record v{version}",
+      "clinicConfirmed": "Confirmed by clinic",
+      "selfReported": "Entered by you · not used for offer proofs",
+      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
       "rating": "Satisfaction {n}/5"
     },
     "calendar": {
@@ -483,9 +497,21 @@
       "title": "My agent card",
       "lead": "This is what your agent shows to other agents."
     },
+    "wallet": {
+      "title": "Record wallet",
+      "lead": "Clinics only learn whether you meet an offer's conditions. Treatment dates, clinics and counts stay on this device.",
+      "subject": "Pseudonym",
+      "commitment": "On-chain chart hash",
+      "none": "None",
+      "version": "Version",
+      "anchored": "Anchored records",
+      "anchoredValue": "{n, plural, one {# record} other {# records}}",
+      "network": "{network} testnet · demo",
+      "ledger": "View the public ledger"
+    },
     "export": {
       "title": "Export your data",
-      "body": "Save your profile, consents and procedure records as JSON.",
+      "body": "Save your profile, consents, procedure records and record wallet as JSON.",
       "button": "Export JSON"
     },
     "remove": {

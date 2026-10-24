@@ -146,7 +146,7 @@ export const ClinicShortlistV1Schema = obj({
         reviewStats: obj({ n: CountSchema, avgRating: z.number().min(1).max(5) }).optional(),
       }),
     )
-    .max(5),
+    .max(3),
 });
 
 // ---- quote, judge ----

@@ -20,7 +20,7 @@
 | 기능 | 설명 | 우선순위 |
 | --- | --- | --- |
 | 온보딩 | 채팅으로 프로필 구축 ([04-onboarding-chat.md](04-onboarding-chat.md)) | P0 |
-| 요청 정리 | 한마디("리주란 받고 싶어")를 `pibu/procedure-request@1`로 정리. 빠진 필수 슬롯만 되묻는다. 기본값 규칙: 용량을 말하지 않으면 `platform.recipe`의 통상 용량 **최솟값**(`typicalAmount.min`), 지역은 숙소 지역이 속한 **지역 그룹 전체** (예: 신사 → 신사·강남·압구정, [07-platform-intelligence.md](07-platform-intelligence.md) 지역 그룹), 예산은 `prefs.budgetKrw`, 날짜는 체류 기간, 언어는 `prefs.languagesNeeded` | P0 |
+| 요청 정리 | 한마디("리주란 받고 싶어")를 `pibu/procedure-request@1`로 정리. 빠진 필수 슬롯만 되묻는다. 기본값 규칙: 용량을 말하지 않으면 `platform.recipe`의 통상 용량 **최솟값**(`typicalAmount.min`), 지역은 숙소 지역이 속한 **지역 그룹 전체** (위치 정보, 필터 아님. 예: 신사 → 신사·강남·압구정, [07-platform-intelligence.md](07-platform-intelligence.md) 지역 그룹), 예산은 `prefs.budgetKrw`, 날짜는 체류 기간, 언어는 `prefs.languagesNeeded` | P0 |
 | 대화 대행 | 플랫폼에 매칭 요청 → 후보 병원들에 병렬 견적 요청 → 플랫폼에 판정 요청 → 결과를 고객 언어로 요약. 병원이 20초 안에 답하지 않거나 거절하면 `platform.report_signal`로 알린다 | P0 |
 | 예약 대행 | 고객이 고른 견적으로 병원에 예약 요청. 병원이 추가 정보를 요구하면(`TASK_STATE_INPUT_REQUIRED`) 프로필에서 동의된 값으로 답하거나 고객에게 묻는다 | P0 |
 | 내 시술 기록 | 예약으로 받은 시술은 자동 기록, 그 외는 3초 수동 기록. 다음 회차 계산 (주기 규칙은 `data/seed/procedures.json`) | P0 |
@@ -58,14 +58,14 @@
 | 규칙 제안 | 결과 신호를 모아 Claude가 규칙 후보와 근거를 제안 → 운영자 승인 | P1 (데모에선 버튼으로 실행) |
 | 유치 실적 원장 | 추천 토큰으로 귀속된 예약·결제 기록 (법정 실적 보고용) | P0 |
 | 기록 앵커 relayer (ZK 확장) | 고객 지갑이 만든 append 증명을 가스를 내며 체인에 대신 제출한다. 예약이 호출 고객의 것이고 완료 상태인지, 기록 해시가 맞는지 확인한 뒤에만 보낸다 | P0 |
-| 검증 방문·후기 집계 (ZK 확장) | 앵커된 방문마다 후기 티켓 1장을 발급하고, 후기를 집계(`n`, 평균 평점)한다. 공개 피드는 없다 ([07-platform-intelligence.md](07-platform-intelligence.md)) | P0 |
+| 검증 방문·후기 집계 (ZK 확장) | 앵커된 방문마다 후기 티켓 1장을 발급하고, 후기를 집계(`n`, 평균 평점)한다. 원문과 집계는 로그인 고객 화면과 비교 화면에 공개한다 ([07-platform-intelligence.md](07-platform-intelligence.md)) | P0 |
 
 ### A2A 스킬 (플랫폼 에이전트가 받는 요청)
 
 | 스킬 id | 호출자 | 입력 | 출력 | 우선순위 |
 | --- | --- | --- | --- | --- |
 | `platform.recipe` | 고객 | `pibu/recipe-query@1` (고민, 나이대, 시술 후보) | `pibu/recipe@1` (한국 여성 선택 조합, 통상 용량, 주기, 다운타임, 효과 시기) | P0 |
-| `platform.match_clinics` | 고객 | `pibu/procedure-request@1` | `pibu/clinic-shortlist@1` (후보 병원 최대 5곳, 이유, 추천 토큰, 가격 기준 분포). 한국인·국내 거주 외국인은 `TASK_STATE_REJECTED` | P0 |
+| `platform.match_clinics` | 고객 | `pibu/procedure-request@1` | `pibu/clinic-shortlist@1` (후보 병원 최대 3곳, 이유, 추천 토큰, 가격 기준 분포). 한국인·국내 거주 외국인은 `TASK_STATE_REJECTED` | P0 |
 | `platform.judge_quote` | 고객 | `pibu/judge-request@1` (견적 1~N개) | `pibu/fairness-verdict-list@1` (견적별 `pibu/fairness-verdict@1`) | P0 |
 | `platform.report_booking` | 병원 | `pibu/booking@1` (추천 토큰 포함) | 접수 확인 text | P0 |
 | `platform.submit_outcome` | 고객 | `pibu/outcome@1` | 접수 확인 + 반영 여부 text | P0 |

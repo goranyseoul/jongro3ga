@@ -8,10 +8,11 @@ import { pibuGlobals } from "./pibu-globals";
 // "시계 이동"), so the demo replays the same way every time. Otherwise it is the real time.
 
 /**
- * Start of every demo run: Saturday 2026-10-24, the day the planner's memo was saved and the day of the
- * presentation. The scenarios in DEMO.md are laid out around it (see docs/spec/BUILD-LOG.md).
+ * Start of every demo run: Thursday 2026-11-12 10:00 in Seoul, the day before Yuki arrives
+ * (06-data-model.md "시계", `DEMO_NOW` in the 09-architecture.md environment table). Seed dates and the
+ * 10-build-plan.md demo are laid out around it. The spec, not DEMO.md, is canonical (docs/spec/BUILD-LOG.md row 13).
  */
-export const DEFAULT_DEMO_NOW: IsoDateTime = "2026-10-24T10:00:00+09:00";
+export const DEFAULT_DEMO_NOW: IsoDateTime = "2026-11-12T10:00:00+09:00";
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;

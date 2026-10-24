@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button, ChipGroup, Input, Sheet } from "@/components/ui";
 import { formatCurrency } from "@/lib/money";
-import type { MenuItem, Offer } from "@/lib/ui-data/clinic";
+import { ZK_PRESETS, ZK_PRESET_TEXT, zkClausesFor, zkPresetOf, type MenuItem, type Offer, type ZkPreset } from "@/lib/ui-data/clinic";
 import { formatAmount } from "./format";
 import { parseWon } from "./price-sheet";
 
@@ -62,6 +62,9 @@ function EventForm({
   const [from, setFrom] = useState(offer?.validFrom ?? "");
   const [until, setUntil] = useState(offer?.validUntil ?? "");
   const [conditions, setConditions] = useState(base?.conditions ?? "");
+  // Clauses written outside the presets (for example through the API) show as "custom" and are kept as they are
+  const initialProof = base ? zkPresetOf(base.zkClauses, base.procedureId) : "none";
+  const [proof, setProof] = useState<ZkPreset | "custom">(initialProof);
   const [submitted, setSubmitted] = useState(false);
 
   const item = items.find((candidate) => candidate.id === itemId);
@@ -103,8 +106,14 @@ function EventForm({
       validUntil: until,
       conditions: conditions.trim(),
       active: offer?.active ?? true,
+      zkClauses: proof === "custom" ? base?.zkClauses : zkClausesFor(proof, item.procedureId),
     });
   };
+
+  const proofOptions = [
+    ...ZK_PRESETS.map((value) => ({ value: value as ZkPreset | "custom", label: ZK_PRESET_TEXT[value].option })),
+    ...(initialProof === "custom" ? [{ value: "custom" as const, label: "직접 정의 (그대로 유지)" }] : []),
+  ];
 
   return (
     <div className="flex flex-col gap-sp-4">
@@ -155,6 +164,14 @@ function EventForm({
         error={shown("conditions")}
         hint="예: 첫 방문 고객만, 평일 오전 예약 한정"
       />
+
+      <div className="flex flex-col gap-sp-2">
+        <span className="text-label font-med text-muted">증명 조건</span>
+        <ChipGroup label="증명 조건" value={proof} onChange={setProof} options={proofOptions} />
+        <p className="text-caption text-subtle">
+          조건 텍스트는 그대로 필수예요. 증명 조건이 있으면 고객 에이전트가 기기 안에서 자격을 확인하고 증명만 보내요
+        </p>
+      </div>
 
       <Button variant="primary" fullWidth onClick={save}>
         저장

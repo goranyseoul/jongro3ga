@@ -8,9 +8,12 @@ import { foundry } from 'viem/chains';
 import { deployArtifact } from './deploy-utils.mjs';
 import { createProver, emptyChart } from './records.mjs';
 
-// test codes (the app catalog defines the real ones)
-const JUVELOOK = 1, FILLER = 2, REJURAN = 3, RITUO = 4;
-const HONGDAE_A = 10, YEOKSAM_I = 20, SINNONHYEON_D = 30;
+// circuit codes from zk/codes.json (spec ids); FILLER is a test-only code outside the catalog
+const codes = JSON.parse(readFileSync(new URL('../zk/codes.json', import.meta.url)));
+const REJURAN = codes.procedures.rejuran_healer, BOTOX = codes.procedures.botox_forehead, FILLER = 99;
+const HANBIT = codes.clinics.cln_hanbit, MINT = codes.clinics.cln_mint, DAHYE = codes.clinics.cln_dahye;
+let failures = 0;
+const report = (pass, text) => { if (!pass) failures++; console.log(`  ${pass ? 'PASS' : 'FAIL'}  ${text}`); };
 const DAY = 86400;
 const art = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url)));
 const rpc = http('http://127.0.0.1:8545');
@@ -29,7 +32,7 @@ const Registry = art('./build/RecordRegistry.json');
 const registry = { address: await deployArtifact(wallet, pub, Registry, [verifierAddr, account.address, BigInt(DAY)]), abi: Registry.abi };
 console.log('deployed registry', registry.address);
 
-const subjectId = keccak256(toBytes('yuki-device-secret'));
+const subjectId = keccak256(toBytes('lin-device-secret'));
 let chart = emptyChart();
 const onchainCommitment = () => pub.readContract({ ...registry, functionName: 'commitmentOf', args: [subjectId] });
 const chainToday = async () => Number(await pub.readContract({ ...registry, functionName: 'today' }));
@@ -49,43 +52,45 @@ async function checkOffer(label, clauses, expectPass) {
   let ok = false, why = '';
   try { ok = await prover.verifyOffer(await prover.proveOffer(chart, commitment, today, clauses), commitment, today, clauses); }
   catch (e) { why = e.message.split('\n')[0]; }
-  console.log(`  ${ok === expectPass ? 'PASS' : 'FAIL'}  ${label} -> ${ok ? 'eligible' : `not eligible ${why}`}`);
+  report(ok === expectPass, `${label} -> ${ok ? 'eligible' : `not eligible ${why}`}`);
 }
 async function expectRevert(label, fn) {
-  try { await fn(); console.log(`  FAIL  ${label}: should have been rejected`); }
-  catch (e) { console.log(`  PASS  ${label}: rejected (${(e.shortMessage || e.message).split('\n')[0]})`); }
+  try { await fn(); report(false, `${label}: should have been rejected`); }
+  catch (e) { report(true, `${label}: rejected (${(e.shortMessage || e.message).split('\n')[0]})`); }
 }
 
-// ① 2nd-session offer: Juvelook exactly once, none in the last 27 days
-const secondSession = [{ type: JUVELOOK, minCount: 1, maxCount: 1 }, { type: JUVELOOK, maxDays: 27, maxCount: 0 }];
-// ② first-visit offer at Yeoksam I: no record of any kind there
-const firstVisitYeoksam = [{ clinic: YEOKSAM_I, maxCount: 0 }];
+// Lin (docs/spec): Rejuran exactly once anywhere -> 2nd-session offer at Seoul Glow; none in the last 27 days keeps it a real "next session"
+const secondSession = [{ type: REJURAN, minCount: 1, maxCount: 1 }, { type: REJURAN, maxDays: 27, maxCount: 0 }];
+// Mint first-visit event: no record of any kind there
+const firstVisitMint = [{ clinic: MINT, maxCount: 0 }];
 
 console.log('\n[timeline]');
-console.log('  day 0   Juvelook @ Hongdae A   gas', await clinicVisit(JUVELOOK, HONGDAE_A));
+console.log('  day 0   Rejuran @ Hanbit        gas', await clinicVisit(REJURAN, HANBIT));
 await warpDays(10);
 await checkOffer('day 10  2nd-session offer (too early)', secondSession, false);
 await warpDays(20);
 await checkOffer('day 30  2nd-session offer', secondSession, true);
-await checkOffer('day 30  first visit at Yeoksam I', firstVisitYeoksam, true);
-console.log('  day 30  Rituo @ Yeoksam I      gas', await clinicVisit(RITUO, YEOKSAM_I));
-await checkOffer('day 30  first visit at Yeoksam I again', firstVisitYeoksam, false);
+await checkOffer('day 30  first visit at Mint', firstVisitMint, true);
+console.log('  day 30  Rejuran @ Mint          gas', await clinicVisit(REJURAN, MINT));
+await checkOffer('day 30  first visit at Mint again', firstVisitMint, false);
 
 console.log('\n[attacks]');
 const t = await chainToday();
-await expectRevert('backdated record (60 days ago)', () => clinicVisit(FILLER, SINNONHYEON_D, { day: t - 60 }));
+await expectRevert('backdated record (60 days ago)', () => clinicVisit(FILLER, DAHYE, { day: t - 60 }));
 const staleChart = { ...chart, types: [...chart.types], dates: [...chart.dates], clinics: [...chart.clinics] };
-console.log('  day 30  Filler @ Sinnonhyeon D  gas', await clinicVisit(FILLER, SINNONHYEON_D));
-await expectRevert('rollback: append onto the pre-filler chart', () => clinicVisit(REJURAN, SINNONHYEON_D, { baseChart: staleChart }));
+console.log('  day 30  Filler @ Dahye          gas', await clinicVisit(FILLER, DAHYE));
+await expectRevert('rollback: append onto the pre-filler chart', () => clinicVisit(BOTOX, DAHYE, { baseChart: staleChart }));
 const realChart = chart;
 chart = staleChart;
 await checkOffer('stale chart "no filler within 14 days"', [{ type: FILLER, maxDays: 14, maxCount: 0 }], false);
 chart = realChart;
 {
   const commitment = await onchainCommitment();
-  const proofs = await prover.proveOffer(chart, commitment, t, [{ type: JUVELOOK, minCount: 1 }]);
-  const ok = await prover.verifyOffer(proofs, commitment, t, [{ type: RITUO, minCount: 1 }]);
-  console.log(`  ${ok ? 'FAIL' : 'PASS'}  replay a Juvelook proof as a Rituo proof -> ${ok ? 'accepted' : 'rejected'}`);
+  const proofs = await prover.proveOffer(chart, commitment, t, [{ type: REJURAN, minCount: 1 }]);
+  const ok = await prover.verifyOffer(proofs, commitment, t, [{ type: BOTOX, minCount: 1 }]);
+  report(!ok, `replay a Rejuran proof as a Botox proof -> ${ok ? 'accepted' : 'rejected'}`);
 }
 console.log('\non-chain version', await pub.readContract({ ...registry, functionName: 'versionOf', args: [subjectId] }));
 await prover.destroy();
+console.log(failures ? `\n${failures} failure(s)` : '\nall passed');
+process.exit(failures ? 1 : 0);

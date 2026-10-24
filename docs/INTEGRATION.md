@@ -12,7 +12,7 @@
 | 4 비교 화면: 민트 "첫 방문 1cc 이벤트" | 유키가 "민트 기록 0건"을 증명 → 민트가 검증 → `quote.offerApplied` | `match-offers` → `prove-offer` → `verify-offer` |
 | 5~6 서울글로우 예약 → D0 기록 | D0 제출 시 지갑이 append 증명을 만들고 플랫폼 relayer가 체인에 기록. 후기 티켓 1장 발급 | `records/visit` (→ `platform.anchor_record`) |
 | 린의 2회차 (01 페르소나) | "리쥬란 정확히 1회" 증명 → 서울글로우 2회차 패키지·한빛 이어서 2회차가 경쟁 | `prove-offer` → `verify-offer` |
-| 비교 화면 "피북 사용자 N명" · 검증 후기 | 방문 수 = 병원 확인 티켓 수. 후기 = 티켓 보유자만 익명 1회 (Semaphore). 공개 피드 없음, 집계만 | `stats`, `reviews` (→ `platform.submit_review`) |
+| 비교 화면 "피북 사용자 N명" · 검증 후기 | 방문 수 = 병원 확인 티켓 수. 후기 = 티켓 보유자만 익명 1회 (Semaphore). 원문과 집계를 로그인 고객·비교 화면에 공개 (랜딩 제외, 익명 집합 3명 이상) | `stats`, `reviews` (→ `platform.submit_review`) |
 | 지수 기록 화면 | 직접 입력 기록은 "자기 신고"로 지갑에만. 증명에는 병원 확인 기록만 | `wallet/:id` |
 
 ## 1. 실행
@@ -71,7 +71,7 @@ cd glowpass && npm start        # http://localhost:4000 (데모 콘솔 + API), /
 { "clinicId": "cln_seoul_glow", "verifiedVisits": 1240, "reviewStats": { "n": 18, "avgRating": 4.6 } }
 ```
 
-플랫폼이 후보마다 넣는다. `reviewStats`는 `n >= 5`일 때만 (08 집계 원칙). 매칭 점수에는 넣지 않는다 (07 점수표 불변).
+플랫폼이 후보마다 넣는다. `reviewStats`는 (병원, 시술) 익명 집합이 3명 이상일 때만 (`MIN_ANON_SET = 3`). 후기 원문은 별도 조회 경로로 공개한다. 매칭 점수에는 넣지 않는다 (07 점수표 불변).
 
 ### `pibu/offer-proof@1` (고객 → 병원, `clinic.quote` 메시지의 `metadata.offerProof`)
 
@@ -133,7 +133,7 @@ cd glowpass && npm start        # http://localhost:4000 (데모 콘솔 + API), /
 
 - `visitProof`는 Semaphore v4 증명 (`@semaphore-protocol/core` `generateProof` 결과 그대로). `scope = hash("review:<clinicId>:<procedureId>")`, `message = hash({rating, text})`.
 - 플랫폼 검사: 그룹 멤버십, nullifier 미사용(방문 1회 = 후기 1회), 증명 검증. 통과하면 `ReviewStat`에 집계. 거부 사유는 text로.
-- 08 규제: 후기 텍스트는 공개 피드에 내지 않는다. 고객 화면에는 `reviewStats`(n, 평점)만, 텍스트는 로그인 고객의 1:1 상담 응답에서 Claude 요약으로만 쓴다 (오너 결정 2026-10-24).
+- 08 규제: 후기 텍스트와 `reviewStats`(n, 평점)는 로그인 고객 화면과 비교 화면에 공개한다. 랜딩 제외, 익명 집합 3명 이상일 때만. 제출 시 "공개됨 + 익명(Semaphore)"을 고지한다 (오너 결정 2026-10-24).
 - 한계: A2A 호출은 bearer 토큰이 있어 플랫폼은 발신 에이전트를 안다. 플랫폼에 대한 익명성은 P1(릴레이 제출)이고, P0에서 Semaphore가 보장하는 것은 "검증된 방문자, 1회"다.
 
 ### 새 스킬 2개 (02·03 표와 플랫폼 카드에 추가)

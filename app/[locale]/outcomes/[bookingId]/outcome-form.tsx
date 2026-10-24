@@ -23,6 +23,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import {
   BOOKING_ID,
+  D0_ANCHOR,
   DEFAULT_BOOKING_CHOICE,
   FX_RATES,
   OUTCOME_DEFAULTS,
@@ -35,6 +36,7 @@ import {
   nextSessionNumber,
   referenceFor,
   upcomingSessionNumber,
+  walletFor,
   type ProductVerified,
   type TreatmentRecord,
 } from "@/lib/ui-data/customer";
@@ -88,8 +90,11 @@ export function OutcomeForm() {
       .sort((a, b) => b.date.localeCompare(a.date))[0];
     const sessionNumber = nextSessionNumber(previous, procedure, day);
     const shares = consentsFor(profile).some((c) => c.type === "shareAnonymizedRecords" && c.granted);
+    const id = `rec_${profile.id}_${booking.bookingId}`;
+    // The clinic-confirmed visit is appended to the chart on the chain (platform.anchor_record with the D0 outcome)
+    const wallet = walletFor(profile.id, records.filter((r) => r.id !== id));
     const record: TreatmentRecord = {
-      id: `rec_${profile.id}_${booking.bookingId}`,
+      id,
       customerId: profile.id,
       procedureId: procedure.id,
       date: day,
@@ -103,6 +108,7 @@ export function OutcomeForm() {
       nextDue: computeNextDue(procedure, day, sessionNumber),
       status: "active",
       sharedToPlatform: shares,
+      anchor: wallet ? { subjectId: wallet.subjectId, version: wallet.version + 1, tx: D0_ANCHOR.tx } : undefined,
     };
     updateDemoState((state) => ({
       ...state,
