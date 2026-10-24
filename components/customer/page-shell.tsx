@@ -27,7 +27,7 @@ export async function PageShell({ children, variant = "app", width = "narrow" }:
         <div className={cn("mx-auto flex w-full items-center justify-between gap-sp-3 px-sp-4", widthClass[width])}>
           <Link
             href={isApp ? "/home" : "/"}
-            className={cn("inline-flex min-h-touch items-center text-title font-semi", focusRing)}
+            className={cn("inline-flex min-h-touch min-w-touch items-center text-title font-semi", focusRing)}
           >
             {t("brand")}
           </Link>

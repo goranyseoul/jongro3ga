@@ -24,5 +24,33 @@
     "optional": "Optional",
     "required": "Required",
     "approx": "Reference"
+  },
+  "landing": {
+    "metaTitle": "Your agent talks to Korean clinics for you",
+    "metaDescription": "Tell your agent what you want. It organizes your conditions, gathers quotes, checks prices, books and keeps your records.",
+    "title": "Your agent talks to Korean clinics for you",
+    "lead": "Tell your agent what you want. It organizes your conditions, asks clinics for quotes, checks the prices and handles the booking.",
+    "start": "Get started",
+    "stepsTitle": "Three steps",
+    "steps": {
+      "tell": {
+        "title": "Tell your agent",
+        "body": "Chat about what you want. Your agent turns it into a condition card with the procedure, amount, budget, area, language and dates."
+      },
+      "compare": {
+        "title": "Your agent compares",
+        "body": "Your agent asks clinics for quotes, and the platform checks them against past payment records."
+      },
+      "book": {
+        "title": "Choose, book and keep records",
+        "body": "Compare the quotes and book. Your record after the visit also helps you time the next session."
+      }
+    },
+    "careTitle": "What to know",
+    "care": {
+      "consent": "Your information goes to a clinic only within the scope you agreed to.",
+      "doctor": "Doctors decide on diagnosis and whether a procedure suits you. Pibu does not provide medical care.",
+      "records": "Price checks appear as a one-to-one answer to your own request, never as a public advertisement."
+    }
   }
 }
