@@ -146,3 +146,13 @@ Claude가 근거 요약·사유 문장 작성 + 추가 패턴 제안 (proposer)
 ## 5. 레시피 (`platform.recipe`)
 
 `kr-patterns.json` + `shared_record` 출처 `PriceRecord`로, 요청 `ageBand`·`concerns`에 맞는 시술 조합 상위 3개와 share, 시술별 통상 용량·주기·다운타임·효과 시기를 돌려준다. 표본 n < 10이면 `disclaimer`에 "데이터가 적어요"를 넣는다. `demo_assumption` 시술은 `disclaimer`에 "데모용 값"을 넣는다. 의학적 권유 문장은 넣지 않는다.
+
+## 검증 방문과 후기 집계 (ZK 확장)
+
+ZK 기록 레이어가 만드는 두 가지 집계값을 `platform.match_clinics` 응답과 비교 화면에 보여주는 규칙이다 ([INTEGRATION.md](../INTEGRATION.md), [03-a2a-protocol.md](03-a2a-protocol.md) 메시지 스키마).
+
+- `verifiedVisits`: `platform.anchor_record`로 방문 티켓이 발급된 수 (시드 `verified-visits.json` 포함). 병원과 시술별로 센다.
+- `reviewStats`: `{ n, avgRating }`. **n >= 5일 때만** 응답에 넣는다. n < 5면 필드를 생략한다 ([08-compliance.md](08-compliance.md) 집계 원칙).
+- 둘 다 **매칭 점수에 들어가지 않는다** (2절 점수표 불변). 표시용 맥락이다. "방문 N명", "후기 n건 평점 x.x"처럼 사실만 쓰고, 병원끼리 우열을 말하는 문구("A보다 B가 낫다")는 쓰지 않는다 (금지어 테스트 대상).
+- 후기 원문(`pibu/review@1`의 `text`)은 공개 피드나 비교 화면에 그대로 보이지 않는다. 로그인한 고객의 1:1 상담 응답에서 Claude가 요약할 때만 쓴다 (오너 결정 2026-10-24).
+- `offerApplied`가 붙은 견적도 다른 견적과 똑같이 판정한다. 용량·가격 판정은 증명과 독립이다. 예를 들어 민트의 첫 방문 1cc 이벤트(99,000원)는 증명이 통과해도 `underdosed` 라벨을 받는다.

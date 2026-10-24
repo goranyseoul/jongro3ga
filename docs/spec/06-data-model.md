@@ -49,7 +49,19 @@ export type Krw = number; // 원 단위 정수
 export type IsoDate = string; // YYYY-MM-DD
 export type IsoDateTime = string; // ISO 8601 with offset
 export type I18nText = Partial<Record<Locale, string>>;
+
+// ZK 확장: 오퍼 조건 1개 (INTEGRATION.md 3절, 03 메시지 스키마). 모든 필드 선택이되 minCount, maxCount 중 하나는 필수.
+export interface ZkClause {
+  type?: string;       // 시술 id ("rejuran_healer"). 없으면 시술 무관
+  clinicId?: string;   // 병원 id ("cln_hanbit"). 없으면 병원 무관
+  minDays?: number;    // 오늘 기준 며칠 전부터
+  maxDays?: number;    // 오늘 기준 며칠 전까지
+  minCount?: number;
+  maxCount?: number;
+}
 ```
+
+회로 코드 표는 `zk/codes.json`에 있고, 와이어와 저장소는 항상 id만 쓴다 (코드 변환은 `lib/zk`가 한다).
 
 ## 시술 마스터 (`data/seed/procedures.json`)
 
@@ -141,6 +153,25 @@ export interface TreatmentRecord {
   status: "active" | "paused" | "stopped"; // 계속 / 쉬기 / 그만
   stopReason?: "no_effect" | "expensive" | "side_effect" | "other";
   sharedToPlatform: boolean;
+  anchor?: { subjectId: string; version: number; tx: string; recordHash: string }; // ZK 확장: 병원 확인 시술이 체인에 앵커된 기록. 없으면 "직접 입력" (증명에 쓰이지 않음)
+}
+
+// ZK 확장: 기록 지갑. 차트는 기기(지갑)에만 있고 어떤 메시지로도 나가지 않는다
+export interface RecordWallet {
+  id: string;                    // = customerId
+  subjectId: string;             // 체인 가명
+  chart: unknown;                // private, never leaves the device
+  version: number;               // 앵커된 기록 수 (체인 기록 v{n})
+}
+
+// ZK 확장: 방문 티켓. 후기 1회를 증명하는 Semaphore identity
+export interface VisitTicket {
+  id: string;
+  customerId: string;
+  clinicId: string;
+  procedureId: string;
+  identity: unknown;             // private
+  used: boolean;                 // 후기를 냈으면 true (방문 1회 = 후기 1회)
 }
 
 export interface CustomerRequest {
@@ -240,6 +271,11 @@ export interface AttributionEntry {
   referralTokenJti: string; status: BookingV1["status"]; priceKrw: Krw; nationality?: Nationality; reportedAt: IsoDateTime;
 }
 
+// ZK 확장: 검증 방문 수와 후기 집계. 후기 원문은 저장하지 않는다 (1:1 요약 때만 쓰고 폐기, 08)
+export interface VerifiedVisitStat { id: string; clinicId: string; procedureId: string; count: number }
+export interface ReviewStat { id: string; clinicId: string; procedureId: string; n: number; avgRating: number; nullifiers: string[] }
+export interface AnchorLog { id: string; bookingId: string; subjectId: string; tx: string; day: number; at: IsoDateTime }
+
 export interface Signal {
   id: string;
   clinicId: string;
@@ -263,7 +299,7 @@ export interface ClinicProfile {
   contactPerson?: { name: string; role: string };
 }
 export interface MenuItem { id: string; clinicId: string; procedureId: string; product: string; amount: Amount; priceKrw: Krw; vatIncluded: boolean; includes: string[]; foreignerSamePrice: boolean }
-export interface Offer { id: string; clinicId: string; procedureId: string; title: string; amount: Amount; priceKrw: Krw; regularPriceKrw: Krw; validFrom: IsoDate; validUntil: IsoDate; conditions: string }
+export interface Offer { id: string; clinicId: string; procedureId: string; title: string; amount: Amount; priceKrw: Krw; regularPriceKrw: Krw; validFrom: IsoDate; validUntil: IsoDate; conditions: string; zkClauses?: ZkClause[] } // zkClauses가 있어도 conditions 텍스트는 필수 (의료법 시행령 제23조)
 export interface SlotPolicy { clinicId: string; durationMinByProcedure: Record<string, number>; foreignSlotsPerDay: number; autoConfirm: boolean; hours: Record<"mon"|"tue"|"wed"|"thu"|"fri"|"sat"|"sun", { open: string; close: string } | null> }
 export interface Slot { id: string; clinicId: string; start: IsoDateTime; procedureIds: string[]; held: boolean }
 export interface ClinicBooking { id: string; clinicId: string; a2aTaskId: string; request: BookingRequestV1; status: BookingV1["status"]; confirmedBy?: "clinic_staff" | "pibu_operator" | "auto"; referralJti: string }
@@ -300,7 +336,7 @@ export interface AgentIdentity { agentId: string; role: "customer" | "platform" 
 | 파일 | 내용 | 규모 |
 | --- | --- | --- |
 | `procedures.json` | 시술 마스터 | 6종 |
-| `clinics.json` | `ClinicRegistryEntry` + `ClinicProfile` + `MenuItem[]` + `Offer[]` + `SlotPolicy` | 5곳 ([01-users-journeys.md](01-users-journeys.md)). 서울글로우(일본어 staff, `autoConfirm=false`)·민트(일본어 interpreter)·아라(일본어 interpreter)는 일본어 하드 필터를 통과해야 한다. 리쥬란 메뉴: 서울글로우 2cc 340,000 VAT 포함 · 민트는 **1cc 이벤트만** (99,000 VAT 포함, 정상가 150,000, 2026-11-01 ~ 11-30, 첫 방문) · 아라 2cc 300,000 VAT 별도 · 한빛 2cc 420,000 VAT 포함 · 다혜 2cc 360,000 VAT 포함 |
+| `clinics.json` | `ClinicRegistryEntry` + `ClinicProfile` + `MenuItem[]` + `Offer[]` + `SlotPolicy` | 5곳 ([01-users-journeys.md](01-users-journeys.md)). 서울글로우(일본어 staff, `autoConfirm=false`)·민트(일본어 interpreter)·아라(일본어 interpreter)는 일본어 하드 필터를 통과해야 한다. 리쥬란 메뉴: 서울글로우 2cc 340,000 VAT 포함 · 민트는 **1cc 이벤트만** (99,000 VAT 포함, 정상가 150,000, 2026-11-01 ~ 11-30, 첫 방문) · 아라 2cc 300,000 VAT 별도 · 한빛 2cc 420,000 VAT 포함 · 다혜 2cc 360,000 VAT 포함. ZK 확장: 이벤트 `Offer`는 `zkClauses`를 가질 수 있다 (민트 첫 방문 1cc 이벤트 = `[{ "clinicId": "cln_mint", "maxCount": 0 }]`) |
 | `slots.json` | 2026-11-10 ~ 2026-11-30, 병원마다 매일 10:00 · 11:00 · 14:00 · 15:00 (KST) 4개 고정 | 병원 5곳 × 21일 × 4 |
 | `price-records.json` | 가상 실결제 기록 (한국 여성 공유 기록 + 외국인 결과). 리쥬란 `gangnam_sinsa` verified 기록은 **정확히 42건**, 날짜 2026-07-16 ~ 2026-11-10 (기준일 119일 이내, 경계 해석과 무관), 단위가격 p25 140,000 · p50 160,000 · p75 185,000 · p90 210,000, 용량 p25 = 2 · p75 = 3 (0.5 반올림 후). 그 외 지역·시술은 10~20건씩 | 리쥬란 42 + 기타 |
 | `outcomes.json` | 기본 결과. 아라의원 일본 고객 결과 4건은 평균 `quoteGapRatio` +0.15, 날짜 2026-08-14 ~ 2026-10-12 (기준일 31~90일 전: 90일 병원 플래그에는 들어가고 30일 규칙 트리거 윈도우에는 안 들어감) | 30건 |
@@ -309,5 +345,6 @@ export interface AgentIdentity { agentId: string; role: "customer" | "platform" 
 | `rules.json` | 활성 2개, 제안 0개. `rule_001`: when `{ nationalities: ["CN"] }` then `require_language ["zh-CN"]` · `rule_002`: when `{ procedureIds: ["ulthera"] }` then `demote_clinic ["cln_dahye"] 0.1`. 둘 다 Yuki 리쥬란 요청에는 매치되지 않는다 (`appliedRuleIds = []`) | 2개 |
 | `kr-patterns.json` | 나이대·고민별 한국 여성 시술 조합 (PLANNING의 Pibu Recipe) | `demo_assumption` |
 | `fx.json` | 참고 환율 (JPY, CNY, USD) | 고정값 |
+| `verified-visits.json` | ZK 확장: 병원 × 시술별 `VerifiedVisitStat` 시드 (데모용 가상 통계. 예: 서울글로우 리쥬란 1,240명). 후기 시드 `ReviewStat`은 같은 방식으로 n >= 5인 병원에만 둔다 | 병원 5곳 × 시술 |
 
 모든 시드 병원·인물·통계는 **가상**이다 (README 규칙).
