@@ -70,8 +70,9 @@ export function toOfferProof(bundle: ProofBundle, clinicId: string): OfferProofV
     offerId: bundle.offerId,
     clinicId,
     subjectId: bundle.subjectId,
-    chainId: Number(process.env.ZK_CHAIN_ID ?? DEFAULT_CHAIN_ID),
-    registry: process.env.ZK_REGISTRY_ADDRESS ?? DEFAULT_REGISTRY,
+    chainId: Number(process.env.ZK_CHAIN_ID || DEFAULT_CHAIN_ID),
+    // An empty variable (as in .env.example) means "use the deployment default", same as unset.
+    registry: process.env.ZK_REGISTRY_ADDRESS || DEFAULT_REGISTRY,
     today: bundle.today,
     proofs: bundle.proofs,
   };
