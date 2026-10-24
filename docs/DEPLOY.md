@@ -9,6 +9,14 @@
 | 웹 앱 (고객 웹, 병원 콘솔, 운영 콘솔, 데모) | 리포 루트 Next.js | Vercel | `vercel.json`: `main`만 배포, 다른 브랜치 프리뷰 끔 |
 | GlowPass ZK 데모 서버 | `glowpass/` (+ `zk/`, `chain/`) | 데모 맥에서 직접 실행 | Yuki·Lin 증명은 지갑 파일이 있는 데모 맥에서만 성공 ([INTEGRATION.md](INTEGRATION.md) 1절) |
 
+## 0. 현재 연결 상태 (2026-10-24)
+
+- Vercel 프로젝트: `ironact-projects/jongro3ga`
+- 연결된 Git 리포: **`makim-414/jongro3ga` (포크)**. 원본 `goranyseoul/jongro3ga`는 개인 계정 소유라 Vercel GitHub 앱이 접근하지 못해 직접 연결이 실패했다.
+- 정본은 계속 `goranyseoul/jongro3ga`다. 포크는 배포용 거울이고 직접 커밋하지 않는다.
+- 배포 절차: 원본에 PR 머지 → `gh repo sync makim-414/jongro3ga` (포크 `main`을 원본과 맞춤) → Vercel이 포크 `main` 푸시를 받아 프로덕션 빌드.
+- 원본 리포 소유자가 Vercel GitHub 앱에 이 리포 접근을 허용하면, `vercel git connect https://github.com/goranyseoul/jongro3ga.git`로 원본에 직접 연결하고 포크 단계를 없앤다.
+
 ## 1. Vercel 프로젝트 연결 (오너 1회)
 
 1. Vercel 대시보드 → Add New → Project → GitHub `goranyseoul/jongro3ga` Import. Vercel GitHub 앱이 `goranyseoul` 계정 리포에 접근할 수 있어야 하므로, 리포 소유자 계정에서 앱 접근을 허용해야 할 수 있다.
