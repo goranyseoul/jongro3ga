@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/check-token-map.mjs && node scripts/check-components.mjs && node scripts/check-tokens.mjs",
+    "prebuild": "node scripts/check-token-map.mjs && node scripts/check-components.mjs && node scripts/check-tokens.mjs && node scripts/rename-brand.mjs --check",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
