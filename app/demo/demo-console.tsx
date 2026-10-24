@@ -26,8 +26,8 @@ import { DemoControls } from "./controls";
 import { LiveLog } from "./live-log";
 import { SidePanel, type SideMode } from "./side-panel";
 
-// Yuki's calls in order: the first YUKI_BOOKING_STEP happen before the booking exists, the last one
-// (platform.report_booking) is the clinic reporting the confirmation.
+// Yuki's calls in order: the first YUKI_BOOKING_STEP happen before the booking exists, the rest come after
+// it is confirmed: platform.report_booking from the clinic, then platform.anchor_record on the procedure day.
 const YUKI_FLOW = A2A_LOG.filter((entry) => entry.contextId === YUKI_CONTEXT_ID);
 const YUKI_BOOKING_ID = "bk_demo_yuki";
 // Time between two replayed calls, slow enough to follow on screen.
@@ -69,7 +69,9 @@ export function DemoConsole() {
   const visible = bookings.filter((booking) => booking.revealAtStep === undefined || shown >= booking.revealAtStep);
   const pending = visible.filter((booking) => booking.state === "pending");
   const yukiConfirmed = bookings.some((booking) => booking.id === YUKI_BOOKING_ID && booking.state === "confirmed");
-  const entries = [...YUKI_FLOW.slice(0, shown), ...(yukiConfirmed ? YUKI_FLOW.slice(YUKI_BOOKING_STEP) : [])];
+  // calls after the booking wait for the demo clock to reach their day (timestamps carry +09:00, so the date slices compare)
+  const after = yukiConfirmed ? YUKI_FLOW.slice(YUKI_BOOKING_STEP).filter((entry) => entry.at.slice(0, 10) <= clock.slice(0, 10)) : [];
+  const entries = [...YUKI_FLOW.slice(0, shown), ...after];
 
   const run = async (key: string, task: () => Promise<void>) => {
     setBusy(key);
