@@ -43,7 +43,7 @@ import {
 import type { LandingCopy } from "../landing-copy";
 import { LandingHome } from "../landing-home";
 import { LOCALES, LOCALE_NAME } from "../locales";
-import { ParticleField } from "../hero/particle-field";
+import { GatewayFlow } from "../hero/gateway-flow";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
 import {
@@ -754,7 +754,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     </div>
   );
 
-  // One screen for both phases: the sunrise backdrop and the particle field stay mounted, the hero copy turns into
+  // One screen for both phases: the sunrise backdrop and the gateway flow stay mounted, the hero copy turns into
   // the conversation in place, and the input stays where it was.
   const heroMain = (
     <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-12">
@@ -843,7 +843,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
       {full || splashOver ? null : <Splash wordmark={intro.wordmark} />}
       <div className={cn("theme-sunrise relative flex flex-col", full && "min-h-0 flex-1 overflow-hidden")}>
         <section className={cn("relative flex flex-col overflow-hidden", full && "min-h-0 flex-1")}>
-          <ParticleField className="absolute inset-0" shrink={engaged || started} />
+          <GatewayFlow className="absolute inset-0" quiet={engaged || started} />
           <header className="relative flex flex-wrap items-center justify-between gap-x-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
             <span className="type-hero">{intro.wordmark}</span>
             {/* hidden once the customer has answered: this switch reloads the page and would drop the answers.
