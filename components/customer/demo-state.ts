@@ -20,6 +20,8 @@ export type DemoOutcome = {
 };
 
 export type DemoState = {
+  /** Nickname typed in onboarding; the seed profile name is used until then. */
+  nickname?: string;
   requestStarted: boolean;
   booking?: DemoBooking;
   outcome?: DemoOutcome;
