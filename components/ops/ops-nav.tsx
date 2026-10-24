@@ -17,7 +17,7 @@ export function OpsNav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="운영 콘솔" className="flex gap-sp-1 overflow-x-auto px-sp-3 pb-sp-2 lg:flex-col lg:overflow-visible lg:pb-0">
+    <nav aria-label="운영 콘솔" className="flex flex-wrap gap-sp-1 px-sp-3 pb-sp-2 lg:flex-col lg:flex-nowrap lg:pb-0">
       {ITEMS.map((item) => {
         const current = pathname === item.href || pathname.startsWith(`${item.href}/`);
         return (
