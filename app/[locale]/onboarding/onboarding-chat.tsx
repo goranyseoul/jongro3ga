@@ -20,6 +20,7 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { AccountMenu } from "@/components/customer/account-menu";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { ClinicCarousel } from "@/components/customer/clinic-carousel";
 import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
@@ -721,21 +722,14 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
       <div className={cn("theme-sunrise relative flex flex-col", started && "min-h-0 flex-1 overflow-hidden")}>
         <section className={cn("relative flex flex-col overflow-hidden", started && "min-h-0 flex-1")}>
           <FaceParticles className="absolute inset-0" shrink={engaged || started} />
-          <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+          <header className="relative z-10 flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
             <span className="type-hero">{intro.wordmark}</span>
             {started ? (
               <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
                 <span className="tabular-nums">{c.progress(percent)}</span>
               </Button>
             ) : (
-              <Button
-                variant="secondary"
-                aria-expanded={signupOpen}
-                aria-haspopup="dialog"
-                onClick={() => setSignupOpen((open) => !open)}
-              >
-                {intro.signup.toggle}
-              </Button>
+              <AccountMenu compact={false} onSignUp={() => setSignupOpen(true)} signUpOpen={signupOpen} />
             )}
           </header>
           {started ? chatMain : heroMain}
