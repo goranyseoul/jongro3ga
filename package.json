@@ -12,6 +12,8 @@
     "lint:tokens": "node scripts/check-tokens.mjs"
   },
   "dependencies": {
+    "@aztec/bb.js": "5.0.0-nightly.20260324",
+    "@noir-lang/noir_js": "1.0.0-beta.20",
     "@react-three/fiber": "^9.8.2",
     "geist": "^1.8.2",
     "next": "^16.4.3",
