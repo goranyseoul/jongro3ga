@@ -74,6 +74,18 @@ export async function fetchAuthOptions(): Promise<AuthOptions> {
   return { google: false, demo: false, demoAccounts: [] };
 }
 
+/** Whether there is a session, without logging an error response when signed out (get-session answers 200 null). */
+export async function hasSession(): Promise<boolean> {
+  try {
+    const res = await fetch("/api/auth/get-session", { cache: "no-store", credentials: "same-origin" });
+    if (!res.ok) return false;
+    const body = (await res.json()) as { user?: unknown } | null;
+    return Boolean(body?.user);
+  } catch {
+    return false;
+  }
+}
+
 /** GET /api/me, or null when signed out. */
 export async function fetchMe<T = unknown>(): Promise<T | null> {
   const res = await fetch("/api/me", { cache: "no-store", credentials: "same-origin" });

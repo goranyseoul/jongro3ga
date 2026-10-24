@@ -35,21 +35,21 @@ const agentWindow = (page: Page, title = ko.agentWindow.title) => page.getByRole
 const tour = (page: Page, region = ko.tour.region) => page.getByRole("dialog", { name: region });
 
 test.describe("first visit", () => {
-  test("the tour and the agent window open together, and the tour does not come back", async ({ page }) => {
+  test("the tour runs over the landing alone, and does not come back", async ({ page }) => {
     const problems = watch(page);
     await page.goto("/ko");
 
     await expect(tour(page)).toBeVisible({ timeout: 15_000 });
-    await expect(agentWindow(page)).toBeVisible();
-    // the window greets at once: the first question is the language
-    await expect(agentWindow(page).getByRole("button", { name: LOCALE_NAME.en })).toBeVisible();
+    // one place to type at a time: no agent window and no launcher until the customer asks something
+    await expect(agentWindow(page)).toBeHidden();
+    await expect(page.getByRole("button", { name: ko.agentWindow.open })).toBeHidden();
 
     for (let step = 0; step < ko.tour.steps.length - 1; step++) {
       await tour(page).getByRole("button", { name: ko.tour.next }).click();
     }
     await tour(page).getByRole("button", { name: ko.tour.done }).click();
     await expect(tour(page)).toBeHidden();
-    await expect(agentWindow(page)).toBeVisible();
+    await expect(agentWindow(page)).toBeHidden();
     expect(await page.evaluate((key) => localStorage.getItem(key), TOUR_SEEN)).toBe("1");
 
     await page.reload();
@@ -76,7 +76,7 @@ test.describe("returning visit", () => {
     test(`the language chip for ${target} changes the page language and keeps the conversation`, async ({ page }) => {
       const problems = watch(page);
       await page.goto("/ko");
-      await page.getByRole("button", { name: ko.agentWindow.open }).click();
+      await page.getByRole("button", { name: ko.startPlain }).click();
       await agentWindow(page).getByRole("button", { name: LOCALE_NAME[target] }).click();
 
       // the page moves to the new language on purpose ...
@@ -125,7 +125,7 @@ test.describe("returning visit", () => {
 
   test("expanding hands the same conversation the whole screen", async ({ page }) => {
     await page.goto("/ko");
-    await page.getByRole("button", { name: ko.agentWindow.open }).click();
+    await page.getByRole("button", { name: ko.startPlain }).click();
     await expect(agentWindow(page).getByRole("log")).toContainText(LOCALE_NAME.ja);
     await agentWindow(page).getByRole("button", { name: ko.agentWindow.expand }).click();
     await expect(agentWindow(page)).toBeHidden();
@@ -133,9 +133,41 @@ test.describe("returning visit", () => {
     await expect(page).toHaveURL(/\/ko$/);
   });
 
+  test("the sign-up link opens its own page, and signing up starts the conversation", async ({ page }) => {
+    const problems = watch(page);
+    await page.goto("/en");
+    await page.getByRole("link", { name: LANDING_COPY.en.signup.toggle }).click();
+    await expect(page).toHaveURL(/\/en\/signup$/);
+    await page.getByLabel(/email/i).first().fill(`visitor-${Date.now()}@example.com`);
+    await page.locator('input[type="password"]').fill("pibook-demo-pass");
+    await page.locator('input[type="password"]').press("Enter");
+    // the first sign-up also creates the local database
+    await expect(page).toHaveURL(/\/en$/, { timeout: 30_000 });
+    await expect(agentWindow(page, LANDING_COPY.en.agentWindow.title)).toBeVisible();
+    expect(problems).toEqual([]);
+  });
+
+  test("the wordmark leads back to the landing, or to home once signed up", async ({ page }) => {
+    await page.goto("/en");
+    await page.getByRole("button", { name: LANDING_COPY.en.startPlain }).click();
+    await expect(agentWindow(page, LANDING_COPY.en.agentWindow.title)).toBeVisible();
+    await page.getByRole("link", { name: "PibooK" }).first().click();
+    await expect(agentWindow(page, LANDING_COPY.en.agentWindow.title)).toBeHidden();
+    await expect(page.getByRole("button", { name: LANDING_COPY.en.startPlain })).toBeVisible();
+
+    await page.goto("/en/signup");
+    await page.getByLabel(/email/i).first().fill(`wordmark-${Date.now()}@example.com`);
+    await page.locator('input[type="password"]').fill("pibook-demo-pass");
+    await page.locator('input[type="password"]').press("Enter");
+    // the first sign-up also creates the local database
+    await expect(page).toHaveURL(/\/en$/, { timeout: 30_000 });
+    await page.getByRole("link", { name: "PibooK" }).first().click();
+    await expect(page).toHaveURL(/\/en\/home$/);
+  });
+
   test("Escape closes the window and the launcher takes the focus back", async ({ page }) => {
     await page.goto("/ko");
-    await page.getByRole("button", { name: ko.agentWindow.open }).click();
+    await page.getByRole("button", { name: ko.startPlain }).click();
     await expect(agentWindow(page)).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(agentWindow(page)).toBeHidden();
@@ -146,7 +178,7 @@ test.describe("returning visit", () => {
     test(`the ${locale} landing loads without errors`, async ({ page }) => {
       const problems = watch(page);
       await page.goto(`/${locale}`);
-      await expect(page.getByRole("button", { name: LANDING_COPY[locale].agentWindow.open })).toBeVisible();
+      await expect(page.getByRole("button", { name: LANDING_COPY[locale].startPlain })).toBeVisible();
       await page.waitForTimeout(1500);
       expect(problems).toEqual([]);
     });

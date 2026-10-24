@@ -2,11 +2,10 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { FcGoogle } from "react-icons/fc";
 import { Button, Input } from "@/components/ui";
 import { resetDemoState } from "@/components/customer/demo-state";
 import { authCopy } from "@/components/auth/copy";
-import { demoSignIn, errorMessage, fetchAuthOptions, signInGoogle, signUpEmail, type AuthOptions } from "@/components/auth/client";
+import { demoSignIn, errorMessage, fetchAuthOptions, signUpEmail, type AuthOptions } from "@/components/auth/client";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
@@ -50,7 +49,8 @@ export function SignupForm() {
       return;
     }
     resetDemoState();
-    router.push("/onboarding");
+    // a new account goes straight to creating its agent, in the conversation on the landing
+    router.push("/?start=1");
   };
 
   const pickDemo = async (account: (typeof DEMO_ACCOUNTS)[number]) => {
@@ -64,7 +64,7 @@ export function SignupForm() {
       return;
     }
     resetDemoState();
-    router.push(account.start === "onboarding" ? "/onboarding" : "/home", { locale: account.locale });
+    router.push(account.start === "onboarding" ? "/?start=1" : "/home", { locale: account.locale });
   };
 
   return (
@@ -104,12 +104,6 @@ export function SignupForm() {
         <Button type="submit" size="lg" fullWidth disabled={pending} aria-busy={pending || undefined}>
           {pending ? ui.pending : t("submit")}
         </Button>
-        {options.google ? (
-          <Button type="button" variant="secondary" size="lg" fullWidth disabled={pending} onClick={() => void signInGoogle(`/${locale}/home`, `/${locale}/onboarding`)}>
-            <FcGoogle aria-hidden className="size-sp-5" />
-            {ui.googleSignup}
-          </Button>
-        ) : null}
         <p className="flex flex-wrap items-center justify-center gap-x-sp-1 text-label text-muted">
           <span>{ui.haveAccount}</span>
           <Link href="/login" className={cn("inline-flex min-h-touch items-center px-sp-1 font-med text-brand hover:underline", focusRing)}>

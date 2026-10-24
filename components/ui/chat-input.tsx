@@ -81,10 +81,11 @@ export function ChatInput({
     : {};
 
   return (
-    <div className="mx-auto w-full" style={shell}>
+    // chat-neon: the sunrise ring turning around the bar (globals.css), brighter while the bar has focus
+    <div className={cn("chat-neon relative mx-auto w-full rounded-3xl", disabled && "chat-neon-off")} style={shell}>
       <form
         className={cn(
-          "flex flex-col overflow-hidden rounded-3xl border border-input bg-elev shadow-card transition-colors duration-press ease-out focus-within:border-brand",
+          "relative flex flex-col overflow-hidden rounded-3xl border border-input bg-elev shadow-card transition-colors duration-press ease-out",
           disabled && "opacity-50",
         )}
         onFocus={() => setFocused(true)}
