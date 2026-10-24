@@ -1,0 +1,6 @@
+[package]
+name = "append"
+type = "bin"
+authors = [""]
+
+[dependencies]

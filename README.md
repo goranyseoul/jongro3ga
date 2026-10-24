@@ -98,3 +98,20 @@ npm run build        # prebuild가 토큰 가드와 컴포넌트 목록을 먼�
 ```
 
 디자인 값(색, 간격, 모서리, 타이포)은 `app/globals.css`의 CSS 변수가 유일한 출처이고, `tailwind.config.ts`는 그 변수만 매핑한다. 토큰 이름과 UI 규칙은 스펙의 `docs/spec/05-screens.md`를 따른다.
+
+## ZK 기록 레이어 (GlowPass, 팀원 브랜치 `feat/zk-record-registry`에서 통합)
+
+에이전트는 차트를 주고받지 않고 오퍼 ID + ZK 증명만 주고받는다. 시술 기록은 유저 지갑에, 체인(Base Sepolia)에는 가명 → 차트 해시만 저장한다. 연동 가이드: [docs/INTEGRATION.md](docs/INTEGRATION.md)
+
+| 디렉터리 | 내용 |
+| --- | --- |
+| `zk/` | Noir 회로: `eligibility`(오퍼 조건 증명), `append`(기록 추가 증명), `commit`, `record_hash` |
+| `chain/` | `RecordRegistry.sol` + 검증 컨트랙트, 지갑·증명 로직(`records.mjs`), Semaphore 익명 리뷰(`reviews.mjs`), 로컬 e2e(`e2e.mjs`) |
+| `glowpass/` | ZK HTTP API 데모 서버 + UI (원래 브랜치의 `app/`. Next.js `app/` 디렉토리와 겹쳐서 옮김) |
+
+```bash
+(cd zk && npm i) && (cd chain && npm i) && (cd glowpass && npm i)
+cd glowpass && PORT=4000 node server.mjs   # Next.js(3000)와 포트 분리
+```
+
+Yuki·Lin 증명은 차트 원본(지갑 파일)이 있는 데모 맥 서버에서만 성공한다 (docs/INTEGRATION.md 1절).
