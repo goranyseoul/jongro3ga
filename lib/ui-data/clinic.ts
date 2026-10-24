@@ -307,7 +307,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: "mi_shurink",
-    procedureId: "shurink_universe",
+    procedureId: "shrink_universe",
     product: "Shurink Universe",
     nameKo: "슈링크 유니버스",
     amount: { value: 300, unit: "shot" },
@@ -398,7 +398,7 @@ export const OFFERS: Offer[] = [
   },
   {
     id: "of_shurink_nov",
-    procedureId: "shurink_universe",
+    procedureId: "shrink_universe",
     title: "11월 슈링크 300샷 이벤트",
     amount: { value: 300, unit: "shot" },
     priceKrw: 380000,

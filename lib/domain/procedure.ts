@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { I18nTextSchema, UnitSchema } from "../a2a/schemas";
 
-// Procedure master (PLANNING.md appendix A, uploaded 2026-10-24). It replaces the earlier 06-data-model.md
-// `Procedure` interface: that one had six product level ids, this one has 27 procedures.
+// Procedure master (PLANNING.md appendix A, uploaded 2026-10-24). It extends the six procedures of the
+// 06-data-model.md `Procedure` interface to 27. The spec is canonical (owner decision 2026-10-24, BUILD-LOG
+// row 10), so the six entries that are spec procedures carry the spec ids: `ulthera`, `rejuran_healer`,
+// `thermage_flx`, `shrink_universe`, `botox_forehead`, `skin_booster_juvelook`. The other 21 keep their own ids.
 //
 // The table gives ranges and phrases. Rules used to turn them into numbers, applied by the data, not by code:
 //  - cycle days: "한 달" and "매달" are 30 days, "N주" is 7N, "연 1회" is 300~400 (same as 06), "약 1년" is 365.

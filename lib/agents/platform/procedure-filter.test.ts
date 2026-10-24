@@ -77,23 +77,23 @@ describe("scenario: Grace wants lifting once a year without downtime", () => {
     visitGapDays: 365,
     trip: { arrival: "2026-11-17", departure: "2026-11-24" },
   };
-  const context = { selectionRate: rates({ ulthera: 0.4, thermage: 0.35 }) };
+  const context = { selectionRate: rates({ ulthera: 0.4, thermage_flx: 0.35 }) };
 
   it("leaves exactly Ulthera and Thermage", () => {
     const result = filterProcedures(input, context);
-    expect(ids(result.ranked)).toEqual(["ulthera", "thermage"]);
+    expect(ids(result.ranked)).toEqual(["ulthera", "thermage_flx"]);
   });
 
   it("explains each removal so the agent can say what it left out", () => {
     const result = filterProcedures(input, context);
-    expect(ids(result.excluded)).toEqual(["inmode", "oligio", "shrink", "thread_lift"]);
+    expect(ids(result.excluded)).toEqual(["inmode", "oligio", "shrink_universe", "thread_lift"]);
     expect(reasonCodes(result, "thread_lift")).toEqual(["downtime_too_long", "method_excluded"]);
-    for (const id of ["inmode", "oligio", "shrink"]) expect(reasonCodes(result, id), id).toEqual(["cycle_too_frequent"]);
+    for (const id of ["inmode", "oligio", "shrink_universe"]) expect(reasonCodes(result, id), id).toEqual(["cycle_too_frequent"]);
   });
 
   it("flags pain above the visitor's limit without removing the treatment, and ranks it lower", () => {
     const strict = filterProcedures({ ...input, maxPain: "mid" }, context);
-    expect(ids(strict.ranked)).toEqual(["ulthera", "thermage"]);
+    expect(ids(strict.ranked)).toEqual(["ulthera", "thermage_flx"]);
     for (const card of strict.ranked) {
       expect(card.warnings).toContainEqual({ code: "pain_above_preference", pain: "high" });
       expect(card.breakdown.pain).toBe(0);
@@ -102,7 +102,7 @@ describe("scenario: Grace wants lifting once a year without downtime", () => {
 
   it("one visit a year needs a long lasting effect even when downtime is fine", () => {
     const result = filterProcedures({ areas: ["lifting"], minMaintenanceDays: 300 }, {});
-    expect(ids(result.ranked)).toEqual(["thermage", "thread_lift", "ulthera"]);
+    expect(ids(result.ranked)).toEqual(["thermage_flx", "thread_lift", "ulthera"]);
   });
 });
 
@@ -110,16 +110,16 @@ describe("scenario: Grace wants lifting once a year without downtime", () => {
 describe("scenario: Lin cannot repeat a monthly series", () => {
   it("detects the mismatch for Rejuran and keeps what fits a four month rhythm", () => {
     const result = filterProcedures({ areas: ["texture_renewal"], visitGapDays: 120 }, {});
-    for (const id of ["rejuran", "juvelook", "juvelook_eye", "skin_booster", "exosome", "fraxel"]) {
+    for (const id of ["rejuran_healer", "skin_booster_juvelook", "juvelook_eye", "skin_booster", "exosome", "fraxel"]) {
       expect(reasonCodes(result, id), id).toEqual(["series_too_close"]);
     }
-    expect(ids(result.ranked)).toEqual(expect.arrayContaining(["thermage", "skin_botox", "lituo"]));
-    expect(ids(result.ranked)).not.toContain("rejuran");
+    expect(ids(result.ranked)).toEqual(expect.arrayContaining(["thermage_flx", "skin_botox", "lituo"]));
+    expect(ids(result.ranked)).not.toContain("rejuran_healer");
   });
 
   it("the same visitor is fine with the series when visits are a month apart", () => {
     const result = filterProcedures({ areas: ["texture_renewal"], visitGapDays: 30 }, {});
-    expect(ids(result.ranked)).toContain("rejuran");
+    expect(ids(result.ranked)).toContain("rejuran_healer");
   });
 });
 
@@ -130,29 +130,29 @@ describe("conditions", () => {
     const filler = result.ranked.find((c) => c.procedure.id === "filler")!;
     expect(ulthera.breakdown.area).toBe(SCORE.area / 2);
     expect(filler.breakdown.area).toBe(SCORE.area / 2);
-    const thermage = result.ranked.find((c) => c.procedure.id === "thermage")!;
+    const thermage = result.ranked.find((c) => c.procedure.id === "thermage_flx")!;
     expect(thermage.procedure.areas).toContain("lifting");
-    expect(ids(result.ranked)).not.toContain("botox_wrinkle");
+    expect(ids(result.ranked)).not.toContain("botox_forehead");
   });
 
   it("filters by method when the visitor knows it, and by excluded methods", () => {
     const only = filterProcedures({ areas: ["lifting"], methods: ["hifu"] }, {});
-    expect(ids(only.ranked)).toEqual(["shrink", "ulthera"]);
-    expect(reasonCodes(only, "thermage")).toEqual(["method_not_selected"]);
+    expect(ids(only.ranked)).toEqual(["shrink_universe", "ulthera"]);
+    expect(reasonCodes(only, "thermage_flx")).toEqual(["method_not_selected"]);
     const excludingRf = filterProcedures({ areas: ["lifting"], excludeMethods: ["rf"] }, {});
-    expect(ids(excludingRf.excluded)).toEqual(["inmode", "oligio", "thermage"]);
+    expect(ids(excludingRf.excluded)).toEqual(["inmode", "oligio", "thermage_flx"]);
   });
 
   it("downtime limits use the upper end of the range: three days OK means a 1~3 day treatment passes, 2~5 does not", () => {
     const result = filterProcedures({ areas: ["texture_renewal", "volume"], maxDowntimeDays: 3 }, {});
-    expect(ids(result.ranked)).toContain("rejuran");
+    expect(ids(result.ranked)).toContain("rejuran_healer");
     expect(reasonCodes(result, "filler")).toEqual(["downtime_too_long"]);
   });
 
   it("budget: fully inside earns full points, partly inside half, above nothing plus a warning", () => {
     const result = filterProcedures({ areas: ["lifting"], budgetKrw: 1_500_000 }, {});
     const byId = Object.fromEntries(result.ranked.map((c) => [c.procedure.id, c]));
-    expect(byId.shrink!.breakdown.budget).toBe(SCORE.budget);
+    expect(byId.shrink_universe!.breakdown.budget).toBe(SCORE.budget);
     expect(byId.ulthera!.breakdown.budget).toBe(SCORE.budget / 2);
     const tight = filterProcedures({ areas: ["lifting"], budgetKrw: 400_000 }, {});
     const ulthera = tight.ranked.find((c) => c.procedure.id === "ulthera")!;
@@ -171,7 +171,7 @@ describe("conditions", () => {
   });
 
   it("orders by score, then selection rate, then id, whatever the input order", () => {
-    const base = procedureMaster.find((p) => p.id === "botox_wrinkle")!;
+    const base = procedureMaster.find((p) => p.id === "botox_forehead")!;
     const copies = ["zeta", "alpha", "mid"].map((id) => ({ ...base, id }));
     const tied = filterProcedures({ areas: ["wrinkles"] }, { procedures: copies });
     expect(ids(tied.ranked)).toEqual(["alpha", "mid", "zeta"]);
