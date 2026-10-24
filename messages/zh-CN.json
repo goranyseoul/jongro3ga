@@ -23,7 +23,31 @@
     "save": "保存",
     "optional": "选填",
     "required": "必填",
-    "approx": "参考"
+    "approx": "参考",
+    "session": "第{n}次: {date}",
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value}发",
+      "unit": "{value}单位",
+      "line": "{value}条",
+      "session": "{value}次"
+    },
+    "area": {
+      "gangnam": "江南",
+      "sinsa": "新沙",
+      "apgujeong": "狎鸥亭",
+      "myeongdong": "明洞",
+      "hongdae": "弘大",
+      "other": "其他"
+    },
+    "bookingStatus": {
+      "requested": "已发送请求",
+      "pending_clinic": "诊所确认中",
+      "confirmed": "预约已确认",
+      "canceled": "已取消",
+      "no_show": "未到诊",
+      "completed": "已施术"
+    }
   },
   "landing": {
     "metaTitle": "由您的专属代理,代您与韩国诊所沟通",
@@ -73,6 +97,44 @@
       "lin": "上海 · 33岁 · 中文",
       "emily": "洛杉矶 · 26岁 · 英语",
       "jisoo": "首尔 · 34岁 · 韩语 · 以记录为主"
+    }
+  },
+  "home": {
+    "metaTitle": "首页",
+    "greeting": "{name},你好",
+    "agent": {
+      "title": "我的代理",
+      "active": "已启用",
+      "status": "状态",
+      "languages": "需要的语言",
+      "stay": "停留",
+      "cardLink": "查看代理卡"
+    },
+    "ask": {
+      "label": "您想做什么项目?",
+      "placeholder": "例如: 想做丽珠兰",
+      "submit": "去咨询",
+      "quick": "按项目选择"
+    },
+    "locked": {
+      "title": "关于诊所介绍与预约",
+      "body": "诊所介绍与预约仅面向外国籍短期停留的用户。施术记录和下次时间提醒可以完整使用。"
+    },
+    "requests": {
+      "title": "进行中的请求",
+      "count": "已收到{count}家诊所的报价",
+      "open": "查看报价"
+    },
+    "booking": {
+      "title": "即将到来的预约",
+      "open": "预约详情"
+    },
+    "next": {
+      "title": "下次时间",
+      "empty": "还没有记录",
+      "overdue": "已过预定日期",
+      "all": "查看全部记录",
+      "add": "3秒记录"
     }
   }
 }

@@ -24,7 +24,7 @@ export function AppNav({ items, label }: { items: AppNavItem[]; label: string })
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-touch items-center justify-center px-sp-3 text-body transition-colors duration-press ease-out md:rounded-md",
+                  "flex min-h-touch min-w-touch items-center justify-center px-sp-3 text-body transition-colors duration-press ease-out md:rounded-md",
                   active ? "font-semi text-text" : "text-muted hover:text-text",
                   focusRing,
                 )}

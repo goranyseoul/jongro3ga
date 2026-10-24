@@ -23,7 +23,31 @@
     "save": "保存する",
     "optional": "任意",
     "required": "必須",
-    "approx": "参考"
+    "approx": "参考",
+    "session": "{n}回目: {date}",
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value}ショット",
+      "unit": "{value}ユニット",
+      "line": "{value}ライン",
+      "session": "{value}回"
+    },
+    "area": {
+      "gangnam": "江南",
+      "sinsa": "新沙",
+      "apgujeong": "狎鴎亭",
+      "myeongdong": "明洞",
+      "hongdae": "弘大",
+      "other": "その他"
+    },
+    "bookingStatus": {
+      "requested": "リクエスト送信済み",
+      "pending_clinic": "クリニック確認中",
+      "confirmed": "予約確定",
+      "canceled": "キャンセル",
+      "no_show": "来院なし",
+      "completed": "施術済み"
+    }
   },
   "landing": {
     "metaTitle": "あなたの代わりに、エージェントが韓国のクリニックと話します",
@@ -73,6 +97,44 @@
       "lin": "上海 · 33歳 · 中国語",
       "emily": "ロサンゼルス · 26歳 · 英語",
       "jisoo": "ソウル · 34歳 · 韓国語 · 記録が中心"
+    }
+  },
+  "home": {
+    "metaTitle": "ホーム",
+    "greeting": "{name}さん、こんにちは",
+    "agent": {
+      "title": "わたしのエージェント",
+      "active": "有効",
+      "status": "状態",
+      "languages": "必要な言語",
+      "stay": "滞在",
+      "cardLink": "エージェントカードを見る"
+    },
+    "ask": {
+      "label": "何を受けたいですか？",
+      "placeholder": "例: リジュランを受けたい",
+      "submit": "相談する",
+      "quick": "施術から選ぶ"
+    },
+    "locked": {
+      "title": "クリニックのご紹介と予約について",
+      "body": "クリニックのご紹介と予約は、外国籍で短期滞在の方のみが対象です。施術の記録と次回の目安は、すべてご利用いただけます。"
+    },
+    "requests": {
+      "title": "進行中のリクエスト",
+      "count": "{count}院から見積もりが届いています",
+      "open": "見積もりを見る"
+    },
+    "booking": {
+      "title": "今後の予約",
+      "open": "予約の詳細"
+    },
+    "next": {
+      "title": "次回の目安",
+      "empty": "まだ記録がありません",
+      "overdue": "予定日を過ぎています",
+      "all": "記録をすべて見る",
+      "add": "3秒で記録する"
     }
   }
 }

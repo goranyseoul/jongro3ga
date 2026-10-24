@@ -23,7 +23,31 @@
     "save": "Save",
     "optional": "Optional",
     "required": "Required",
-    "approx": "Reference"
+    "approx": "Reference",
+    "session": "Session {n}: {date}",
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value, plural, one {# shot} other {# shots}}",
+      "unit": "{value, plural, one {# unit} other {# units}}",
+      "line": "{value, plural, one {# line} other {# lines}}",
+      "session": "{value, plural, one {# session} other {# sessions}}"
+    },
+    "area": {
+      "gangnam": "Gangnam",
+      "sinsa": "Sinsa",
+      "apgujeong": "Apgujeong",
+      "myeongdong": "Myeongdong",
+      "hongdae": "Hongdae",
+      "other": "Other"
+    },
+    "bookingStatus": {
+      "requested": "Request sent",
+      "pending_clinic": "Waiting for the clinic",
+      "confirmed": "Booking confirmed",
+      "canceled": "Canceled",
+      "no_show": "No show",
+      "completed": "Completed"
+    }
   },
   "landing": {
     "metaTitle": "Your agent talks to Korean clinics for you",
@@ -73,6 +97,44 @@
       "lin": "Shanghai · 33 · Chinese",
       "emily": "Los Angeles · 26 · English",
       "jisoo": "Seoul · 34 · Korean · records only"
+    }
+  },
+  "home": {
+    "metaTitle": "Home",
+    "greeting": "Hello, {name}",
+    "agent": {
+      "title": "My agent",
+      "active": "Active",
+      "status": "Status",
+      "languages": "Languages needed",
+      "stay": "Stay",
+      "cardLink": "View agent card"
+    },
+    "ask": {
+      "label": "What would you like to have done?",
+      "placeholder": "For example: I want Rejuran",
+      "submit": "Ask",
+      "quick": "Pick a procedure"
+    },
+    "locked": {
+      "title": "About clinic matching and booking",
+      "body": "Clinic matching and booking are available only to foreign nationals on a short stay. Procedure records and next-session reminders are fully available."
+    },
+    "requests": {
+      "title": "Requests in progress",
+      "count": "Quotes from {count} clinics have arrived",
+      "open": "View quotes"
+    },
+    "booking": {
+      "title": "Upcoming booking",
+      "open": "Booking details"
+    },
+    "next": {
+      "title": "Next sessions",
+      "empty": "No records yet",
+      "overdue": "Past the planned date",
+      "all": "View all records",
+      "add": "Log in 3 seconds"
     }
   }
 }

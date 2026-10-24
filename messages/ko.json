@@ -23,7 +23,31 @@
     "save": "저장",
     "optional": "선택",
     "required": "필수",
-    "approx": "참고"
+    "approx": "참고",
+    "session": "{n}회차: {date}",
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value}샷",
+      "unit": "{value}유닛",
+      "line": "{value}라인",
+      "session": "{value}회"
+    },
+    "area": {
+      "gangnam": "강남",
+      "sinsa": "신사",
+      "apgujeong": "압구정",
+      "myeongdong": "명동",
+      "hongdae": "홍대",
+      "other": "기타"
+    },
+    "bookingStatus": {
+      "requested": "요청 보냄",
+      "pending_clinic": "병원 확인 중",
+      "confirmed": "예약 확정",
+      "canceled": "취소됨",
+      "no_show": "방문 안 함",
+      "completed": "시술 완료"
+    }
   },
   "landing": {
     "metaTitle": "에이전트가 대신 한국 병원과 이야기해요",
@@ -73,6 +97,44 @@
       "lin": "상하이 · 33세 · 중국어",
       "emily": "로스앤젤레스 · 26세 · 영어",
       "jisoo": "서울 · 34세 · 한국어 · 기록 중심"
+    }
+  },
+  "home": {
+    "metaTitle": "홈",
+    "greeting": "{name}님, 안녕하세요",
+    "agent": {
+      "title": "내 에이전트",
+      "active": "활성",
+      "status": "상태",
+      "languages": "필요한 언어",
+      "stay": "체류",
+      "cardLink": "에이전트 카드 보기"
+    },
+    "ask": {
+      "label": "무엇을 받고 싶으세요?",
+      "placeholder": "예: 리쥬란 받고 싶어요",
+      "submit": "상담하기",
+      "quick": "시술에서 고르기"
+    },
+    "locked": {
+      "title": "병원 매칭과 예약 안내",
+      "body": "병원 매칭과 예약은 외국 국적의 단기 방문자에게만 제공돼요. 시술 기록과 다음 회차 알림은 모두 쓸 수 있어요."
+    },
+    "requests": {
+      "title": "진행 중인 요청",
+      "count": "병원 {count}곳의 견적이 도착했어요",
+      "open": "견적 보기"
+    },
+    "booking": {
+      "title": "다가오는 예약",
+      "open": "예약 상세"
+    },
+    "next": {
+      "title": "다음 회차",
+      "empty": "아직 기록이 없어요",
+      "overdue": "예정일이 지났어요",
+      "all": "기록 전체 보기",
+      "add": "3초 기록"
     }
   }
 }
