@@ -5,57 +5,38 @@
 > 한국 여성이 쓰는 **3초 시술 트래커**로 진짜 시술 데이터를 모으고, 그 데이터를 바탕으로 외국인에게 **상담실장 AI**가 시술·용량·주기를 추천하고, **병원 에이전트**들과 조건을 맞춰 방한 일정에 맞는 병원·가격을 찾아 예약하고 기록까지 관리하는 의료관광 A2A 앱.
 
 - 기획 문서: [PLANNING.md](PLANNING.md)
+- **웹서비스 스펙 (정본): [docs/spec/](docs/spec/00-overview.md)** · 고객·플랫폼·병원 에이전트가 [A2A v1.0](https://github.com/a2aproject/A2A)으로 대화
 - 해커톤 규칙: AI는 **Claude만** 사용
-- 사용자: ① 한국 20~50대 여성 (시술 기록) ② 일본·중국·미국 20~50대 여성 의료관광객
+- 사용자: ① 한국 사용자 (시술 기록, 데이터 공급) ② 외국인 의료관광객 (일본·중국·미국 등)
 
 ---
 
 ## MVP 기능 (해커톤 데모 범위)
 
-- [ ] **시술 트래커 (한국 여성):** 시술·용량·병원·가격·날짜 3초 기록 (+ 선택: 한 줄 후기, 별점)
-- [ ] **다음 시술 알림:** 주기 규칙으로 다음 회차 계산, 알림에서 계속 / 쉬기 / 그만 선택
-- [ ] **이달 이벤트 비교:** 가장 싼 곳(단위가격) · 많이 받은 곳 · 후기 좋은 곳 필터
-- [ ] **상담실장 에이전트:** 고민 입력 → 시술·적정 용량·주기·효과 시기·다운타임 추천 (영어/일본어/중국어), 한국 여성 패턴 데이터 인용
-- [ ] **스케줄러:** 시술 주기 규칙 + 방한 일정 → 회차 날짜 (다운타임 고려)
-- [ ] **병원 에이전트 3~5개** (목업) → 견적 응답
-- [ ] **병원 비교:** 단위당 가격 정렬, 용량 부족 경고, 이벤트, 언어 지원
-- [ ] **병원 상세:** 랭킹, 패키지 구성·항목별 가격, 구매 수, 후기
-- [ ] **내 시술 기록:** 예약 → 자동 저장 → 다음 회차 알림 미리보기
+P0 전체 목록: [docs/spec/00-overview.md](docs/spec/00-overview.md#범위)
+
+- [ ] **채팅 온보딩:** 고객이 채팅으로 일정·피부 고민·과거 시술·안전 정보·예산을 말하면 내 에이전트가 만들어진다
+- [ ] **한마디 → 조건:** "리주란 받고 싶어" → 시술 · 용량 · 예산 · 지역 · 언어 · 날짜 조건 카드
+- [ ] **A2A 대화 대행:** 내 에이전트가 플랫폼에 매칭을 묻고, 병원 에이전트들에 견적을 받고, 플랫폼에 판정을 받는다 (진행 화면에 실시간 표시)
+- [ ] **가격·용량 판정:** 실제 결제 기록 분포 대비 적정 / 높음 / 용량 부족 / 판정 불가 + 근거
+- [ ] **예약:** 직접 운영 병원은 병원 콘솔에서, 대행 운영 병원은 운영자 큐에서 확정
+- [ ] **내 시술 기록:** 예약 자동 기록 + 3초 수동 기록, 다음 회차 계산 (한국 여성 트래커 포함)
+- [ ] **결과 기록 → 개선 루프:** 후기는 플랫폼으로, 플랫폼 에이전트가 연결 규칙을 제안하고 운영자가 승인
 
 ## 아키텍처
 
+세 에이전트가 각자 Agent Card를 들고 A2A 1.0 JSON-RPC로 대화한다. 상세: [docs/spec/03-a2a-protocol.md](docs/spec/03-a2a-protocol.md), [docs/spec/09-architecture.md](docs/spec/09-architecture.md)
+
 ```
-[Next.js UI]
-    │
-    ▼
-/api/consultant-agent  ── Claude (tool use)
-    │   tools: recommend_procedures · get_kr_patterns · build_schedule · request_quotes
-    │
-    ├─ lib/schedule.ts   (주기 규칙 → 회차 날짜)
-    ├─ lib/price.ts      (단위가격, 용량 경고)
-    └─ request_quotes ─▶ /api/clinic-agent/[id] × N ── Claude (병원 데이터를 시스템 프롬프트로)
-                              │
-                              ▼
-                        data/clinics.json
+[고객 에이전트 · Pibu 실장]  ──A2A──→  [플랫폼 에이전트]  매칭 · 가격/용량 판정 · 후기 수집 · 연결 규칙 개선
+        │  (고객 소유)                    (Pibu 소유)
+        └────────A2A (추천 토큰)────────→  [병원 에이전트 × N]  가격 · 용량 · 이벤트 · 예약
+                                           (병원 소유, 초기엔 Pibu 대행 운영 → 병원이 인수)
 ```
 
-### 에이전트 메시지
+## 데이터
 
-```json
-// 상담실장 → 병원
-{ "type": "quote_request", "procedure": "rejuran", "amount": { "value": 2, "unit": "cc" }, "dates": ["2026-11-10", "2026-11-14"], "language": "ja" }
-// 병원 → 상담실장
-{ "type": "quote", "clinic_id": "c-003", "procedure": "rejuran", "amount": { "value": 2, "unit": "cc" }, "price_krw": 350000, "unit_price_krw": 175000, "event": "첫 방문 10% 할인", "slots": ["2026-11-11T14:00"], "language_support": ["ja", "en"] }
-```
-
-## 데이터 (목업, `data/`)
-
-| 파일 | 스키마 |
-| --- | --- |
-| `procedures.json` | `id, name{ko,en,ja,zh}, type(주사/레이저/리프팅), concerns[], unit, recommended_amount, effect_onset, downtime_days, cycle{initial{count, interval_months}, maintenance{interval_months[]}}` |
-| `clinics.json` | `id, name, area, rank, foreigner_friendly, events[{procedure, month, price_krw}], procedures[{id, amount, unit, price_krw, event}], packages[{name, items[{procedure, amount, price_krw}]}], purchase_count, reviews[], languages, slots[]` |
-| `kr_patterns.json` | `age_group, concern, top_combinations[{procedures[], share}], typical_amount, sample_size` |
-| `treatment_log` (메모리/로컬) | `user_id, procedure, clinic_id, date, amount, price_krw, note?, rating?, next_due, status(계속/쉬기/그만)` |
+시드 파일과 스키마: [docs/spec/06-data-model.md](docs/spec/06-data-model.md)
 
 시술 주기 규칙 (확정분):
 - 리쥬란: 한 달 간격 3회 연속 → 이후 약 4개월(3~4개월)마다
@@ -69,7 +50,7 @@
 
 맛집 예약 앱 스타일 (레스토랑 → 병원, 코스 메뉴 → 시술 패키지)
 
-0. 내 시술 기록 (한국 여성 홈): 3초 기록 버튼, 타임라인, 다음 회차, 이달 이벤트
+0. 내 시술 기록 (한국 사용자 홈): 3초 기록 버튼, 타임라인, 다음 회차
 1. 홈 (외국인): 언어·국가 선택, 시술 카테고리
 2. 상담: 상담실장 채팅 + 고민 칩(탄력/모공/주름/색소)
 3. 추천 결과: 시술 카드 (이유, 적정 용량, 주기, 단위 가격대, 한국 여성 선택률)
@@ -99,23 +80,10 @@ npm run dev
 
 ## 데모 시나리오
 
-0. [한국 여성] 지수(34)가 리쥬란 2cc·○○의원·35만 원 3초 기록 → 2회차 알림 → "계속" → 이달 이벤트 단위가격순
-1. Yuki(29, 일본)가 일본어로 "볼 탄력이 떨어지고 잔주름이 신경 쓰여요"
-2. 상담실장: 한국 30대 여성 선택 조합(리쥬란 + 써마지) + 적정 용량·주기
-3. 방한 11/10~11/14 → 1회차 + 12월·1월 회차 자동 생성
-4. 병원 에이전트 4곳 견적 → 단위가격순, "1cc 이벤트는 용량 부족" 경고
-5. 병원 상세 → 예약 → 내 시술 기록 저장, "리쥬란 2회차: 12월 10일"
+3분 시나리오와 장면별 기대값: [docs/spec/10-build-plan.md](docs/spec/10-build-plan.md#데모-시나리오-3분-픽스처-모드-기준-기대값)
 
 ---
 
 ## Claude Code에게 (빌드 순서)
 
-1. Next.js + TypeScript + Tailwind 세팅, `.env.example`·`.gitignore`
-2. `data/` 목업 3종 생성 (위 스키마, 가상 병원·가상 통계)
-3. `lib/schedule.ts` (주기 + 다운타임) + 단위 테스트
-3-1. 트래커 화면 + `treatment_log` 저장, 알림(계속/쉬기/그만)
-4. `lib/price.ts`: 단위가격 계산, 적정 용량 미만 경고
-5. `app/api/consultant-agent`: Claude tool use (tools 4개)
-6. `app/api/clinic-agent/[id]`: 병원 데이터로 quote JSON 응답
-7. 화면 1~7, 데모 시나리오가 끝까지 돌아가게
-8. 기획 의도는 `PLANNING.md` 참고
+빌드 순서와 태스크별 수용 기준은 [docs/spec/10-build-plan.md](docs/spec/10-build-plan.md)를 따른다 (T00 ~ T15). 기획 의도는 `PLANNING.md`, 규제 근거는 [docs/spec/08-compliance.md](docs/spec/08-compliance.md).
