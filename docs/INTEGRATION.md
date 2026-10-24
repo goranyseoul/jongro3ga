@@ -15,7 +15,17 @@ cd app && node server.mjs
 - 컴파일된 회로(`zk/*/target/*.json`)와 컨트랙트 ABI(`chain/build/`)가 커밋돼 있어서 **Noir 설치 없이 `npm i`만으로 동작**합니다.
   회로를 고칠 때만 nargo **1.0.0-beta.20** (`noirup -v 1.0.0-beta.20`) + bb.js `5.0.0-nightly.20260324` 조합이 필요합니다 (다른 조합은 깨짐).
 - 체인 기록 발급(`/api/visit`)만 relayer 키가 필요합니다(`chain/.env`의 `DEPLOYER_PRIVATE_KEY`). 증명·검증·리뷰는 키 없이 동작합니다.
-- 페르소나 지갑(비공개 차트)은 `chain/wallets/<persona>.json`에 있고 gitignore입니다. 데모 머신 1대에서 서버를 돌리는 것을 전제로 합니다.
+- 페르소나 지갑(비공개 차트)은 `chain/wallets/<persona>.json`에 있고 gitignore입니다. 데모 머신 1대에서 서버를 돌리는 것을 전제로 합니다 (아래 ⚠️ 참고).
+
+> ### ⚠️ clone해서 로컬 서버를 띄우면 Yuki·Lin 증명이 실패합니다
+>
+> 체인(Base Sepolia)에는 Yuki·Lin의 **차트 해시**가 이미 올라가 있지만, 그 해시를 만든 **차트 원본(지갑 파일)은 데모 맥에만** 있습니다 (의료 차트라서 의도적으로 git에서 제외).
+> 지갑 파일이 없으면 서버는 빈 차트를 만들고, 빈 차트로 만든 증명은 온체인 해시와 맞지 않아 `prove-offer`가 `Cannot satisfy constraint`로 실패합니다.
+>
+> **방법: 에이전트는 데모 맥에서 도는 서버를 호출하세요.**
+> - 같은 와이파이: `http://<데모 맥 IP>:3000` (예: `POST http://<데모 맥 IP>:3000/api/zk/prove-offer`). IP는 담당자에게 확인
+> - 다른 네트워크: 데모 맥에서 터널(ngrok 등)을 열어 공유
+> - 로컬에서 UI/흐름만 개발할 땐: `/api/visit`로 새 페르소나 기록을 직접 발급하면 됩니다 (relayer 키 필요). 단 데모 시계상 기록이 "오래돼야" 하는 오퍼(예: 60일 경과 = 60분)는 그만큼 기다려야 합니다.
 
 ## 2. HTTP API
 
