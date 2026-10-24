@@ -486,5 +486,42 @@
       "done": "Deleted. In this demo, the actions saved in this browser were cleared.",
       "top": "Back to start"
     }
+  },
+  "legal": {
+    "metaTitle": "Notice on the protection of foreign patients' rights",
+    "title": "Notice on the protection of foreign patients' rights",
+    "lead": "Pibu is a foreign patient referral agency. This page explains what you should know before you use it.",
+    "demoNotice": "This is demo text. Before the real service opens it will be replaced with text reviewed by legal counsel.",
+    "reg": {
+      "label": "Registration no.",
+      "demo": "Demo (not registered)"
+    },
+    "english": "English (required text)",
+    "service": {
+      "title": "What the service is and its terms",
+      "content": "Pibu's AI agent organizes your request, asks clinics for quotes, checks the prices against past payment records, and passes your booking request to the clinic.",
+      "noMedical": "Pibu does not provide medical care. Diagnosis, whether a procedure suits you, and the procedure itself are the responsibility of the clinic's doctors.",
+      "price": "Amounts shown are quotes. A reference price that Pibu gives on a clinic's behalf may differ from the actual price. The clinic confirms the final amount.",
+      "explain": "Before a procedure the clinic explains the diagnosis, the treatment method, possible side effects, the treatment agreement, the expected cost, and how disputes are resolved.",
+      "fee": "Pibu may receive a referral fee from a clinic within the limit set by law. That fee does not affect which clinics are shown or how prices are checked. Pibu does not charge customers.",
+      "eligibility": "Clinic matching and booking are available only to foreign nationals on a short stay. They are not available to Korean nationals or to people living in Korea with an alien registration or residence report."
+    },
+    "dispute": {
+      "title": "How disputes are resolved",
+      "contact": "Send questions and complaints to Pibu first. The contact details will be shown here before the service opens (demo).",
+      "mediation": "You can also consult public bodies such as the Korea Medical Dispute Mediation and Arbitration Agency (KOMEDI) about medical disputes. The Korea Health Industry Development Institute (KHIDI) also has a support desk for foreign patients.",
+      "records": "To help review a complaint, Pibu keeps records of your requests, quotes and bookings, and passes them to the clinic if you ask."
+    },
+    "privacy": {
+      "title": "Protection of personal information",
+      "collected": "We handle your nickname, nationality, age band, dates, contact details, skin concerns, past procedures, safety information and procedure records.",
+      "purpose": "We use them to run your agent, find clinics, request quotes, make bookings and check prices.",
+      "sensitive": "Skin, procedure and safety information is health information, which is sensitive. We ask for your consent to it separately from the other consents. A clinic receives only what you agreed to share, when you send a booking.",
+      "crossBorder": "Information entered outside Korea is processed on servers in Korea. We may use overseas providers for AI processing and storage. We ask for a separate consent for this as well.",
+      "retention": "Your information is kept until you delete it in My data.",
+      "rights": "In My data you can view your agent card, export your data as JSON, switch consents on or off, and delete everything.",
+      "anonymous": "Only if you agree to anonymous sharing are your records anonymized and used as a price reference. We never publish results as public reviews."
+    },
+    "rightsLink": "Go to My data"
   }
 }
