@@ -364,6 +364,18 @@
       "notShared": "익명 공유: 끔",
       "fromBooking": "예약에서 자동 기록",
       "rating": "만족도 {n}/5"
+    },
+    "calendar": {
+      "title": "달력",
+      "prev": "이전 달",
+      "next": "다음 달",
+      "done": "시술한 날",
+      "planned": "다음 회차",
+      "overdue": "예정일 지남",
+      "empty": "이 날은 기록이 없어요.",
+      "hasEvents": "일정 {n}개",
+      "doneSession": "{n}회차 받음",
+      "plannedSession": "{n}회차 예정"
     }
   },
   "recordsNew": {

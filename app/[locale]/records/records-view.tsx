@@ -6,6 +6,7 @@ import { moneyText } from "@/components/customer/format";
 import { updateDemoState } from "@/components/customer/demo-state";
 import { useCustomer, useLabels } from "@/components/customer/use-customer";
 import { Link } from "@/i18n/navigation";
+import { RecordsCalendar } from "./records-calendar";
 import { DEMO_TODAY, upcomingSessionNumber, type RecordStatus, type TreatmentRecord } from "@/lib/ui-data/customer";
 
 const STATUSES: RecordStatus[] = ["active", "paused", "stopped"];
@@ -78,6 +79,8 @@ export function RecordsView() {
           </ul>
         )}
       </section>
+
+      <RecordsCalendar records={records} latest={latest} locale={locale} />
 
       <section aria-labelledby="rec-history" className="flex flex-col gap-sp-3">
         <h2 id="rec-history" className="text-title font-semi">

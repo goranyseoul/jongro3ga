@@ -364,6 +364,18 @@
       "notShared": "匿名共享: 关",
       "fromBooking": "由预约自动记录",
       "rating": "满意度 {n}/5"
+    },
+    "calendar": {
+      "title": "日历",
+      "prev": "上个月",
+      "next": "下个月",
+      "done": "已做项目",
+      "planned": "下一次",
+      "overdue": "已过预定日期",
+      "empty": "这一天没有记录。",
+      "hasEvents": "{n}项安排",
+      "doneSession": "第{n}次 已完成",
+      "plannedSession": "第{n}次 预定"
     }
   },
   "recordsNew": {
