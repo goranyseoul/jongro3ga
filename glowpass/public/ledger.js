@@ -15,7 +15,7 @@ async function load() {
   ({ ledger, personas, deployment } = l);
   wallet = w;
   // ?select=mine preselects this persona's latest record (handy for slides)
-  if (!selectedTx && params.get('select') === 'mine') selectedTx = wallet.records.at(-1)?.tx ?? null;
+  if (!selectedTx && params.get('select') === 'mine') selectedTx = wallet.verifiedRecords.at(-1)?.tx ?? null;
   if (!selectedTx && params.get('tx')) selectedTx = params.get('tx');
   render();
 }
@@ -23,7 +23,7 @@ async function load() {
 function render() {
   $('#contract').innerHTML = `RecordRegistry <a target="_blank" href="https://sepolia.basescan.org/address/${deployment.registry}#events">${short(deployment.registry, 6)}</a> · 데모 시계 1일 = ${deployment.secondsPerDay}초`;
   $('#count').textContent = `이벤트 ${ledger.length}건 · 실시간`;
-  const mine = new Set(wallet.records.map((r) => r.tx));
+  const mine = new Set(wallet.verifiedRecords.map((r) => r.tx));
   $('#rows').innerHTML = ledger.map((e) => `<tr data-tx="${e.tx}" class="${mine.has(e.tx) ? 'mine' : ''} ${e.tx === selectedTx ? 'sel' : ''}">
       <td>${time(e.timestamp)}</td>
       <td><span class="dot" style="background:${colorOf(e.subjectId)}"></span>${short(e.subjectId, 4)}</td>
@@ -52,16 +52,16 @@ function renderDetail() {
 function renderPhone() {
   const p = wallet.profile;
   const sel = ledger.find((x) => x.tx === selectedTx);
-  const isMine = !sel || wallet.records.some((r) => r.tx === selectedTx);
+  const isMine = !sel || wallet.verifiedRecords.some((r) => r.tx === selectedTx);
   const head = `<div class="who"><div><div class="nm">📱 ${p.flag} ${esc(p.name)}의 폰</div><div class="muted" style="font-size:12px">차트 원본 · 이 기기에만 저장</div></div>
     <div class="pchips">${personas.map((x) => `<button class="pchip ${x.id === persona ? 'on' : ''}" data-p="${x.id}">${x.flag}</button>`).join('')}</div></div>`;
   if (!isMine) {
     $('#phone').innerHTML = head + `<div class="locked"><div class="big">🔒</div>선택한 줄은 <b>다른 사람의 기록</b>입니다.<br>${esc(p.name)}의 폰도 이 해시가 무슨 시술인지 알 수 없습니다.<br><span class="muted">차트 원본과 salt를 가진 본인 기기만 해석 가능</span></div>`;
     return;
   }
-  const recs = wallet.records.length
-    ? [...wallet.records].reverse().map((r) => `<div class="rec ${r.tx === selectedTx ? 'sel' : ''}">
-        <div class="rtop"><span>${esc(r.name)}</span><span class="ago">${r.daysAgo}일 전</span></div>
+  const recs = wallet.verifiedRecords.length
+    ? [...wallet.verifiedRecords].reverse().map((r) => `<div class="rec ${r.tx === selectedTx ? 'sel' : ''}">
+        <div class="rtop"><span>${esc(r.procedure)}</span><span class="ago">${r.daysAgo}일 전</span></div>
         <div class="meta">${esc(r.clinic)} · 병원 서명 기록</div>
         <div class="link">↔ 공개 원장 tx ${short(r.tx, 4)}</div></div>`).join('')
     : '<div class="locked">아직 기록이 없습니다</div>';

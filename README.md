@@ -99,15 +99,15 @@ npm run build        # prebuild가 토큰 가드와 컴포넌트 목록을 먼�
 
 디자인 값(색, 간격, 모서리, 타이포)은 `app/globals.css`의 CSS 변수가 유일한 출처이고, `tailwind.config.ts`는 그 변수만 매핑한다. 토큰 이름과 UI 규칙은 스펙의 `docs/spec/05-screens.md`를 따른다.
 
-## ZK 기록 레이어 (GlowPass, 팀원 브랜치 `feat/zk-record-registry`에서 통합)
+## ZK 프라이버시 레이어 (팀원 브랜치 `feat/zk-record-registry`에서 통합)
 
-에이전트는 차트를 주고받지 않고 오퍼 ID + ZK 증명만 주고받는다. 시술 기록은 유저 지갑에, 체인(Base Sepolia)에는 가명 → 차트 해시만 저장한다. 연동 가이드: [docs/INTEGRATION.md](docs/INTEGRATION.md)
+병원은 차트를 보지 않고 증명만 본다. 고객 에이전트가 병원의 공개 오퍼 규칙을 기기 안에서 매칭하고, 해당되는 오퍼만 ZK 증명으로 주장한다 (예: "쥬베룩 1회 완료 · 28일 경과", "우리 병원 첫 방문"). 시술 기록은 유저 지갑에, 체인(Base Sepolia)에는 가명 → 차트 해시만 저장한다. 후기는 Semaphore로 실제 방문자만 익명 1회. 데모 장면은 [DEMO.md](DEMO.md), 연동 가이드: [docs/INTEGRATION.md](docs/INTEGRATION.md)
 
 | 디렉터리 | 내용 |
 | --- | --- |
 | `zk/` | Noir 회로: `eligibility`(오퍼 조건 증명), `append`(기록 추가 증명), `commit`, `record_hash` |
 | `chain/` | `RecordRegistry.sol` + 검증 컨트랙트, 지갑·증명 로직(`records.mjs`), Semaphore 익명 리뷰(`reviews.mjs`), 로컬 e2e(`e2e.mjs`) |
-| `glowpass/` | ZK HTTP API 데모 서버 + UI (원래 브랜치의 `app/`. Next.js `app/` 디렉토리와 겹쳐서 옮김) |
+| `glowpass/` | ZK HTTP API + 데모 콘솔 + 공개 원장 화면 `/ledger` (원래 브랜치의 `app/`. Next.js `app/` 디렉토리와 겹쳐서 옮김) |
 
 ```bash
 (cd zk && npm i) && (cd chain && npm i) && (cd glowpass && npm i)

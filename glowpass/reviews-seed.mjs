@@ -1,41 +1,27 @@
-// Demo review board: verified-visit groups per (clinic, procedure) with a few real Semaphore reviews.
-// Members are fresh identities (stand-ins for past patients); reviews carry real proofs.
+// Demo review board: verified-visit groups per (clinic, procedure) sized like DEMO.md
+// ("피북 사용자 1,2xx명 받음"), plus a handful of reviews that carry real Semaphore proofs.
+// Past patients are random commitments; reviewers are real identities so their proofs verify.
+import { keccak256 } from 'viem';
 import { createReviewBoard, newVisitIdentity, writeReview } from '../chain/reviews.mjs';
+import { VERIFIED_VISITS, SEED_REVIEWS } from './catalog.mjs';
 
-const VISITS = {
-  glow: { REJURAN: 41, LASER_TONING: 23, BOTOX: 9 },
-  lumiere: { EXOSOME: 57, REJURAN: 30, LASER_TONING: 12 },
-  apgujeong: { ULTHERA: 19, THERMAGE: 12, BOTOX: 6 },
-};
-const REVIEWS = [
-  ['glow', 'REJURAN', 5, 'Bumps were gone in 2 days. English-speaking coordinator was great.'],
-  ['glow', 'LASER_TONING', 4, 'Quick and painless, tone is more even.'],
-  ['lumiere', 'EXOSOME', 5, 'Zero downtime, skin glowing for my flight home.'],
-  ['lumiere', 'EXOSOME', 5, 'Perfect add-on after my Rejuran course.'],
-  ['lumiere', 'REJURAN', 4, 'Good result, slightly pricey.'],
-  ['apgujeong', 'ULTHERA', 5, 'Visible jawline lift after a month. Worth it.'],
-  ['apgujeong', 'THERMAGE', 3, 'Nice but I expected more lifting.'],
-];
+const randomCommitment = () => BigInt(keccak256(crypto.getRandomValues(new Uint8Array(32)))) >> 8n;
 
-export async function seedReviewBoard() {
+export function seedReviewBoard() {
   const board = createReviewBoard();
-  const reviewers = new Map();
-  for (const [clinicId, procs] of Object.entries(VISITS)) {
+  const reviewers = [];
+  for (const [clinicId, procs] of Object.entries(VERIFIED_VISITS)) {
     for (const [proc, n] of Object.entries(procs)) {
-      for (let i = 0; i < n; i++) {
-        const id = newVisitIdentity();
-        board.issueTicket(clinicId, proc, id.commitment);
-        reviewers.set(`${clinicId}:${proc}:${i}`, id);
-      }
+      const ids = SEED_REVIEWS.filter(([c, p]) => c === clinicId && p === proc).map((r) => ({ r, id: newVisitIdentity() }));
+      reviewers.push(...ids);
+      board.seedTickets(clinicId, proc, [...ids.map((x) => x.id.commitment), ...Array.from({ length: n - ids.length }, randomCommitment)]);
     }
   }
-  const used = new Map();
-  for (const [clinicId, proc, rating, text] of REVIEWS) {
-    const k = `${clinicId}:${proc}`;
-    const i = used.get(k) ?? 0;
-    used.set(k, i + 1);
-    const r = await writeReview(reviewers.get(`${k}:${i}`), board.groupOf(clinicId, proc), clinicId, proc, { rating, text });
-    await board.submitReview(r);
-  }
-  return board;
+  // proofs take ~2s each: generate in the background so the server starts immediately
+  const ready = (async () => {
+    for (const { r: [clinicId, proc, rating, text], id } of reviewers) {
+      await board.submitReview(await writeReview(id, board.groupOf(clinicId, proc), clinicId, proc, { rating, text }));
+    }
+  })();
+  return { board, ready };
 }

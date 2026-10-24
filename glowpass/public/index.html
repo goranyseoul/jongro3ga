@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GlowPass — private beauty concierge for Seoul</title>
+  <title>PiBoo-K · ZK 프라이버시 레이어</title>
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
     <div class="brand">
       <span class="logo">◐</span>
       <div>
-        <div class="brand-name">GlowPass</div>
-        <div class="brand-sub">에이전트는 차트를 보지 않고, 증명만 본다</div>
+        <div class="brand-name">PiBoo-K <span class="brand-tag">ZK 프라이버시 레이어</span></div>
+        <div class="brand-sub">병원은 차트를 보지 않고, 증명만 본다</div>
       </div>
     </div>
     <nav id="personas" class="personas"></nav>
@@ -26,41 +26,41 @@
       <div class="col-head"><span class="badge private">ON-DEVICE · PRIVATE</span><h2>내 시술 지갑</h2></div>
       <div id="profile" class="card profile"></div>
       <div class="card">
-        <div class="card-title">시술 기록 <span class="muted">(병원 서명 · 원본은 기기에만)</span></div>
-        <ul id="records" class="records"></ul>
+        <div class="card-title">✓ 병원 확인 기록 <span class="muted">· 체인에 해시로 앵커 · 증명에 사용</span></div>
+        <ul id="verified" class="records"></ul>
       </div>
+      <details class="card" id="self-box">
+        <summary class="card-title" id="self-title"></summary>
+        <ul id="self" class="records self"></ul>
+      </details>
       <div class="card anchor">
-        <div class="card-title">블록체인 앵커 <span class="muted">(공개되는 전부)</span></div>
+        <div class="card-title">블록체인에 공개되는 전부</div>
         <div id="anchor"></div>
       </div>
+      <button class="btn ghost reset-btn" data-act="reset">↺ 이 페르소나 초기화 (리허설용)</button>
+    </section>
+
+    <!-- CENTER: scenes -->
+    <section class="col scenes">
+      <div class="col-head"><span class="badge agent">DEMO.md 장면</span><h2>오퍼·기록·리뷰를 ZK로</h2></div>
+      <div id="scene-list"></div>
+      <div class="card">
+        <div class="card-title">이 사람에게 온 오퍼 <span class="muted">· 매칭은 기기 안에서 (병원은 '해당 없음'을 모름)</span></div>
+        <div id="offers"></div>
+      </div>
       <details class="card sim">
-        <summary>데모: 시술 완료 → 병원이 기록 발급</summary>
-        <div class="row">
-          <select id="visit-clinic"></select>
-          <select id="visit-proc"></select>
-        </div>
-        <button id="visit-btn" class="btn ghost">기록 발급 (append proof → on-chain)</button>
+        <summary>수동: 시술 완료 → 병원 확인 기록 발급</summary>
+        <div class="row"><select id="visit-clinic"></select><select id="visit-proc"></select></div>
+        <button id="visit-btn" class="btn ghost">기록 발급 (append 증명 → Base Sepolia)</button>
       </details>
       <div id="review-box"></div>
     </section>
 
-    <!-- CENTER: concierge chat -->
-    <section class="col chat">
-      <div class="col-head"><span class="badge agent">CLAUDE · CONCIERGE AGENT</span><h2 id="chat-title">컨시어지</h2>
-        <button id="reset-btn" class="btn tiny ghost">새 대화</button></div>
-      <div id="messages" class="messages"></div>
-      <div id="chips" class="chips"></div>
-      <form id="composer" class="composer">
-        <textarea id="input" rows="2" placeholder="What are you looking for on this trip?"></textarea>
-        <button class="btn primary" id="send">Send</button>
-      </form>
-    </section>
-
-    <!-- RIGHT: what crosses the network -->
+    <!-- RIGHT: what clinics / the public see -->
     <section class="col net">
       <div class="col-head">
-        <span class="badge public">A2A NETWORK · WHAT CLINICS SEE</span>
-        <div class="tabs"><button data-tab="log" class="tab active">A2A 로그</button><button data-tab="rank" class="tab">랭킹 · 리뷰</button></div>
+        <span class="badge public">WHAT CLINICS SEE</span>
+        <div class="tabs"><button data-tab="log" class="tab active">병원이 받은 것</button><button data-tab="rank" class="tab">검증 방문 · 리뷰</button></div>
       </div>
       <div id="log" class="log tabpane"></div>
       <div id="rank" class="rank tabpane hidden"></div>
