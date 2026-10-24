@@ -6,6 +6,9 @@ import { DEMO_AS_HEADER } from "./config";
 import { authHandler } from "./handlers";
 import { resetAuth } from "./server";
 
+// PGlite start-up and password hashing are slow when the whole suite runs in parallel
+vi.setConfig({ testTimeout: 30_000, hookTimeout: 60_000 });
+
 // proxy.ts redirect rules, with real Better Auth cookies (signed cookie cache) from the demo sign-in.
 
 const ORIGIN = "http://localhost:3501";

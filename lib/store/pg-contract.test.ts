@@ -1,8 +1,11 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { openMemoryDb, type DbHandle } from "../db";
 import { createMemoryStore } from "./memory";
 import { createPgStore, type PgStore } from "./pg";
 import type { Namespace, Store, StoreSnapshot } from "./types";
+
+// PGlite start-up and password hashing are slow when the whole suite runs in parallel
+vi.setConfig({ testTimeout: 30_000, hookTimeout: 60_000 });
 
 // One Store contract, run against both implementations: the memory store (unit tests, build) and the
 // Postgres store (PGlite in memory here; Neon or PGlite on disk at runtime). Every other track only

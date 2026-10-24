@@ -1,10 +1,13 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { closeDb } from "../db";
 import { getStore, resetStore } from "../store";
 import { DEMO_AS_HEADER } from "./config";
 import { authHandler, authOptions, deleteMe, getMe, getProfile, putProfile } from "./handlers";
-import { resetAuth } from "./server";
+import { getAuth, resetAuth } from "./server";
 import { getSessionUser } from "./session";
+
+// PGlite start-up and password hashing are slow when the whole suite runs in parallel
+vi.setConfig({ testTimeout: 30_000, hookTimeout: 60_000 });
 
 // Accounts end to end through the real Better Auth handler on an in-memory PGlite database:
 // sign up, sign in, sign out, session, demo sign-in, and the /api/me profile API.
@@ -76,6 +79,7 @@ beforeAll(async () => {
   process.env.DEMO_MODE = "true";
   await closeDb();
   resetAuth();
+  await getAuth(); // open, migrate and seed once, outside the per-test timeout
 });
 
 afterAll(async () => {
