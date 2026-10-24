@@ -40,3 +40,18 @@
 - 접근성: 푸터 언어 링크 폭을 44px로 맞췄다.
 - 알려진 남은 것: 병원 콘솔 `/clinic/inbox` 데스크톱 폭의 체크박스 20px (병원 콘솔 세션 영역). 채팅 입력창은 바 전체가 터치 영역이다.
 - 검사: CI와 같은 순서(`npm ci`, `typecheck`, `test` 112개, `build`와 가드 3종, `verify-spec`) 통과. 55개 라우트를 3개 폭으로 연 브라우저 검사에서 pageerror 0, 가로 넘침 0.
+
+## 트랙 CUSTOMER (2026-10-24, `feat/track-customer`)
+
+| # | 영역 | 스펙 | 구현 | 이유 / 다음 할 일 |
+| --- | --- | --- | --- | --- |
+| C1 | 다음 회차 | 06: `date + intervalDays`. 10 T08: "3회차 이후 +90일" | 30의 배수 간격은 달력 월로 더한다(30=1개월, 90=3개월, 300=10개월). 그 외(14, 28일)는 일수. 월말은 말일로 맞춘다(01-31 + 1개월 = 02-28). 리셋은 `maintenanceIntervalDays.max x 1.5`, 유지 주기가 없는 시리즈 시술은 `initial.intervalDays x 1.5` | 이 문서 13행 결정(달력 월). 리쥬란 11-14 → 12-14는 두 규칙이 같고, 3회차 이후는 +90일 대신 +3개월(예: 01-14 → 04-14) |
+| C2 | 시술 id | 03, 07은 `rejuran_healer` 같은 제품 단위 id | 고객 에이전트는 둘 다 받는다. 주기·다운타임은 `lib/agents/customer/procedures.ts`의 별칭으로 마스터 id(`rejuran`)에서 읽고, 기록은 마스터 id로 저장 | 10행의 id 체계가 정해지면 별칭 표만 지운다 |
+| C3 | 자동 기록 | 02: 예약으로 받은 시술은 자동 기록 | 예약 확정 때가 아니라 D0 결과 제출 때 `source: "booking"` 기록을 만든다(실결제·실용량이 그때 정해짐). 확정 때는 D0 초안(`OutcomeDraft`)과 받은편지함 알림만 | 시술 전에는 기록이 아니라 예약이라서 |
+| C4 | D0 화면 | 05: 실결제, 실용량, 정품 확인, 만족도, 통증, 한 줄 | "다시 갈 의향" 예/아니요를 추가 | `pibu/outcome@1`의 `wouldReturn`이 필수 boolean이라 값을 지어내지 않으려고 |
+| C5 | 결과 공유 | 02: 고객이 확인하면 전송 | `shareAnonymizedRecords` 동의가 꺼져 있으면 기록은 남기고 플랫폼에는 보내지 않는다. 체크인 태스크(`customer.checkin`)는 REJECTED로 끝낸다 | 08 5절 |
+| C6 | 계정 | 06 `CustomerAccount` | 로그인 계정은 `getSessionUser().customerAgentId`로 프로필을 찾는다. 로그아웃 상태는 `DEMO_MODE=true`일 때만 Yuki(`cus_yuki_done`), 쿠키 `pibu_demo_customer`로 데모 인물 전환. 데모 인물(Yuki, Lin, Emily, 지수)은 처음 조회할 때 `customer` 네임스페이스에 넣는다 | 시드 로더가 고객 네임스페이스를 몰라도 화면이 돈다. 데모에서 [전체 삭제] 뒤 다시 들어오면 데모 인물이 다시 생긴다 |
+| C7 | 단독 검증 | 다른 트랙(A2A 코어, 플랫폼, 병원) 없이 화면 검증 | `PIBU_CUSTOMER_MOCK_A2A=true`이면 BFF가 07 기준값(서울글로우 fair, 민트 underdosed, 아라 fair + 실결제 상승)을 돌려주는 프로세스 내 목(`lib/agents/customer/mock-a2a.ts`)을 쓴다. 테스트도 같은 목을 쓴다 | 합친 뒤에는 이 변수를 켜지 않는다 |
+| C8 | 의도 파악 | LLM 트랙 `POST /api/intent` | 화면은 `POST /api/customer/intent`를 부르고, BFF가 같은 출처의 `/api/intent`에 `{ message, text, locale }`을 보낸다. 응답에서 `procedureId`가 있는 객체(`request`, `draft`, `procedureRequest`, `condition`, `data`, `toolCalls[].input` 또는 본문)를 찾고, 없거나 실패하면 시술 이름 매칭으로 대신한다. 용량이 없으면 고객 에이전트가 `platform.recipe`로 채운다 | 브라우저 콘솔에 404가 남지 않게 서버에서 대체 |
+| C9 | 데모 확정 버튼 | 10 T10: `POST /api/demo/confirm-booking` (OPS) | 예약 화면의 데모 버튼은 `{ clinicId, taskId, bookingId }`로 이 경로를 부른다. 없으면 안내 문장만 | 본문 모양은 OPS 트랙과 맞춰야 함 |
+| C10 | 고객 네임스페이스 | 06 엔티티 목록 | 컬렉션: `accounts`, `profiles`, `consents`(추가만, 최신 항목이 유효), `records`, `requests`, `shortlists`(요청별 후보·추천 토큰·응답 실패), `quotes`(id = `요청id:견적id`), `bookings`(고객 쪽 id `cbk_...`, 병원 `bookingId`는 `booking.bookingId`), `outcomes`(`od_<예약>_<D0·D7·D30>`), `inbox` | 다른 트랙은 이 네임스페이스를 읽지 않는다 |
