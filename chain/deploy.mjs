@@ -15,9 +15,10 @@ const wallet = createWalletClient({ account, chain: baseSepolia, transport });
 const art = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url)));
 
 console.log('deployer', account.address, formatEther(await pub.getBalance({ address: account.address })), 'ETH');
+const deployBlock = Number(await pub.getBlockNumber());
 const verifier = await deployArtifact(wallet, pub, art('./build/HonkVerifier.json'));
 const registry = await deployArtifact(wallet, pub, art('./build/RecordRegistry.json'), [verifier, account.address, secondsPerDay]);
-const out = { chainId: baseSepolia.id, verifier, registry, relayer: account.address, secondsPerDay: Number(secondsPerDay), deployedAt: new Date().toISOString() };
+const out = { chainId: baseSepolia.id, verifier, registry, relayer: account.address, secondsPerDay: Number(secondsPerDay), deployBlock, deployedAt: new Date().toISOString() };
 mkdirSync('deployments', { recursive: true });
 writeFileSync('deployments/base-sepolia.json', JSON.stringify(out, null, 2) + '\n');
 console.log(out);

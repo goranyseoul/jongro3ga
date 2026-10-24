@@ -6,9 +6,11 @@ import { createPublicClient, createWalletClient, http, keccak256, toBytes } from
 import { privateKeyToAccount } from 'viem/accounts';
 import { foundry } from 'viem/chains';
 import { deployArtifact } from './deploy-utils.mjs';
-import { createProver, emptyChart, PROCEDURES } from './records.mjs';
+import { createProver, emptyChart } from './records.mjs';
 
-const { REJURAN, FILLER, THERMAGE } = PROCEDURES;
+// test codes (the app catalog defines the real ones)
+const JUVELOOK = 1, FILLER = 2, REJURAN = 3, RITUO = 4;
+const HONGDAE_A = 10, YEOKSAM_I = 20, SINNONHYEON_D = 30;
 const DAY = 86400;
 const art = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url)));
 const rpc = http('http://127.0.0.1:8545');
@@ -32,9 +34,9 @@ let chart = emptyChart();
 const onchainCommitment = () => pub.readContract({ ...registry, functionName: 'commitmentOf', args: [subjectId] });
 const chainToday = async () => Number(await pub.readContract({ ...registry, functionName: 'today' }));
 
-async function clinicVisit(type, { day, baseChart = chart } = {}) {
+async function clinicVisit(type, clinic, { day, baseChart = chart } = {}) {
   day ??= await chainToday();
-  const a = await prover.proveAppend(baseChart, await onchainCommitment(), type, day);
+  const a = await prover.proveAppend(baseChart, await onchainCommitment(), type, clinic, day);
   const hash = await wallet.writeContract({ ...registry, functionName: 'append', args: [subjectId, a.newCommitment, a.recordHash, day, a.proofHex] });
   const rcpt = await pub.waitForTransactionReceipt({ hash });
   if (rcpt.status !== 'success') throw new Error('reverted');
@@ -54,34 +56,36 @@ async function expectRevert(label, fn) {
   catch (e) { console.log(`  PASS  ${label}: rejected (${(e.shortMessage || e.message).split('\n')[0]})`); }
 }
 
-const rejuranOffer = [{ type: REJURAN, minCount: 2 }, { type: REJURAN, maxDays: 59, maxCount: 0 }];
+// ① 2nd-session offer: Juvelook exactly once, none in the last 27 days
+const secondSession = [{ type: JUVELOOK, minCount: 1, maxCount: 1 }, { type: JUVELOOK, maxDays: 27, maxCount: 0 }];
+// ② first-visit offer at Yeoksam I: no record of any kind there
+const firstVisitYeoksam = [{ clinic: YEOKSAM_I, maxCount: 0 }];
 
 console.log('\n[timeline]');
-console.log('  day 0   Rejuran @ clinic A  gas', await clinicVisit(REJURAN));
-await warpDays(50);
-console.log('  day 50  Rejuran @ clinic A  gas', await clinicVisit(REJURAN));
+console.log('  day 0   Juvelook @ Hongdae A   gas', await clinicVisit(JUVELOOK, HONGDAE_A));
+await warpDays(10);
+await checkOffer('day 10  2nd-session offer (too early)', secondSession, false);
 await warpDays(20);
-await checkOffer('day 70  Clinic B "Rejuran>=2, last 60+ days ago"', rejuranOffer, false);
-await warpDays(45);
-await checkOffer('day 115 Clinic B "Rejuran>=2, last 60+ days ago"', rejuranOffer, true);
-await checkOffer('day 115 Clinic C "had Thermage"', [{ type: THERMAGE, minCount: 1 }], false);
+await checkOffer('day 30  2nd-session offer', secondSession, true);
+await checkOffer('day 30  first visit at Yeoksam I', firstVisitYeoksam, true);
+console.log('  day 30  Rituo @ Yeoksam I      gas', await clinicVisit(RITUO, YEOKSAM_I));
+await checkOffer('day 30  first visit at Yeoksam I again', firstVisitYeoksam, false);
 
 console.log('\n[attacks]');
 const t = await chainToday();
-await expectRevert('backdated record (60 days ago)', () => clinicVisit(FILLER, { day: t - 60 }));
-const staleChart = { ...chart, types: [...chart.types], dates: [...chart.dates] };
-console.log('  day 115 Filler @ clinic C  gas', await clinicVisit(FILLER));
-await expectRevert('rollback: append onto the pre-filler chart', () => clinicVisit(THERMAGE, { baseChart: staleChart }));
+await expectRevert('backdated record (60 days ago)', () => clinicVisit(FILLER, SINNONHYEON_D, { day: t - 60 }));
+const staleChart = { ...chart, types: [...chart.types], dates: [...chart.dates], clinics: [...chart.clinics] };
+console.log('  day 30  Filler @ Sinnonhyeon D  gas', await clinicVisit(FILLER, SINNONHYEON_D));
+await expectRevert('rollback: append onto the pre-filler chart', () => clinicVisit(REJURAN, SINNONHYEON_D, { baseChart: staleChart }));
 const realChart = chart;
 chart = staleChart;
 await checkOffer('stale chart "no filler within 14 days"', [{ type: FILLER, maxDays: 14, maxCount: 0 }], false);
 chart = realChart;
-// proof for clinic B's clause replayed against clinic C's (different) clause
 {
   const commitment = await onchainCommitment();
-  const proofs = await prover.proveOffer(chart, commitment, t, [{ type: REJURAN, minCount: 1 }]);
-  const ok = await prover.verifyOffer(proofs, commitment, t, [{ type: THERMAGE, minCount: 1 }]);
-  console.log(`  ${ok ? 'FAIL' : 'PASS'}  replay a Rejuran proof as a Thermage proof -> ${ok ? 'accepted' : 'rejected'}`);
+  const proofs = await prover.proveOffer(chart, commitment, t, [{ type: JUVELOOK, minCount: 1 }]);
+  const ok = await prover.verifyOffer(proofs, commitment, t, [{ type: RITUO, minCount: 1 }]);
+  console.log(`  ${ok ? 'FAIL' : 'PASS'}  replay a Juvelook proof as a Rituo proof -> ${ok ? 'accepted' : 'rejected'}`);
 }
 console.log('\non-chain version', await pub.readContract({ ...registry, functionName: 'versionOf', args: [subjectId] }));
 await prover.destroy();

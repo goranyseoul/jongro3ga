@@ -29,6 +29,12 @@ export function createReviewBoard() {
       e.group.addMember(identityCommitment);
       e.roots.add(e.group.root.toString());
     },
+    /** Bulk seed (demo history): many past patients at once. */
+    seedTickets(clinicId, procedure, identityCommitments) {
+      const e = entry(clinicId, procedure);
+      e.group.addMembers(identityCommitments);
+      e.roots.add(e.group.root.toString());
+    },
     /** Patient side needs the current group (members are public commitments). */
     groupOf: (clinicId, procedure) => entry(clinicId, procedure).group,
 
