@@ -176,7 +176,7 @@ npm run llm:smoke                     # 키 확인 (선택)
 
 ### 10.3 미구현과 알려진 문제 (우선순위 순)
 
-1. **고객 에이전트(WP6, T08 + T18 고객 쪽).** `lib/agents/customer/executor.ts`는 스텁이라 `customer.notify`·`customer.checkin`이 FAILED로 답한다. 데모의 고객 역할은 `lib/bff/demo-scenario.ts`(`/api/demo/run-scenario`, `/api/demo/submit-d0`)가 고정 입력으로 대신한다. 브리프는 이 세션 대화의 WP6 지시를 BUILD-LOG 19~24행과 함께 다시 쓰면 된다. 요점: 오케스트레이터(recipe → match → 기기 안 오퍼 매칭과 해당 병원에만 증명 → 병렬 quote 20초 → judge), 동의 원장으로 병원 사본 10개 필드, 예약 폴링과 INPUT_REQUIRED 자동 응답, 다음 회차(달력 월), D0 결과와 anchor_record. 완성되면 `demo-scenario.ts`를 고객 에이전트 호출로 바꾼다.
+1. **고객 에이전트(WP6, T08 + T18 고객 쪽).** (2026-10-24 마감 직후: 브랜치 `goranyseoul/customer-agent`에서 완료, `/demo` 드라이버도 고객 에이전트로 교체. BUILD-LOG 25행. 아래는 그 전 상태.) `lib/agents/customer/executor.ts`는 스텁이라 `customer.notify`·`customer.checkin`이 FAILED로 답한다. 데모의 고객 역할은 `lib/bff/demo-scenario.ts`(`/api/demo/run-scenario`, `/api/demo/submit-d0`)가 고정 입력으로 대신한다. 브리프는 이 세션 대화의 WP6 지시를 BUILD-LOG 19~24행과 함께 다시 쓰면 된다. 요점: 오케스트레이터(recipe → match → 기기 안 오퍼 매칭과 해당 병원에만 증명 → 병렬 quote 20초 → judge), 동의 원장으로 병원 사본 10개 필드, 예약 폴링과 INPUT_REQUIRED 자동 응답, 다음 회차(달력 월), D0 결과와 anchor_record. 완성되면 `demo-scenario.ts`를 고객 에이전트 호출로 바꾼다.
 2. **고객 화면 연결(WP7).** `app/[locale]/**`는 목데이터. 고객 BFF(`app/api/customer/**`)를 만들고 `lib/bff/demo.ts`의 `ensurePlatformReady()`를 진입에서 부른다.
 3. **병원 콘솔 화면(`/clinic/**`).** 에이전트 함수(`listInbox`, `confirmClinicBooking`, `updateMenu`, `upsertOffer`)는 있고 API·화면 연결만 남았다.
 4. **[예약 확정] 메시지 문구.** 서버는 실제 대기 예약을 확정하지만 `/demo` 메시지는 왼쪽 목 카드 이름(예: "한빛의원 · Lin W.")을 보여 준다. `app/demo/demo-console.tsx`의 `confirm`이 서버 응답의 `clinicId`를 쓰게 고친다.
