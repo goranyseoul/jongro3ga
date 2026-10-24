@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardHeader, Money, Stat, buttonStyles } from "@/components/ui";
+import { DeltaStat } from "@/components/clinic/delta-stat";
 import { formatCurrency } from "@/lib/money";
 import { PageHeader } from "@/components/clinic/page-header";
 import { StateText } from "@/components/clinic/task-state";
@@ -11,6 +12,7 @@ import {
   NOW,
   OFFERS,
   OPERATION_MODE_TEXT,
+  PREVIOUS_PERIOD,
   RESPONSE_STATS,
   TODAY,
   responseRatePercent,
@@ -37,7 +39,8 @@ export default function ClinicDashboardPage() {
   const needsAction = bookings.filter(
     (task) => task.state === "TASK_STATE_WORKING" || task.state === "TASK_STATE_INPUT_REQUIRED",
   );
-  const offersNow = OFFERS.filter((offer) => offer.validUntil >= TODAY);
+  const offersNow = OFFERS.filter((offer) => offer.active && offer.validUntil >= TODAY);
+  const quotesByNow = quotesToday.filter((task) => Date.parse(task.receivedAt) <= now).length;
 
   return (
     <div className="flex flex-col gap-sp-6">
@@ -45,7 +48,12 @@ export default function ClinicDashboardPage() {
 
       <section aria-label="오늘 현황" className="grid grid-cols-1 gap-sp-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <Stat label="오늘 견적 요청" value={`${quotesToday.length}건`} caption="에이전트가 자동으로 답했어요" />
+          <DeltaStat
+            label="오늘 견적 요청"
+            value={`${quotesToday.length}건`}
+            caption="에이전트가 자동으로 답했어요"
+            delta={{ diff: quotesByNow - PREVIOUS_PERIOD.quotesYesterdayByNow, unit: "건", against: "어제 이 시각" }}
+          />
         </Card>
         <Card>
           <Stat
@@ -55,13 +63,19 @@ export default function ClinicDashboardPage() {
           />
         </Card>
         <Card>
-          <Stat label="이번 주 예약" value={`${thisWeek.length}건`} caption="오늘부터 7일 안에 확정된 예약" />
+          <DeltaStat
+            label="이번 주 예약"
+            value={`${thisWeek.length}건`}
+            caption="오늘부터 7일 안에 확정된 예약"
+            delta={{ diff: thisWeek.length - PREVIOUS_PERIOD.bookingsLastWeek, unit: "건", against: "지난주" }}
+          />
         </Card>
         <Card>
-          <Stat
+          <DeltaStat
             label="응답률"
             value={`${responseRatePercent()}%`}
             caption={`최근 ${RESPONSE_STATS.windowDays}일 · ${RESPONSE_STATS.quoteRequests}건 중 ${RESPONSE_STATS.answeredWithin20s}건을 20초 안에 응답`}
+            delta={{ diff: responseRatePercent() - PREVIOUS_PERIOD.responseRateLastWeek, unit: "%p", against: "지난주" }}
           />
         </Card>
       </section>
