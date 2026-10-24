@@ -15,7 +15,7 @@ export function SiteNav({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-10 border-b border-border-soft bg-bg">
       <div className={cn(container, "flex items-center justify-between gap-sp-3 py-sp-2")}>
         <Link href={`/${locale}`} className={cn("inline-flex min-h-touch items-center text-title font-semi", focusRing)}>
-          Pibu
+          Pibuk
         </Link>
         <Link href={`/${locale}`} className={buttonStyles()}>
           {LANDING_COPY[locale].start}
@@ -35,7 +35,7 @@ export function SiteFooter({ locale, path = "" }: { locale: Locale; path?: strin
     <footer className="border-t border-border-soft py-sp-12">
       <div className={cn(container, "flex flex-col gap-sp-6 md:flex-row md:justify-between")}>
         <div className="flex flex-col gap-sp-2">
-          <p className="text-title font-semi">Pibu</p>
+          <p className="text-title font-semi">Pibuk</p>
           <p className="text-label text-muted">
             {c.regLabel}: <span className="tabular-nums">{regNo}</span>
           </p>
