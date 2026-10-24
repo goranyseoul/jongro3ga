@@ -1,0 +1,539 @@
+{
+  "common": {
+    "brand": "PibooK",
+    "language": "언어",
+    "nav": {
+      "label": "주 메뉴",
+      "home": "홈",
+      "chat": "상담",
+      "records": "기록",
+      "settings": "내 데이터"
+    },
+    "footer": {
+      "regLabel": "외국인환자 유치사업자 등록번호",
+      "regDemo": "데모(미등록)",
+      "patientRights": "외국인환자 권익 보호 안내",
+      "notice": "PibooK은 AI 에이전트가 병원 연락과 비교를 도와주는 서비스예요. 진단과 시술 가능 여부는 의사가 판단해요."
+    },
+    "demoValue": "데모용 값",
+    "back": "뒤로",
+    "close": "닫기",
+    "cancel": "취소",
+    "next": "다음",
+    "save": "저장",
+    "optional": "선택",
+    "required": "필수",
+    "approx": "참고",
+    "session": "{n}회차: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "샷",
+      "unit": "유닛",
+      "line": "라인",
+      "session": "회"
+    },
+    "unit": {
+      "cc": "{value}cc",
+      "shot": "{value}샷",
+      "unit": "{value}유닛",
+      "line": "{value}라인",
+      "session": "{value}회"
+    },
+    "area": {
+      "gangnam": "강남",
+      "sinsa": "신사",
+      "apgujeong": "압구정",
+      "myeongdong": "명동",
+      "hongdae": "홍대",
+      "other": "기타"
+    },
+    "bookingStatus": {
+      "requested": "요청 보냄",
+      "pending_clinic": "병원 확인 중",
+      "confirmed": "예약 확정",
+      "canceled": "취소됨",
+      "no_show": "방문 안 함",
+      "completed": "시술 완료"
+    }
+  },
+  "landing": {
+    "metaTitle": "에이전트가 대신 한국 병원과 이야기해요",
+    "metaDescription": "받고 싶은 시술만 말해 주세요. 조건 정리, 견적 받기, 가격 확인, 예약과 기록까지 내 에이전트가 진행해요.",
+    "title": "에이전트가 대신 한국 병원과 이야기해요",
+    "lead": "받고 싶은 시술만 말해 주세요. 조건 정리, 견적 받기, 가격 확인, 예약까지 내 에이전트가 진행해요.",
+    "start": "시작하기",
+    "stepsTitle": "세 단계로 진행해요",
+    "steps": {
+      "tell": {
+        "title": "원하는 것을 말해요",
+        "body": "채팅으로 이야기하면 에이전트가 시술, 용량, 예산, 지역, 언어, 날짜를 조건 카드로 정리해요."
+      },
+      "compare": {
+        "title": "에이전트가 비교해요",
+        "body": "에이전트가 병원에 견적을 요청하고, 플랫폼이 지난 결제 기록과 견주어 확인해요."
+      },
+      "book": {
+        "title": "고르고 예약하고 기록해요",
+        "body": "견적을 비교해 예약해요. 시술 뒤 기록은 다음 회차 시기를 가늠하는 데도 쓰여요."
+      }
+    },
+    "careTitle": "알아 두세요",
+    "care": {
+      "consent": "내 정보는 동의한 범위 안에서만 병원에 전달돼요.",
+      "doctor": "진단과 시술 가능 여부는 의사가 판단해요. PibooK은 의료 행위를 하지 않아요.",
+      "records": "가격 확인은 공개 광고가 아니라 나에게만 보이는 1:1 답변으로 보여줘요."
+    }
+  },
+  "signup": {
+    "metaTitle": "시작하기",
+    "title": "시작하기",
+    "lead": "이메일로 가입하거나 데모 계정을 골라 주세요.",
+    "emailLabel": "이메일 주소",
+    "emailHint": "데모에서는 실제로 메일을 보내지 않아요.",
+    "emailError": "이메일 주소 형식을 확인해 주세요.",
+    "submit": "이메일로 계속",
+    "or": "또는",
+    "demoTitle": "데모 계정으로 체험해요",
+    "demoLead": "가상의 인물 계정이에요. 고르면 그 언어의 화면으로 바뀌어요.",
+    "startLabel": {
+      "onboarding": "에이전트 만들기부터 시작해요",
+      "home": "만들어 둔 에이전트로 시작해요"
+    },
+    "accounts": {
+      "yuki": "도쿄 · 29세 · 일본어",
+      "lin": "상하이 · 33세 · 중국어",
+      "emily": "로스앤젤레스 · 26세 · 영어",
+      "jisoo": "서울 · 34세 · 한국어 · 기록 중심"
+    }
+  },
+  "home": {
+    "metaTitle": "홈",
+    "greeting": "{name}님, 안녕하세요",
+    "agent": {
+      "title": "내 에이전트",
+      "active": "활성",
+      "status": "상태",
+      "languages": "필요한 언어",
+      "stay": "체류",
+      "cardLink": "에이전트 카드 보기"
+    },
+    "ask": {
+      "label": "무엇을 받고 싶으세요?",
+      "placeholder": "예: 리쥬란 받고 싶어요",
+      "submit": "상담하기",
+      "quick": "시술에서 고르기"
+    },
+    "locked": {
+      "title": "병원 매칭과 예약 안내",
+      "body": "병원 매칭과 예약은 외국 국적의 단기 방문자에게만 제공돼요. 시술 기록과 다음 회차 알림은 모두 쓸 수 있어요."
+    },
+    "requests": {
+      "title": "진행 중인 요청",
+      "count": "병원 {count}곳의 견적이 도착했어요",
+      "open": "견적 보기"
+    },
+    "booking": {
+      "title": "다가오는 예약",
+      "open": "예약 상세"
+    },
+    "next": {
+      "title": "다음 회차",
+      "empty": "아직 기록이 없어요",
+      "overdue": "예정일이 지났어요",
+      "all": "기록 전체 보기",
+      "add": "3초 기록"
+    }
+  },
+  "chat": {
+    "metaTitle": "상담",
+    "title": "담당 에이전트와 상담",
+    "inputLabel": "메시지",
+    "placeholder": "예: 리쥬란 받고 싶어요",
+    "send": "보내기",
+    "typing": "입력 중",
+    "agent": {
+      "greeting": "안녕하세요, PibooK 담당 에이전트예요. 받고 싶은 시술을 말씀해 주세요.",
+      "askProcedure": "어떤 시술이 궁금하세요? 아래에서 고르거나 그대로 입력해 주세요.",
+      "summary": "알겠어요. {procedure} 조건을 정리했어요. 바꾸고 싶은 항목은 눌러서 고쳐 주세요.",
+      "updated": "조건을 {procedure}에 맞게 바꿨어요."
+    },
+    "locked": {
+      "title": "병원 매칭과 예약 안내",
+      "body": "병원 매칭과 예약은 외국 국적의 단기 방문자에게만 제공돼요. 시술 기록과 다음 회차 알림은 쓸 수 있어요.",
+      "records": "기록 보기"
+    },
+    "condition": {
+      "title": "조건 카드",
+      "hint": "항목을 누르면 고칠 수 있어요.",
+      "rows": {
+        "procedure": "시술",
+        "amount": "용량",
+        "budget": "예산",
+        "area": "지역",
+        "language": "언어",
+        "dates": "날짜"
+      },
+      "amountNote": "보통 {range}예요. 최솟값을 넣어 두었어요.",
+      "budgetValue": "{amount} 이하",
+      "budgetNone": "제한 없음",
+      "privacy": "병원에는 시술, 용량, 지역, 언어, 날짜만 보내요. 예산은 보내지 않아요.",
+      "find": "이 조건으로 찾기",
+      "done": "완료",
+      "currency": "통화",
+      "amountInput": "금액",
+      "rateNote": "참고 환율",
+      "from": "시작일",
+      "to": "종료일"
+    }
+  },
+  "requests": {
+    "metaTitle": "견적 비교",
+    "title": "견적 비교",
+    "summary": {
+      "title": "요청",
+      "procedure": "시술",
+      "dates": "날짜",
+      "languages": "언어",
+      "status": "상태"
+    },
+    "status": {
+      "draft": "작성 중",
+      "matching": "병원을 찾는 중",
+      "quoting": "견적을 모으는 중",
+      "judging": "가격을 확인하는 중",
+      "comparing": "견적을 비교할 수 있어요",
+      "booking": "예약 요청 중",
+      "booked": "예약 완료",
+      "closed": "종료",
+      "failed": "문제가 생겼어요"
+    },
+    "progress": {
+      "title": "에이전트가 한 일",
+      "raw": "A2A JSON 보기"
+    },
+    "reference": {
+      "title": "시장 결제 기록",
+      "body": "최근 {days}일 기록 {count}건에서 1{unit}당 {p25}~{p75}(중앙값 {p50})이에요. 지난 기록에 따른 참고값이며 가격을 보장하지 않아요."
+    },
+    "compare": {
+      "title": "견적 비교",
+      "caption": "병원별 견적",
+      "hint": "정렬은 바꿀 수 있어요. 주의가 필요한 견적도 숨기지 않고 보여줘요."
+    },
+    "sort": {
+      "label": "정렬",
+      "match": "매칭순",
+      "unit": "단위가격순",
+      "total": "총액순"
+    },
+    "columns": {
+      "clinic": "병원",
+      "total": "총액",
+      "unit": "단위가격",
+      "amount": "용량",
+      "verdict": "판정",
+      "includes": "포함",
+      "slots": "가능 시간",
+      "action": "예약"
+    },
+    "mode": {
+      "proxy": "PibooK이 대신 답변 중 · 참고가",
+      "clinic": "병원이 직접 답변 · 확정가"
+    },
+    "vat": {
+      "included": "VAT 포함",
+      "excluded": "VAT 별도(포함으로 환산하면 {total})"
+    },
+    "event": {
+      "regular": "정상가 {price}",
+      "conditions": "조건: {text}"
+    },
+    "perUnit": "1{unit}당 {price}",
+    "typical": "보통 {range}",
+    "includes": {
+      "numbing_cream": "마취크림",
+      "soothing_mask": "진정팩",
+      "none": "없음",
+      "excluded": "미포함: {items}"
+    },
+    "warn": {
+      "label": "주의",
+      "paidMore": "견적보다 실제 결제액이 높았던 기록이 있어요(최근 90일 평균 +{pct}%)",
+      "downtime": "출국 전에 다운타임이 끝나지 않을 수 있어요"
+    },
+    "validUntil": "견적 유효기간 {date}",
+    "book": "이 병원으로 예약",
+    "pickSlot": "시간을 고르면 예약할 수 있어요",
+    "requested": "예약 요청함",
+    "openBooking": "예약 보기",
+    "sheet": {
+      "title": "예약 요청 확인",
+      "clinic": "병원",
+      "when": "일시",
+      "procedure": "시술",
+      "total": "총액",
+      "sharedTitle": "병원에 공유되는 정보",
+      "name": "이름",
+      "safety": "안전 정보",
+      "safetyValue": "임신·수유: {pregnant} / 알레르기: {allergies}",
+      "contact": "연락처",
+      "yes": "예",
+      "no": "아니오",
+      "none": "없음",
+      "doctor": "진단과 시술 가능 여부는 병원 의사가 판단해요.",
+      "send": "예약 요청 보내기",
+      "back": "뒤로"
+    }
+  },
+  "bookings": {
+    "metaTitle": "예약 상세",
+    "title": "예약 상세",
+    "statusNote": {
+      "pending_clinic_clinic": "병원이 예약을 확인하고 있어요. 확정되면 여기에 보여요.",
+      "pending_clinic_proxy": "PibooK이 병원에 전화나 메시지로 확인하고 있어요. 확정되면 여기에 보여요.",
+      "confirmed": "예약이 확정됐어요.",
+      "completed": "시술 기록을 받았어요."
+    },
+    "info": {
+      "title": "예약 내용",
+      "clinic": "병원",
+      "when": "일시",
+      "address": "주소",
+      "map": "지도에서 열기",
+      "procedure": "시술",
+      "price": "견적 금액",
+      "priceNote": "견적 금액이에요. 실제 결제액은 시술 당일에 기록할 수 있어요.",
+      "id": "예약 번호",
+      "confirmedBy": "확정한 곳",
+      "by": {
+        "clinic_staff": "병원 직원",
+        "pibu_operator": "PibooK 운영",
+        "auto": "자동 확정"
+      }
+    },
+    "steps": {
+      "title": "예약 진행 상황",
+      "requested": "예약 요청을 보냈어요",
+      "pending": "병원 확인 대기",
+      "confirmed": "예약 확정"
+    },
+    "notes": {
+      "title": "병원 안내",
+      "empty": "확정되면 방문 전 안내가 여기에 도착해요."
+    },
+    "explain": {
+      "title": "시술 전에 병원이 설명하는 내용",
+      "diagnosis": "진단명, 치료 방법, 가능한 부작용",
+      "contract": "진료 계약 내용",
+      "cost": "예상 진료비",
+      "dispute": "분쟁이 생겼을 때의 해결 절차",
+      "doctor": "진단과 시술 가능 여부는 의사가 판단해요. PibooK이 병원을 대신해 설명하지 않아요."
+    },
+    "downtime": "출국 전에 다운타임이 끝나지 않을 수 있어요.",
+    "actions": {
+      "simulate": "데모: 병원 확인 시뮬레이션",
+      "simulateNote": "실제 서비스에서는 병원 또는 운영이 예약을 확정해요.",
+      "record": "시술 당일 기록하기",
+      "recordNote": "시술 뒤에 실제 결제액과 받은 용량을 기록할 수 있어요.",
+      "viewRecords": "기록 보기",
+      "requests": "견적으로 돌아가기"
+    }
+  },
+  "records": {
+    "metaTitle": "기록",
+    "title": "내 시술 기록",
+    "add": "3초 기록",
+    "next": {
+      "title": "다음 회차",
+      "overdue": "예정일이 지났어요",
+      "paused": "쉬는 중",
+      "stopped": "그만둠",
+      "statusLabel": "이 시술은 앞으로",
+      "status": {
+        "active": "계속",
+        "paused": "쉬기",
+        "stopped": "그만"
+      },
+      "empty": "기록을 남기면 다음 회차가 여기에 보여요."
+    },
+    "history": {
+      "title": "기록 목록",
+      "empty": "아직 기록이 없어요. 첫 기록을 추가해 보세요.",
+      "session": "{n}회차",
+      "shared": "익명 공유: 켬",
+      "notShared": "익명 공유: 끔",
+      "fromBooking": "예약에서 자동 기록",
+      "rating": "만족도 {n}/5"
+    },
+    "calendar": {
+      "title": "달력",
+      "prev": "이전 달",
+      "next": "다음 달",
+      "done": "시술한 날",
+      "planned": "다음 회차",
+      "overdue": "예정일 지남",
+      "empty": "이 날은 기록이 없어요.",
+      "hasEvents": "일정 {n}개",
+      "doneSession": "{n}회차 받음",
+      "plannedSession": "{n}회차 예정"
+    }
+  },
+  "recordsNew": {
+    "metaTitle": "기록 추가",
+    "title": "3초 기록",
+    "lead": "받은 시술을 나중에 다시 볼 수 있게 남겨요.",
+    "procedure": "시술",
+    "amount": "용량",
+    "amountNote": "보통 {range}예요. {demo}",
+    "clinic": "병원",
+    "clinicHint": "후보에서 고르거나 이름을 그대로 입력해 주세요.",
+    "currency": "통화",
+    "price": "결제 금액",
+    "rateNote": "참고 환율",
+    "date": "시술일",
+    "optional": "선택",
+    "receipt": "영수증 사진",
+    "receiptSoon": "다음 버전에서 지원할 예정이에요.",
+    "rating": "만족도",
+    "submit": "기록하기",
+    "shareOn": "이 기록은 익명으로 처리돼 가격 참고값에 쓰여요(설정에서 끌 수 있어요).",
+    "shareOff": "이 기록은 공유되지 않아요.",
+    "saved": {
+      "title": "기록했어요",
+      "next": "다음 회차",
+      "all": "기록 보기",
+      "another": "계속 추가"
+    }
+  },
+  "outcomes": {
+    "metaTitle": "시술 기록",
+    "title": "시술 당일 기록",
+    "lead": "시술이 끝나면 실제 결제액과 받은 용량을 기록해요.",
+    "wait": {
+      "title": "예약이 확정되면 기록할 수 있어요",
+      "body": "병원 확인이 끝날 때까지 기다려 주세요.",
+      "open": "예약 보기"
+    },
+    "summary": {
+      "clinic": "병원",
+      "when": "시술일",
+      "quoted": "견적 금액"
+    },
+    "fields": {
+      "currency": "통화",
+      "paid": "실제 결제액",
+      "rateNote": "참고 환율",
+      "received": "실제로 받은 용량",
+      "verified": "정품 확인 방식",
+      "satisfaction": "만족도",
+      "pain": "통증",
+      "comment": "한 줄(선택)"
+    },
+    "verified": {
+      "vial_shown": "약제 바이알을 보여줬어요",
+      "packaging_shown": "포장을 확인했어요",
+      "explained_verbally": "말로 설명을 들었어요",
+      "not_checked": "확인하지 않았어요"
+    },
+    "scale": {
+      "low": "낮음",
+      "high": "높음",
+      "satisfactionLow": "불만족",
+      "satisfactionHigh": "만족"
+    },
+    "gap": {
+      "same": "견적과 같은 금액이에요.",
+      "higher": "견적보다 {amount} 높아요.",
+      "lower": "견적보다 {amount} 낮아요."
+    },
+    "share": "이 결과는 가격 판정과 병원 연결에 쓰여요. 개별 답변이 병원에 전달되지는 않아요.",
+    "submit": "기록 보내기",
+    "saved": {
+      "title": "기록을 보냈어요",
+      "body": "고마워요. 다음 회차를 기록에 추가했어요.",
+      "next": "다음 회차",
+      "records": "기록 보기"
+    },
+    "later": {
+      "title": "이후 체크인",
+      "note": "다음 버전에서 지원할 예정이에요.",
+      "d7": "7일 뒤",
+      "d30": "30일 뒤",
+      "questions": "실제 다운타임 · 효과 체감 · 다시 받을 의향"
+    }
+  },
+  "settings": {
+    "metaTitle": "내 데이터",
+    "title": "내 데이터",
+    "consents": {
+      "title": "동의 설정",
+      "lead": "동의는 언제든 켜고 끌 수 있어요. 변경은 새 동의로 기록돼요.",
+      "on": "켬",
+      "off": "끔",
+      "fixed": "필수 · 항상 켬",
+      "scope": "공유 범위",
+      "version": "문구 버전 {version}",
+      "at": "{date} 동의",
+      "shareWithClinic": {
+        "title": "병원에 정보 공유",
+        "description": "예약을 보낼 때만 안전 정보와 연락처를 병원에 전달해요."
+      }
+    },
+    "agent": {
+      "title": "내 에이전트 카드",
+      "lead": "내 에이전트가 다른 에이전트에게 보여주는 정보예요."
+    },
+    "export": {
+      "title": "데이터 내보내기",
+      "body": "프로필, 동의, 시술 기록을 JSON으로 저장해요.",
+      "button": "JSON 내보내기"
+    },
+    "remove": {
+      "title": "전체 삭제",
+      "body": "프로필, 동의 이력, 시술 기록, 대화를 삭제해요. 되돌릴 수 없어요.",
+      "button": "전체 삭제",
+      "confirmTitle": "정말 삭제할까요?",
+      "confirmBody": "삭제하면 에이전트도 비활성화돼요. 되돌릴 수 없어요.",
+      "confirm": "삭제",
+      "done": "삭제했어요. 이 데모에서는 이 브라우저에 저장된 조작 내용을 지웠어요.",
+      "top": "처음으로"
+    }
+  },
+  "legal": {
+    "metaTitle": "외국인환자 권익 보호 안내",
+    "title": "외국인환자 권익 보호 안내",
+    "lead": "PibooK은 외국인환자 유치사업자예요. 이용하기 전에 알아 두실 내용을 안내해 드려요.",
+    "demoNotice": "데모용 문구예요. 실제 서비스 전에 법률 검토를 받은 문구로 바꿀 예정이에요.",
+    "reg": {
+      "label": "등록번호",
+      "demo": "데모(미등록)"
+    },
+    "english": "English (필수 게시문)",
+    "service": {
+      "title": "용역 내용과 조건",
+      "content": "PibooK의 AI 에이전트가 원하는 내용을 정리하고, 병원에 견적을 요청하고, 지난 결제 기록과 견주어 가격을 확인하고, 예약 요청을 병원에 전달해요.",
+      "noMedical": "PibooK은 의료 행위를 하지 않아요. 진단, 시술 가능 여부, 시술은 병원 의사가 맡고, 그 책임은 병원에 있어요.",
+      "price": "보여드리는 금액은 견적이에요. PibooK이 병원을 대신해 답한 참고가는 실제 금액과 다를 수 있어요. 최종 금액은 병원이 확인해요.",
+      "explain": "병원은 시술 전에 진단명, 치료 방법, 가능한 부작용, 진료 계약, 예상 진료비, 분쟁이 생겼을 때의 해결 절차를 설명해요.",
+      "fee": "PibooK은 법령이 정한 상한 안에서 병원으로부터 유치 수수료를 받을 수 있어요. 이 수수료는 병원 선정과 가격 확인에 영향을 주지 않아요. 고객에게는 수수료를 받지 않아요.",
+      "eligibility": "병원 매칭과 예약은 외국 국적의 단기 방문자에게만 제공돼요. 한국 국적이거나 한국에 외국인등록 또는 거소신고를 하고 사는 분은 대상이 아니에요."
+    },
+    "dispute": {
+      "title": "분쟁 해결 절차",
+      "contact": "문의와 불만은 먼저 PibooK에 보내 주세요. 연락처는 서비스 시작 전에 여기에 게시할 예정이에요(데모).",
+      "mediation": "의료 분쟁은 한국의료분쟁조정중재원(KOMEDI) 같은 공적 기관에 상담할 수 있어요. 한국보건산업진흥원(KHIDI)에도 외국인환자 상담 창구가 있어요.",
+      "records": "PibooK은 확인을 위해 요청, 견적, 예약 기록을 보관하고, 원하시면 그 내용을 병원에 전달해요."
+    },
+    "privacy": {
+      "title": "개인정보 보호",
+      "collected": "호칭, 국적, 연령대, 일정, 연락처, 피부 고민, 과거 시술, 안전 정보, 시술 기록을 다뤄요.",
+      "purpose": "내 에이전트 운영, 병원 찾기, 견적 요청, 예약, 가격 확인에 써요.",
+      "sensitive": "피부, 시술, 안전 정보는 건강에 관한 민감정보라서 다른 동의와 따로 받아요. 병원에는 예약을 보낼 때 동의한 범위만 전달해요.",
+      "crossBorder": "해외에서 입력한 정보는 한국 서버에서 처리해요. AI 처리와 보관을 위해 해외 사업자의 서비스를 쓸 수 있어요. 이 부분도 따로 동의를 받아요.",
+      "retention": "정보는 내 데이터에서 직접 삭제할 때까지 보관해요.",
+      "rights": "내 데이터에서 에이전트 카드를 보고, JSON으로 내보내고, 동의를 켜고 끄고, 전체 삭제할 수 있어요.",
+      "anonymous": "익명 기록 공유에 동의한 경우에만 기록을 익명으로 처리해 가격 참고값에 써요. 결과를 공개 후기로 올리지 않아요."
+    },
+    "rightsLink": "내 데이터로 가기"
+  }
+}

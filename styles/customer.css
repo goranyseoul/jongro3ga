@@ -1,0 +1,93 @@
+/* Customer web app only (app/[locale]). Every value is a token from app/globals.css. */
+
+.cu-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* CJK line breaking: keep Korean words whole, break Japanese and Chinese by strict rules */
+.cu-root:lang(ko) {
+  word-break: keep-all;
+}
+.cu-root:lang(ja),
+.cu-root:lang(zh-CN) {
+  line-break: strict;
+}
+
+/* Bottom tab bar on phones: stay clear of the home indicator */
+.cu-tabbar {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Room under the content so the fixed tab bar never covers the last block */
+.cu-main-with-tabbar {
+  padding-bottom: calc(var(--touch) + var(--sp-12));
+}
+@media (min-width: 768px) {
+  .cu-main-with-tabbar {
+    padding-bottom: var(--sp-12);
+  }
+}
+
+/* Long ids and addresses must wrap instead of widening the page */
+.cu-wrap {
+  overflow-wrap: anywhere;
+}
+
+/* Chat input stays above the phone tab bar while the transcript scrolls */
+.cu-chat-input {
+  position: sticky;
+  bottom: calc(var(--touch) + env(safe-area-inset-bottom));
+  padding-block: var(--sp-3);
+  background: var(--bg);
+}
+@media (min-width: 768px) {
+  .cu-chat-input {
+    bottom: 0;
+  }
+}
+
+/* Quote comparison: the shared Table turns into cards below md, but seven columns are still too
+   tight between md and lg, so those widths keep the card view (two columns). Targets the two
+   elements Table renders (the table wrapper and the card list). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cu-quotes > div {
+    display: none;
+  }
+  .cu-quotes > ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--sp-3);
+  }
+}
+
+/* Task steps (onboarding checklist): spinner of the active step and the check that draws itself */
+@keyframes cu-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes cu-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.cu-task-spinner {
+  animation: cu-spin 900ms linear infinite;
+}
+.cu-task-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: cu-draw var(--dur-dropdown) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cu-task-spinner,
+  .cu-task-check path {
+    animation: none;
+  }
+}
