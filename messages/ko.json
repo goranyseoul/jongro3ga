@@ -25,6 +25,13 @@
     "required": "필수",
     "approx": "참고",
     "session": "{n}회차: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "샷",
+      "unit": "유닛",
+      "line": "라인",
+      "session": "회"
+    },
     "unit": {
       "cc": "{value}cc",
       "shot": "{value}샷",
@@ -177,6 +184,105 @@
       "rateNote": "참고 환율",
       "from": "시작일",
       "to": "종료일"
+    }
+  },
+  "requests": {
+    "metaTitle": "견적 비교",
+    "title": "견적 비교",
+    "summary": {
+      "title": "요청",
+      "procedure": "시술",
+      "dates": "날짜",
+      "languages": "언어",
+      "status": "상태"
+    },
+    "status": {
+      "draft": "작성 중",
+      "matching": "병원을 찾는 중",
+      "quoting": "견적을 모으는 중",
+      "judging": "가격을 확인하는 중",
+      "comparing": "견적을 비교할 수 있어요",
+      "booking": "예약 요청 중",
+      "booked": "예약 완료",
+      "closed": "종료",
+      "failed": "문제가 생겼어요"
+    },
+    "progress": {
+      "title": "에이전트가 한 일",
+      "raw": "A2A JSON 보기"
+    },
+    "reference": {
+      "title": "시장 결제 기록",
+      "body": "최근 {days}일 기록 {count}건에서 1{unit}당 {p25}~{p75}(중앙값 {p50})이에요. 지난 기록에 따른 참고값이며 가격을 보장하지 않아요."
+    },
+    "compare": {
+      "title": "견적 비교",
+      "caption": "병원별 견적",
+      "hint": "정렬은 바꿀 수 있어요. 주의가 필요한 견적도 숨기지 않고 보여줘요."
+    },
+    "sort": {
+      "label": "정렬",
+      "match": "매칭순",
+      "unit": "단위가격순",
+      "total": "총액순"
+    },
+    "columns": {
+      "clinic": "병원",
+      "total": "총액",
+      "unit": "단위가격",
+      "amount": "용량",
+      "verdict": "판정",
+      "includes": "포함",
+      "slots": "가능 시간",
+      "action": "예약"
+    },
+    "mode": {
+      "proxy": "Pibu가 대신 답변 중 · 참고가",
+      "clinic": "병원이 직접 답변 · 확정가"
+    },
+    "vat": {
+      "included": "VAT 포함",
+      "excluded": "VAT 별도(포함으로 환산하면 {total})"
+    },
+    "event": {
+      "regular": "정상가 {price}",
+      "conditions": "조건: {text}"
+    },
+    "perUnit": "1{unit}당 {price}",
+    "typical": "보통 {range}",
+    "includes": {
+      "numbing_cream": "마취크림",
+      "soothing_mask": "진정팩",
+      "none": "없음",
+      "excluded": "미포함: {items}"
+    },
+    "warn": {
+      "label": "주의",
+      "paidMore": "견적보다 실제 결제액이 높았던 기록이 있어요(최근 90일 평균 +{pct}%)",
+      "downtime": "출국 전에 다운타임이 끝나지 않을 수 있어요"
+    },
+    "validUntil": "견적 유효기간 {date}",
+    "book": "이 병원으로 예약",
+    "pickSlot": "시간을 고르면 예약할 수 있어요",
+    "requested": "예약 요청함",
+    "openBooking": "예약 보기",
+    "sheet": {
+      "title": "예약 요청 확인",
+      "clinic": "병원",
+      "when": "일시",
+      "procedure": "시술",
+      "total": "총액",
+      "sharedTitle": "병원에 공유되는 정보",
+      "name": "이름",
+      "safety": "안전 정보",
+      "safetyValue": "임신·수유: {pregnant} / 알레르기: {allergies}",
+      "contact": "연락처",
+      "yes": "예",
+      "no": "아니오",
+      "none": "없음",
+      "doctor": "진단과 시술 가능 여부는 병원 의사가 판단해요.",
+      "send": "예약 요청 보내기",
+      "back": "뒤로"
     }
   }
 }

@@ -25,6 +25,13 @@
     "required": "必填",
     "approx": "参考",
     "session": "第{n}次: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "发",
+      "unit": "单位",
+      "line": "条",
+      "session": "次"
+    },
     "unit": {
       "cc": "{value}cc",
       "shot": "{value}发",
@@ -177,6 +184,105 @@
       "rateNote": "参考汇率",
       "from": "开始日",
       "to": "结束日"
+    }
+  },
+  "requests": {
+    "metaTitle": "报价比较",
+    "title": "报价比较",
+    "summary": {
+      "title": "请求",
+      "procedure": "项目",
+      "dates": "日期",
+      "languages": "语言",
+      "status": "状态"
+    },
+    "status": {
+      "draft": "草稿",
+      "matching": "正在寻找诊所",
+      "quoting": "正在收集报价",
+      "judging": "正在核对价格",
+      "comparing": "可以比较报价",
+      "booking": "正在请求预约",
+      "booked": "已预约",
+      "closed": "已结束",
+      "failed": "未能完成"
+    },
+    "progress": {
+      "title": "代理的进展",
+      "raw": "查看 A2A JSON"
+    },
+    "reference": {
+      "title": "市场支付记录",
+      "body": "最近{days}天的{count}条记录显示,每{unit}为{p25}~{p75}(中位数 {p50})。这是基于过往记录的参考值,不保证价格。"
+    },
+    "compare": {
+      "title": "比较报价",
+      "caption": "各诊所的报价",
+      "hint": "排序可以更换。需要留意的报价也不会隐藏。"
+    },
+    "sort": {
+      "label": "排序",
+      "match": "按匹配度",
+      "unit": "按单价",
+      "total": "按总价"
+    },
+    "columns": {
+      "clinic": "诊所",
+      "total": "总价",
+      "unit": "单价",
+      "amount": "用量",
+      "verdict": "判定",
+      "includes": "包含内容",
+      "slots": "可预约时间",
+      "action": "预约"
+    },
+    "mode": {
+      "proxy": "Pibu 代为答复 · 参考价",
+      "clinic": "诊所直接答复 · 确定价"
+    },
+    "vat": {
+      "included": "含增值税",
+      "excluded": "不含增值税(含税换算为 {total})"
+    },
+    "event": {
+      "regular": "原价 {price}",
+      "conditions": "条件: {text}"
+    },
+    "perUnit": "每{unit} {price}",
+    "typical": "常见用量为{range}",
+    "includes": {
+      "numbing_cream": "麻醉膏",
+      "soothing_mask": "镇静面膜",
+      "none": "无",
+      "excluded": "不含: {items}"
+    },
+    "warn": {
+      "label": "注意",
+      "paidMore": "有实际支付高于报价的记录(最近90天平均 +{pct}%)",
+      "downtime": "离境前恢复期可能尚未结束"
+    },
+    "validUntil": "报价有效期至 {date}",
+    "book": "预约这家诊所",
+    "pickSlot": "选择时间后即可预约",
+    "requested": "已发送预约请求",
+    "openBooking": "查看预约",
+    "sheet": {
+      "title": "确认预约请求",
+      "clinic": "诊所",
+      "when": "日期时间",
+      "procedure": "项目",
+      "total": "总价",
+      "sharedTitle": "将提供给诊所的信息",
+      "name": "姓名",
+      "safety": "安全信息",
+      "safetyValue": "怀孕或哺乳: {pregnant} / 过敏: {allergies}",
+      "contact": "联系方式",
+      "yes": "是",
+      "no": "否",
+      "none": "无",
+      "doctor": "诊断及能否施术由诊所医生判断。",
+      "send": "发送预约请求",
+      "back": "返回"
     }
   }
 }

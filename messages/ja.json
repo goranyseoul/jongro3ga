@@ -25,6 +25,13 @@
     "required": "必須",
     "approx": "参考",
     "session": "{n}回目: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "ショット",
+      "unit": "ユニット",
+      "line": "ライン",
+      "session": "回"
+    },
     "unit": {
       "cc": "{value}cc",
       "shot": "{value}ショット",
@@ -177,6 +184,105 @@
       "rateNote": "参考レート",
       "from": "開始日",
       "to": "終了日"
+    }
+  },
+  "requests": {
+    "metaTitle": "見積もり比較",
+    "title": "見積もり比較",
+    "summary": {
+      "title": "リクエスト",
+      "procedure": "施術",
+      "dates": "日程",
+      "languages": "言語",
+      "status": "状態"
+    },
+    "status": {
+      "draft": "下書き",
+      "matching": "クリニックを探しています",
+      "quoting": "見積もりを集めています",
+      "judging": "価格を確認しています",
+      "comparing": "見積もりを比較できます",
+      "booking": "予約リクエスト中",
+      "booked": "予約済み",
+      "closed": "終了",
+      "failed": "うまくいきませんでした"
+    },
+    "progress": {
+      "title": "エージェントの進行状況",
+      "raw": "A2A JSONを見る"
+    },
+    "reference": {
+      "title": "市場の支払い記録",
+      "body": "直近{days}日の{count}件の記録では、1{unit}あたり{p25}~{p75}(中央値 {p50})です。過去の記録にもとづく参考値で、価格を保証するものではありません。"
+    },
+    "compare": {
+      "title": "見積もりを比べる",
+      "caption": "クリニック別の見積もり",
+      "hint": "並び順は変えられます。注意が必要な見積もりも隠さず表示します。"
+    },
+    "sort": {
+      "label": "並び順",
+      "match": "マッチ度順",
+      "unit": "単価順",
+      "total": "総額順"
+    },
+    "columns": {
+      "clinic": "クリニック",
+      "total": "総額",
+      "unit": "単価",
+      "amount": "量",
+      "verdict": "判定",
+      "includes": "含まれるもの",
+      "slots": "予約可能な時間",
+      "action": "予約"
+    },
+    "mode": {
+      "proxy": "Pibuが代理回答中 · 参考価格",
+      "clinic": "クリニックが直接回答 · 確定価格"
+    },
+    "vat": {
+      "included": "VAT込み",
+      "excluded": "VAT別(込みで換算すると {total})"
+    },
+    "event": {
+      "regular": "通常価格 {price}",
+      "conditions": "条件: {text}"
+    },
+    "perUnit": "1{unit}あたり {price}",
+    "typical": "通常は{range}",
+    "includes": {
+      "numbing_cream": "麻酔クリーム",
+      "soothing_mask": "鎮静パック",
+      "none": "なし",
+      "excluded": "含まれない: {items}"
+    },
+    "warn": {
+      "label": "注意",
+      "paidMore": "見積もりより支払額が高かった記録があります(直近90日の平均 +{pct}%)",
+      "downtime": "出国前にダウンタイムが終わらない可能性があります"
+    },
+    "validUntil": "見積もり有効期限 {date}",
+    "book": "このクリニックで予約",
+    "pickSlot": "時間を選ぶと予約できます",
+    "requested": "予約リクエスト済み",
+    "openBooking": "予約を見る",
+    "sheet": {
+      "title": "予約リクエストの確認",
+      "clinic": "クリニック",
+      "when": "日時",
+      "procedure": "施術",
+      "total": "総額",
+      "sharedTitle": "クリニックに共有される情報",
+      "name": "お名前",
+      "safety": "安全情報",
+      "safetyValue": "妊娠・授乳: {pregnant} / アレルギー: {allergies}",
+      "contact": "連絡先",
+      "yes": "はい",
+      "no": "いいえ",
+      "none": "なし",
+      "doctor": "診断と施術の可否は、クリニックの医師が判断します。",
+      "send": "予約リクエストを送る",
+      "back": "戻る"
     }
   }
 }

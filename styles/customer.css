@@ -47,3 +47,18 @@
     bottom: 0;
   }
 }
+
+/* Quote comparison: the shared Table turns into cards below md, but seven columns are still too
+   tight between md and lg, so those widths keep the card view (two columns). Targets the two
+   elements Table renders (the table wrapper and the card list). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cu-quotes > div {
+    display: none;
+  }
+  .cu-quotes > ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--sp-3);
+  }
+}

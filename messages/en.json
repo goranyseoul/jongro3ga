@@ -25,6 +25,13 @@
     "required": "Required",
     "approx": "Reference",
     "session": "Session {n}: {date}",
+    "unitName": {
+      "cc": "cc",
+      "shot": "shot",
+      "unit": "unit",
+      "line": "line",
+      "session": "session"
+    },
     "unit": {
       "cc": "{value}cc",
       "shot": "{value, plural, one {# shot} other {# shots}}",
@@ -177,6 +184,105 @@
       "rateNote": "Reference rate",
       "from": "From",
       "to": "To"
+    }
+  },
+  "requests": {
+    "metaTitle": "Compare quotes",
+    "title": "Compare quotes",
+    "summary": {
+      "title": "Request",
+      "procedure": "Procedure",
+      "dates": "Dates",
+      "languages": "Language",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Draft",
+      "matching": "Finding clinics",
+      "quoting": "Collecting quotes",
+      "judging": "Checking prices",
+      "comparing": "Ready to compare",
+      "booking": "Booking requested",
+      "booked": "Booked",
+      "closed": "Closed",
+      "failed": "Something went wrong"
+    },
+    "progress": {
+      "title": "What your agent did",
+      "raw": "View A2A JSON"
+    },
+    "reference": {
+      "title": "Market payment records",
+      "body": "In {count} records from the last {days} days, the price is {p25}~{p75} per {unit} (median {p50}). This is a reference from past records, not a guaranteed price."
+    },
+    "compare": {
+      "title": "Compare quotes",
+      "caption": "Quotes by clinic",
+      "hint": "You can change the order. Quotes that need attention are shown, never hidden."
+    },
+    "sort": {
+      "label": "Sort by",
+      "match": "Match",
+      "unit": "Unit price",
+      "total": "Total"
+    },
+    "columns": {
+      "clinic": "Clinic",
+      "total": "Total",
+      "unit": "Unit price",
+      "amount": "Amount",
+      "verdict": "Verdict",
+      "includes": "Included",
+      "slots": "Available times",
+      "action": "Book"
+    },
+    "mode": {
+      "proxy": "Pibu is answering for the clinic · reference price",
+      "clinic": "Answered by the clinic · confirmed price"
+    },
+    "vat": {
+      "included": "VAT included",
+      "excluded": "VAT not included ({total} with VAT)"
+    },
+    "event": {
+      "regular": "Regular price {price}",
+      "conditions": "Conditions: {text}"
+    },
+    "perUnit": "{price} per {unit}",
+    "typical": "Usually {range}",
+    "includes": {
+      "numbing_cream": "Numbing cream",
+      "soothing_mask": "Soothing mask",
+      "none": "None",
+      "excluded": "Not included: {items}"
+    },
+    "warn": {
+      "label": "Note",
+      "paidMore": "Past customers paid more than quoted (average +{pct}% in the last 90 days)",
+      "downtime": "Recovery may not be over before you leave Korea"
+    },
+    "validUntil": "Quote valid until {date}",
+    "book": "Book this clinic",
+    "pickSlot": "Pick a time to book",
+    "requested": "Booking requested",
+    "openBooking": "View booking",
+    "sheet": {
+      "title": "Confirm your booking request",
+      "clinic": "Clinic",
+      "when": "Date and time",
+      "procedure": "Procedure",
+      "total": "Total",
+      "sharedTitle": "Information shared with the clinic",
+      "name": "Name",
+      "safety": "Safety information",
+      "safetyValue": "Pregnant or breastfeeding: {pregnant} / Allergies: {allergies}",
+      "contact": "Contact",
+      "yes": "Yes",
+      "no": "No",
+      "none": "None",
+      "doctor": "The clinic's doctor decides on diagnosis and whether the procedure suits you.",
+      "send": "Send booking request",
+      "back": "Back"
     }
   }
 }
