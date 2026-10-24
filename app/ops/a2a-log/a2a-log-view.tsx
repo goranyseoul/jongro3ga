@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toUiLogEntry, type ServerLogEntry } from "@/lib/bff/log-ui";
 import { Button, Input } from "@/components/ui";
 import { A2ALogRow, FilterSelect, type FilterOption } from "@/components/ops";
 import {
@@ -21,31 +22,29 @@ const NO_FILTERS: Filters = { agent: ALL, skill: ALL, state: ALL, contextId: "" 
 
 const unique = <T,>(items: T[]) => [...new Set(items)];
 
-const agentById = new Map<string, A2AAgent>();
-for (const entry of A2A_LOG) for (const agent of [entry.from, entry.to]) agentById.set(agent.agentId, agent);
-const agents = [...agentById.values()].sort(
-  (a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role) || a.agentId.localeCompare(b.agentId),
-);
-
-const AGENT_OPTIONS: FilterOption[] = [
-  { value: ALL, label: "전체" },
-  ...ROLE_ORDER.map((role) => ({ value: `role:${role}`, label: `${AGENT_ROLE_LABEL[role]} 전체` })),
-  ...agents.map((agent) => ({ value: agent.agentId, label: agentLabel(agent) })),
-];
-
-const SKILL_OPTIONS: FilterOption[] = [
-  { value: ALL, label: "전체" },
-  ...unique(A2A_LOG.map((entry) => entry.skillId))
-    .sort()
-    .map((skillId) => ({ value: skillId, label: skillId })),
-];
-
-const STATE_OPTIONS: FilterOption[] = [
-  { value: ALL, label: "전체" },
-  ...unique(A2A_LOG.map((entry) => entry.state)).map((state) => ({ value: state, label: TASK_STATE_LABEL[state] })),
-];
-
-const CONTEXT_IDS = unique(A2A_LOG.map((entry) => entry.contextId));
+function optionsFor(log: A2ALogEntry[]) {
+  const agentById = new Map<string, A2AAgent>();
+  for (const entry of log) for (const agent of [entry.from, entry.to]) agentById.set(agent.agentId, agent);
+  const agents = [...agentById.values()].sort(
+    (a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role) || a.agentId.localeCompare(b.agentId),
+  );
+  const agentOptions: FilterOption[] = [
+    { value: ALL, label: "전체" },
+    ...ROLE_ORDER.map((role) => ({ value: `role:${role}`, label: `${AGENT_ROLE_LABEL[role]} 전체` })),
+    ...agents.map((agent) => ({ value: agent.agentId, label: agentLabel(agent) })),
+  ];
+  const skillOptions: FilterOption[] = [
+    { value: ALL, label: "전체" },
+    ...unique(log.map((entry) => entry.skillId))
+      .sort()
+      .map((skillId) => ({ value: skillId, label: skillId })),
+  ];
+  const stateOptions: FilterOption[] = [
+    { value: ALL, label: "전체" },
+    ...unique(log.map((entry) => entry.state)).map((state) => ({ value: state, label: TASK_STATE_LABEL[state] ?? state })),
+  ];
+  return { agentOptions, skillOptions, stateOptions, contextIds: unique(log.map((entry) => entry.contextId)) };
+}
 
 function matches(entry: A2ALogEntry, filters: Filters): boolean {
   const { agent, skill, state, contextId } = filters;
@@ -65,8 +64,30 @@ function matches(entry: A2ALogEntry, filters: Filters): boolean {
 export function A2ALogView() {
   const [filters, setFilters] = useState<Filters>(NO_FILTERS);
   const [open, setOpen] = useState<Set<string>>(new Set());
+  // The real log from the agents (/api/ops/a2a-log), refreshed every 3 s. The sample log shows until a call exists.
+  const [live, setLive] = useState<A2ALogEntry[]>([]);
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      try {
+        const response = await fetch("/api/ops/a2a-log", { cache: "no-store" });
+        const body = (await response.json()) as { entries: ServerLogEntry[] };
+        if (alive) setLive(body.entries.map(toUiLogEntry));
+      } catch {
+        // keep the last list
+      }
+    };
+    void load();
+    const timer = setInterval(load, 3000);
+    return () => {
+      alive = false;
+      clearInterval(timer);
+    };
+  }, []);
+  const log = live.length > 0 ? live : A2A_LOG;
+  const { agentOptions, skillOptions, stateOptions, contextIds } = optionsFor(log);
 
-  const rows = A2A_LOG.filter((entry) => matches(entry, filters));
+  const rows = log.filter((entry) => matches(entry, filters));
   const filtered = Object.entries(filters).some(([key, value]) => value !== NO_FILTERS[key as keyof Filters]);
   const set = (patch: Partial<Filters>) => setFilters((current) => ({ ...current, ...patch }));
 
@@ -81,9 +102,9 @@ export function A2ALogView() {
   return (
     <>
       <section aria-label="필터" className="grid grid-cols-1 gap-sp-3 sm:grid-cols-2 lg:grid-cols-4">
-        <FilterSelect label="에이전트" value={filters.agent} onChange={(agent) => set({ agent })} options={AGENT_OPTIONS} />
-        <FilterSelect label="스킬" value={filters.skill} onChange={(skill) => set({ skill })} options={SKILL_OPTIONS} />
-        <FilterSelect label="상태" value={filters.state} onChange={(state) => set({ state })} options={STATE_OPTIONS} />
+        <FilterSelect label="에이전트" value={filters.agent} onChange={(agent) => set({ agent })} options={agentOptions} />
+        <FilterSelect label="스킬" value={filters.skill} onChange={(skill) => set({ skill })} options={skillOptions} />
+        <FilterSelect label="상태" value={filters.state} onChange={(state) => set({ state })} options={stateOptions} />
         <Input
           label="contextId"
           value={filters.contextId}
@@ -93,7 +114,7 @@ export function A2ALogView() {
           autoComplete="off"
         />
         <datalist id={CONTEXT_LIST_ID}>
-          {CONTEXT_IDS.map((id) => (
+          {contextIds.map((id) => (
             <option key={id} value={id} />
           ))}
         </datalist>
@@ -101,7 +122,7 @@ export function A2ALogView() {
 
       <div className="flex flex-wrap items-center justify-between gap-sp-3">
         <p role="status" aria-live="polite" className="text-label text-muted tabular-nums">
-          {rows.length}건 (전체 {A2A_LOG.length}건)
+          {rows.length}건 (전체 {log.length}건)
         </p>
         {filtered ? (
           <Button variant="ghost" onClick={() => setFilters(NO_FILTERS)}>

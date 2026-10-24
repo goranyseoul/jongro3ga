@@ -25,6 +25,7 @@ import {
 import { confirmBooking, injectOutcomes, moveClock, resetSeed, runScenario, submitD0 } from "./demo-api";
 import { DemoControls } from "./controls";
 import { LiveLog } from "./live-log";
+import { toUiLogEntry, type ServerLogEntry } from "@/lib/bff/log-ui";
 import { SidePanel, type SideMode } from "./side-panel";
 
 // Yuki's calls in order: the first YUKI_BOOKING_STEP happen before the booking exists, the rest come after
@@ -35,26 +36,6 @@ const YUKI_BOOKING_ID = "bk_demo_yuki";
 const REPLAY_STEP_MS = 700;
 
 const inlineLink = cn("text-text underline", focusRing);
-
-type ServerLogEntry = Omit<A2ALogEntry, "humanSummary" | "state" | "contextId" | "taskId" | "skillId"> & {
-  contextId?: string;
-  taskId?: string;
-  skillId?: string;
-  state?: string;
-  humanSummary: Partial<Record<"ko" | "ja" | "en" | "zh-CN", string>>;
-};
-
-/** A stored A2ALogEntry (lib/a2a/log.ts) as the row the ops log component renders. */
-function toUiLogEntry(entry: ServerLogEntry): A2ALogEntry {
-  return {
-    ...entry,
-    contextId: entry.contextId ?? "",
-    taskId: entry.taskId ?? "",
-    skillId: entry.skillId ?? "",
-    state: (entry.state ?? "TASK_STATE_FAILED") as A2ALogEntry["state"],
-    humanSummary: entry.humanSummary.ko ?? entry.humanSummary.en ?? "",
-  };
-}
 
 export function DemoConsole() {
   const [personaId, setPersonaId] = useState("yuki");
