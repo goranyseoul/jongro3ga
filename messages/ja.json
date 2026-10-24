@@ -385,10 +385,23 @@
       "pages": "ページ",
       "prevPage": "前のページ",
       "nextPage": "次のページ",
+<<<<<<< HEAD
       "anchored": "クリニック確認済み · チェーン記録 v{version}",
       "clinicConfirmed": "クリニック確認済み",
       "selfReported": "自分で入力 · 特典の証明には使われません",
       "txLabel": "Base Sepoliaで取引を見る(新しいタブ)"
+=======
+      "preset": {
+        "procedure": "施術",
+        "area": "部位",
+        "clinic": "クリニック"
+      },
+      "area": {
+        "forehead": "額",
+        "full_face": "顔全体",
+        "jawline": "フェイスライン"
+      }
+>>>>>>> origin/feat/records-presets
     },
     "calendar": {
       "title": "カレンダー",
@@ -408,7 +421,9 @@
       "title": "私のケアプラン",
       "lead": "記録を施術ごとの推奨周期と比べて、次にすることをお知らせします。",
       "showAll": "ケアカードをすべて表示 ({n})",
-      "showLess": "閉じる"
+      "showLess": "閉じる",
+      "findClinic": "クリニックを探す",
+      "findIntent": "{procedure}のイベントがあるクリニックを探して ({range})"
     },
     "cycle": {
       "course": "推奨: {interval}日間隔で{count}回、その後は{every}",
@@ -430,6 +445,12 @@
       "total": "合計 {amount}",
       "prev": "前へ",
       "next": "次へ"
+    },
+    "alerts": {
+      "label": "重要なお知らせ",
+      "late": "{procedure} 推奨周期を{late}日過ぎています",
+      "courseLate": "{procedure} 推奨間隔より{late}日遅れています",
+      "more": "ほか{n}件"
     }
   },
   "recordsNew": {

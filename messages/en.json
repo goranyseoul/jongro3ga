@@ -385,10 +385,23 @@
       "pages": "Pages",
       "prevPage": "Previous page",
       "nextPage": "Next page",
+<<<<<<< HEAD
       "anchored": "Confirmed by clinic · on-chain record v{version}",
       "clinicConfirmed": "Confirmed by clinic",
       "selfReported": "Entered by you · not used for offer proofs",
       "txLabel": "View the transaction on Base Sepolia (opens in a new tab)"
+=======
+      "preset": {
+        "procedure": "Procedure",
+        "area": "Area",
+        "clinic": "Clinic"
+      },
+      "area": {
+        "forehead": "Forehead",
+        "full_face": "Full face",
+        "jawline": "Jawline"
+      }
+>>>>>>> origin/feat/records-presets
     },
     "calendar": {
       "title": "Calendar",
@@ -408,7 +421,9 @@
       "title": "My care plan",
       "lead": "Your records compared with each procedure's recommended cycle, so you know what to do next.",
       "showAll": "Show all care cards ({n})",
-      "showLess": "Show less"
+      "showLess": "Show less",
+      "findClinic": "Find clinics",
+      "findIntent": "Find clinics with a {procedure} event ({range})"
     },
     "cycle": {
       "course": "Recommended: {count} sessions {interval} days apart, then {every}",
@@ -430,6 +445,12 @@
       "total": "Total {amount}",
       "prev": "Previous",
       "next": "Next"
+    },
+    "alerts": {
+      "label": "Important alerts",
+      "late": "{procedure}: {late} days past the recommended cycle",
+      "courseLate": "{procedure}: {late} days past the recommended interval",
+      "more": "+{n} more"
     }
   },
   "recordsNew": {
