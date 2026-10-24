@@ -134,3 +134,131 @@
     color: var(--text-subtle);
   }
 }
+
+/* display face: Non Bureau (licensed, served locally from public/fonts, never committed).
+   Latin only; CJK glyphs fall back to the system font. */
+@font-face {
+  font-family: "Non Bureau";
+  src: local("Non Bureau Regular"), local("NonBureau-Regular"), url("/fonts/NonBureau-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Non Bureau";
+  src: local("Non Bureau Medium"), local("NonBureau-Medium"), url("/fonts/NonBureau-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Non Bureau";
+  src: local("Non Bureau SemiBold"), local("NonBureau-SemiBold"), url("/fonts/NonBureau-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Non Bureau";
+  src: local("Non Bureau Bold"), local("NonBureau-Bold"), url("/fonts/NonBureau-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* landing hero: display type scale (IRONACT landing pattern: fluid clamp, -0.02em),
+   sunrise gradient (owner reference: 21st.dev jahed/ai-chat-input demo), particles, splash */
+:root {
+  --font-display: "Non Bureau", var(--font);
+  --t-wordmark: clamp(3rem, 11vw, 6.5rem);
+  --t-hero: clamp(1.25rem, 2.8vw, 2rem);
+  --lh-hero: 1.1;
+  --tracking-display: -0.02em;
+  --hero-gradient: radial-gradient(
+    125% 125% at 50% 101%,
+    rgb(245 87 2) 10.5%,
+    rgb(245 120 2) 16%,
+    rgb(245 140 2) 17.5%,
+    rgb(245 170 100) 25%,
+    rgb(238 174 202) 40%,
+    rgb(202 179 214) 65%,
+    rgb(148 201 233) 100%
+  );
+  --particle: oklch(1 0 0);
+  --enter-offset: 12px;
+  --stagger-step: 70ms;
+  --dur-splash: 1500ms;
+}
+
+/* Light-on-gradient surface for the hero only. Components keep reading the same tokens. */
+.theme-sunrise {
+  --text: oklch(0.22 0.04 310);
+  --text-muted: oklch(0.34 0.04 310);
+  --text-subtle: oklch(0.44 0.04 310);
+  --bg-elev: oklch(1 0 0 / 55%);
+  --bg-sunken: oklch(1 0 0 / 38%);
+  --border: oklch(0.22 0.04 310 / 14%);
+  --border-soft: oklch(0.22 0.04 310 / 10%);
+  --input: oklch(0.22 0.04 310 / 16%);
+  --sh-card: 0 1px 2px rgb(60 30 80 / 10%), 0 8px 24px rgb(60 30 80 / 8%);
+  background: var(--hero-gradient);
+  color: var(--text);
+}
+
+@layer components {
+  .type-wordmark {
+    font-family: var(--font-display);
+    font-size: var(--t-wordmark);
+    font-weight: var(--w-semi);
+    line-height: var(--lh-hero);
+    letter-spacing: var(--tracking-display);
+  }
+  .type-hero {
+    font-family: var(--font-display);
+    font-size: var(--t-hero);
+    font-weight: var(--w-med);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* entry splash: letters rise in one by one, then the layer fades to the hero underneath */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hero-gradient);
+    pointer-events: none;
+    animation: splash-out var(--dur-modal) var(--ease-in-out) var(--dur-splash) forwards;
+  }
+  .splash-letter {
+    display: inline-block;
+    opacity: 0;
+    animation: splash-letter var(--dur-modal) var(--ease-out) forwards;
+    animation-delay: calc(var(--i) * var(--stagger-step));
+  }
+}
+
+@keyframes splash-letter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--enter-offset));
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes splash-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash {
+    display: none;
+  }
+}

@@ -7,3 +7,6 @@ next-env.d.ts
 !.env.example
 .data
 .DS_Store
+
+# Non Bureau is a licensed font: kept local, never committed to this public repo
+public/fonts/NonBureau-*
