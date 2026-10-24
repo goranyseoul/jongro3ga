@@ -5,6 +5,8 @@ import { FcGoogle } from "react-icons/fc";
 import { Button, Chip, Input } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
+import { DEMO_ACCOUNTS } from "@/lib/ui-data/customer";
+import { signIn } from "./session";
 
 export type AuthCopy = {
   title: string;
@@ -42,6 +44,7 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const [mode, setMode] = useState<"signup" | "login">("signup");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -55,8 +58,16 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
 
   const isSignup = mode === "signup";
 
+  // Mock session (session.ts): every path signs in so the header shows the account.
   const submit = (event: FormEvent) => {
     event.preventDefault();
+    signIn({ email: email.trim() });
+    onDone();
+  };
+
+  const pickPersona = (persona: string) => {
+    const account = DEMO_ACCOUNTS.find((a) => a.displayName === persona);
+    signIn(account ? { accountId: account.id } : { email: persona });
     onDone();
   };
 
@@ -83,12 +94,28 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
         </div>
 
         <form onSubmit={submit} className="flex w-full flex-col gap-sp-4">
-          <Input label={copy.email} type="email" autoComplete="email" required />
+          <Input
+            label={copy.email}
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
           <Input label={copy.password} type="password" autoComplete={isSignup ? "new-password" : "current-password"} required />
           <Button type="submit" fullWidth className="mt-sp-2">
             {isSignup ? copy.submit : copy.loginSubmit}
           </Button>
-          <Button type="button" variant="secondary" fullWidth onClick={onDone}>
+          <Button
+            type="button"
+            variant="secondary"
+            fullWidth
+            onClick={() => {
+              // no Google in the demo: a guest session, or the address already typed
+              signIn(email.trim() ? { email: email.trim() } : { accountId: "cus_google" });
+              onDone();
+            }}
+          >
             <FcGoogle aria-hidden className="size-sp-5" />
             {isSignup ? copy.googleSignup : copy.googleLogin}
           </Button>
@@ -109,7 +136,7 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
           <p className="text-label text-muted">{copy.demo}</p>
           <div className="flex flex-wrap gap-sp-2">
             {personas.map((persona) => (
-              <Chip key={persona} onClick={onDone}>
+              <Chip key={persona} onClick={() => pickPersona(persona)}>
                 {persona}
               </Chip>
             ))}
