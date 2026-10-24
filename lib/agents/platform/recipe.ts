@@ -195,6 +195,11 @@ async function loadRecords(): Promise<PriceRecord[]> {
   }
 }
 
+/** Typical amount with the platform's own records, for BFF routes that may call the module directly. */
+export async function platformTypicalAmount(procedureId: string): Promise<{ min: number; max: number; unit: Unit } | null> {
+  return typicalAmountFor(procedureId, await loadRecords())?.amount ?? null;
+}
+
 export const recipeSkill: SkillHandler = async (data) => {
   try {
     const recipe = buildRecipe(data as RecipeQueryV1, await loadRecords());
