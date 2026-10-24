@@ -1,0 +1,32 @@
+/* Layout glue for the ops console and demo controls. Token variables only, no color or
+   spacing literals. Media queries repeat the breakpoints from tailwind.config.ts because
+   media queries cannot read CSS variables. */
+
+:root {
+  --ops-nav-w: calc(var(--sp-16) * 3);
+}
+
+.ops-shell {
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+}
+
+.ops-shell-main {
+  min-width: 0;
+  flex: 1;
+}
+
+@media (min-width: 1024px) {
+  .ops-shell {
+    display: grid;
+    grid-template-columns: var(--ops-nav-w) minmax(0, 1fr);
+  }
+
+  .ops-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow-y: auto;
+  }
+}
