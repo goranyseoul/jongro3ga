@@ -142,8 +142,9 @@ describe("rpc route: SendMessage", () => {
     expect(res.json.id).toBe("rpc_0003");
     const task = res.json.result.task;
     expect(task.contextId).toBe("req_01J9Z8");
-    expect(task.status.state).toBe("TASK_STATE_FAILED");
-    expect(task.status.message.parts[0].text).toBe("skill clinic.quote is not implemented");
+    // The 03 example's referral token is a placeholder, so the clinic agent (WP3) turns the quote down.
+    expect(task.status.state).toBe("TASK_STATE_REJECTED");
+    expect(task.status.message.parts[0].text).toBe("referral_token_malformed");
 
     const entries = await log();
     expect(entries).toHaveLength(1);
@@ -152,19 +153,19 @@ describe("rpc route: SendMessage", () => {
       skillId: "clinic.quote",
       contextId: "req_01J9Z8",
       taskId: task.id,
-      state: "TASK_STATE_FAILED",
+      state: "TASK_STATE_REJECTED",
       from: { agentId: "cag_7f3k2", role: "customer" },
       to: { agentId: "cln_mint", role: "clinic", url: MINT_RPC },
     });
     expect(entries[0].latencyMs).toBeGreaterThanOrEqual(0);
     expect(entries[0].request).toEqual(quoteRequest());
     expect((entries[0].response as Record<string, any>).result.task.id).toBe(task.id);
-    expect(entries[0].humanSummary.ko).toBe("견적 · 문제가 생겼어요");
+    expect(entries[0].humanSummary.ko).toBe("견적 · 이 병원은 요청을 받을 수 없어요");
   });
 
   it("(b) stores a long offer proof as a size note", async () => {
     const res = await post(clinicRpc, MINT_RPC, { slug: "mint" }, quoteRequestWithProof(), await asYuki());
-    expect(res.json.result.task.status.state).toBe("TASK_STATE_FAILED");
+    expect(res.json.result.task.status.state).toBe("TASK_STATE_REJECTED");
     const [entry] = await log();
     const request = entry.request as Record<string, any>;
     expect(request.params.message.metadata.offerProof.proofs[0].proof).toMatch(/^\[proof \d+(\.\d)?KB\]$/);
@@ -301,7 +302,7 @@ describe("rpc route: protocol checks", () => {
       body: JSON.stringify(quoteRequest()),
     });
     const res = await clinicRpc(req, ctx({ slug: "mint" }));
-    expect(((await res.json()) as Record<string, any>).result.task.status.state).toBe("TASK_STATE_FAILED");
+    expect(((await res.json()) as Record<string, any>).result.task.status.state).toBe("TASK_STATE_REJECTED");
   });
 
   it("(f) refuses SendStreamingMessage and SubscribeToTask with -32004", async () => {

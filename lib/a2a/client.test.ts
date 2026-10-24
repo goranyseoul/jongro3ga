@@ -78,16 +78,17 @@ describe("sendMessage and getTask", () => {
   it("round trip through the rpc route and leave the logging to the server", async () => {
     const task = await quote();
     expect(task.contextId).toBe("req_01J9Z8");
-    expect(task.status.state).toBe("TASK_STATE_FAILED");
+    // The placeholder referral token makes the clinic agent (WP3) turn the quote down.
+    expect(task.status.state).toBe("TASK_STATE_REJECTED");
 
     const again = await getTask({ from: yuki, toCardUrl: MINT_CARD, taskId: task.id, fetchImpl: routeFetch });
     expect(again.id).toBe(task.id);
-    expect(again.status.state).toBe("TASK_STATE_FAILED");
+    expect(again.status.state).toBe("TASK_STATE_REJECTED");
 
     const entries = await log();
     expect(entries.map((e) => [e.method, e.state])).toEqual([
-      ["SendMessage", "TASK_STATE_FAILED"],
-      ["GetTask", "TASK_STATE_FAILED"],
+      ["SendMessage", "TASK_STATE_REJECTED"],
+      ["GetTask", "TASK_STATE_REJECTED"],
     ]);
   });
 
