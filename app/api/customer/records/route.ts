@@ -1,4 +1,5 @@
 import { addRecord, listRecords, upcomingDue } from "@/lib/agents/customer/records";
+import { clock } from "@/lib/clock";
 import { customerContext, errorResponse, readJson } from "../_lib/context";
 import { RecordInputSchema } from "../_lib/schemas";
 
@@ -9,7 +10,7 @@ export async function GET(request: Request) {
   if (ctx instanceof Response) return ctx;
   try {
     const records = await listRecords(ctx.store, ctx.profile.id);
-    return Response.json({ records, due: upcomingDue(records) });
+    return Response.json({ records, due: upcomingDue(records), today: clock.today() });
   } catch (error) {
     return errorResponse(error);
   }

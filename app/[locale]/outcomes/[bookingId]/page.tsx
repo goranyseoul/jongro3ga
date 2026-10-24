@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/customer/page-shell";
-import { routing } from "@/i18n/routing";
-import { BOOKING_ID } from "@/lib/ui-data/customer";
 import { peekLocale, resolveLocale } from "../../_lib/locale";
 import { OutcomeForm } from "./outcome-form";
 
-type Props = { params: Promise<{ locale: string; bookingId: string }> };
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale, bookingId: BOOKING_ID }));
-}
+type Props = {
+  params: Promise<{ locale: string; bookingId: string }>;
+  searchParams: Promise<{ checkin?: string; checkpoint?: string }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await peekLocale({ params });
@@ -19,13 +15,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${t("metaTitle")} · PibooK` };
 }
 
-export default async function OutcomePage({ params }: Props) {
+export default async function OutcomePage({ params, searchParams }: Props) {
   await resolveLocale({ params });
   const { bookingId } = await params;
-  if (bookingId !== BOOKING_ID) notFound();
+  const { checkin, checkpoint } = await searchParams;
+  // D7 and D30 check-ins open this screen from the inbox with the item id
+  const checkpointValue = checkpoint === "D7" || checkpoint === "D30" ? checkpoint : undefined;
   return (
     <PageShell>
-      <OutcomeForm />
+      <OutcomeForm bookingId={bookingId} checkinId={checkin} checkpoint={checkpointValue} />
     </PageShell>
   );
 }

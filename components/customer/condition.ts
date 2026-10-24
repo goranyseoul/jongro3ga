@@ -25,6 +25,7 @@ export const AMOUNT_STEPS: Record<Unit, number[]> = {
   unit: [20, 30, 40, 50, 60],
   line: [200, 300, 400, 600],
   session: [1, 2, 3],
+  vial: [1, 2, 3, 4],
 };
 
 export const AREAS: Area[] = ["gangnam", "sinsa", "apgujeong", "myeongdong", "hongdae", "other"];

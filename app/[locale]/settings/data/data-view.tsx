@@ -2,55 +2,88 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { AgentCardView, Button, Card, CardHeader, ConsentCard, Sheet, buttonStyles } from "@/components/ui";
-import { resetDemoState, updateDemoState } from "@/components/customer/demo-state";
-import { useCustomer } from "@/components/customer/use-customer";
+import { AgentCardView, Button, Card, CardHeader, ConsentCard, Sheet, buttonStyles, type AgentCard } from "@/components/ui";
+import { api } from "@/components/customer/api";
+import { ApiStatus } from "@/components/customer/api-state";
+import { resetDemoState } from "@/components/customer/demo-state";
+import { useMe } from "@/components/customer/use-customer";
+import type { ConsentEntry } from "@/lib/domain/customer";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { COPY } from "../../onboarding/copy";
-import { buildAgentCard } from "../../onboarding/mock";
-import { consentsFor, type ConsentType } from "@/lib/ui-data/customer";
 
+type ConsentType = ConsentEntry["type"];
 const REQUIRED: ConsentType[] = ["terms", "privacy"];
 
 export function DataView() {
   const t = useTranslations("settings");
   const common = useTranslations("common");
-  const { locale, profile, demo, records } = useCustomer();
+  const { data: me, error, loading, reload, locale } = useMe();
   const copy = COPY[locale];
 
   const [confirming, setConfirming] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
-  const consents = consentsFor(profile);
-  const granted = (type: ConsentType, seed: boolean) => demo.consents[type] ?? seed;
+  if (deleted) {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <Card className="flex flex-col gap-sp-3">
+          <p className="text-body">{t("remove.done")}</p>
+          <Link href="/" className={cn(buttonStyles({ variant: "secondary" }), "self-start")}>
+            {t("remove.top")}
+          </Link>
+        </Card>
+      </>
+    );
+  }
 
-  // The onboarding card carries the demo agent id; the customer's own id replaces it here
-  const card = (() => {
-    const base = buildAgentCard(true);
-    return {
-      ...base,
-      name: `PibooK Customer Agent ${profile.agentId}`,
-      supportedInterfaces: base.supportedInterfaces.map((entry) => ({
-        ...entry,
-        url: `https://pibu.example/a2a/customers/${profile.agentId}/rpc`,
-      })),
-    };
-  })();
+  if (!me) {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <ApiStatus error={error} loading={loading} onRetry={reload} />
+      </>
+    );
+  }
 
-  const exportJson = () => {
-    const data = { profile, consents: consents.map((c) => ({ ...c, granted: granted(c.type, c.granted) })), records };
-    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `pibu-export-${profile.agentId}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+  const toggle = async (type: ConsentType, value: boolean) => {
+    setNotice(null);
+    try {
+      await api("/api/customer/consents", { method: "PATCH", json: { type, granted: value } });
+      await reload();
+    } catch {
+      setNotice(t("consents.error"));
+    }
   };
 
-  const remove = () => {
-    resetDemoState();
-    updateDemoState((state) => ({ ...state, deleted: true }));
-    setConfirming(false);
+  const exportJson = async () => {
+    setNotice(null);
+    try {
+      const response = await fetch("/api/customer/export", { cache: "no-store" });
+      if (!response.ok) throw new Error(String(response.status));
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `pibu-export-${me.profile.agentId}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setNotice(t("export.error"));
+    }
+  };
+
+  const remove = async () => {
+    try {
+      await api("/api/customer/data", { method: "DELETE" });
+      resetDemoState();
+      setDeleted(true);
+    } catch {
+      setNotice(t("remove.error"));
+    } finally {
+      setConfirming(false);
+    }
   };
 
   const text = (type: ConsentType) =>
@@ -62,15 +95,6 @@ export function DataView() {
     <>
       <h1 className="text-h2 font-semi">{t("title")}</h1>
 
-      {demo.deleted ? (
-        <Card className="flex flex-col gap-sp-3">
-          <p className="text-body">{t("remove.done")}</p>
-          <Link href="/" className={cn(buttonStyles({ variant: "secondary" }), "self-start")}>
-            {t("remove.top")}
-          </Link>
-        </Card>
-      ) : null}
-
       <section aria-labelledby="set-agent" className="flex flex-col gap-sp-3">
         <div className="flex flex-col gap-sp-1">
           <h2 id="set-agent" className="text-title font-semi">
@@ -78,7 +102,7 @@ export function DataView() {
           </h2>
           <p className="text-label text-muted">{t("agent.lead")}</p>
         </div>
-        <AgentCardView card={card} labels={copy.agentCard} />
+        <AgentCardView card={me.card as AgentCard} labels={copy.agentCard} />
       </section>
 
       <section aria-labelledby="set-consents" className="flex flex-col gap-sp-3">
@@ -88,12 +112,13 @@ export function DataView() {
           </h2>
           <p className="text-label text-muted">{t("consents.lead")}</p>
         </div>
+        {notice ? <p className="text-label text-muted">{notice}</p> : null}
         <ul className="flex flex-col gap-sp-3">
-          {consents.map((entry) => {
+          {me.consents.map((entry) => {
             const info = text(entry.type);
             const fixed = REQUIRED.includes(entry.type);
             return (
-              <li key={entry.id} className="flex flex-col gap-sp-2">
+              <li key={entry.type} className="flex flex-col gap-sp-2">
                 {fixed ? (
                   <Card className="flex flex-col gap-sp-2">
                     <CardHeader title={info.title} description={t("consents.fixed")} />
@@ -105,8 +130,8 @@ export function DataView() {
                     description={info.description}
                     agreeLabel={t("consents.on")}
                     declineLabel={t("consents.off")}
-                    value={granted(entry.type, entry.granted)}
-                    onChange={(value) => updateDemoState((state) => ({ ...state, consents: { ...state.consents, [entry.type]: value } }))}
+                    value={entry.granted}
+                    onChange={(value) => void toggle(entry.type, value)}
                   />
                 )}
                 <p className="px-sp-1 text-caption text-subtle">
@@ -121,7 +146,7 @@ export function DataView() {
 
       <Card className="flex flex-col gap-sp-3">
         <CardHeader title={t("export.title")} description={t("export.body")} as="h2" />
-        <Button variant="secondary" className="self-start" onClick={exportJson}>
+        <Button variant="secondary" className="self-start" onClick={() => void exportJson()}>
           {t("export.button")}
         </Button>
       </Card>
@@ -137,7 +162,7 @@ export function DataView() {
         <div className="flex flex-col gap-sp-4">
           <p className="text-body text-muted">{t("remove.confirmBody")}</p>
           <div className="flex flex-col gap-sp-2 sm:flex-row-reverse">
-            <Button fullWidth onClick={remove}>
+            <Button fullWidth onClick={() => void remove()}>
               {t("remove.confirm")}
             </Button>
             <Button variant="ghost" fullWidth onClick={() => setConfirming(false)}>

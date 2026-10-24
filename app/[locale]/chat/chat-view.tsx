@@ -4,86 +4,163 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { buttonStyles, Card, CardHeader, ChatBubble, ChatInput, ChipGroup } from "@/components/ui";
-import { buildCondition, type Condition } from "@/components/customer/condition";
+import { api, ApiError } from "@/components/customer/api";
+import { ApiStatus } from "@/components/customer/api-state";
+import type { Condition } from "@/components/customer/condition";
 import { ConditionCard } from "@/components/customer/condition-card";
-import { updateDemoState } from "@/components/customer/demo-state";
-import { useCustomer, useLabels } from "@/components/customer/use-customer";
+import { useLabels, useMe } from "@/components/customer/use-customer";
+import type { StoredRequest } from "@/lib/agents/customer/store";
+import type { Locale } from "@/lib/domain/common";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
-import { DEMO_TODAY, PROCEDURES, REQUEST_ID, canMatch, detectProcedure } from "@/lib/ui-data/customer";
+import { PROCEDURES, detectProcedure } from "@/lib/ui-data/customer";
 
 type Message = { id: string; from: "agent" | "user"; text: string };
 
-/** Mock agent typing delay. */
-const REPLY_DELAY_MS = 400;
+type IntentDraft = Partial<Condition> & { procedureId: string };
 
-// The real agent turns the sentence into pibu/procedure-request@1 (02-agents.md "요청 정리");
-// this mock only recognizes the procedure name and fills the defaults of that rule.
+/** Finds a procedure-request-like object in the /api/intent response (LLM track), whatever its wrapper. */
+function intentDraft(body: unknown): IntentDraft | null {
+  if (!body || typeof body !== "object") return null;
+  const record = body as Record<string, unknown>;
+  const toolInput = Array.isArray(record.toolCalls)
+    ? (record.toolCalls as { name?: string; input?: unknown }[]).find((call) => call.name === "draft_procedure_request")?.input
+    : undefined;
+  const candidates = [record.request, record.draft, record.procedureRequest, record.condition, record.data, toolInput, record];
+  for (const candidate of candidates) {
+    if (!candidate || typeof candidate !== "object") continue;
+    const c = candidate as Record<string, unknown>;
+    if (typeof c.procedureId !== "string" || !c.procedureId) continue;
+    const budget = c.budgetKrw as { max?: number } | number | undefined;
+    return {
+      procedureId: c.procedureId,
+      ...(c.amount && typeof c.amount === "object" ? { amount: c.amount as Condition["amount"] } : {}),
+      ...(typeof budget === "number" ? { budgetKrw: budget } : budget?.max ? { budgetKrw: budget.max } : {}),
+      ...(Array.isArray(c.areas) ? { areas: c.areas as Condition["areas"] } : {}),
+      ...(Array.isArray(c.languages) && c.languages.length > 0 ? { languages: c.languages as Locale[] } : {}),
+      ...(c.dateWindow && typeof c.dateWindow === "object" ? { dateWindow: c.dateWindow as Condition["dateWindow"] } : {}),
+    };
+  }
+  return null;
+}
+
+/** The LLM track's intent endpoint when it exists, otherwise the same draft from the procedure name. */
+async function draftFromText(text: string, locale: Locale): Promise<IntentDraft | null> {
+  try {
+    const response = await fetch("/api/intent", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: text, text, locale }),
+    });
+    if (response.ok) {
+      const draft = intentDraft(await response.json());
+      if (draft) return draft;
+    }
+  } catch {
+    // intent endpoint not available: local fallback below
+  }
+  const procedure = detectProcedure(text);
+  return procedure ? { procedureId: procedure.id } : null;
+}
+
+function toCondition(request: StoredRequest["request"]): Condition {
+  return {
+    procedureId: request.procedureId,
+    amount: request.amount as Condition["amount"],
+    budgetKrw: request.budgetKrw?.max,
+    areas: request.areas ?? [],
+    languages: request.languages,
+    dateWindow: request.dateWindow,
+  };
+}
+
+// The customer agent turns the sentence into pibu/procedure-request@1 (02 "요청 정리"): the intent comes from
+// POST /api/intent (or the local fallback), the defaults and the usual amount (platform.recipe) from the BFF.
 export function ChatView() {
   const t = useTranslations("chat");
   const router = useRouter();
   const label = useLabels();
-  const { locale, profile } = useCustomer();
+  const { data: me, error: meError, loading: meLoading, reload, locale } = useMe();
   const params = useSearchParams();
 
   const [messages, setMessages] = useState<Message[]>([{ id: "m0", from: "agent", text: t("agent.greeting") }]);
   const [typing, setTyping] = useState(false);
   const [condition, setCondition] = useState<Condition | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
   const [askingProcedure, setAskingProcedure] = useState(false);
+  const [finding, setFinding] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const nextId = useRef(1);
-  const timers = useRef<number[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => () => timers.current.forEach((timer) => window.clearTimeout(timer)), []);
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" });
   }, [messages, typing, condition, askingProcedure]);
 
   const message = (from: Message["from"], text: string): Message => ({ id: `m${nextId.current++}`, from, text });
 
-  const agentSays = (text: string, then?: () => void) => {
-    setTyping(true);
-    timers.current.push(
-      window.setTimeout(() => {
-        setMessages((prev) => [...prev, message("agent", text)]);
-        setTyping(false);
-        then?.();
-      }, REPLY_DELAY_MS),
-    );
-  };
-
-  const send = (text: string) => {
+  const send = async (text: string) => {
     setMessages((prev) => [...prev, message("user", text)]);
     setAskingProcedure(false);
-    const procedure = detectProcedure(text);
-    if (!procedure) {
-      agentSays(t("agent.askProcedure"), () => setAskingProcedure(true));
-      return;
+    setFailed(false);
+    setTyping(true);
+    try {
+      const draft = await draftFromText(text, locale);
+      if (!draft) {
+        setMessages((prev) => [...prev, message("agent", t("agent.askProcedure"))]);
+        setAskingProcedure(true);
+        return;
+      }
+      const updating = condition !== null;
+      const created = await api<{ requestId: string; request: StoredRequest }>("/api/customer/requests", {
+        method: "POST",
+        json: { condition: draft, rawUtterance: text, start: false },
+      });
+      setRequestId(created.requestId);
+      setCondition(toCondition(created.request.request));
+      setMessages((prev) => [...prev, message("agent", t(updating ? "agent.updated" : "agent.summary", { procedure: label.procedure(draft.procedureId) }))]);
+    } catch {
+      setMessages((prev) => [...prev, message("agent", t("agent.error"))]);
+    } finally {
+      setTyping(false);
     }
-    const name = label.procedure(procedure.id);
-    const updating = condition !== null;
-    agentSays(t(updating ? "agent.updated" : "agent.summary", { procedure: name }), () =>
-      setCondition(buildCondition(profile, procedure)),
-    );
   };
 
   // ?intent= from the home input is sent once, as if typed here
   const intent = params.get("intent");
   // (a timeout, not a ref guard: React strict mode mounts twice and the cleanup must cancel the first run)
   useEffect(() => {
-    if (!intent || !canMatch(profile)) return;
-    const id = window.setTimeout(() => send(intent), 0);
+    if (!intent || !me?.canMatch) return;
+    const id = window.setTimeout(() => void send(intent), 0);
     return () => window.clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [intent]);
+  }, [intent, me?.canMatch]);
 
-  const find = () => {
-    updateDemoState((state) => ({ ...state, requestStarted: true }));
-    router.push(`/requests/${REQUEST_ID}`);
+  const find = async () => {
+    if (!requestId || !condition) return;
+    setFinding(true);
+    setFailed(false);
+    try {
+      await api(`/api/customer/requests/${requestId}/start`, { method: "POST", json: { condition } });
+      router.push(`/requests/${requestId}`);
+    } catch (error) {
+      setFailed(true);
+      setFinding(false);
+      if (error instanceof ApiError && error.status === 401) void reload();
+    }
   };
 
-  if (!canMatch(profile)) {
+  if (!me) {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <ApiStatus error={meError} loading={meLoading} onRetry={reload} />
+      </>
+    );
+  }
+
+  if (!me.canMatch) {
     return (
       <>
         <h1 className="text-h2 font-semi">{t("title")}</h1>
@@ -113,16 +190,17 @@ export function ChatView() {
             label={t("condition.rows.procedure")}
             options={PROCEDURES.map((p) => ({ value: p.id, label: label.procedure(p.id) }))}
             value={null}
-            onChange={(id) => send(label.procedure(id))}
+            onChange={(id) => void send(label.procedure(id))}
           />
         ) : null}
         {condition && !typing ? (
-          <ConditionCard locale={locale} value={condition} onChange={setCondition} onFind={find} today={DEMO_TODAY} />
+          <ConditionCard locale={locale} value={condition} onChange={setCondition} onFind={() => void find()} today={me.today} busy={finding} />
         ) : null}
+        {failed ? <p className="text-label text-muted">{t("agent.findError")}</p> : null}
         <div ref={endRef} />
       </div>
       <div className="cu-chat-input">
-        <ChatInput onSend={send} label={t("inputLabel")} sendLabel={t("send")} placeholder={t("placeholder")} disabled={typing} />
+        <ChatInput onSend={(text) => void send(text)} label={t("inputLabel")} sendLabel={t("send")} placeholder={t("placeholder")} disabled={typing} />
       </div>
     </>
   );

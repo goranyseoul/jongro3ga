@@ -30,14 +30,16 @@
       "shot": "shot",
       "unit": "unit",
       "line": "line",
-      "session": "session"
+      "session": "session",
+      "vial": "vial"
     },
     "unit": {
       "cc": "{value}cc",
       "shot": "{value, plural, one {# shot} other {# shots}}",
       "unit": "{value, plural, one {# unit} other {# units}}",
       "line": "{value, plural, one {# line} other {# lines}}",
-      "session": "{value, plural, one {# session} other {# sessions}}"
+      "session": "{value, plural, one {# session} other {# sessions}}",
+      "vial": "{value, plural, one {# vial} other {# vials}}"
     },
     "area": {
       "gangnam": "Gangnam",
@@ -54,6 +56,30 @@
       "canceled": "Canceled",
       "no_show": "No show",
       "completed": "Completed"
+    },
+    "api": {
+      "loading": "Loading",
+      "signedOutTitle": "Please sign in",
+      "signedOutBody": "Your agent works for your account only.",
+      "signIn": "Sign in",
+      "onboardingTitle": "Let's set up your agent first",
+      "onboardingBody": "A short chat fills in your profile and consents.",
+      "onboarding": "Start the chat",
+      "notFoundTitle": "We could not find this",
+      "home": "Go home",
+      "errorTitle": "Something went wrong",
+      "errorBody": "Please try again in a moment.",
+      "retry": "Try again"
+    },
+    "taskState": {
+      "TASK_STATE_SUBMITTED": "Request sent",
+      "TASK_STATE_WORKING": "The clinic is checking",
+      "TASK_STATE_INPUT_REQUIRED": "More information requested",
+      "TASK_STATE_COMPLETED": "Done",
+      "TASK_STATE_REJECTED": "Cannot take this request",
+      "TASK_STATE_FAILED": "Something went wrong",
+      "TASK_STATE_CANCELED": "Canceled",
+      "TASK_STATE_AUTH_REQUIRED": "Reconnecting"
     }
   },
   "landing": {
@@ -142,6 +168,10 @@
       "overdue": "Past the planned date",
       "all": "View all records",
       "add": "Log in 3 seconds"
+    },
+    "inbox": {
+      "title": "Notifications",
+      "answer": "Record now"
     }
   },
   "chat": {
@@ -155,7 +185,9 @@
       "greeting": "Hello, I'm your PibooK agent. Tell me which procedure you'd like.",
       "askProcedure": "Which procedure is it about? Pick one below or just type it.",
       "summary": "Got it, {procedure}. I organized your conditions. Tap any item to change it.",
-      "updated": "I updated the conditions for {procedure}."
+      "updated": "I updated the conditions for {procedure}.",
+      "error": "I could not organize that just now. Please try again.",
+      "findError": "I could not start the search. Please try again."
     },
     "locked": {
       "title": "About clinic matching and booking",
@@ -209,7 +241,8 @@
     },
     "progress": {
       "title": "What your agent did",
-      "raw": "View A2A JSON"
+      "raw": "View A2A JSON",
+      "empty": "Nothing has been sent yet."
     },
     "reference": {
       "title": "Market payment records",
@@ -259,7 +292,8 @@
     "warn": {
       "label": "Note",
       "paidMore": "Past customers paid more than quoted (average +{pct}% in the last 90 days)",
-      "downtime": "Recovery may not be over before you leave Korea"
+      "downtime": "Recovery may not be over before you leave Korea",
+      "underdosed": "The amount is below the usual {range}"
     },
     "validUntil": "Quote valid until {date}",
     "book": "Book this clinic",
@@ -283,6 +317,27 @@
       "doctor": "The clinic's doctor decides on diagnosis and whether the procedure suits you.",
       "send": "Send booking request",
       "back": "Back"
+    },
+    "errors": {
+      "consent": "Booking needs your consent to share contact details with the clinic. You can turn it on in My data.",
+      "book": "The booking request could not be sent. Please try again.",
+      "retry": "The search could not be restarted. Please try again shortly."
+    },
+    "indicativeNote": "Reference price: the clinic confirms the final price",
+    "noVerdict": "The platform has not judged this quote",
+    "failure": {
+      "not_eligible_foreign_patient": "Clinic matching and booking are available only to foreign nationals on a short stay.",
+      "platform_unavailable": "The platform could not be reached. Please try again shortly.",
+      "no_candidates": "No clinic matched these conditions. Try changing the area or dates.",
+      "no_quotes": "No clinic answered in time. Please try again shortly.",
+      "consent_required": "Your consent is needed to send these conditions. You can check it in My data."
+    },
+    "retry": "Search again",
+    "draftNote": "Back to the condition card",
+    "noAnswer": {
+      "response_timeout": "{clinic} did not answer within 20 seconds",
+      "rejection": "{clinic} cannot take this request",
+      "error": "{clinic} could not answer"
     }
   },
   "bookings": {
@@ -292,7 +347,8 @@
       "pending_clinic_clinic": "The clinic is checking your booking. It will show here once confirmed.",
       "pending_clinic_proxy": "PibooK is checking with the clinic by phone or message. It will show here once confirmed.",
       "confirmed": "Your booking is confirmed.",
-      "completed": "Your procedure record has been received."
+      "completed": "Your procedure record has been received.",
+      "canceled": "The clinic could not take this booking. You can pick another quote."
     },
     "info": {
       "title": "Booking",
@@ -336,7 +392,14 @@
       "record": "Record the procedure day",
       "recordNote": "After the procedure you can record what you paid and the amount you received.",
       "viewRecords": "View records",
-      "requests": "Back to quotes"
+      "requests": "Back to quotes",
+      "simulateUnavailable": "The demo confirmation is not available right now."
+    },
+    "input": {
+      "title": "The clinic needs a little more information",
+      "body": "Only what you enter here is sent to this clinic.",
+      "submit": "Send to the clinic",
+      "error": "It could not be sent. Please try again."
     }
   },
   "records": {
@@ -354,7 +417,8 @@
         "paused": "Pause",
         "stopped": "Stop"
       },
-      "empty": "Add a record and your next session shows up here."
+      "empty": "Add a record and your next session shows up here.",
+      "noNext": "No next session planned"
     },
     "history": {
       "title": "History",
@@ -402,8 +466,10 @@
       "title": "Saved",
       "next": "Next session",
       "all": "View records",
-      "another": "Add another"
-    }
+      "another": "Add another",
+      "noNext": "No next session for this procedure"
+    },
+    "error": "The record could not be saved. Please try again."
   },
   "outcomes": {
     "metaTitle": "Procedure record",
@@ -427,7 +493,8 @@
       "verified": "How the product was checked",
       "satisfaction": "Satisfaction",
       "pain": "Pain",
-      "comment": "One line (optional)"
+      "comment": "One line (optional)",
+      "wouldReturn": "Would you go back to this clinic?"
     },
     "verified": {
       "vial_shown": "Shown the vial",
@@ -452,14 +519,26 @@
       "title": "Record sent",
       "body": "Thank you. Your next session has been added to your records.",
       "next": "Next session",
-      "records": "View records"
+      "records": "View records",
+      "local": "Saved to your records. It was not shared because anonymous sharing is off."
     },
     "later": {
       "title": "Check-ins to come",
-      "note": "Planned for a later version.",
+      "note": "Your agent will remind you here in the app.",
       "d7": "In 7 days",
       "d30": "In 30 days",
       "questions": "Actual downtime · how it feels · whether you would return"
+    },
+    "wouldReturn": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "error": "It could not be sent. Please try again.",
+    "checkin": {
+      "done": "Thank you. Your answer was recorded.",
+      "home": "Back to home",
+      "downtime": "How many days did recovery actually take?",
+      "days": "{n, plural, one {# day} other {# days}}"
     }
   },
   "settings": {
@@ -477,7 +556,8 @@
       "shareWithClinic": {
         "title": "Sharing with clinics",
         "description": "Your safety information and contact details are passed to a clinic only when you send a booking."
-      }
+      },
+      "error": "The consent could not be changed. Please try again."
     },
     "agent": {
       "title": "My agent card",
@@ -486,7 +566,8 @@
     "export": {
       "title": "Export your data",
       "body": "Save your profile, consents and procedure records as JSON.",
-      "button": "Export JSON"
+      "button": "Export JSON",
+      "error": "The export failed. Please try again."
     },
     "remove": {
       "title": "Delete everything",
@@ -495,8 +576,9 @@
       "confirmTitle": "Delete everything?",
       "confirmBody": "Your agent will also be deactivated. This cannot be undone.",
       "confirm": "Delete",
-      "done": "Deleted. In this demo, the actions saved in this browser were cleared.",
-      "top": "Back to start"
+      "done": "Deleted. Your agent no longer holds your profile, consents, records or requests.",
+      "top": "Back to start",
+      "error": "Deletion failed. Please try again."
     }
   },
   "legal": {

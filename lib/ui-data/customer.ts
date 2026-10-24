@@ -6,6 +6,7 @@
 import type { IsoDate, Krw, Locale } from "@/lib/domain/common";
 import type { VerdictLabel } from "@/lib/domain/verdict";
 import type { ReferenceCurrency } from "@/lib/money";
+import { getProcedure as getMasterProcedure } from "@/lib/domain/procedure-master";
 
 // ---------------------------------------------------------------------------
 // Shared types (06-data-model.md "공통 타입")
@@ -13,7 +14,7 @@ import type { ReferenceCurrency } from "@/lib/money";
 
 export type IsoDateTime = string;
 export type I18nText = Partial<Record<Locale, string>>;
-export type Unit = "cc" | "shot" | "unit" | "line" | "session";
+export type Unit = "cc" | "shot" | "unit" | "line" | "session" | "vial";
 export interface Amount {
   value: number;
   unit: Unit;
@@ -38,9 +39,9 @@ export type ProcedureId =
   | "shrink_universe"
   | "skin_booster_juvelook";
 
-/** The demo clock (06-data-model.md "시계"): the day before Yuki arrives. */
-export const DEMO_NOW: IsoDateTime = "2026-11-12T10:00:00+09:00";
-export const DEMO_TODAY: IsoDate = "2026-11-12";
+/** The demo clock start (lib/clock.ts DEFAULT_DEMO_NOW, BUILD-LOG 13). Screens read "today" from the BFF. */
+export const DEMO_NOW: IsoDateTime = "2026-10-24T10:00:00+09:00";
+export const DEMO_TODAY: IsoDate = "2026-10-24";
 
 // ---------------------------------------------------------------------------
 // Dates, money reference values
@@ -182,9 +183,20 @@ export function getProcedure(id: string): Procedure | undefined {
   return PROCEDURES.find((p) => p.id === id);
 }
 
+/** Master ids (data/seed/procedures.json) that are the same procedure as a product level id above. */
+const MASTER_ALIAS: Record<string, ProcedureId> = {
+  rejuran: "rejuran_healer",
+  thermage: "thermage_flx",
+  shrink: "shrink_universe",
+  juvelook: "skin_booster_juvelook",
+  botox_wrinkle: "botox_forehead",
+};
+
 export function procedureName(id: string, locale: Locale): string {
-  const p = getProcedure(id);
-  return p?.name[locale] ?? p?.name.en ?? id;
+  const p = getProcedure(id) ?? getProcedure(MASTER_ALIAS[id] ?? "");
+  if (p) return p.name[locale] ?? p.name.en ?? id;
+  const master = getMasterProcedure(id);
+  return master?.name[locale] ?? master?.name.en ?? master?.name.ko ?? id;
 }
 
 /** Matches a customer's free text against procedure names in every language and the id. */
