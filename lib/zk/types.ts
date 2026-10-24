@@ -47,12 +47,16 @@ export interface ProofBundle {
   offerId: string;
   today: number;
   provingMs?: number;
+  /** True when the pseudonym has no on-chain commitment yet: the proof was made against the local empty chart. */
+  unanchored?: boolean;
   proofs: OfferProofV1["proofs"];
 }
 
 export interface VerifyResult {
   ok: boolean;
   reason: string;
+  /** The verifier applied the "never anchored = empty chart" rule instead of comparing with the chain. */
+  unanchored?: boolean;
   commitment?: string;
   today?: number;
   conditions?: string[];

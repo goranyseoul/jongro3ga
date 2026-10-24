@@ -94,6 +94,7 @@ cd glowpass && npm start        # http://localhost:4000 (데모 콘솔 + API), /
 - `publicInputs` 순서는 회로와 같다: `[commitment, today, type, clinic, min_days, max_days, min_count, max_count]` (type·clinic은 회로 코드).
 - 증명 1개 약 14KB. A2A 로그에 저장할 때 `proofs[].proof`는 `"[proof 14KB]"`로 줄인다 (개인정보 아님, 크기 때문).
 - 이 번들로 알 수 있는 건 "이 가명이 이 오퍼 조건을 만족한다"뿐이다.
+- **앵커된 적 없는 가명** (체인 `commitmentOf == 0`, 기록이 하나도 없는 신규 고객): 체인에 비교할 해시가 없으므로 지갑은 빈 차트의 로컬 해시로 증명을 만들고(`bundle.unanchored: true`), 병원은 "체인에 기록 없음 = 빈 차트"로 간주해 **빈 차트가 만족하는 조건(첫 방문, 기록 0건)만** 통과시킨다 (`verify-offer` 응답 `unanchored: true`, 사유 "빈 차트로 간주"). 기록이 필요한 조건(2회차·단골)은 불가. 새 가명을 만들면 첫 방문을 다시 노릴 수 있다는 기존 한계와 같은 신뢰 수준이다 (8절).
 
 ### `pibu/record-anchor@1` (고객 → 플랫폼, 새 스킬 `platform.anchor_record`)
 
@@ -233,4 +234,4 @@ cd glowpass && npm start        # http://localhost:4000 (데모 콘솔 + API), /
 
 - `zk/eligibility`: 기록 (시술, 날짜, 병원) 중 조건에 맞는 개수가 범위 안임을 증명
 - `zk/append`: 기존 차트 + 1건 (삭제·병원 바꿔치기 불가, 신규 가명은 빈 차트에서 시작). 차트는 8칸 (데모 제한)
-- 알려진 한계: 가명을 새로 만들면 첫 방문 할인을 다시 노릴 수 있음 → 로드맵: 여권 ZK로 여권당 가명 1개. 기록 발급은 플랫폼 relayer 권한 → 로드맵: 병원 서명을 회로 안에서 검증. 지갑이 서버 파일 → 로드맵: 브라우저 지갑 + bb.js WASM 증명 (T18)
+- 알려진 한계: 가명을 새로 만들면 첫 방문 할인을 다시 노릴 수 있음 (앵커된 적 없는 가명은 빈 차트로 간주하므로 같은 한계) → 로드맵: 여권 ZK로 여권당 가명 1개. 기록 발급은 플랫폼 relayer 권한 → 로드맵: 병원 서명을 회로 안에서 검증. 지갑이 서버 파일 → 로드맵: 브라우저 지갑 + bb.js WASM 증명 (T18)
