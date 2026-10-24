@@ -31,6 +31,9 @@ export const round = (value: number, digits: number): number => {
 /** The Korean calendar date of a time, YYYY-MM-DD. */
 export const kstDate = (at: Date): string => new Date(at.getTime() + KST_OFFSET_MS).toISOString().slice(0, 10);
 
+/** ISO 8601 with the +09:00 offset the data model uses, e.g. 2026-11-12T10:00:00+09:00. */
+export const kstIso = (ms: number): string => `${new Date(ms + KST_OFFSET_MS).toISOString().slice(0, 19)}+09:00`;
+
 /** True when `at` (ISO date time) is at most `days` days before `now` and not after it. Boundary included. */
 export function withinDays(at: string, now: Date, days: number): boolean {
   const t = Date.parse(at);
