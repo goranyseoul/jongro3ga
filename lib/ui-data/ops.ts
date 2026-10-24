@@ -72,3 +72,122 @@ export function formatMonthDayTime(iso: string): string {
 export function formatClock(iso: string): string {
   return iso.slice(11, 19);
 }
+
+// ---- Clinic registry (ClinicRegistryEntry, 06-data-model.md) ----
+
+export type VerificationStatus = "verified" | "pending_verification" | "suspended";
+export type DataSource = "sms" | "public_web" | "clinic_input";
+export type LanguageMode = "staff" | "interpreter" | "app_translation";
+
+export const VERIFICATION_LABEL: Record<VerificationStatus, string> = {
+  verified: "검증 완료",
+  pending_verification: "확인 대기",
+  suspended: "정지",
+};
+
+export const DATA_SOURCE_LABEL: Record<DataSource, string> = {
+  sms: "문자",
+  public_web: "공개 웹",
+  clinic_input: "병원 입력",
+};
+
+export const LANGUAGE_MODE_LABEL: Record<LanguageMode, string> = {
+  staff: "상주",
+  interpreter: "통역",
+  app_translation: "앱 번역",
+};
+
+export type OpsClinic = {
+  id: string;
+  name: string;
+  area: Area;
+  operationMode: OperationMode;
+  dataSources: DataSource[];
+  lastVerifiedAt: IsoDate;
+  foreignPatientFacilityRegistered: boolean;
+  verificationStatus: VerificationStatus;
+  languages: { locale: Locale; mode: LanguageMode }[];
+};
+
+// The five seed clinics of 01-users-journeys.md. lastVerifiedAt is chosen so that two proxy
+// clinics (한빛, 아라) are past the 30 day limit against the demo clock.
+export const OPS_CLINICS: OpsClinic[] = [
+  {
+    id: "cln_seoul_glow",
+    name: "서울글로우의원",
+    area: "sinsa",
+    operationMode: "clinic",
+    dataSources: ["clinic_input"],
+    lastVerifiedAt: "2026-11-05",
+    foreignPatientFacilityRegistered: true,
+    verificationStatus: "verified",
+    languages: [
+      { locale: "ja", mode: "staff" },
+      { locale: "ko", mode: "staff" },
+    ],
+  },
+  {
+    id: "cln_mint",
+    name: "민트피부과의원",
+    area: "gangnam",
+    operationMode: "proxy",
+    dataSources: ["sms", "public_web"],
+    lastVerifiedAt: "2026-10-20",
+    foreignPatientFacilityRegistered: true,
+    verificationStatus: "verified",
+    languages: [
+      { locale: "ja", mode: "interpreter" },
+      { locale: "ko", mode: "staff" },
+    ],
+  },
+  {
+    id: "cln_hanbit",
+    name: "한빛의원",
+    area: "myeongdong",
+    operationMode: "proxy",
+    dataSources: ["sms"],
+    lastVerifiedAt: "2026-09-28",
+    foreignPatientFacilityRegistered: true,
+    verificationStatus: "verified",
+    languages: [
+      { locale: "zh-CN", mode: "staff" },
+      { locale: "ko", mode: "staff" },
+    ],
+  },
+  {
+    id: "cln_ara",
+    name: "아라의원",
+    area: "apgujeong",
+    operationMode: "proxy",
+    dataSources: ["sms", "public_web"],
+    lastVerifiedAt: "2026-10-09",
+    foreignPatientFacilityRegistered: true,
+    verificationStatus: "verified",
+    languages: [
+      { locale: "ja", mode: "interpreter" },
+      { locale: "ko", mode: "staff" },
+    ],
+  },
+  {
+    id: "cln_dahye",
+    name: "다혜피부과의원",
+    area: "hongdae",
+    operationMode: "clinic",
+    dataSources: ["clinic_input"],
+    lastVerifiedAt: "2026-11-09",
+    foreignPatientFacilityRegistered: true,
+    verificationStatus: "verified",
+    languages: [
+      { locale: "en", mode: "staff" },
+      { locale: "ko", mode: "staff" },
+    ],
+  },
+];
+
+export function clinicName(id: string): string {
+  return OPS_CLINICS.find((clinic) => clinic.id === id)?.name ?? id;
+}
+
+export function isStale(clinic: OpsClinic): boolean {
+  return daysSince(clinic.lastVerifiedAt) > STALE_AFTER_DAYS;
+}
