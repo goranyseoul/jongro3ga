@@ -1,0 +1,28 @@
+{
+  "common": {
+    "brand": "Pibu",
+    "language": "语言",
+    "nav": {
+      "label": "主菜单",
+      "home": "首页",
+      "chat": "咨询",
+      "records": "记录",
+      "settings": "数据"
+    },
+    "footer": {
+      "regLabel": "外国患者引荐机构登记号",
+      "regDemo": "演示(未登记)",
+      "patientRights": "外国患者权益保护说明",
+      "notice": "Pibu 是由 AI 代理协助联系与比较的服务。诊断及能否施术由医生判断。"
+    },
+    "demoValue": "演示用数值",
+    "back": "返回",
+    "close": "关闭",
+    "cancel": "取消",
+    "next": "下一步",
+    "save": "保存",
+    "optional": "选填",
+    "required": "必填",
+    "approx": "参考"
+  }
+}

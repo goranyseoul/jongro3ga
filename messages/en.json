@@ -1,0 +1,28 @@
+{
+  "common": {
+    "brand": "Pibu",
+    "language": "Language",
+    "nav": {
+      "label": "Main menu",
+      "home": "Home",
+      "chat": "Chat",
+      "records": "Records",
+      "settings": "My data"
+    },
+    "footer": {
+      "regLabel": "Foreign patient referral agency registration no.",
+      "regDemo": "Demo (not registered)",
+      "patientRights": "Notice on the protection of foreign patients' rights",
+      "notice": "Pibu is a service where an AI agent helps you contact and compare clinics. Doctors decide on diagnosis and whether a procedure is suitable."
+    },
+    "demoValue": "Demo value",
+    "back": "Back",
+    "close": "Close",
+    "cancel": "Cancel",
+    "next": "Next",
+    "save": "Save",
+    "optional": "Optional",
+    "required": "Required",
+    "approx": "Reference"
+  }
+}

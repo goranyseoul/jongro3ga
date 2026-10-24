@@ -1,0 +1,36 @@
+/* Customer web app only (app/[locale]). Every value is a token from app/globals.css. */
+
+.cu-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* CJK line breaking: keep Korean words whole, break Japanese and Chinese by strict rules */
+.cu-root:lang(ko) {
+  word-break: keep-all;
+}
+.cu-root:lang(ja),
+.cu-root:lang(zh-CN) {
+  line-break: strict;
+}
+
+/* Bottom tab bar on phones: stay clear of the home indicator */
+.cu-tabbar {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Room under the content so the fixed tab bar never covers the last block */
+.cu-main-with-tabbar {
+  padding-bottom: calc(var(--touch) + var(--sp-12));
+}
+@media (min-width: 768px) {
+  .cu-main-with-tabbar {
+    padding-bottom: var(--sp-12);
+  }
+}
+
+/* Long ids and addresses must wrap instead of widening the page */
+.cu-wrap {
+  overflow-wrap: anywhere;
+}

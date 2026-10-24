@@ -1,0 +1,28 @@
+{
+  "common": {
+    "brand": "Pibu",
+    "language": "言語",
+    "nav": {
+      "label": "メインメニュー",
+      "home": "ホーム",
+      "chat": "相談",
+      "records": "記録",
+      "settings": "データ"
+    },
+    "footer": {
+      "regLabel": "外国人患者誘致事業者 登録番号",
+      "regDemo": "デモ(未登録)",
+      "patientRights": "外国人患者の権益保護のご案内",
+      "notice": "PibuはAIエージェントによる連絡と比較の補助サービスです。診断や施術の可否は医師が判断します。"
+    },
+    "demoValue": "デモ用の値",
+    "back": "戻る",
+    "close": "閉じる",
+    "cancel": "キャンセル",
+    "next": "次へ",
+    "save": "保存する",
+    "optional": "任意",
+    "required": "必須",
+    "approx": "参考"
+  }
+}
