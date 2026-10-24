@@ -163,9 +163,14 @@ export function DemoConsole() {
         title="데모 컨트롤"
         description="3분 데모를 진행하는 화면이에요. 지금은 목업이라 API 대신 이 화면 안에서 동작해요."
         action={
-          <Link href="/ops/clinics" className={buttonStyles({ variant: "secondary" })}>
-            운영 콘솔 열기
-          </Link>
+          <div className="flex flex-wrap gap-sp-2">
+            <Link href="/demo/ledger" className={buttonStyles({ variant: "secondary" })}>
+              공개 원장
+            </Link>
+            <Link href="/ops/clinics" className={buttonStyles({ variant: "secondary" })}>
+              운영 콘솔 열기
+            </Link>
+          </div>
         }
       />
 
