@@ -655,6 +655,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         }}
       >
         <ChatInput
+          collapsible
           onSend={(text) => start(text)}
           label={c.inputLabel}
           sendLabel={c.send}
