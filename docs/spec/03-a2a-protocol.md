@@ -111,7 +111,7 @@ A2A Message에는 스킬 id 필드가 없다. 이 서비스는 다음 규칙으�
     {
       "id": "platform.match_clinics",
       "name": "Match clinics",
-      "description": "Ranks up to five clinics for a procedure request and issues a signed referral token per clinic.",
+      "description": "Ranks up to three clinics for a procedure request and issues a signed referral token per clinic.",
       "tags": ["matching", "clinic", "referral"],
       "inputModes": ["application/json"],
       "outputModes": ["application/json"]

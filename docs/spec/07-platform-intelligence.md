@@ -53,7 +53,7 @@
 | 아라 | 2cc · 300,000 · VAT 별도 | 165,000 | mid | within | paid_more_than_quoted, indicative_price | `fair` (+ 경고 문장) |
 | 한빛 | 2cc · 420,000 · VAT 포함 | 210,000 | high | within | indicative_price | `high` |
 
-이 표는 **기준 표본을 고정해 넣는 순수 함수 테스트**다. 실제 데모에서 Yuki(선호 지역 신사)의 요청은 지역 하드 필터 때문에 서울글로우·민트·아라 3곳만 견적을 받는다 (한빛은 명동, 다혜는 홍대). 한빛 행은 `high` 구간 검증용.
+이 표는 **기준 표본을 고정해 넣는 순수 함수 테스트**다. 실제 데모에서 Yuki(일본어)의 요청은 언어 하드 필터 때문에 같은 서울글로우·민트·아라 3곳만 견적을 받는다 (한빛은 중국어 응대, 다혜는 영어 응대). 한빛 행은 `high` 구간 검증용.
 
 경계값 테스트도 둔다: x = p75 정확히 → `mid`, x = p90 정확히 → `high`, n = 4 → `insufficient_data`, n = 5 → 판정.
 
@@ -66,13 +66,14 @@
 1. `verificationStatus = "verified"` 그리고 `foreignPatientFacilityRegistered = true`
 2. 요청 시술을 메뉴 또는 이달 오퍼로 제공
 3. 요청 `languages` 중 하나 이상을 `staff` 또는 `interpreter`로 지원 (`app_translation`만이면 제외, 단 요청이 `ko`면 무관)
-4. 요청 `areas`가 비어 있지 않으면 그 지역 또는 같은 지역 그룹
+
+지역은 조건이 아니라 위치 정보다 (오너 결정 2026-10-24, BUILD-LOG 12). 요청 `areas`는 필터와 점수에 쓰지 않고, reasons 템플릿 문장("숙소 근처")과 화면 표시에만 쓴다. 규칙 `prefer_area`로 지역을 올릴 수는 있지만 하드 제외는 아니다.
 
 ### 점수 (0~1)
 
 | 요소 | 가중치 | 계산 |
 | --- | --- | --- |
-| 적합도 | 0.35 | 언어 (staff 1.0 · interpreter 0.6) 와 지역 (요청 지역 1.0 · 같은 그룹 0.5) 의 평균 |
+| 적합도 | 0.35 | 언어만 (staff 1.0 · interpreter 0.6) |
 | 가격 | 0.25 | 요청 용량에 가장 가까운 메뉴의 단위가격 u로 `clamp((p75 - u) / (p75 - p25), 0, 1)`. 표본 부족 시 0.5. 메뉴 용량이 통상 min 미만뿐이면 최대 0.3 |
 | 결과 | 0.25 | 베이지안 평균 만족도 `(5 × 4.0 + Σs) / (5 + n)` 를 `(x - 1) / 4` 로 정규화 |
 | 신뢰성 | 0.15 | `(1 - min(1, 평균 quoteGapRatio × 2)) × (1 - 응답 시간초과 비율)` (음수 gap은 0으로) |
@@ -83,7 +84,7 @@
 
 1. 하드 필터 → 점수 계산 → `candidatesBeforeRules` 기록
 2. 활성 규칙 중 `when`이 **요청**과 맞는 것 평가 (모든 지정 필드가 일치해야 매치, 미지정 필드는 와일드카드. 병원은 `when`에 없고 `then.clinicIds`로만 지정). 순서: `require_language` → `exclude_clinic` → `boost`/`demote`/`prefer_area` (점수 0~1로 clamp)
-3. 점수 내림차순 상위 5곳. 동점은 `clinicId` 사전순 (결정론)
+3. 점수 내림차순 상위 3곳. 동점은 `clinicId` 사전순 (결정론)
 4. 후보마다 추천 토큰 발급 (ES256, 72시간), `reasons`는 상위 기여 요소 2개 + 규칙 기인 사유를 템플릿 문장으로 (규칙 내용 자체는 노출하지 않는다)
 5. `MatchLog` 저장, 규칙 `appliedCount` 증가
 
