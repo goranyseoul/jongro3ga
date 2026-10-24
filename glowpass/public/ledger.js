@@ -6,7 +6,7 @@ const COLORS = ['#c8406f', '#4b3fb3', '#1d7f57', '#c27a12', '#2a7bb8', '#8a4fb0'
 
 let ledger = [], personas = [], deployment = null;
 const params = new URLSearchParams(location.search);
-let persona = params.get('persona') ?? 'yuki', wallet = null, selectedTx = null;
+let persona = params.get('persona') ?? 'cus_yuki', wallet = null, selectedTx = null;
 const subjectColor = new Map();
 const colorOf = (s) => { if (!subjectColor.has(s)) subjectColor.set(s, COLORS[subjectColor.size % COLORS.length]); return subjectColor.get(s); };
 

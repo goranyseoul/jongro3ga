@@ -121,7 +121,7 @@ select, textarea, input { font: inherit; border: 1px solid var(--line); border-r
 .review-form .stars { display: flex; gap: 2px; font-size: 18px; cursor: pointer; color: #d8c9bf; }
 .review-form .stars .on { color: var(--rose); }
 
-/* ---- PiBoo-K ZK console ---- */
+/* ---- PibooK ZK console ---- */
 .brand-tag { font-size: 11px; font-weight: 700; color: var(--violet); background: var(--violet-soft); padding: 2px 7px; border-radius: 6px; margin-left: 6px; vertical-align: middle; }
 .scene { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
 .scene.current { border-color: var(--rose); box-shadow: 0 0 0 3px var(--rose-soft); }
