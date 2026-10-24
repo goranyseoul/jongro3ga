@@ -477,7 +477,10 @@
       "another": "Add another"
     },
     "month": "Month of treatment",
-    "dateUnknown": "I only remember the month"
+    "dateUnknown": "I only remember the month",
+    "note": "Note",
+    "notePlaceholder": "How it felt, side effects, what to change next time.",
+    "noteHint": "Only you can see this note."
   },
   "outcomes": {
     "metaTitle": "Procedure record",

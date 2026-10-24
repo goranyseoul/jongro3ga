@@ -7,6 +7,8 @@ import { AMOUNT_STEPS } from "@/components/customer/condition";
 import { updateDemoState } from "@/components/customer/demo-state";
 import { useCustomer, useLabels } from "@/components/customer/use-customer";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
+import { fieldBase, focusRing } from "@/lib/ui";
 import { LOCALES } from "../../locales";
 import {
   CLINICS,
@@ -39,6 +41,7 @@ export function NewRecordForm() {
   // "I only remember the month": the record keeps the 1st of that month with datePrecision "month".
   const [monthOnly, setMonthOnly] = useState(false);
   const [rating, setRating] = useState<string | null>(null);
+  const [note, setNote] = useState("");
   const [saved, setSaved] = useState<TreatmentRecord | null>(null);
 
   const procedure = procedureId ? getProcedure(procedureId) : undefined;
@@ -72,6 +75,7 @@ export function NewRecordForm() {
       clinicName: typed || undefined,
       source: "manual",
       rating: rating ? (Number(rating) as TreatmentRecord["rating"]) : undefined,
+      note: note.trim() || undefined,
       sessionNumber,
       nextDue: computeNextDue(procedure, date, sessionNumber),
       status: "active",
@@ -106,6 +110,7 @@ export function NewRecordForm() {
               setClinicText("");
               setPrice({ currency: "KRW", amount: null });
               setRating(null);
+              setNote("");
             }}
           >
             {t("saved.another")}
@@ -204,14 +209,31 @@ export function NewRecordForm() {
           <div className="flex flex-col gap-sp-1">
             <Input label={t("receipt")} type="file" accept="image/*" disabled hint={t("receiptSoon")} />
           </div>
-          <div className="flex flex-col gap-sp-2">
-            <span className="text-label font-med text-muted">{t("rating")}</span>
-            <div role="group" aria-label={t("rating")} className="flex flex-wrap gap-sp-2">
-              {["1", "2", "3", "4", "5"].map((value) => (
-                <Chip key={value} selected={rating === value} className="min-w-touch" onClick={() => setRating(rating === value ? null : value)}>
-                  {value}
-                </Chip>
-              ))}
+          <div className="flex flex-col gap-sp-4 md:flex-row">
+            <div className="flex shrink-0 flex-col gap-sp-2">
+              <span className="text-label font-med text-muted">{t("rating")}</span>
+              <div role="group" aria-label={t("rating")} className="flex flex-wrap gap-sp-2">
+                {["1", "2", "3", "4", "5"].map((value) => (
+                  <Chip key={value} selected={rating === value} className="min-w-touch" onClick={() => setRating(rating === value ? null : value)}>
+                    {value}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-1 flex-col gap-sp-2">
+              <label htmlFor="record-note" className="text-label font-med text-muted">
+                {t("note")}
+              </label>
+              <textarea
+                id="record-note"
+                rows={3}
+                maxLength={500}
+                value={note}
+                placeholder={t("notePlaceholder")}
+                onChange={(event) => setNote(event.target.value)}
+                className={cn(fieldBase, "border-input py-sp-2", focusRing)}
+              />
+              <p className="text-caption text-subtle">{t("noteHint")}</p>
             </div>
           </div>
         </section>

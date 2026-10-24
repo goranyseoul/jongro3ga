@@ -394,7 +394,16 @@ export function RecordsView() {
               const point = carePoint(summary.last, DEMO_TODAY);
               return (
                 <Card key={summary.procedureId} className="flex flex-col gap-sp-1">
-                  <p className="text-title font-semi">{label.procedure(summary.procedureId)}</p>
+                  <div className="flex flex-wrap items-center justify-between gap-sp-2">
+                    <p className="text-title font-semi">{label.procedure(summary.procedureId)}</p>
+                    <Link
+                      href={findHref(summary.procedureId)}
+                      className={cn(smallChip, "border-danger bg-elev text-danger hover:bg-sunken", focusRing)}
+                    >
+                      <FiSearch aria-hidden />
+                      {t("plan.findClinic")}
+                    </Link>
+                  </div>
                   <p className="text-body tabular-nums">
                     {t("history.summary", {
                       first: recordDate(summary.first),
@@ -440,6 +449,7 @@ export function RecordsView() {
                           ) : null}
                           {record.priceKrw ? <li className="tabular-nums">{moneyText(record.priceKrw, locale)}</li> : null}
                           {record.rating ? <li>{t("history.rating", { n: record.rating })}</li> : null}
+                          {record.note ? <li className="whitespace-pre-line text-text">{record.note}</li> : null}
                           <Provenance record={record} />
                           <li>{record.sharedToPlatform ? t("history.shared") : t("history.notShared")}</li>
                         </ul>
