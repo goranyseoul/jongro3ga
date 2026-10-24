@@ -92,6 +92,18 @@ type DoneData = {
   saved?: "account" | "demo_fallback" | "error";
 };
 
+/** What a language switch carries to the page in the new locale (sessionStorage, read once on load). */
+type Handoff = {
+  at: number;
+  locale: Locale;
+  /** Set when the conversation goes on: the new page answers the locale slot in this server session. */
+  sessionId?: string;
+  windowOpen: boolean;
+  surface: "window" | "full";
+  messages: Message[];
+  draft?: OnboardingDraft;
+};
+
 type TurnBody = { message: string; widgetValue?: { slot: string; value?: unknown; skip?: boolean } };
 
 const SLOT_LABEL: Record<SlotId, SlotKey> = {
@@ -138,8 +150,8 @@ export type OnboardingIntro = {
 // Each tour step points at the element carrying this data-tour value; the order matches the copy.
 const TOUR_TARGETS = ["input", "topics", "signup", "agent"] as const;
 const TOUR_SEEN_KEY = "pibook.tour.v1";
-// A language chip reloads the page in the new locale; the onboarding session id travels through
-// sessionStorage for a moment so the server-side conversation goes on there.
+// A language switch opens the page in the new locale, which mounts a new chat; the onboarding session id, the
+// lines on screen and the window state travel through sessionStorage for a moment so the conversation goes on.
 const HANDOFF_KEY = "pibook.onboarding.handoff";
 const HANDOFF_MAX_AGE_MS = 120_000;
 // the entry splash plays 1.5s and fades; the tour and the first greeting wait for it
@@ -364,19 +376,34 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const answer = (slot: SlotId | "summary", value: unknown, label: string) => void send({ message: label, widgetValue: { slot, value } }, label);
   const skip = (slot: SlotId) => void send({ message: c.skip, widgetValue: { slot, skip: true } }, c.skip);
 
+  // Before the page opens in another language. With `answerLocale` (the language chip, or any switch once the
+  // customer has said something) the server session continues there and the new page answers the locale slot;
+  // otherwise only the window state goes along and the new page greets in its own language.
+  const handOver = (value: Locale, answerLocale: boolean) => {
+    try {
+      if (answerLocale && !sessionId.current) sessionId.current = newSessionId();
+      const handoff: Handoff = {
+        at: Date.now(),
+        locale: value,
+        windowOpen: windowOpen || answerLocale,
+        surface,
+        messages: answerLocale ? messages.slice(-60) : [],
+        ...(answerLocale ? { sessionId: sessionId.current, draft } : {}),
+      };
+      sessionStorage.setItem(HANDOFF_KEY, JSON.stringify(handoff));
+    } catch {
+      /* storage blocked: the conversation restarts in the new language */
+    }
+  };
+
   const chooseLocale = (value: Locale) => {
-    if (value !== locale) {
-      // the page reloads in the new language: hand the session over so the conversation goes on there
-      try {
-        if (!sessionId.current) sessionId.current = newSessionId();
-        sessionStorage.setItem(HANDOFF_KEY, JSON.stringify({ sessionId: sessionId.current, locale: value, at: Date.now() }));
-      } catch {
-        /* storage blocked: the conversation restarts in the new language */
-      }
-      router.push(`/${value}`);
+    // the current language is an answer, never a navigation (going to the same page would drop the conversation)
+    if (value === locale) {
+      answer("locale", value, LOCALE_NAME[value]);
       return;
     }
-    answer("locale", value, LOCALE_NAME[value]);
+    handOver(value, true);
+    router.push(`/${value}`);
   };
 
   const done = status === "completed";
@@ -395,10 +422,26 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     answer("consents", consents, agreed.length > 0 ? agreed.join(" · ") : c.decline);
   };
 
+  // Language links anywhere on the landing (the header and footer switches) hand the conversation over too.
+  const handOverRef = useRef(handOver);
+  useEffect(() => {
+    handOverRef.current = handOver;
+  });
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.("a[hreflang]");
+      const target = link?.getAttribute("hreflang");
+      if (!target || target === locale || !(LOCALES as string[]).includes(target)) return;
+      handOverRef.current(target as Locale, spoke.current);
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, [locale]);
+
   // Picks the conversation up after a language switch, in the new locale and with the window open.
   useEffect(() => {
     if (resumed.current) return;
-    let handoff: { sessionId: string; locale: Locale; at: number } | null = null;
+    let handoff: Handoff | null = null;
     try {
       const raw = sessionStorage.getItem(HANDOFF_KEY);
       handoff = raw ? JSON.parse(raw) : null;
@@ -406,12 +449,20 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     } catch {
       handoff = null;
     }
-    if (!handoff || Date.now() - handoff.at > HANDOFF_MAX_AGE_MS || handoff.locale !== locale || !handoff.sessionId) return;
+    if (!handoff || Date.now() - handoff.at > HANDOFF_MAX_AGE_MS || handoff.locale !== locale) return;
     resumed.current = true;
+    if (!handoff.sessionId) {
+      if (handoff.windowOpen) start();
+      return;
+    }
     sessionId.current = handoff.sessionId;
+    spoke.current = handoff.messages.some((m) => m.from === "user");
     startedRef.current = true;
     setStarted(true);
-    setWindowOpen(true);
+    setSurface(handoff.surface);
+    setWindowOpen(handoff.surface === "window");
+    setMessages((handoff.messages ?? []).map((m) => ({ ...m, id: `h-${m.id}` })));
+    if (handoff.draft) setDraft(handoff.draft);
     void send({ message: LOCALE_NAME[locale], widgetValue: { slot: "locale", value: locale } }, LOCALE_NAME[locale]);
     // runs once per page load
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -51,16 +51,19 @@ export function SiteFooter({ locale, path = "" }: { locale: Locale; path?: strin
         <nav aria-label={c.languages} className="flex flex-col gap-sp-1">
           <p className="text-label text-subtle">{c.languages}</p>
           <ul className="flex flex-wrap gap-x-sp-4">
+            {/* the current language is text, not a link: reopening the same page would drop what is on screen
+                (the landing agent window). hrefLang lets the landing hand its conversation to the new language. */}
             {LOCALES.map((l) => (
               <li key={l}>
-                <Link
-                  href={`/${l}${path}`}
-                  lang={l}
-                  aria-current={l === locale ? "page" : undefined}
-                  className={cn(textLink, "min-w-touch justify-center", l === locale && "text-text")}
-                >
-                  {LOCALE_NAME[l]}
-                </Link>
+                {l === locale ? (
+                  <span lang={l} aria-current="page" className="inline-flex min-h-touch min-w-touch items-center justify-center text-label text-text">
+                    {LOCALE_NAME[l]}
+                  </span>
+                ) : (
+                  <Link href={`/${l}${path}`} lang={l} hrefLang={l} className={cn(textLink, "min-w-touch justify-center")}>
+                    {LOCALE_NAME[l]}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
