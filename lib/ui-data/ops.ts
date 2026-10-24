@@ -1,4 +1,5 @@
 import type { IsoDate, Locale } from "@/lib/domain/common";
+import { D0_ANCHOR, MINT_OFFER_PROOF, YUKI_SUBJECT_ID, ZK_OFFER_PROOF_EXTENSION } from "./customer";
 
 // Mock data for the ops console (/ops) and demo controls (/demo) until the platform API exists.
 // Shapes follow docs/spec/06-data-model.md (platform and shared namespaces), values follow the
@@ -509,8 +510,11 @@ type CallInput = {
   state: TaskState;
   latencyMs: number;
   summary: string;
-  artifact?: { name: string; data: Record<string, unknown> };
+  /** A DataPart artifact, or a text artifact (platform.anchor_record answers `anchored <tx>`). */
+  artifact?: { name: string; data: Record<string, unknown> } | { name: string; text: string };
   error?: { code: number; message: string };
+  /** Offer proof for this clinic: goes in metadata, with the zk-offer-proof extension on the message. */
+  offerProof?: Record<string, unknown>;
 };
 
 // Builds the JSON-RPC pair the way lib/a2a/client.ts would log it.
@@ -527,10 +531,13 @@ function call(input: CallInput): A2ALogEntry {
         contextId: input.contextId,
         role: "ROLE_USER",
         parts: [{ text: input.text }, { data: input.data, mediaType: "application/json" }],
-        metadata: { skillId: input.skillId },
+        metadata: input.offerProof ? { skillId: input.skillId, offerProof: input.offerProof } : { skillId: input.skillId },
+        ...(input.offerProof ? { extensions: [ZK_OFFER_PROOF_EXTENSION] } : {}),
       },
     },
   };
+  const artifactPart = (artifact: NonNullable<CallInput["artifact"]>) =>
+    "text" in artifact ? { text: artifact.text } : { data: artifact.data, mediaType: "application/json" };
   const response = input.error
     ? { jsonrpc: "2.0", id: rpcId, error: input.error }
     : {
@@ -542,7 +549,7 @@ function call(input: CallInput): A2ALogEntry {
             contextId: input.contextId,
             status: { state: input.state, timestamp: input.at },
             artifacts: input.artifact
-              ? [{ artifactId: `art_${taskId}`, name: input.artifact.name, parts: [{ data: input.artifact.data, mediaType: "application/json" }] }]
+              ? [{ artifactId: `art_${taskId}`, name: input.artifact.name, parts: [artifactPart(input.artifact)] }]
               : [],
           },
         },
@@ -613,7 +620,8 @@ const YUKI_REQ = "req_01J9Z8";
 const YUKI_REQUEST = rejuranRequest(YUKI_REQ, YUKI, "JP", ["ja"], ["sinsa", "gangnam", "apgujeong"], 450_000);
 
 export const A2A_LOG: A2ALogEntry[] = [
-  // Yuki (JP): recipe, match, three quotes, judge, then a booking at Seoul Glow (direct clinic).
+  // Yuki (JP): recipe, match, three quotes (Mint's carries the first-visit proof), judge, a booking at
+  // Seoul Glow (direct clinic), and on the procedure day the anchor of the D0 record.
   call({
     n: 1,
     at: "2026-11-12T09:55:01+09:00",
@@ -688,12 +696,24 @@ export const A2A_LOG: A2ALogEntry[] = [
     skillId: "clinic.quote",
     text: "Quote request for Rejuran Healer 2cc, 11-13~11-15, Japanese support.",
     data: { ...YUKI_REQUEST, ...REFERRAL },
+    offerProof: MINT_OFFER_PROOF,
     state: "TASK_STATE_COMPLETED",
     latencyMs: 910,
-    summary: "민트피부과의원이 참고가 견적을 보냈어요",
+    summary: "민트에 첫 방문 증명을 첨부했어요. 병원이 검증을 통과시켰어요",
     artifact: {
       name: "quote",
-      data: quoteData(YUKI_REQ, "qt_1204", "cln_mint", 1, 99_000, true, "proxy", ["ja"], ["2026-11-13T11:00:00+09:00"]),
+      data: {
+        ...quoteData(YUKI_REQ, "qt_1204", "cln_mint", 1, 99_000, true, "proxy", ["ja"], ["2026-11-13T11:00:00+09:00"]),
+        event: {
+          title: "First visit 1cc event",
+          regularPriceKrw: 150_000,
+          validFrom: "2026-11-01",
+          validUntil: "2026-11-30",
+          conditions: "First visit only",
+          zkClauses: [{ clinicId: "cln_mint", maxCount: 0 }],
+        },
+        offerApplied: { offerId: MINT_OFFER_PROOF.offerId, verified: true },
+      },
     },
   }),
   call({
@@ -788,6 +808,33 @@ export const A2A_LOG: A2ALogEntry[] = [
     state: "TASK_STATE_COMPLETED",
     latencyMs: 150,
     summary: "서울글로우의원이 예약 확정을 플랫폼에 보고했어요",
+  }),
+  // D0 on the procedure day (scene 6): the wallet proves the append, the platform relays it to the registry.
+  // Only subjectId, the new chart hash, the record hash and the day reach the chain.
+  call({
+    n: 22,
+    at: "2026-11-14T13:10:02+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: platformEndpoint,
+    skillId: "platform.anchor_record",
+    text: "Anchor the clinic-confirmed record of booking bk_0088.",
+    data: {
+      schema: "pibu/record-anchor@1",
+      bookingId: "bk_0088",
+      clinicId: "cln_seoul_glow",
+      procedureId: "rejuran_healer",
+      subjectId: YUKI_SUBJECT_ID,
+      record: { day: D0_ANCHOR.day, recordNonce: D0_ANCHOR.recordNonce, ticketCommitment: D0_ANCHOR.ticketCommitment },
+      oldCommitment: "0x0",
+      newCommitment: D0_ANCHOR.newCommitment,
+      recordHash: D0_ANCHOR.recordHash,
+      proof: "[proof 8.4KB]",
+    },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 10_420,
+    summary: "시술 기록을 체인에 앵커했어요. 가명과 해시만 올라가요",
+    artifact: { name: "anchor", text: `anchored ${D0_ANCHOR.tx}` },
   }),
 
   // Aoi (JP): booking at Ara, a proxy clinic, confirmed by the operator (queue item pq_203).
@@ -1099,7 +1146,11 @@ export type DemoBooking = {
   revealAtStep?: number;
 };
 
-/** Yuki's request (demo scenario steps 2 to 5): the calls up to the booking request are replayed. */
+/**
+ * Yuki's request (demo scenario steps 2 to 6): the calls up to the booking request are replayed. The rest
+ * (report_booking, then anchor_record) shows once the booking is confirmed and the demo clock reaches the
+ * call's day, so the anchor appears after [시계 이동: 11/14 13:00].
+ */
 export const YUKI_CONTEXT_ID = "req_01J9Z8";
 export const YUKI_BOOKING_STEP = 7;
 

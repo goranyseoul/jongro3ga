@@ -248,6 +248,14 @@
       "regular": "通常価格 {price}",
       "conditions": "条件: {text}"
     },
+    "offer": {
+      "verified": "条件を満たすことを証明済み",
+      "note": "施術履歴は送らず、条件を満たすことだけを証明しました"
+    },
+    "stats": {
+      "visits": "PibooKユーザー{visits, number}人",
+      "reviews": "検証済みレビュー{reviews}件 評価{avg}"
+    },
     "perUnit": "1{unit}あたり {price}",
     "typical": "通常は{range}",
     "includes": {
@@ -277,6 +285,9 @@
       "safety": "安全情報",
       "safetyValue": "妊娠・授乳: {pregnant} / アレルギー: {allergies}",
       "contact": "連絡先",
+      "history": "施術履歴",
+      "historyValue": "共有しません(特典の条件を満たすかどうかだけを証明)",
+      "historyValuePlain": "共有しません",
       "yes": "はい",
       "no": "いいえ",
       "none": "なし",
@@ -362,8 +373,32 @@
       "session": "{n}回目",
       "shared": "匿名共有: オン",
       "notShared": "匿名共有: オフ",
+      "anchored": "クリニック確認済み · チェーン記録 v{version}",
+      "clinicConfirmed": "クリニック確認済み",
+      "selfReported": "自分で入力 · 特典の証明には使われません",
+      "txLabel": "Base Sepoliaで取引を見る(新しいタブ)",
       "fromBooking": "予約から自動で記録",
-      "rating": "満足度 {n}/5"
+      "rating": "満足度 {n}/5",
+      "search": "施術を検索",
+      "searchPlaceholder": "例: リジュラン",
+      "all": "すべて",
+      "noMatch": "該当する施術の記録はありません。",
+      "month": "{count}件 · 合計 {total}",
+      "unknownDay": "{month} (日付は不明)",
+      "summary": "{first}から{count}回 · 合計 {total}",
+      "pages": "ページ",
+      "prevPage": "前のページ",
+      "nextPage": "次のページ",
+      "preset": {
+        "procedure": "施術",
+        "area": "部位",
+        "clinic": "クリニック"
+      },
+      "area": {
+        "forehead": "額",
+        "full_face": "顔全体",
+        "jawline": "フェイスライン"
+      }
     },
     "calendar": {
       "title": "カレンダー",
@@ -375,7 +410,44 @@
       "empty": "この日の記録はありません。",
       "hasEvents": "予定{n}件",
       "doneSession": "{n}回目 済み",
-      "plannedSession": "{n}回目 予定"
+      "plannedSession": "{n}回目 予定",
+      "monthTotal": "この月 {count}件 · 合計 {total}",
+      "monthNone": "この月の記録はありません。"
+    },
+    "plan": {
+      "title": "私のケアプラン",
+      "lead": "記録を施術ごとの推奨周期と比べて、次にすることをお知らせします。",
+      "showAll": "ケアカードをすべて表示 ({n})",
+      "showLess": "閉じる",
+      "findClinic": "クリニックを探す",
+      "findIntent": "{procedure}のイベントがあるクリニックを探して ({range})"
+    },
+    "cycle": {
+      "course": "推奨: {interval}日間隔で{count}回、その後は{every}",
+      "maintenance": "推奨: {every}",
+      "range": "{min}~{max}日ごと",
+      "every": "{days}日ごと"
+    },
+    "point": {
+      "courseOnTrack": "{count}回中{done}回済み。{days}日以内に{next}回目を受けるのがおすすめです。",
+      "courseLate": "{count}回中{done}回済み、前回から{since}日経過。推奨間隔より{late}日遅れています。",
+      "early": "前回から{since}日。次のケアまであと{days}日です。",
+      "window": "前回から{since}日。今がケアのタイミングです。",
+      "late": "前回から{since}日。推奨周期を{late}日過ぎています。"
+    },
+    "top": {
+      "title": "よく受ける施術",
+      "count": "{n}回",
+      "last": "前回 {date}",
+      "total": "合計 {amount}",
+      "prev": "前へ",
+      "next": "次へ"
+    },
+    "alerts": {
+      "label": "重要なお知らせ",
+      "late": "{procedure} 推奨周期を{late}日過ぎています",
+      "courseLate": "{procedure} 推奨間隔より{late}日遅れています",
+      "more": "ほか{n}件"
     }
   },
   "recordsNew": {
@@ -403,7 +475,9 @@
       "next": "次回の目安",
       "all": "記録を見る",
       "another": "続けて追加"
-    }
+    },
+    "month": "施術した月",
+    "dateUnknown": "日付は覚えていない (月のみ記録)"
   },
   "outcomes": {
     "metaTitle": "施術の記録",
@@ -483,9 +557,21 @@
       "title": "わたしのエージェントカード",
       "lead": "あなたのエージェントが、ほかのエージェントに見せる情報です。"
     },
+    "wallet": {
+      "title": "記録ウォレット",
+      "lead": "クリニックが受け取るのは、特典の条件を満たすかどうかだけです。施術日・クリニック・回数はこの端末の中にだけあります。",
+      "subject": "仮名",
+      "commitment": "オンチェーンのカルテハッシュ",
+      "none": "なし",
+      "version": "バージョン",
+      "anchored": "チェーンに記録した件数",
+      "anchoredValue": "{n}件",
+      "network": "{network} テストネット · デモ",
+      "ledger": "公開台帳を見る"
+    },
     "export": {
       "title": "データの書き出し",
-      "body": "プロフィール、同意、施術記録をJSONで保存します。",
+      "body": "プロフィール、同意、施術記録、記録ウォレットをJSONで保存します。",
       "button": "JSONを書き出す"
     },
     "remove": {

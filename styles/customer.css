@@ -91,3 +91,17 @@
     animation: none;
   }
 }
+
+/* Landing rails: horizontal snap rows on phones without a visible scrollbar */
+.cu-snap-row {
+  scrollbar-width: none;
+}
+.cu-snap-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Landing overview card: a quiet dot grid instead of a photo */
+.cu-dot-grid {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: var(--sp-6) var(--sp-6);
+}

@@ -1,0 +1,18 @@
+{
+  "_comment": "Field codes the Noir circuits see for procedures and clinics. 0 means empty slot / any. Ids follow docs/spec (06 procedure master, 01 clinic registry). Shared by glowpass/catalog.mjs and lib/zk/codes.ts; never renumber a code that has been anchored on-chain, append new ids instead.",
+  "procedures": {
+    "rejuran_healer": 1,
+    "thermage_flx": 2,
+    "ulthera": 3,
+    "botox_forehead": 4,
+    "shrink_universe": 5,
+    "skin_booster_juvelook": 6
+  },
+  "clinics": {
+    "cln_seoul_glow": 1,
+    "cln_mint": 2,
+    "cln_hanbit": 3,
+    "cln_ara": 4,
+    "cln_dahye": 5
+  }
+}

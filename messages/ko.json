@@ -248,6 +248,14 @@
       "regular": "정상가 {price}",
       "conditions": "조건: {text}"
     },
+    "offer": {
+      "verified": "조건 충족 증명됨",
+      "note": "시술 이력은 보내지 않고 조건만 증명했어요"
+    },
+    "stats": {
+      "visits": "PibooK 사용자 {visits, number}명",
+      "reviews": "검증 후기 {reviews}건 평점 {avg}"
+    },
     "perUnit": "1{unit}당 {price}",
     "typical": "보통 {range}",
     "includes": {
@@ -277,6 +285,9 @@
       "safety": "안전 정보",
       "safetyValue": "임신·수유: {pregnant} / 알레르기: {allergies}",
       "contact": "연락처",
+      "history": "시술 이력",
+      "historyValue": "공유하지 않음 (혜택 조건 충족 여부만 증명)",
+      "historyValuePlain": "공유하지 않음",
       "yes": "예",
       "no": "아니오",
       "none": "없음",
@@ -362,8 +373,32 @@
       "session": "{n}회차",
       "shared": "익명 공유: 켬",
       "notShared": "익명 공유: 끔",
+      "anchored": "병원 확인 · 체인 기록 v{version}",
+      "clinicConfirmed": "병원 확인",
+      "selfReported": "직접 입력 · 혜택 증명에는 쓰이지 않아요",
+      "txLabel": "Base Sepolia에서 거래 보기 (새 창)",
       "fromBooking": "예약에서 자동 기록",
-      "rating": "만족도 {n}/5"
+      "rating": "만족도 {n}/5",
+      "search": "시술 검색",
+      "searchPlaceholder": "예: 리쥬란",
+      "all": "전체",
+      "noMatch": "찾는 시술의 기록이 없어요.",
+      "month": "{count}건 · 총 {total}",
+      "unknownDay": "{month} (날짜 기억 안 남)",
+      "summary": "{first}부터 {count}회 · 총 {total}",
+      "pages": "페이지",
+      "prevPage": "이전 페이지",
+      "nextPage": "다음 페이지",
+      "preset": {
+        "procedure": "시술",
+        "area": "부위",
+        "clinic": "병원"
+      },
+      "area": {
+        "forehead": "이마",
+        "full_face": "얼굴 전체",
+        "jawline": "턱선"
+      }
     },
     "calendar": {
       "title": "달력",
@@ -375,7 +410,44 @@
       "empty": "이 날은 기록이 없어요.",
       "hasEvents": "일정 {n}개",
       "doneSession": "{n}회차 받음",
-      "plannedSession": "{n}회차 예정"
+      "plannedSession": "{n}회차 예정",
+      "monthTotal": "이 달 {count}건 · 총 {total}",
+      "monthNone": "이 달은 기록이 없어요."
+    },
+    "plan": {
+      "title": "내 관리 계획",
+      "lead": "기록을 시술별 권장 주기와 비교해서 다음에 할 일을 알려줘요.",
+      "showAll": "관리 카드 모두 보기 ({n})",
+      "showLess": "접기",
+      "findClinic": "병원 찾기",
+      "findIntent": "{procedure} 이벤트가 있는 병원 찾아줘 ({range})"
+    },
+    "cycle": {
+      "course": "권장: {interval}일 간격 {count}회, 이후 {every}",
+      "maintenance": "권장: {every}",
+      "range": "{min}~{max}일마다",
+      "every": "{days}일마다"
+    },
+    "point": {
+      "courseOnTrack": "{count}회 중 {done}회 했어요. {days}일 안에 {next}회차를 받으면 좋아요.",
+      "courseLate": "{count}회 중 {done}회 했고, 마지막 시술 후 {since}일 지났어요. 권장 간격보다 {late}일 늦었어요.",
+      "early": "마지막 시술 후 {since}일. 다음 관리까지 {days}일 남았어요.",
+      "window": "마지막 시술 후 {since}일. 지금이 관리 적기예요.",
+      "late": "마지막 시술 후 {since}일. 권장 주기보다 {late}일 지났어요."
+    },
+    "top": {
+      "title": "자주 받는 시술",
+      "count": "{n}회",
+      "last": "마지막 {date}",
+      "total": "총 {amount}",
+      "prev": "이전 시술",
+      "next": "다음 시술"
+    },
+    "alerts": {
+      "label": "중요 알림",
+      "late": "{procedure} 권장 주기보다 {late}일 지났어요",
+      "courseLate": "{procedure} 권장 간격보다 {late}일 늦었어요",
+      "more": "외 {n}건"
     }
   },
   "recordsNew": {
@@ -403,7 +475,9 @@
       "next": "다음 회차",
       "all": "기록 보기",
       "another": "계속 추가"
-    }
+    },
+    "month": "시술한 달",
+    "dateUnknown": "날짜는 기억 안 나요 (월만 기록)"
   },
   "outcomes": {
     "metaTitle": "시술 기록",
@@ -483,9 +557,21 @@
       "title": "내 에이전트 카드",
       "lead": "내 에이전트가 다른 에이전트에게 보여주는 정보예요."
     },
+    "wallet": {
+      "title": "기록 지갑",
+      "lead": "병원이 받는 것은 혜택 조건 충족 여부뿐이에요. 시술 날짜·병원·횟수는 이 기기에만 있어요.",
+      "subject": "가명",
+      "commitment": "온체인 차트 해시",
+      "none": "없음",
+      "version": "버전",
+      "anchored": "앵커된 기록 수",
+      "anchoredValue": "{n}건",
+      "network": "{network} 테스트넷 · 데모",
+      "ledger": "공개 원장 보기"
+    },
     "export": {
       "title": "데이터 내보내기",
-      "body": "프로필, 동의, 시술 기록을 JSON으로 저장해요.",
+      "body": "프로필, 동의, 시술 기록, 기록 지갑을 JSON으로 저장해요.",
       "button": "JSON 내보내기"
     },
     "remove": {

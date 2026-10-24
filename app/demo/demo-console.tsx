@@ -26,8 +26,8 @@ import { DemoControls } from "./controls";
 import { LiveLog } from "./live-log";
 import { SidePanel, type SideMode } from "./side-panel";
 
-// Yuki's calls in order: the first YUKI_BOOKING_STEP happen before the booking exists, the last one
-// (platform.report_booking) is the clinic reporting the confirmation.
+// Yuki's calls in order: the first YUKI_BOOKING_STEP happen before the booking exists, the rest come after
+// it is confirmed: platform.report_booking from the clinic, then platform.anchor_record on the procedure day.
 const YUKI_FLOW = A2A_LOG.filter((entry) => entry.contextId === YUKI_CONTEXT_ID);
 const YUKI_BOOKING_ID = "bk_demo_yuki";
 // Time between two replayed calls, slow enough to follow on screen.
@@ -69,7 +69,9 @@ export function DemoConsole() {
   const visible = bookings.filter((booking) => booking.revealAtStep === undefined || shown >= booking.revealAtStep);
   const pending = visible.filter((booking) => booking.state === "pending");
   const yukiConfirmed = bookings.some((booking) => booking.id === YUKI_BOOKING_ID && booking.state === "confirmed");
-  const entries = [...YUKI_FLOW.slice(0, shown), ...(yukiConfirmed ? YUKI_FLOW.slice(YUKI_BOOKING_STEP) : [])];
+  // calls after the booking wait for the demo clock to reach their day (timestamps carry +09:00, so the date slices compare)
+  const after = yukiConfirmed ? YUKI_FLOW.slice(YUKI_BOOKING_STEP).filter((entry) => entry.at.slice(0, 10) <= clock.slice(0, 10)) : [];
+  const entries = [...YUKI_FLOW.slice(0, shown), ...after];
 
   const run = async (key: string, task: () => Promise<void>) => {
     setBusy(key);
@@ -161,9 +163,17 @@ export function DemoConsole() {
         title="데모 컨트롤"
         description="3분 데모를 진행하는 화면이에요. 지금은 목업이라 API 대신 이 화면 안에서 동작해요."
         action={
-          <Link href="/ops/clinics" className={buttonStyles({ variant: "secondary" })}>
-            운영 콘솔 열기
-          </Link>
+          <div className="flex flex-wrap gap-sp-2">
+            <Link href="/demo/ledger" className={buttonStyles({ variant: "secondary" })}>
+              공개 원장
+            </Link>
+            <Link href="/demo/wallet" className={buttonStyles({ variant: "secondary" })}>
+              브라우저 지갑
+            </Link>
+            <Link href="/ops/clinics" className={buttonStyles({ variant: "secondary" })}>
+              운영 콘솔 열기
+            </Link>
+          </div>
         }
       />
 

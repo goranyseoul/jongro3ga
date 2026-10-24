@@ -26,18 +26,18 @@ describe("demo clock", () => {
     expect(clock.nowIso()).toBe(DEFAULT_DEMO_NOW);
     vi.advanceTimersByTime(3 * 60 * 60 * 1000);
     expect(clock.nowIso()).toBe(DEFAULT_DEMO_NOW);
-    expect(clock.today()).toBe("2026-10-24");
+    expect(clock.today()).toBe("2026-11-12");
   });
 
-  it("is a Saturday morning in Seoul, the day the scenarios start from", () => {
-    expect(clock.today()).toBe("2026-10-24");
-    expect(clock.now().getUTCDay()).toBe(6);
+  it("is a Thursday morning in Seoul, the day before Yuki arrives (spec 06)", () => {
+    expect(clock.today()).toBe("2026-11-12");
+    expect(clock.now().getUTCDay()).toBe(4);
     expect(DEFAULT_DEMO_NOW.endsWith("+09:00")).toBe(true);
   });
 
   it("starts from DEMO_NOW when it is set", () => {
-    process.env.DEMO_NOW = "2026-11-12T10:00:00+09:00";
-    expect(clock.today()).toBe("2026-11-12");
+    process.env.DEMO_NOW = "2026-11-14T13:00:00+09:00";
+    expect(clock.today()).toBe("2026-11-14");
   });
 
   it("moves only through setClock, forward or back, and resets to the start", () => {
@@ -51,15 +51,15 @@ describe("demo clock", () => {
 
   it("advances by hours from the fixed time", () => {
     advanceClockHours(5);
-    expect(clock.nowIso()).toBe("2026-10-24T15:00:00+09:00");
+    expect(clock.nowIso()).toBe("2026-11-12T15:00:00+09:00");
     advanceClockHours(24);
-    expect(clock.today()).toBe("2026-10-25");
+    expect(clock.today()).toBe("2026-11-13");
   });
 
   it("converts to Seoul time: 16:00 UTC is already the next day in Korea", () => {
-    setClock("2026-10-24T16:00:00Z");
-    expect(clock.today()).toBe("2026-10-25");
-    expect(clock.nowIso()).toBe("2026-10-25T01:00:00+09:00");
+    setClock("2026-11-12T16:00:00Z");
+    expect(clock.today()).toBe("2026-11-13");
+    expect(clock.nowIso()).toBe("2026-11-13T01:00:00+09:00");
   });
 
   it("accepts Date objects and rejects nonsense", () => {

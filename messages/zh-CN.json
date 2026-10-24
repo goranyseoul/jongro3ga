@@ -248,6 +248,14 @@
       "regular": "原价 {price}",
       "conditions": "条件: {text}"
     },
+    "offer": {
+      "verified": "已证明符合条件",
+      "note": "未发送施术记录,只证明了符合条件"
+    },
+    "stats": {
+      "visits": "PibooK 用户到访 {visits, number} 人",
+      "reviews": "验证评价 {reviews} 条,评分 {avg}"
+    },
     "perUnit": "每{unit} {price}",
     "typical": "常见用量为{range}",
     "includes": {
@@ -277,6 +285,9 @@
       "safety": "安全信息",
       "safetyValue": "怀孕或哺乳: {pregnant} / 过敏: {allergies}",
       "contact": "联系方式",
+      "history": "施术记录",
+      "historyValue": "不共享(只证明是否符合优惠条件)",
+      "historyValuePlain": "不共享",
       "yes": "是",
       "no": "否",
       "none": "无",
@@ -362,8 +373,32 @@
       "session": "第{n}次",
       "shared": "匿名共享: 开",
       "notShared": "匿名共享: 关",
+      "anchored": "诊所确认 · 链上记录 v{version}",
+      "clinicConfirmed": "诊所确认",
+      "selfReported": "自行录入 · 不用于优惠证明",
+      "txLabel": "在 Base Sepolia 查看交易(新标签页)",
       "fromBooking": "由预约自动记录",
-      "rating": "满意度 {n}/5"
+      "rating": "满意度 {n}/5",
+      "search": "搜索项目",
+      "searchPlaceholder": "例: 丽珠兰",
+      "all": "全部",
+      "noMatch": "没有该项目的记录。",
+      "month": "{count}条 · 共 {total}",
+      "unknownDay": "{month} (日期不记得)",
+      "summary": "自{first}起{count}次 · 共 {total}",
+      "pages": "页码",
+      "prevPage": "上一页",
+      "nextPage": "下一页",
+      "preset": {
+        "procedure": "项目",
+        "area": "部位",
+        "clinic": "诊所"
+      },
+      "area": {
+        "forehead": "额头",
+        "full_face": "全脸",
+        "jawline": "下颌线"
+      }
     },
     "calendar": {
       "title": "日历",
@@ -375,7 +410,44 @@
       "empty": "这一天没有记录。",
       "hasEvents": "{n}项安排",
       "doneSession": "第{n}次 已完成",
-      "plannedSession": "第{n}次 预定"
+      "plannedSession": "第{n}次 预定",
+      "monthTotal": "本月 {count}条 · 共 {total}",
+      "monthNone": "本月没有记录。"
+    },
+    "plan": {
+      "title": "我的护理计划",
+      "lead": "将记录与各项目的建议周期对比，告诉你下一步该做什么。",
+      "showAll": "查看全部护理卡片 ({n})",
+      "showLess": "收起",
+      "findClinic": "查找诊所",
+      "findIntent": "帮我找有{procedure}活动的诊所 ({range})"
+    },
+    "cycle": {
+      "course": "建议: 每隔{interval}天做{count}次，之后{every}",
+      "maintenance": "建议: {every}",
+      "range": "每{min}~{max}天",
+      "every": "每{days}天"
+    },
+    "point": {
+      "courseOnTrack": "{count}次中已完成{done}次。建议在{days}天内做第{next}次。",
+      "courseLate": "{count}次中已完成{done}次，距上次已{since}天。比建议间隔晚了{late}天。",
+      "early": "距上次{since}天。距下次护理还有{days}天。",
+      "window": "距上次{since}天。现在正是护理的好时机。",
+      "late": "距上次{since}天。已超过建议周期{late}天。"
+    },
+    "top": {
+      "title": "常做的项目",
+      "count": "{n}次",
+      "last": "上次 {date}",
+      "total": "共 {amount}",
+      "prev": "上一个",
+      "next": "下一个"
+    },
+    "alerts": {
+      "label": "重要提醒",
+      "late": "{procedure} 已超过建议周期{late}天",
+      "courseLate": "{procedure} 比建议间隔晚了{late}天",
+      "more": "另有{n}项"
     }
   },
   "recordsNew": {
@@ -403,7 +475,9 @@
       "next": "下次时间",
       "all": "查看记录",
       "another": "继续添加"
-    }
+    },
+    "month": "做项目的月份",
+    "dateUnknown": "不记得具体日期 (只记月份)"
   },
   "outcomes": {
     "metaTitle": "施术记录",
@@ -483,9 +557,21 @@
       "title": "我的代理卡",
       "lead": "这是您的代理向其他代理展示的信息。"
     },
+    "wallet": {
+      "title": "记录钱包",
+      "lead": "诊所只会知道您是否符合优惠条件。施术日期、诊所和次数只保存在这台设备上。",
+      "subject": "化名",
+      "commitment": "链上病历哈希",
+      "none": "无",
+      "version": "版本",
+      "anchored": "已上链记录数",
+      "anchoredValue": "{n} 条",
+      "network": "{network} 测试网 · 演示",
+      "ledger": "查看公开账本"
+    },
     "export": {
       "title": "导出数据",
-      "body": "以 JSON 保存个人资料、同意记录和施术记录。",
+      "body": "以 JSON 保存个人资料、同意记录、施术记录和记录钱包。",
       "button": "导出 JSON"
     },
     "remove": {

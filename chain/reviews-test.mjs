@@ -2,7 +2,8 @@ import { createReviewBoard, newVisitIdentity, writeReview } from './reviews.mjs'
 
 const board = createReviewBoard();
 const yuki = newVisitIdentity(), lin = newVisitIdentity(), emily = newVisitIdentity(), outsider = newVisitIdentity();
-const check = (label, got, want) => console.log(`  ${got === want ? 'PASS' : 'FAIL'}  ${label} -> ${got}`);
+let failures = 0;
+const check = (label, got, want) => { const pass = got === want; if (!pass) failures++; console.log(`  ${pass ? 'PASS' : 'FAIL'}  ${label} -> ${got}`); };
 
 board.issueTicket('clinic-b', 'EXOSOME', yuki.commitment);
 board.issueTicket('clinic-b', 'EXOSOME', lin.commitment);
@@ -28,4 +29,5 @@ const r3 = await writeReview(outsider, fakeGroup, 'clinic-x', 'EXOSOME', { ratin
 check('non-patient posts to clinic B', (await board.submitReview({ ...r3, clinicId: 'clinic-b' })).reason, 'wrong scope');
 
 console.log(JSON.stringify(board.stats(), null, 1));
-process.exit(0);
+console.log(failures ? `\n${failures} failure(s)` : '\nall passed');
+process.exit(failures ? 1 : 0);

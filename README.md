@@ -99,19 +99,20 @@ npm run build        # prebuild가 토큰 가드와 컴포넌트 목록을 먼�
 
 디자인 값(색, 간격, 모서리, 타이포)은 `app/globals.css`의 CSS 변수가 유일한 출처이고, `tailwind.config.ts`는 그 변수만 매핑한다. 토큰 이름과 UI 규칙은 스펙의 `docs/spec/05-screens.md`를 따른다.
 
-## ZK 프라이버시 레이어 (팀원 브랜치 `feat/zk-record-registry`에서 통합)
+## ZK 기록 레이어 (ZK 확장)
 
-병원은 차트를 보지 않고 증명만 본다. 고객 에이전트가 병원의 공개 오퍼 규칙을 기기 안에서 매칭하고, 해당되는 오퍼만 ZK 증명으로 주장한다 (예: "쥬베룩 1회 완료 · 28일 경과", "우리 병원 첫 방문"). 시술 기록은 유저 지갑에, 체인(Base Sepolia)에는 가명 → 차트 해시만 저장한다. 후기는 Semaphore로 실제 방문자만 익명 1회. 데모 장면은 [DEMO.md](DEMO.md), 연동 가이드: [docs/INTEGRATION.md](docs/INTEGRATION.md)
+병원은 차트를 보지 않고 증명만 본다. 고객 에이전트가 병원 이벤트의 조건(`event.zkClauses`)을 기기 안에서 매칭하고, 해당되는 오퍼만 ZK 증명으로 주장한다 (예: "리쥬란 정확히 1회" = 2회차 오퍼, "우리 병원 기록 0건" = 첫 방문). 시술 기록은 고객 지갑에, 체인(Base Sepolia)에는 가명 → 차트 해시만 저장한다. 후기는 Semaphore로 실제 방문자만 익명 1회, 원문과 집계(n, 평점)를 로그인 고객·비교 화면에 공개 (익명 집합 3명 이상). 시나리오·id의 정본은 `docs/spec` (03 ZK 확장, 06, 07, 10 T16~T18), 연동 가이드: [docs/INTEGRATION.md](docs/INTEGRATION.md)
 
 | 디렉터리 | 내용 |
 | --- | --- |
-| `zk/` | Noir 회로: `eligibility`(오퍼 조건 증명), `append`(기록 추가 증명), `commit`, `record_hash` |
-| `chain/` | `RecordRegistry.sol` + 검증 컨트랙트, 지갑·증명 로직(`records.mjs`), Semaphore 익명 리뷰(`reviews.mjs`), 로컬 e2e(`e2e.mjs`) |
-| `glowpass/` | ZK HTTP API + 데모 콘솔 + 공개 원장 화면 `/ledger` (원래 브랜치의 `app/`. Next.js `app/` 디렉토리와 겹쳐서 옮김) |
+| `zk/` | Noir 회로: `eligibility`(오퍼 조건 증명), `append`(기록 추가 증명), `commit`, `record_hash`. `codes.json`은 시술·병원 id의 회로 코드 |
+| `chain/` | `RecordRegistry.sol` + 검증 컨트랙트, 지갑·증명 로직(`records.mjs`), Semaphore 익명 후기(`reviews.mjs`), 로컬 e2e(`e2e.mjs`) |
+| `glowpass/` | ZK HTTP API 데모 서버 + 데모 콘솔 + 공개 원장 화면 `/ledger`. `catalog.mjs`가 스펙 id·오퍼·시드의 정본 |
+| `lib/zk/` | Next.js 쪽 공용 라이브러리: 조건 매칭(`clauses.ts`), 회로 코드(`codes.ts`), glowpass 클라이언트(`client.ts`) |
 
 ```bash
 (cd zk && npm i) && (cd chain && npm i) && (cd glowpass && npm i)
-cd glowpass && PORT=4000 node server.mjs   # Next.js(3000)와 포트 분리
+cd glowpass && npm start                  # http://localhost:4000 (Next.js는 3000)
 ```
 
-Yuki·Lin 증명은 차트 원본(지갑 파일)이 있는 데모 맥 서버에서만 성공한다 (docs/INTEGRATION.md 1절).
+페르소나 증명은 차트 원본(지갑 파일)이 있는 데모 맥 서버에서만 성공한다 (docs/INTEGRATION.md 1절).

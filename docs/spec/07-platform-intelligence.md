@@ -53,7 +53,7 @@
 | 아라 | 2cc · 300,000 · VAT 별도 | 165,000 | mid | within | paid_more_than_quoted, indicative_price | `fair` (+ 경고 문장) |
 | 한빛 | 2cc · 420,000 · VAT 포함 | 210,000 | high | within | indicative_price | `high` |
 
-이 표는 **기준 표본을 고정해 넣는 순수 함수 테스트**다. 실제 데모에서 Yuki(선호 지역 신사)의 요청은 지역 하드 필터 때문에 서울글로우·민트·아라 3곳만 견적을 받는다 (한빛은 명동, 다혜는 홍대). 한빛 행은 `high` 구간 검증용.
+이 표는 **기준 표본을 고정해 넣는 순수 함수 테스트**다. 실제 데모에서 Yuki(일본어)의 요청은 언어 하드 필터 때문에 같은 서울글로우·민트·아라 3곳만 견적을 받는다 (한빛은 중국어 응대, 다혜는 영어 응대). 한빛 행은 `high` 구간 검증용.
 
 경계값 테스트도 둔다: x = p75 정확히 → `mid`, x = p90 정확히 → `high`, n = 4 → `insufficient_data`, n = 5 → 판정.
 
@@ -66,13 +66,14 @@
 1. `verificationStatus = "verified"` 그리고 `foreignPatientFacilityRegistered = true`
 2. 요청 시술을 메뉴 또는 이달 오퍼로 제공
 3. 요청 `languages` 중 하나 이상을 `staff` 또는 `interpreter`로 지원 (`app_translation`만이면 제외, 단 요청이 `ko`면 무관)
-4. 요청 `areas`가 비어 있지 않으면 그 지역 또는 같은 지역 그룹
+
+지역은 조건이 아니라 위치 정보다 (오너 결정 2026-10-24, BUILD-LOG 12). 요청 `areas`는 필터와 점수에 쓰지 않고, reasons 템플릿 문장("숙소 근처")과 화면 표시에만 쓴다. 규칙 `prefer_area`로 지역을 올릴 수는 있지만 하드 제외는 아니다.
 
 ### 점수 (0~1)
 
 | 요소 | 가중치 | 계산 |
 | --- | --- | --- |
-| 적합도 | 0.35 | 언어 (staff 1.0 · interpreter 0.6) 와 지역 (요청 지역 1.0 · 같은 그룹 0.5) 의 평균 |
+| 적합도 | 0.35 | 언어만 (staff 1.0 · interpreter 0.6) |
 | 가격 | 0.25 | 요청 용량에 가장 가까운 메뉴의 단위가격 u로 `clamp((p75 - u) / (p75 - p25), 0, 1)`. 표본 부족 시 0.5. 메뉴 용량이 통상 min 미만뿐이면 최대 0.3 |
 | 결과 | 0.25 | 베이지안 평균 만족도 `(5 × 4.0 + Σs) / (5 + n)` 를 `(x - 1) / 4` 로 정규화 |
 | 신뢰성 | 0.15 | `(1 - min(1, 평균 quoteGapRatio × 2)) × (1 - 응답 시간초과 비율)` (음수 gap은 0으로) |
@@ -83,7 +84,7 @@
 
 1. 하드 필터 → 점수 계산 → `candidatesBeforeRules` 기록
 2. 활성 규칙 중 `when`이 **요청**과 맞는 것 평가 (모든 지정 필드가 일치해야 매치, 미지정 필드는 와일드카드. 병원은 `when`에 없고 `then.clinicIds`로만 지정). 순서: `require_language` → `exclude_clinic` → `boost`/`demote`/`prefer_area` (점수 0~1로 clamp)
-3. 점수 내림차순 상위 5곳. 동점은 `clinicId` 사전순 (결정론)
+3. 점수 내림차순 상위 3곳. 동점은 `clinicId` 사전순 (결정론)
 4. 후보마다 추천 토큰 발급 (ES256, 72시간), `reasons`는 상위 기여 요소 2개 + 규칙 기인 사유를 템플릿 문장으로 (규칙 내용 자체는 노출하지 않는다)
 5. `MatchLog` 저장, 규칙 `appliedCount` 증가
 
@@ -97,7 +98,7 @@
 | 가격 기록 | `PriceRecord` 생성 (`source = outcome`, 예약 연계면 `verified = true`, 아니면 영수증 첨부 시 운영자 확인 후 true). 시드 `outcomes.json`과 데모 주입 결과는 `PriceRecord`를 만들지 않는다 (판정 표본 n = 42 유지) |
 | 신호 | `quote_gap`(> 0.10), `low_satisfaction`(≤ 2), `side_effect_report`(sideEffects 비어 있지 않음) |
 | 병원 노출 | 병원은 집계만 (`/clinic/insights`, 같은 병원 결과 n ≥ 5). 개별 코멘트·점수는 병원에 보내지 않는다 |
-| 공개 노출 | P0에서는 결과를 공개 후기 피드로 노출하지 않는다. 매칭·판정 신호로만 쓴다 ([08-compliance.md](08-compliance.md)) |
+| 공개 노출 | 결과(수치)는 매칭·판정 신호로만 쓴다. 검증 방문자의 익명 후기는 원문과 집계를 로그인 고객 화면과 비교 화면에 공개한다 (랜딩 제외, 익명 집합 3명 이상, [08-compliance.md](08-compliance.md)) |
 
 ## 4. 연결 규칙과 개선 루프
 
@@ -146,3 +147,13 @@ Claude가 근거 요약·사유 문장 작성 + 추가 패턴 제안 (proposer)
 ## 5. 레시피 (`platform.recipe`)
 
 `kr-patterns.json` + `shared_record` 출처 `PriceRecord`로, 요청 `ageBand`·`concerns`에 맞는 시술 조합 상위 3개와 share, 시술별 통상 용량·주기·다운타임·효과 시기를 돌려준다. 표본 n < 10이면 `disclaimer`에 "데이터가 적어요"를 넣는다. `demo_assumption` 시술은 `disclaimer`에 "데모용 값"을 넣는다. 의학적 권유 문장은 넣지 않는다.
+
+## 검증 방문과 후기 집계 (ZK 확장)
+
+ZK 기록 레이어가 만드는 두 가지 집계값을 `platform.match_clinics` 응답과 비교 화면에 보여주는 규칙이다 ([INTEGRATION.md](../INTEGRATION.md), [03-a2a-protocol.md](03-a2a-protocol.md) 메시지 스키마).
+
+- `verifiedVisits`: `platform.anchor_record`로 방문 티켓이 발급된 수 (시드 `verified-visits.json` 포함). 병원과 시술별로 센다.
+- `reviewStats`: `{ n, avgRating }`. (병원, 시술) 익명 집합이 **3명 이상일 때만** 응답에 넣는다 (`MIN_ANON_SET = 3`). 3명 미만이면 필드를 생략한다 ([08-compliance.md](08-compliance.md)).
+- 둘 다 **매칭 점수에 들어가지 않는다** (2절 점수표 불변). 표시용 맥락이다. "방문 N명", "후기 n건 평점 x.x"처럼 사실만 쓰고, 병원끼리 우열을 말하는 문구("A보다 B가 낫다")는 쓰지 않는다 (금지어 테스트 대상).
+- 후기 원문(`pibu/review@1`의 `text`)은 집계와 함께 로그인 고객 화면과 비교 화면에 공개한다 (랜딩 제외, 익명 집합 3명 이상, 오너 결정 2026-10-24). 원문은 매칭 점수에 들어가지 않는다.
+- `offerApplied`가 붙은 견적도 다른 견적과 똑같이 판정한다. 용량·가격 판정은 증명과 독립이다. 예를 들어 민트의 첫 방문 1cc 이벤트(99,000원)는 증명이 통과해도 `underdosed` 라벨을 받는다.

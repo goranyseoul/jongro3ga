@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
-import { AppNav } from "./app-nav";
+import { AppNav, SettingsLink } from "./app-nav";
 import { LocaleSwitcher } from "./locale-switcher";
 
 export type PageShellProps = {
@@ -38,11 +38,13 @@ export async function PageShell({ children, variant = "app", width = "narrow" }:
                 { href: "/home", label: t("nav.home") },
                 { href: "/chat", label: t("nav.chat") },
                 { href: "/records", label: t("nav.records") },
-                { href: "/settings/data", label: t("nav.settings") },
               ]}
             />
           ) : null}
-          <LocaleSwitcher label={t("language")} />
+          <div className="flex items-center gap-sp-1">
+            <LocaleSwitcher label={t("language")} />
+            {isApp ? <SettingsLink href="/settings/data" label={t("nav.settings")} /> : null}
+          </div>
         </div>
       </header>
 
