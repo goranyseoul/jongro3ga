@@ -104,7 +104,7 @@ export async function matchOffers(persona) {
   const w = loadWallet(persona);
   const today = await chainToday();
   return OFFERS.map((o) => ({
-    offerId: o.id, clinicId: o.clinicId, clinic: CLINICS[o.clinicId].ko, title: o.title, benefit: o.benefit, scene: o.scene,
+    offerId: o.id, clinicId: o.clinicId, procedureId: o.procedureId, clinic: CLINICS[o.clinicId].ko, title: o.title, benefit: o.benefit, scene: o.scene,
     conditions: o.clauses.map(describeClause),
     eligible: o.clauses.every((c) => clauseHolds(w.chart, today, c)),
   }));
