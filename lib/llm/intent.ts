@@ -11,7 +11,7 @@ import { clock } from "../clock";
 import type { AgeBand, Amount, Area, IsoDate, Locale, Unit } from "../domain/common";
 import { procedureMaster } from "../domain/procedure-master";
 import { resolveFixture } from "./fixtures";
-import { runClaude, type RunOptions } from "./index";
+import { llmMode, runClaude, type RunOptions } from "./index";
 import { procedureName } from "./procedure-names";
 import { buildIntentSystemPrompt } from "./prompts/intent";
 import { formatZodError, parseToolInput, zodTool } from "./tools";
@@ -131,7 +131,7 @@ export async function draftProcedureRequest(options: DraftOptions): Promise<Inte
     const call = result.toolCalls.find((c) => c.name === draftProcedureRequestTool.spec.name);
     return call ? parseToolInput(draftProcedureRequestTool, call.input) : ({ ok: false, error: "tool not called" } as const);
   };
-  let source: IntentResult["source"] = "model";
+  let source: IntentResult["source"] = llmMode() === "live" ? "model" : "fixture";
   let extracted = extract(await runClaude(runOptions));
   if (!extracted.ok) {
     source = "fixture";

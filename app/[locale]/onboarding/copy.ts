@@ -1,8 +1,8 @@
 import type { Locale } from "@/lib/domain/common";
 import type { AgeBand, Area, Channel, Concern, ConsentType, NationalityOption, Residency, SlotKey } from "./mock";
 
-// Mock onboarding copy, one block per locale. The real flow gets its agent lines from Claude
-// (04-onboarding-chat.md); widget and slot labels stay here.
+// Onboarding screen copy, one block per locale. The agent lines come from POST /api/onboarding/customer
+// (Claude or lib/llm/fixtures); widget, slot and consent labels stay here.
 export type OnboardingCopy = {
   title: string;
   previewTitle: string;
@@ -26,32 +26,9 @@ export type OnboardingCopy = {
   nudge: string;
   widgetNudge: string;
   agentCard: { version: string; skills: string; endpoint: string; json: string };
-  say: {
-    locale: string;
-    consent: string;
-    consentBlocked: string;
-    sensitiveDeclined: string;
-    nickname: string;
-    nationality: (name: string) => string;
-    residency: string;
-    residentNote: string;
-    ageBand: string;
-    trip: string;
-    stayArea: (range: string) => string;
-    concerns: string;
-    history: string;
-    pregnant: string;
-    budget: string;
-    downtime: string;
-    languages: string;
-    channel: string;
-    handle: (channel: string) => string;
-    summary: string;
-    editPick: string;
-    done: (name: string) => string;
-    intentAck: (text: string) => string;
-    intentReady: (text: string) => string;
-  };
+  editPick: string;
+  connectionError: string;
+  goChat: string;
   summary: { title: string; create: string; edit: string };
   doneTitle: string;
   taskStatus: { pending: string; active: string; done: string; error: string };
@@ -97,32 +74,9 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     nudge: "위 선택지에서 골라 주시거나 그대로 입력해 주세요.",
     widgetNudge: "위 입력 칸을 써 주세요.",
     agentCard: agentCardKo,
-    say: {
-      locale: "안녕하세요, PibooK 담당 에이전트예요. 한국어로 진행할까요?",
-      consent: "시작하기 전에 동의가 필요해요. 하나씩 확인해 주세요.",
-      consentBlocked: "이용약관, 개인정보, 국외 처리 동의가 있어야 진행할 수 있어요.",
-      sensitiveDeclined: "괜찮아요. 피부와 시술 정보는 묻지 않을게요. 병원 매칭은 제한돼요.",
-      nickname: "고마워요. 뭐라고 부를까요?",
-      nationality: (n) => `${n}님, 국적을 알려 주세요.`,
-      residency: "한국에 외국인등록(또는 거소신고)을 하고 살고 계신가요?",
-      residentNote: "그러면 병원 매칭과 예약은 도와드릴 수 없어요. 시술 기록 중심으로 만들게요.",
-      ageBand: "나이대를 골라 주세요. 생년월일은 받지 않아요.",
-      trip: "한국에 오는 날과 돌아가는 날을 알려 주세요.",
-      stayArea: (r) => `${r} 일정이군요. 숙소는 어느 지역인가요?`,
-      concerns: "신경 쓰이는 피부 고민을 모두 골라 주세요.",
-      history: "전에 받아 본 시술이 있나요? 없으면 '없음'을 눌러 주세요.",
-      pregnant: "병원에 전달할 안전 정보예요. 현재 임신 중이거나 수유 중인가요?",
-      budget: "예산 상한이 있으면 알려 주세요. 없으면 건너뛰어도 돼요.",
-      downtime: "시술 후 붉어짐 같은 회복 기간은 며칠까지 괜찮으세요?",
-      languages: "병원에서 필요한 언어를 골라 주세요.",
-      channel: "알림은 어디로 받을까요?",
-      handle: (c) => `${c} 아이디나 주소를 알려 주세요.`,
-      summary: "이 내용으로 에이전트를 만들까요?",
-      editPick: "어느 항목을 고칠까요?",
-      done: (n) => `${n}님의 에이전트가 만들어졌어요. 이제 받고 싶은 시술을 말씀해 주세요.`,
-      intentAck: (t) => `'${t}' 말씀이군요. 도와드리기 전에 먼저 전용 에이전트를 만들게요. 3분이면 돼요.`,
-      intentReady: (t) => `'${t}' 요청을 정리할 준비가 됐어요.`,
-    },
+    editPick: "어느 항목을 고칠까요?",
+    connectionError: "연결이 끊겼어요. 잠시 후 다시 보내 주세요.",
+    goChat: "요청 정리하러 가기",
     summary: { title: "에이전트 요약", create: "만들기", edit: "수정하기" },
     doneTitle: "에이전트 활성화됨",
     taskStatus: { pending: "대기", active: "진행 중", done: "완료", error: "확인 필요" },
@@ -200,32 +154,9 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     nudge: "上の選択肢から選ぶか、そのまま入力してください。",
     widgetNudge: "上の入力欄を使ってください。",
     agentCard: { version: "バージョン", skills: "スキル", endpoint: "エンドポイント", json: "JSONを表示" },
-    say: {
-      locale: "はじめまして、PibooKの担当エージェントです。日本語で進めてもいいですか？",
-      consent: "始める前に同意をお願いします。ひとつずつ確認してください。",
-      consentBlocked: "利用規約、個人情報、海外からの情報処理への同意が必要です。",
-      sensitiveDeclined: "わかりました。肌と施術の情報はお聞きしません。クリニックのご紹介は制限されます。",
-      nickname: "ありがとうございます。何とお呼びすればいいですか？",
-      nationality: (n) => `${n}さん、国籍を教えてください。`,
-      residency: "韓国で外国人登録（または居所申告）をして暮らしていますか？",
-      residentNote: "その場合、クリニックの紹介と予約はご案内できません。施術記録を中心に作成します。",
-      ageBand: "年代を選んでください。生年月日はお聞きしません。",
-      trip: "韓国に到着する日と帰国する日を教えてください。",
-      stayArea: (r) => `${r}ですね。宿泊はどのエリアですか？`,
-      concerns: "気になる肌の悩みをすべて選んでください。",
-      history: "これまでに受けた施術はありますか？なければ「なし」を押してください。",
-      pregnant: "クリニックに伝える安全情報です。現在、妊娠中または授乳中ですか？",
-      budget: "予算の上限があれば教えてください。なければスキップできます。",
-      downtime: "施術後の赤みなど、回復期間は何日まで大丈夫ですか？",
-      languages: "クリニックで必要な言語を選んでください。",
-      channel: "通知はどこで受け取りますか？",
-      handle: (c) => `${c}のIDまたはアドレスを教えてください。`,
-      summary: "この内容でエージェントを作りますか？",
-      editPick: "どの項目を修正しますか？",
-      done: (n) => `${n}さんのエージェントができました。受けたい施術を教えてください。`,
-      intentAck: (t) => `「${t}」ですね。お手伝いする前に、あなた専用のエージェントを作ります。3分ほどです。`,
-      intentReady: (t) => `「${t}」の条件を整理する準備ができました。`,
-    },
+    editPick: "どの項目を修正しますか？",
+    connectionError: "接続できませんでした。少し待ってからもう一度送ってください。",
+    goChat: "条件の整理へ",
     summary: { title: "エージェントの内容", create: "作成する", edit: "修正する" },
     doneTitle: "エージェント有効",
     taskStatus: { pending: "待機", active: "進行中", done: "完了", error: "要確認" },
@@ -303,32 +234,9 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     nudge: "Pick one of the options above, or type it.",
     widgetNudge: "Please use the input above.",
     agentCard: { version: "Version", skills: "Skills", endpoint: "Endpoint", json: "Show JSON" },
-    say: {
-      locale: "Hi, I'm your PibooK agent. Shall we continue in English?",
-      consent: "Before we start, I need your consent. Please review each item.",
-      consentBlocked: "Consent to the terms, personal information and cross-border processing is needed to continue.",
-      sensitiveDeclined: "No problem. I won't ask about your skin or procedures. Clinic matching will be limited.",
-      nickname: "Thank you. What should I call you?",
-      nationality: (n) => `Nice to meet you, ${n}. What is your nationality?`,
-      residency: "Do you live in Korea with an alien registration (or residence report)?",
-      residentNote: "In that case I can't help with clinic matching or booking. I'll set you up for procedure records.",
-      ageBand: "Which age band are you in? I don't ask for your birth date.",
-      trip: "When do you arrive in Korea, and when do you fly home?",
-      stayArea: (r) => `${r}, got it. Which area are you staying in?`,
-      concerns: "Pick every skin concern you have.",
-      history: "Have you had any procedures before? If not, tap None.",
-      pregnant: "This is safety information for the clinic. Are you pregnant or breastfeeding?",
-      budget: "Do you have a budget limit? You can skip this.",
-      downtime: "How many days of recovery, such as redness, are fine for you?",
-      languages: "Which languages do you need at the clinic?",
-      channel: "Where should I send notifications?",
-      handle: (c) => `What is your ${c} ID or address?`,
-      summary: "Shall I create your agent with these details?",
-      editPick: "Which item would you like to change?",
-      done: (n) => `Your agent is ready, ${n}. Tell me which procedure you'd like.`,
-      intentAck: (t) => `"${t}", got it. Before I help, let's set up your own agent. It takes about 3 minutes.`,
-      intentReady: (t) => `I'm ready to turn "${t}" into a request.`,
-    },
+    editPick: "Which item would you like to change?",
+    connectionError: "Connection lost. Please send that again in a moment.",
+    goChat: "Set up my request",
     summary: { title: "Agent summary", create: "Create", edit: "Edit" },
     doneTitle: "Agent active",
     taskStatus: { pending: "Pending", active: "In progress", done: "Done", error: "Needs attention" },
@@ -412,32 +320,9 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     nudge: "请从上面的选项中选择，或直接输入。",
     widgetNudge: "请使用上面的输入框。",
     agentCard: { version: "版本", skills: "技能", endpoint: "接口地址", json: "查看 JSON" },
-    say: {
-      locale: "你好，我是 PibooK 的专属代理。用中文继续可以吗？",
-      consent: "开始之前需要你的同意，请逐项确认。",
-      consentBlocked: "需要同意使用条款、个人信息和跨境处理才能继续。",
-      sensitiveDeclined: "好的，我不会询问皮肤和项目信息。诊所匹配会受到限制。",
-      nickname: "谢谢。我该怎么称呼你？",
-      nationality: (n) => `${n}，请告诉我你的国籍。`,
-      residency: "你是否在韩国办理了外国人登录（或居所申报）并在韩国居住？",
-      residentNote: "这样的话，我无法提供诊所匹配和预约，将以项目记录为主创建。",
-      ageBand: "请选择年龄段。我们不收集出生日期。",
-      trip: "请告诉我到达韩国和回国的日期。",
-      stayArea: (r) => `${r}，明白了。你住在哪个区域？`,
-      concerns: "请选择所有在意的皮肤问题。",
-      history: "以前做过项目吗？没有的话请点「没有」。",
-      pregnant: "这是要告知诊所的安全信息。你目前是否怀孕或哺乳？",
-      budget: "如有预算上限请告诉我，也可以跳过。",
-      downtime: "术后泛红等恢复期最多可以接受几天？",
-      languages: "请选择在诊所需要的语言。",
-      channel: "通知发送到哪里？",
-      handle: (c) => `请告诉我你的 ${c} 账号或地址。`,
-      summary: "用这些内容创建代理吗？",
-      editPick: "要修改哪一项？",
-      done: (n) => `${n}，你的代理已创建。告诉我你想做的项目吧。`,
-      intentAck: (t) => `「${t}」，明白了。在帮你之前，先创建你的专属代理，大约 3 分钟。`,
-      intentReady: (t) => `已准备好整理「${t}」的需求。`,
-    },
+    editPick: "要修改哪一项？",
+    connectionError: "连接中断了，请稍后再发送一次。",
+    goChat: "去整理需求",
     summary: { title: "代理概要", create: "创建", edit: "修改" },
     doneTitle: "代理已启用",
     taskStatus: { pending: "待处理", active: "进行中", done: "已完成", error: "需处理" },

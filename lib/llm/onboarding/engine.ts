@@ -97,6 +97,8 @@ export type OnboardingEvent =
       missing: SlotId[];
       progress: number;
       draft: OnboardingDraft;
+      /** Server (demo clock) date, the earliest arrival the date widget offers. */
+      today: IsoDate;
       profile?: CustomerProfileBody;
       consents?: Omit<ConsentEntry, "customerId">[];
     };
@@ -415,6 +417,7 @@ export async function runOnboardingTurn(request: OnboardingRequest, deps: TurnDe
     missing: missingRequired(session.draft),
     progress: progressPercent(session.draft),
     draft: session.draft,
+    today,
     ...extra,
   });
 
@@ -432,11 +435,11 @@ export async function runOnboardingTurn(request: OnboardingRequest, deps: TurnDe
     const action = widgetAction(req.widgetValue);
     const userText = req.message.trim() || describeWidget(req.widgetValue);
     if (action.kind === "invalid") {
-      return rejectWidget(session, action.slot, action.error, events, store, now, conversationLocale());
+      return rejectWidget(session, action.slot, action.error, events, store, now, today, conversationLocale());
     }
     if (action.kind === "patch") {
       const ruleErrors = checkPatchRules(session.draft, action.patch, today);
-      if (ruleErrors.length > 0) return rejectWidget(session, action.slot, ruleErrors.join(" "), events, store, now, conversationLocale());
+      if (ruleErrors.length > 0) return rejectWidget(session, action.slot, ruleErrors.join(" "), events, store, now, today, conversationLocale());
       session.draft = withDefaults(applyPatch(session.draft, action.patch));
       appliedPatches.push(action.patch);
       if (session.editing === action.slot) {
@@ -597,6 +600,7 @@ async function rejectWidget(
   events: OnboardingEvent[],
   store: Store,
   now: IsoDateTime,
+  today: IsoDate,
   locale: Locale,
 ): Promise<{ events: OnboardingEvent[]; session: OnboardingSession }> {
   const L = ONBOARDING_LINES[locale];
@@ -616,6 +620,7 @@ async function rejectWidget(
     missing: missingRequired(session.draft),
     progress: progressPercent(session.draft),
     draft: session.draft,
+    today,
   });
   return { events, session };
 }
