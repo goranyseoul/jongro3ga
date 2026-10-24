@@ -13,3 +13,9 @@ export const LOCALE_NAME: Record<Locale, string> = {
   en: "English",
   ko: "한국어",
 };
+
+// Korean keeps words whole across lines; Japanese and Chinese have no spaces, so keep-all would
+// stop them from wrapping at all and overflow narrow screens.
+export function wordBreak(locale: Locale): string {
+  return locale === "ko" ? "break-keep" : "break-words";
+}
