@@ -50,7 +50,7 @@ export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingA
     <div className="relative flex flex-col gap-sp-12 pb-sp-16 pt-sp-8">
       <section aria-labelledby="home-categories" className={section}>
         <SectionHead id="home-categories" title={c.categories.title} sub={c.categories.sub} />
-        <ul className="mt-sp-4 grid grid-cols-2 gap-sp-3 md:grid-cols-5">
+        <ul className="mt-sp-4 grid grid-cols-2 gap-sp-3 md:grid-cols-3 lg:grid-cols-5">
           {CATEGORY_ORDER.map((area) => {
             const name = CATEGORY_NAME[area][locale] ?? CATEGORY_NAME[area].en ?? area;
             const sample = proceduresInCategory(area)
@@ -70,7 +70,7 @@ export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingA
                   />
                   <span className="relative flex min-w-0 flex-col gap-sp-1">
                     <span className="text-title font-semi">{name}</span>
-                    <span className="truncate text-caption text-muted">{sample}</span>
+                    <span className="text-caption text-muted">{sample}</span>
                   </span>
                   <span className="relative text-label tabular-nums text-muted">
                     <span className="font-semi text-brand">{c.categories.count(clinicsForCategory(area).length)}</span>
