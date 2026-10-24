@@ -7,6 +7,7 @@ import {
   matchOffers,
   matchOffersDetailed,
   proveOffer,
+  publicOffers,
   readOfferProof,
   verifyOffer,
   zkEnabled,
@@ -27,7 +28,7 @@ const BUNDLE: ZkOfferProofBundle = {
 };
 
 const MATCH = [
-  { offerId: "ofr_mint_rejuran_first_visit", clinicId: "cln_mint", clinic: "민트피부과의원", title: "첫 방문 1cc 이벤트", benefit: "리쥬란 1cc 99,000원", scene: 1, conditions: ["시술 무관 @ 민트피부과의원 기록 0건"], eligible: true },
+  { offerId: "ofr_mint_rejuran_first_visit", clinicId: "cln_mint", procedureId: "rejuran_healer", clinic: "민트피부과의원", title: "첫 방문 1cc 이벤트", benefit: "리쥬란 1cc 99,000원", scene: 1, conditions: ["시술 무관 @ 민트피부과의원 기록 0건"], eligible: true },
   { offerId: "ofr_seoul_glow_rejuran_second", clinicId: "cln_seoul_glow", clinic: "서울글로우의원", title: "리쥬란 2회차 패키지 10%", benefit: "10%", scene: 2, conditions: ["리쥬란 힐러 정확히 1회"], eligible: false },
   { offerId: "ofr_elsewhere", clinicId: "cln_not_in_pibook", clinic: "X", title: "X", benefit: "X", scene: 1, conditions: [], eligible: true },
 ];
@@ -62,6 +63,12 @@ beforeAll(async () => {
       const bundle = b?.bundle as ZkOfferProofBundle;
       const ok = b?.clinicId === "cln_mint" && bundle.subjectId === BUNDLE.subjectId;
       return reply(res, 200, { ok, reason: ok ? "모든 조건이 온체인 해시 기준으로 증명됨" : "증명 검증 실패", commitment: "0x01", today: bundle.today, conditions: [] });
+    }
+    if (req.url === "/api/offers") {
+      return reply(res, 200, [
+        { id: "ofr_mint_rejuran_first_visit", clinicId: "cln_mint", procedureId: "rejuran_healer", title: "첫 방문 1cc 이벤트", benefit: "리쥬란 1cc 99,000원", clauses: [{ clinic: 2, maxCount: 0 }], clinic: "민트피부과의원", conditions: ["c"] },
+        { id: "ofr_elsewhere", clinicId: "cln_not_in_pibook", procedureId: "x", title: "X", benefit: "X", clauses: [], clinic: "X", conditions: [] },
+      ]);
     }
     if (req.url === "/api/ledger") {
       return reply(res, 200, {
@@ -149,7 +156,7 @@ describe("against a GlowPass server", () => {
       { clinicId: "cln_seoul_glow", offerId: "ofr_seoul_glow_rejuran_second", title: "리쥬란 2회차 패키지 10%", eligible: false },
     ]);
     const detailed = await matchOffersDetailed("cus_emily");
-    expect(detailed?.[0]).toMatchObject({ benefit: "리쥬란 1cc 99,000원", conditions: ["시술 무관 @ 민트피부과의원 기록 0건"] });
+    expect(detailed?.[0]).toMatchObject({ procedureId: "rejuran_healer", benefit: "리쥬란 1cc 99,000원", conditions: ["시술 무관 @ 민트피부과의원 기록 0건"] });
   });
 
   it("does not ask GlowPass about customers without a wallet", async () => {
@@ -183,6 +190,13 @@ describe("against a GlowPass server", () => {
     expect(await verifyOffer("cln_unknown", BUNDLE)).toMatchObject({ ok: false });
     expect(await verifyOffer("cln_mint", { ...BUNDLE, proofs: [] })).toMatchObject({ ok: false, reason: "malformed proof bundle" });
     expect(seen).toHaveLength(0);
+  });
+
+  it("lists public offer rules with PibooK clinic ids and no circuit codes", async () => {
+    configure(url);
+    expect(await publicOffers()).toEqual([
+      { offerId: "ofr_mint_rejuran_first_visit", clinicId: "cln_mint", procedureId: "rejuran_healer", title: "첫 방문 1cc 이벤트", benefit: "리쥬란 1cc 99,000원", conditions: ["c"] },
+    ]);
   });
 
   it("summarizes the public ledger without persona data", async () => {

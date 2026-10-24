@@ -65,6 +65,8 @@ export interface ZkOfferMatch {
   offerId: string;
   title: string;
   eligible: boolean;
+  /** Procedure the offer is for (first-visit offers still name the procedure they discount). */
+  procedureId?: string;
   /** Customer-facing benefit text from the clinic's public offer rule. */
   benefit?: string;
   /** Human-readable public conditions, e.g. "민트피부과의원 기록 0건". */
@@ -87,8 +89,38 @@ export async function matchOffersDetailed(persona: string): Promise<ZkOfferMatch
       offerId: row.offerId,
       title: typeof row.title === "string" ? row.title : row.offerId,
       eligible: row.eligible,
+      ...(typeof row.procedureId === "string" ? { procedureId: row.procedureId } : {}),
       ...(typeof row.benefit === "string" ? { benefit: row.benefit } : {}),
       ...(Array.isArray(row.conditions) ? { conditions: row.conditions.filter((c): c is string => typeof c === "string") } : {}),
+    });
+  }
+  return out;
+}
+
+export interface ZkPublicOffer {
+  offerId: string;
+  clinicId: string;
+  procedureId: string;
+  title: string;
+  benefit: string;
+  conditions: string[];
+}
+
+/** Clinic side: the public offer rules (what a clinic card can advertise, and the terms of a verified offerId). */
+export async function publicOffers(): Promise<ZkPublicOffer[] | null> {
+  const res = await call("/api/offers", undefined, timeoutMs("match"));
+  if (!res || !res.ok || !Array.isArray(res.body)) return null;
+  const out: ZkPublicOffer[] = [];
+  for (const o of res.body as Record<string, unknown>[]) {
+    const clinicId = typeof o?.clinicId === "string" ? fromGlowpassClinic(o.clinicId) : null;
+    if (!clinicId || typeof o.id !== "string" || typeof o.procedureId !== "string") continue;
+    out.push({
+      offerId: o.id,
+      clinicId,
+      procedureId: o.procedureId,
+      title: typeof o.title === "string" ? o.title : o.id,
+      benefit: typeof o.benefit === "string" ? o.benefit : "",
+      conditions: Array.isArray(o.conditions) ? o.conditions.filter((c): c is string => typeof c === "string") : [],
     });
   }
   return out;
