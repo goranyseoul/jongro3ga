@@ -32,6 +32,38 @@ export const chainToday = async () => Number(await pub.readContract({ ...registr
 export const commitmentOf = (subjectId) => pub.readContract({ ...registry, functionName: 'commitmentOf', args: [subjectId] });
 export const versionOf = (subjectId) => pub.readContract({ ...registry, functionName: 'versionOf', args: [subjectId] });
 
+/** Public ledger: every RecordAppended event, exactly what anyone can read from the chain.
+ *  The public RPC caps eth_getLogs at 200 blocks, so scan incrementally in chunks and cache. */
+const ledgerCache = { events: [], next: BigInt(dep.deployBlock ?? 0), scanning: null };
+const LOG_RANGE = 199n;
+async function scanLedger() {
+  const latest = await pub.getBlockNumber();
+  const ranges = [];
+  for (let from = ledgerCache.next; from <= latest; from += LOG_RANGE + 1n) ranges.push([from, from + LOG_RANGE > latest ? latest : from + LOG_RANGE]);
+  for (let i = 0; i < ranges.length; i += 8) {
+    const batch = await Promise.all(ranges.slice(i, i + 8).map(([fromBlock, toBlock]) =>
+      pub.getContractEvents({ ...registry, eventName: 'RecordAppended', fromBlock, toBlock })));
+    for (const l of batch.flat()) {
+      const block = await pub.getBlock({ blockNumber: l.blockNumber });
+      ledgerCache.events.push({
+        tx: l.transactionHash,
+        block: Number(l.blockNumber),
+        timestamp: Number(block.timestamp) * 1000,
+        subjectId: l.args.subjectId,
+        commitment: l.args.commitment,
+        version: Number(l.args.version),
+        day: Number(l.args.day),
+      });
+    }
+  }
+  ledgerCache.next = latest + 1n;
+}
+export async function publicLedger() {
+  ledgerCache.scanning ??= scanLedger().finally(() => { ledgerCache.scanning = null; });
+  await ledgerCache.scanning;
+  return [...ledgerCache.events].sort((a, b) => b.block - a.block);
+}
+
 // ---------- patient wallet (on-device in the product) ----------
 const walletFile = (p) => new URL(`wallets/${p}.json`, CHAIN_DIR);
 export function loadWallet(persona) {

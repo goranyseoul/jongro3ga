@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { CLINICS, clinicById, agentCard } from './clinics.mjs';
-import { walletView, recordVisit, submitPatientReview, deployment, PERSONAS, matchOffersLocally, proveOffer, verifyOfferBundle } from './wallet.mjs';
+import { publicLedger, walletView, recordVisit, submitPatientReview, deployment, PERSONAS, matchOffersLocally, proveOffer, verifyOfferBundle } from './wallet.mjs';
 import { seedReviewBoard } from './reviews-seed.mjs';
 
 const chainEnv = new URL('../chain/.env', import.meta.url);
@@ -26,7 +26,7 @@ const emit = (e) => {
 
 const json = (res, code, body) => { res.writeHead(code, { 'content-type': 'application/json' }); res.end(JSON.stringify(body)); };
 const readBody = async (req) => { let b = ''; for await (const c of req) b += c; return b ? JSON.parse(b) : {}; };
-const STATIC = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
+const STATIC = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/ledger': ['ledger.html', 'text/html'], '/ledger.js': ['ledger.js', 'text/javascript'] };
 
 function ranking() {
   const stats = board.stats();
@@ -88,6 +88,7 @@ const server = createServer(async (req, res) => {
       return json(res, 200, r);
     }
     if (path === '/api/ranking') return json(res, 200, ranking());
+    if (path === '/api/ledger') return json(res, 200, { deployment, ledger: await publicLedger(), personas: Object.values(PERSONAS) });
     if (path === '/api/chat' && req.method === 'POST') {
       const { persona, text } = await readBody(req);
       activePersona = persona;
