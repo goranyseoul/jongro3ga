@@ -11,3 +11,7 @@ next-env.d.ts
 # Non Bureau is a licensed font: kept local, never committed to this public repo
 public/fonts/NonBureau-*
 .vercel
+
+# Playwright output
+test-results
+playwright-report
