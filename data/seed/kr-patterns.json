@@ -1,0 +1,1577 @@
+{
+  "description": "PibooK Recipe seed: what Korean women of an age band chose for a concern (07-platform-intelligence.md section 5). Shares are fractions of the cell sample. Every value is a demo assumption until real shared records replace it.",
+  "dataStatus": "demo_assumption",
+  "asOf": "2026-10-24",
+  "patterns": [
+    {
+      "ageBand": "20-24",
+      "concern": "elasticity",
+      "sampleSize": 21,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.38
+        },
+        {
+          "procedureIds": [
+            "shrink"
+          ],
+          "share": 0.27
+        },
+        {
+          "procedureIds": [
+            "rejuran",
+            "shrink"
+          ],
+          "share": 0.18
+        },
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.17
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "elasticity",
+      "sampleSize": 46,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.41
+        },
+        {
+          "procedureIds": [
+            "rejuran",
+            "shrink"
+          ],
+          "share": 0.24
+        },
+        {
+          "procedureIds": [
+            "shrink"
+          ],
+          "share": 0.19
+        },
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.16
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "elasticity",
+      "sampleSize": 58,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "rejuran",
+            "shrink"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.29
+        },
+        {
+          "procedureIds": [
+            "thermage"
+          ],
+          "share": 0.21
+        },
+        {
+          "procedureIds": [
+            "inmode"
+          ],
+          "share": 0.17
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "elasticity",
+      "sampleSize": 37,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "thermage"
+          ],
+          "share": 0.27
+        },
+        {
+          "procedureIds": [
+            "rejuran",
+            "skin_botox"
+          ],
+          "share": 0.21
+        },
+        {
+          "procedureIds": [
+            "ulthera"
+          ],
+          "share": 0.18
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "elasticity",
+      "sampleSize": 29,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "ulthera"
+          ],
+          "share": 0.36
+        },
+        {
+          "procedureIds": [
+            "thermage"
+          ],
+          "share": 0.31
+        },
+        {
+          "procedureIds": [
+            "ulthera",
+            "thermage"
+          ],
+          "share": 0.19
+        },
+        {
+          "procedureIds": [
+            "oligio"
+          ],
+          "share": 0.14
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "fine_lines",
+      "sampleSize": 12,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "botox_wrinkle"
+          ],
+          "share": 0.44
+        },
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.31
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.25
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "fine_lines",
+      "sampleSize": 34,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "juvelook_volume"
+          ],
+          "share": 0.37
+        },
+        {
+          "procedureIds": [
+            "botox_wrinkle"
+          ],
+          "share": 0.28
+        },
+        {
+          "procedureIds": [
+            "filler"
+          ],
+          "share": 0.21
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.14
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "fine_lines",
+      "sampleSize": 41,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "juvelook_volume"
+          ],
+          "share": 0.39
+        },
+        {
+          "procedureIds": [
+            "filler"
+          ],
+          "share": 0.26
+        },
+        {
+          "procedureIds": [
+            "sculptra"
+          ],
+          "share": 0.19
+        },
+        {
+          "procedureIds": [
+            "botox_wrinkle"
+          ],
+          "share": 0.16
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "fine_lines",
+      "sampleSize": 33,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "juvelook_volume"
+          ],
+          "share": 0.31
+        },
+        {
+          "procedureIds": [
+            "sculptra"
+          ],
+          "share": 0.27
+        },
+        {
+          "procedureIds": [
+            "filler"
+          ],
+          "share": 0.24
+        },
+        {
+          "procedureIds": [
+            "botox_wrinkle"
+          ],
+          "share": 0.18
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "fine_lines",
+      "sampleSize": 22,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "sculptra"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "filler"
+          ],
+          "share": 0.29
+        },
+        {
+          "procedureIds": [
+            "juvelook_volume",
+            "botox_wrinkle"
+          ],
+          "share": 0.22
+        },
+        {
+          "procedureIds": [
+            "thread_lift"
+          ],
+          "share": 0.16
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "pores",
+      "sampleSize": 27,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_botox"
+          ],
+          "share": 0.36
+        },
+        {
+          "procedureIds": [
+            "aqua_peel"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.3
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "pores",
+      "sampleSize": 39,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_botox"
+          ],
+          "share": 0.38
+        },
+        {
+          "procedureIds": [
+            "skin_botox",
+            "aqua_peel"
+          ],
+          "share": 0.27
+        },
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.2
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.15
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "pores",
+      "sampleSize": 36,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_botox"
+          ],
+          "share": 0.35
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.25
+        },
+        {
+          "procedureIds": [
+            "rejuran",
+            "skin_botox"
+          ],
+          "share": 0.23
+        },
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.17
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "pores",
+      "sampleSize": 24,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_botox"
+          ],
+          "share": 0.32
+        },
+        {
+          "procedureIds": [
+            "thermage"
+          ],
+          "share": 0.26
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.24
+        },
+        {
+          "procedureIds": [
+            "aqua_peel"
+          ],
+          "share": 0.18
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "pores",
+      "sampleSize": 9,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "thermage"
+          ],
+          "share": 0.35
+        },
+        {
+          "procedureIds": [
+            "skin_botox"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.32
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "acne_scars",
+      "sampleSize": 18,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "agnes"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.33
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "acne_scars",
+      "sampleSize": 22,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.36
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "rejuran",
+            "fraxel"
+          ],
+          "share": 0.31
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "acne_scars",
+      "sampleSize": 15,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.38
+        },
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "juvelook"
+          ],
+          "share": 0.28
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "acne_scars",
+      "sampleSize": 8,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.4
+        },
+        {
+          "procedureIds": [
+            "juvelook"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "potenza_secret"
+          ],
+          "share": 0.26
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "acne_scars",
+      "sampleSize": 4,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "fraxel"
+          ],
+          "share": 0.5
+        },
+        {
+          "procedureIds": [
+            "juvelook"
+          ],
+          "share": 0.5
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "pigmentation",
+      "sampleSize": 19,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "laser_toning"
+          ],
+          "share": 0.45
+        },
+        {
+          "procedureIds": [
+            "pico_toning"
+          ],
+          "share": 0.35
+        },
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.2
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "pigmentation",
+      "sampleSize": 31,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "pico_toning"
+          ],
+          "share": 0.39
+        },
+        {
+          "procedureIds": [
+            "laser_toning"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.28
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "pigmentation",
+      "sampleSize": 35,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "pico_toning"
+          ],
+          "share": 0.37
+        },
+        {
+          "procedureIds": [
+            "rejuran",
+            "laser_toning"
+          ],
+          "share": 0.24
+        },
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.23
+        },
+        {
+          "procedureIds": [
+            "laser_toning"
+          ],
+          "share": 0.16
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "pigmentation",
+      "sampleSize": 26,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "pico_toning"
+          ],
+          "share": 0.36
+        },
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "laser_toning"
+          ],
+          "share": 0.3
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "pigmentation",
+      "sampleSize": 17,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.38
+        },
+        {
+          "procedureIds": [
+            "pico_toning"
+          ],
+          "share": 0.36
+        },
+        {
+          "procedureIds": [
+            "laser_toning"
+          ],
+          "share": 0.26
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "redness",
+      "sampleSize": 7,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "vbeam"
+          ],
+          "share": 0.52
+        },
+        {
+          "procedureIds": [
+            "aqua_peel"
+          ],
+          "share": 0.48
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "redness",
+      "sampleSize": 16,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "vbeam"
+          ],
+          "share": 0.46
+        },
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.31
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.23
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "redness",
+      "sampleSize": 19,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "vbeam"
+          ],
+          "share": 0.44
+        },
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.22
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "redness",
+      "sampleSize": 13,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.41
+        },
+        {
+          "procedureIds": [
+            "vbeam"
+          ],
+          "share": 0.39
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.2
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "redness",
+      "sampleSize": 6,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "ipl"
+          ],
+          "share": 0.55
+        },
+        {
+          "procedureIds": [
+            "vbeam"
+          ],
+          "share": 0.45
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "dryness",
+      "sampleSize": 23,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.43
+        },
+        {
+          "procedureIds": [
+            "aqua_peel"
+          ],
+          "share": 0.37
+        },
+        {
+          "procedureIds": [
+            "exosome"
+          ],
+          "share": 0.2
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "dryness",
+      "sampleSize": 33,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.41
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.3
+        },
+        {
+          "procedureIds": [
+            "aqua_peel"
+          ],
+          "share": 0.29
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "dryness",
+      "sampleSize": 30,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.38
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.34
+        },
+        {
+          "procedureIds": [
+            "exosome"
+          ],
+          "share": 0.28
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "dryness",
+      "sampleSize": 21,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.37
+        },
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.36
+        },
+        {
+          "procedureIds": [
+            "exosome"
+          ],
+          "share": 0.27
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "dryness",
+      "sampleSize": 14,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "skin_booster"
+          ],
+          "share": 0.4
+        },
+        {
+          "procedureIds": [
+            "rejuran"
+          ],
+          "share": 0.35
+        },
+        {
+          "procedureIds": [
+            "aqua_peel"
+          ],
+          "share": 0.25
+        }
+      ]
+    },
+    {
+      "ageBand": "20-24",
+      "concern": "contour",
+      "sampleSize": 25,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "botox_square_jaw"
+          ],
+          "share": 0.48
+        },
+        {
+          "procedureIds": [
+            "contour_injection"
+          ],
+          "share": 0.31
+        },
+        {
+          "procedureIds": [
+            "shrink"
+          ],
+          "share": 0.21
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "concern": "contour",
+      "sampleSize": 38,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "botox_square_jaw"
+          ],
+          "share": 0.4
+        },
+        {
+          "procedureIds": [
+            "shrink"
+          ],
+          "share": 0.26
+        },
+        {
+          "procedureIds": [
+            "contour_injection"
+          ],
+          "share": 0.2
+        },
+        {
+          "procedureIds": [
+            "inmode"
+          ],
+          "share": 0.14
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "concern": "contour",
+      "sampleSize": 32,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "shrink"
+          ],
+          "share": 0.31
+        },
+        {
+          "procedureIds": [
+            "inmode"
+          ],
+          "share": 0.27
+        },
+        {
+          "procedureIds": [
+            "botox_square_jaw"
+          ],
+          "share": 0.24
+        },
+        {
+          "procedureIds": [
+            "thread_lift"
+          ],
+          "share": 0.18
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "concern": "contour",
+      "sampleSize": 20,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "ulthera"
+          ],
+          "share": 0.3
+        },
+        {
+          "procedureIds": [
+            "inmode"
+          ],
+          "share": 0.27
+        },
+        {
+          "procedureIds": [
+            "thread_lift"
+          ],
+          "share": 0.23
+        },
+        {
+          "procedureIds": [
+            "shrink"
+          ],
+          "share": 0.2
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "concern": "contour",
+      "sampleSize": 15,
+      "dataStatus": "demo_assumption",
+      "combinations": [
+        {
+          "procedureIds": [
+            "ulthera"
+          ],
+          "share": 0.37
+        },
+        {
+          "procedureIds": [
+            "thread_lift"
+          ],
+          "share": 0.33
+        },
+        {
+          "procedureIds": [
+            "thermage"
+          ],
+          "share": 0.3
+        }
+      ]
+    }
+  ],
+  "concernRanking": [
+    {
+      "ageBand": "20-24",
+      "dataStatus": "demo_assumption",
+      "items": [
+        {
+          "concern": "acne_scars",
+          "label": {
+            "ko": "여드름 자국",
+            "ja": "ニキビ跡",
+            "en": "Acne scars",
+            "zh-CN": "痘印"
+          },
+          "share": 0.31
+        },
+        {
+          "concern": "pores",
+          "label": {
+            "ko": "모공이 넓어 보임",
+            "ja": "毛穴が目立つ",
+            "en": "Pores look larger",
+            "zh-CN": "毛孔粗大"
+          },
+          "share": 0.27
+        },
+        {
+          "concern": "contour",
+          "label": {
+            "ko": "사각턱과 얼굴 윤곽",
+            "ja": "エラと輪郭",
+            "en": "Square jaw and face contour",
+            "zh-CN": "方下颌和脸部轮廓"
+          },
+          "share": 0.22
+        },
+        {
+          "concern": "dryness",
+          "label": {
+            "ko": "건조하고 푸석함",
+            "ja": "乾燥してハリがない",
+            "en": "Dry, dull skin",
+            "zh-CN": "干燥暗沉"
+          },
+          "share": 0.2
+        }
+      ]
+    },
+    {
+      "ageBand": "25-29",
+      "dataStatus": "demo_assumption",
+      "items": [
+        {
+          "concern": "fine_lines",
+          "label": {
+            "ko": "팔자 주름이 파여 보임",
+            "ja": "ほうれい線が深く見える",
+            "en": "Smile lines look deeper",
+            "zh-CN": "法令纹看起来变深"
+          },
+          "share": 0.29
+        },
+        {
+          "concern": "pores",
+          "label": {
+            "ko": "피부결이 거칠어짐",
+            "ja": "肌のキメが粗くなった",
+            "en": "Skin texture feels rough",
+            "zh-CN": "肤质变粗糙"
+          },
+          "share": 0.26
+        },
+        {
+          "concern": "elasticity",
+          "label": {
+            "ko": "턱선 탄력이 떨어짐",
+            "ja": "フェイスラインのハリが落ちた",
+            "en": "Jawline is losing firmness",
+            "zh-CN": "下颌线松弛"
+          },
+          "share": 0.24
+        },
+        {
+          "concern": "fine_lines",
+          "label": {
+            "ko": "눈가 잔주름",
+            "ja": "目元の小じわ",
+            "en": "Fine lines around the eyes",
+            "zh-CN": "眼周细纹"
+          },
+          "share": 0.21
+        }
+      ]
+    },
+    {
+      "ageBand": "30-34",
+      "dataStatus": "demo_assumption",
+      "items": [
+        {
+          "concern": "fine_lines",
+          "label": {
+            "ko": "팔자 주름이 파여 보임",
+            "ja": "ほうれい線が深く見える",
+            "en": "Smile lines look deeper",
+            "zh-CN": "法令纹看起来变深"
+          },
+          "share": 0.31
+        },
+        {
+          "concern": "pores",
+          "label": {
+            "ko": "피부결이 거칠어짐",
+            "ja": "肌のキメが粗くなった",
+            "en": "Skin texture feels rough",
+            "zh-CN": "肤质变粗糙"
+          },
+          "share": 0.25
+        },
+        {
+          "concern": "elasticity",
+          "label": {
+            "ko": "턱선 탄력이 떨어짐",
+            "ja": "フェイスラインのハリが落ちた",
+            "en": "Jawline is losing firmness",
+            "zh-CN": "下颌线松弛"
+          },
+          "share": 0.23
+        },
+        {
+          "concern": "fine_lines",
+          "label": {
+            "ko": "눈가 잔주름",
+            "ja": "目元の小じわ",
+            "en": "Fine lines around the eyes",
+            "zh-CN": "眼周细纹"
+          },
+          "share": 0.21
+        }
+      ]
+    },
+    {
+      "ageBand": "35-39",
+      "dataStatus": "demo_assumption",
+      "items": [
+        {
+          "concern": "elasticity",
+          "label": {
+            "ko": "턱선 탄력이 떨어짐",
+            "ja": "フェイスラインのハリが落ちた",
+            "en": "Jawline is losing firmness",
+            "zh-CN": "下颌线松弛"
+          },
+          "share": 0.3
+        },
+        {
+          "concern": "pores",
+          "label": {
+            "ko": "피부결이 거칠어짐",
+            "ja": "肌のキメが粗くなった",
+            "en": "Skin texture feels rough",
+            "zh-CN": "肤质变粗糙"
+          },
+          "share": 0.26
+        },
+        {
+          "concern": "pigmentation",
+          "label": {
+            "ko": "잡티와 색소",
+            "ja": "シミとくすみ",
+            "en": "Spots and uneven tone",
+            "zh-CN": "色斑和暗沉"
+          },
+          "share": 0.23
+        },
+        {
+          "concern": "fine_lines",
+          "label": {
+            "ko": "팔자 주름이 파여 보임",
+            "ja": "ほうれい線が深く見える",
+            "en": "Smile lines look deeper",
+            "zh-CN": "法令纹看起来变深"
+          },
+          "share": 0.21
+        }
+      ]
+    },
+    {
+      "ageBand": "40+",
+      "dataStatus": "demo_assumption",
+      "items": [
+        {
+          "concern": "elasticity",
+          "label": {
+            "ko": "볼과 턱선 처짐",
+            "ja": "頬とフェイスラインのたるみ",
+            "en": "Sagging cheeks and jawline",
+            "zh-CN": "脸颊和下颌线下垂"
+          },
+          "share": 0.34
+        },
+        {
+          "concern": "pigmentation",
+          "label": {
+            "ko": "잡티와 색소",
+            "ja": "シミとくすみ",
+            "en": "Spots and uneven tone",
+            "zh-CN": "色斑和暗沉"
+          },
+          "share": 0.24
+        },
+        {
+          "concern": "fine_lines",
+          "label": {
+            "ko": "팔자 주름이 파여 보임",
+            "ja": "ほうれい線が深く見える",
+            "en": "Smile lines look deeper",
+            "zh-CN": "法令纹看起来变深"
+          },
+          "share": 0.22
+        },
+        {
+          "concern": "dryness",
+          "label": {
+            "ko": "건조하고 푸석함",
+            "ja": "乾燥してハリがない",
+            "en": "Dry, dull skin",
+            "zh-CN": "干燥暗沉"
+          },
+          "share": 0.2
+        }
+      ]
+    }
+  ],
+  "procedures": {
+    "ulthera": {
+      "typicalAmount": {
+        "min": 300,
+        "max": 600,
+        "unit": "shot"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "thermage": {
+      "typicalAmount": {
+        "min": 300,
+        "max": 600,
+        "unit": "shot"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "shrink": {
+      "typicalAmount": {
+        "min": 300,
+        "max": 600,
+        "unit": "shot"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "inmode": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "oligio": {
+      "typicalAmount": {
+        "min": 300,
+        "max": 600,
+        "unit": "shot"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "thread_lift": {
+      "typicalAmount": {
+        "min": 4,
+        "max": 10,
+        "unit": "line"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "rejuran": {
+      "typicalAmount": {
+        "min": 2,
+        "max": 3,
+        "unit": "cc"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "juvelook": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 2,
+        "unit": "vial"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "juvelook_eye": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "vial"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "juvelook_volume": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 2,
+        "unit": "vial"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "skin_booster": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 3,
+        "unit": "cc"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "exosome": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "filler": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 2,
+        "unit": "cc"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "sculptra": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 2,
+        "unit": "vial"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "botox_wrinkle": {
+      "typicalAmount": {
+        "min": 20,
+        "max": 50,
+        "unit": "unit"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "botox_square_jaw": {
+      "typicalAmount": {
+        "min": 25,
+        "max": 50,
+        "unit": "unit"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "skin_botox": {
+      "typicalAmount": {
+        "min": 50,
+        "max": 100,
+        "unit": "unit"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "contour_injection": {
+      "typicalAmount": {
+        "min": 3,
+        "max": 10,
+        "unit": "cc"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "laser_toning": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "pico_toning": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "ipl": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "fraxel": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "potenza_secret": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "agnes": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "vbeam": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    },
+    "aqua_peel": {
+      "typicalAmount": {
+        "min": 1,
+        "max": 1,
+        "unit": "session"
+      },
+      "dataStatus": "demo_assumption"
+    }
+  }
+}

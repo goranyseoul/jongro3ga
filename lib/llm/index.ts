@@ -1,6 +1,12 @@
 // Claude access layer (09-architecture.md "LLM 사용"). OWNER: track LLM.
-// Every Claude call goes through here; without ANTHROPIC_API_KEY (or with DEMO_MODE fixtures) it must
-// still return deterministic fixture output so the demo runs offline.
+// Every Claude call goes through here; without ANTHROPIC_API_KEY (or with LLM_MODE=fixtures) it
+// returns deterministic fixture output so the demo runs offline. API errors, timeouts and refusals
+// fall back to the same fixtures, so a flaky network never stops the demo.
+import { callAnthropic } from "./client";
+import { resolveFixture } from "./fixtures";
+import { sanitizeText } from "./guard";
+import { llmMode } from "./models";
+
 export type ModelTier = "chat" | "reasoning" | "fast";
 
 export interface ToolSpec {
@@ -29,6 +35,20 @@ export interface RunOptions {
   maxTokens?: number;
 }
 
-export async function runClaude(_options: RunOptions): Promise<ToolCallResult> {
-  throw new Error("llm layer not implemented yet (track LLM)");
+export async function runClaude(options: RunOptions): Promise<ToolCallResult> {
+  if (llmMode() === "live") {
+    try {
+      return clean(await callAnthropic(options));
+    } catch (error) {
+      // Graceful fallback (09): log the reason without any prompt content, then serve the fixture.
+      console.warn(`[llm] ${options.fixtureKey}: falling back to fixture (${error instanceof Error ? error.message : String(error)})`);
+    }
+  }
+  return clean(resolveFixture(options));
 }
+
+function clean(result: ToolCallResult): ToolCallResult {
+  return { text: sanitizeText(result.text), toolCalls: result.toolCalls };
+}
+
+export { llmMode } from "./models";

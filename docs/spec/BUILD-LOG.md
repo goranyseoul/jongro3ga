@@ -157,3 +157,24 @@
 | A17 | 저장소 컬렉션 | 06에 이름 없음 | `data/seed/load.ts`의 `SEED_COLLECTIONS`가 정본. platform: `clinic_registry, price_records, outcomes, outcome_history, rules, signals, match_logs, attributions, judged_quotes, offer_cache` · clinic: `profiles, menu_items, offers, slot_policies(id = clinicId), slots` · customer: `accounts, profiles, consents, records` · shared: `a2a_log, a2a_tasks, meta` | `ensureSeeded(store)`가 `shared/meta/seed` 표식이 없을 때 한 번 시드한다. A2A 라우트가 매 요청 호출. 데모 리셋은 `resetStore()` 후 다음 요청에서 다시 시드되거나 `loadSeed` 직접 호출 |
 | A18 | 시드 파일 | 06 시드 표 | `clinics.json`(레지스트리+프로필+메뉴+오퍼+슬롯 정책, 실명·실주소 없음), `slots.json`(규칙만 적고 로더가 720개로 펼침), `price-records.json`(`scripts/gen-price-records.mjs`), `outcomes.json`·`outcomes-ara-burst.json`(`scripts/gen-outcomes.mjs`, 버스트는 `araBurstOutcomes(clock.now())`로 날짜 계산), `customers.json`, `rules.json`, `fx.json`(데모용 고정 환율) | 생성 스크립트는 `--check`로 파일이 최신인지 검사 (seed 테스트가 실행). 명동 리쥬란 14건은 p75 204,000 < 210,000 <= p90 211,800이 되게 만들어, 07 표의 한빛(2cc 420,000) `high`가 고정 표본뿐 아니라 실제 시드 판정에서도 나온다 |
 | A19 | 테스트 위치·별칭 | | 테스트는 코드 옆 `*.test.ts`. vitest 설정이 없어 `@/` 별칭이 테스트에서 풀리지 않으므로 이 트랙 파일은 상대 경로 import | `vitest.config.ts`에 `@` 별칭 추가를 오케스트레이터에 요청 |
+## 트랙 LLM (2026-10-24, `feat/track-llm`)
+
+만든 것: `lib/llm` (runClaude, 픽스처, 프롬프트, 의료 경계 가드), `POST /api/onboarding/customer` (SSE), `POST /api/intent`, `platform.recipe` (`lib/agents/platform/recipe.ts`, `data/seed/kr-patterns.json`), 랜딩 채팅을 API로 연결.
+
+| # | 영역 | 스펙 | 구현 | 이유 / 다음 할 일 |
+| --- | --- | --- | --- | --- |
+| L1 | 픽스처 강제 | 09: 키 없으면 데모 모드 | 키가 있으면 실호출, `LLM_MODE=fixtures`면 키가 있어도 픽스처, vitest에서는 항상 픽스처 | `DEMO_MODE=true`는 이미 고정 시계 뜻이라 겹치지 않게 분리 |
+| L2 | 도구 강제 | 09: `draft_procedure_request` 등 "출력 강제" | Sonnet 5.5, Opus 5.5, Haiku 5.5는 `tool_choice: tool/any`가 400. `toolChoice`는 `auto` + 시스템 프롬프트 지시로 바꾸고, 서버가 호출 여부와 입력을 zod로 검증, 실패하면 픽스처 | API 제약 |
+| L3 | 도구 에러 재질문 | 04: 검증 실패는 도구 에러로 돌려 Claude가 다시 묻게 | `runClaude`의 `messages`가 문자열만 받으므로 `[tool_error] ...` 사용자 메시지로 1회 재호출. 유효한 패치는 남긴다 | 계약 시그니처 유지 |
+| L4 | `text` 토큰 | 04: SSE `text` 토큰 | 모델 응답을 다 받은 뒤 서버가 6글자씩 잘라 스트리밍 | 실토큰 스트리밍은 `RunOptions`에 선택 필드(`onText`)가 필요. 계약 변경 요청으로 올림 |
+| L5 | 통상 용량 | 06: `Procedure.typicalAmount`, 07: 레시피가 돌려줌 | 시술 마스터(`procedures.json`, A2A 소유)에 없어서 `kr-patterns.json`의 `procedures`에 넣음 (`demo_assumption`). 공유 기록이 10건 이상이면 p25~p75 | 마스터에 옮길지 A2A 트랙과 결정 |
+| L6 | 쥬베룩 볼륨 단위 | `DEMO.md`: 2cc | 마스터 단위(바이알)를 따라 통상 1~2바이알 | BUILD-LOG #11과 같은 문제. 마스터 단위가 정해지면 시드 수정 |
+| L7 | 레시피 주기 | 03: `maintenanceIntervalDays` 필수 | 마스터 값이 null(초기 시리즈만 있는 시술)이면 `{0,0}` = 유지 주기 없음. 효과 시기는 마스터 `effectOnset` 구간을 일수로 (즉시 0, 1주 3~14, 2~4주 14~28, 서서히 30~90). 마스터 `count`가 null이면 `initial` 생략 | 03 스키마에 null 허용 여부 결정 필요 |
+| L8 | 민감정보 동의 거부 | 06: `CustomerProfile.safety` 필수 | 동의를 거부하면 안전 정보를 모르므로 `safety`를 빼고 보냄 (`CustomerProfileBody`). 임의의 `false`를 만들지 않음 | 06 타입에서 `safety`를 선택으로 바꾸는 계약 변경 요청 |
+| L9 | 프로필 저장 | 04: 완료 시 저장 | 서버가 고객 쿠키를 넘겨 `PUT /api/me/profile`(AUTH)을 호출. 401·404·405면 `saved: "demo_fallback"`, 화면은 브라우저 데모 상태 유지 | 브라우저 콘솔에 404가 찍히지 않게 서버에서 호출 |
+| L10 | 요청 정리 위치 | 09: `lib/agents/customer/intent.ts` | `lib/llm/intent.ts` + `POST /api/intent` | 소유 경로(BUILD-TRACKS). 고객 에이전트는 `draftProcedureRequest`를 import하고 `typicalAmount`에 A2A `platform.recipe` 호출을 넣으면 됨 |
+| L11 | 국적 "기타" | 04: ISO 코드 | 칩 "기타"는 `ZZ`(ISO 사용자 지정 코드)로 저장 | 국가를 자유 입력으로 받는 단계는 P1 |
+| L12 | 시술 이름 | 마스터: ko, en만 | `lib/llm/procedure-names.ts`에 ja, zh-CN 이름과 고객이 쓰는 표기 추가 | 일본어·중국어 원어민 검수 필요 |
+| L13 | 데모 날짜 | 04 예시: 11/13~15 | BUILD-LOG #13대로 유키 11/8~11/10, 데모 시계 10/24 | |
+| L14 | 가격 기록 컬렉션 | 06: `PriceRecord` (platform) | 레시피가 `platform/price_records`를 읽는다고 가정, 없으면 시드 값 | A2A 트랙 시드 컬렉션 이름과 맞출 것 |
+| L15 | 의료 경계 | 08 6절 | `lib/llm/guard.ts` 금지 패턴(진단·금기 판단·권유·효과 보장, 4개 언어). 실호출 출력이 걸리거나 민감정보 동의 전에 건강 주제를 꺼내면 그 턴은 픽스처 문장으로 교체. `DEMO.md`의 "팔자에 특히 잘 맞아요", "좋은 선택이에요" 같은 문장은 오프너 픽스처에서 데이터 인용으로 바꿈 | 스펙 08의 `tests/medical-boundary.test.ts`는 소유 경로상 `lib/llm/medical-boundary.test.ts`에 둠 |

@@ -24,7 +24,7 @@ import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { ClinicCarousel } from "@/components/customer/clinic-carousel";
 import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
 import { updateDemoState } from "@/components/customer/demo-state";
-import type { Locale } from "@/lib/domain/common";
+import type { Concern, Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
 import { cn } from "@/lib/cn";
 import { DEMO_TODAY } from "@/lib/ui-data/customer";
@@ -42,94 +42,75 @@ import { LOCALES, LOCALE_NAME } from "../locales";
 import { ParticleField } from "../hero/particle-field";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
+import { readSse } from "@/lib/llm/sse";
 import {
   AGE_BANDS,
   AREAS,
   BLOCKING_CONSENTS,
   CHANNELS,
   CONCERNS,
-  CONSENTS,
+  CONSENT_TYPES,
   CURRENCIES,
   DOWNTIME_DAYS,
-  EDITABLE_STEPS,
-  EMPTY_DRAFT,
   FX_RATES,
-  NATIONALITIES,
-  REPLY_DELAY_MS,
+  NATIONALITY_OPTIONS,
   REQUIRED_CONSENTS,
   RESIDENCIES,
-  STEP_ORDER,
-  STEP_SLOT,
-  buildAgentCard,
+  SLOTS,
+  UNKNOWN_NATIONALITY,
   defaultCurrency,
-  isStepApplicable,
-  matchOption,
-  nextStep,
+  emptyDraft,
   progressPercent,
-  type Concern,
-  type Draft,
-  type StepId,
-} from "./mock";
+  slotDef,
+  type ConsentType,
+  type NationalityOption,
+  type OnboardingDraft,
+  type SlotId,
+  type WidgetSpec,
+} from "@/lib/llm/onboarding/slots";
+import { buildAgentCard, type SlotKey } from "./mock";
+
+// The landing and onboarding chat. Every turn goes to POST /api/onboarding/customer (04-onboarding-chat.md):
+// the server streams the agent's text, profile patches and the next widget; this screen only renders them
+// and sends back what the customer typed or tapped.
 
 type Message = { id: string; from: "agent" | "user"; text: string; clinics?: { ids: string[]; focus: string[] } };
 type AgentLine = string | { text: string; clinics: { ids: string[]; focus: string[] } };
 
-const shortDate = (iso: string) => iso.slice(5).replace("-", "/");
-const tripRange = (d: Draft) =>
-  d.trip.arrival && d.trip.departure ? `${shortDate(d.trip.arrival)} ~ ${shortDate(d.trip.departure)}` : "";
+type DoneData = {
+  sessionId: string;
+  status: "active" | "completed";
+  nextSlot: SlotId | "summary" | null;
+  draft: OnboardingDraft;
+  today: string;
+  profile?: { agentId: string; nickname: string };
+  saved?: "account" | "demo_fallback" | "error";
+};
 
-// After an edit from the summary, a changed answer can open required steps that were skipped before
-// (for example nationality KR to JP opens residency and the trip).
-function firstMissingStep(d: Draft): StepId | undefined {
-  const missing: [StepId, boolean][] = [
-    ["residency", d.residency === undefined],
-    ["trip", !d.trip.arrival || !d.trip.departure],
-    ["concerns", d.concerns.length === 0],
-    ["pregnant", d.pregnant === undefined],
-  ];
-  return missing.find(([step, isMissing]) => isMissing && isStepApplicable(step, d))?.[0];
-}
+const SLOT_LABEL: Record<SlotId, SlotKey> = {
+  locale: "locale",
+  consents: "consents",
+  nickname: "nickname",
+  nationality: "nationality",
+  residency: "residency",
+  ageBand: "ageBand",
+  trip: "trip",
+  "trip.stayArea": "stayArea",
+  "skin.concerns": "concerns",
+  history: "history",
+  "safety.pregnantOrBreastfeeding": "pregnant",
+  "prefs.budgetKrw": "budget",
+  "prefs.downtimeToleranceDays": "downtime",
+  "prefs.languagesNeeded": "languages",
+  "contact.channel": "channel",
+  "contact.handle": "handle",
+};
 
-function question(step: StepId, d: Draft, c: OnboardingCopy): string {
-  const name = d.nickname ?? "";
-  switch (step) {
-    case "locale":
-      return c.say.locale;
-    case "consent":
-      return c.say.consent;
-    case "nickname":
-      return c.say.nickname;
-    case "nationality":
-      return c.say.nationality(name);
-    case "residency":
-      return c.say.residency;
-    case "ageBand":
-      return c.say.ageBand;
-    case "trip":
-      return c.say.trip;
-    case "stayArea":
-      return c.say.stayArea(tripRange(d));
-    case "concerns":
-      return c.say.concerns;
-    case "history":
-      return c.say.history;
-    case "pregnant":
-      return c.say.pregnant;
-    case "budget":
-      return c.say.budget;
-    case "downtime":
-      return c.say.downtime;
-    case "languages":
-      return c.say.languages;
-    case "channel":
-      return c.say.channel;
-    case "handle":
-      return c.say.handle(d.channel ? c.channel[d.channel] : "");
-    case "summary":
-      return c.say.summary;
-    case "done":
-      return c.say.done(name);
-  }
+/** Slots the summary card can reopen. Locale and consents are changed elsewhere. */
+const EDITABLE: SlotId[] = SLOTS.map((slot) => slot.id).filter((id) => id !== "locale" && id !== "consents");
+
+function newSessionId(): string {
+  return `onb_${crypto.randomUUID().replace(/-/g, "")}`;
 }
 
 /** Landing hero shown before the first message; the conversation then takes over the same page. */
@@ -150,61 +131,57 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const [started, setStarted] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
   const [engaged, setEngaged] = useState(false);
-  const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
-  const [step, setStep] = useState<StepId>("locale");
+  const [draft, setDraft] = useState<OnboardingDraft>(emptyDraft);
+  const [widget, setWidget] = useState<WidgetSpec | null>(null);
+  const [nextSlot, setNextSlot] = useState<SlotId | "summary" | null>("locale");
+  const [status, setStatus] = useState<"active" | "completed">("active");
+  const [agentId, setAgentId] = useState<string | undefined>(undefined);
+  const [today, setToday] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [typing, setTyping] = useState(false);
-  const [returnToSummary, setReturnToSummary] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const [pickingEdit, setPickingEdit] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  // widget values that are only committed when the customer presses next
+  // widget values that are only sent when the customer presses next
+  const [consents, setConsents] = useState<Partial<Record<ConsentType, boolean>>>({});
   const [range, setRange] = useState<DateRange>({ start: "", end: "" });
   const [concerns, setConcerns] = useState<Concern[]>([]);
   const [budget, setBudget] = useState<CurrencyAmount>({ currency: "KRW", amount: null });
-  const [downtime, setDowntime] = useState(DOWNTIME_DAYS[1]);
+  const [downtime, setDowntime] = useState<number>(DOWNTIME_DAYS[1]);
   const [languages, setLanguages] = useState<Locale[]>([locale]);
 
-  const nextId = useRef(1);
-  const timers = useRef<number[]>([]);
+  const sessionId = useRef<string>("");
+  const nextUserId = useRef(1);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" });
-  }, [messages, typing, step, pickingEdit]);
+  }, [messages, busy, widget, pickingEdit]);
 
-  const message = (from: Message["from"], text: string): Message => ({ id: `m${nextId.current++}`, from, text });
+  const message = (from: Message["from"], text: string): Message => ({ id: `${from}-${nextUserId.current++}`, from, text });
   const agentMessage = (line: AgentLine): Message =>
     typeof line === "string" ? message("agent", line) : { ...message("agent", line.text), clinics: line.clinics };
 
-  const agentSays = (lines: AgentLine[], then?: () => void) => {
-    setTyping(true);
-    timers.current.push(
-      window.setTimeout(() => {
-        setMessages((prev) => [...prev, ...lines.map(agentMessage)]);
-        setTyping(false);
-        then?.();
-      }, REPLY_DELAY_MS),
-    );
-  };
 
-  const advance = (next: Draft, userText?: string, notes: string[] = []) => {
-    if (userText) setMessages((prev) => [...prev, message("user", userText)]);
-    setDraft(next);
-    setPickingEdit(false);
 
-    let target: StepId = nextStep(step, next);
-    if (returnToSummary) {
-      target = firstMissingStep(next) ?? "summary";
-      if (target === "summary") setReturnToSummary(false);
+  const addMessage = (from: Message["from"], text: string) =>
+    setMessages((prev) => [...prev, { id: `${from}-${nextUserId.current++}`, from, text }]);
+
+  // Prefill the widget the server asked for from what is already known.
+  const prepareWidget = (next: WidgetSpec, known: OnboardingDraft) => {
+    if (next.slot === "consents") setConsents(known.consents);
+    if (next.slot === "trip") setRange({ start: known.trip.arrival ?? "", end: known.trip.departure ?? "" });
+    if (next.slot === "skin.concerns") setConcerns(known.skin.concerns);
+    if (next.slot === "prefs.budgetKrw") {
+      setBudget(known.prefs.budgetInput ?? { currency: defaultCurrency(known.nationality), amount: null });
     }
-    if (target === "trip") setRange({ start: next.trip.arrival ?? "", end: next.trip.departure ?? "" });
-    if (target === "budget") setBudget(next.budget ?? { currency: defaultCurrency(next.nationality), amount: null });
-
-    const lines = [...notes, question(target, next, c)];
-    if (target === "done" && next.firstIntent) lines.push(c.say.intentReady(next.firstIntent));
-    agentSays(lines, () => setStep(target));
+    if (next.slot === "prefs.downtimeToleranceDays" && known.prefs.downtimeToleranceDays !== undefined) {
+      setDowntime(known.prefs.downtimeToleranceDays);
+    }
+    if (next.slot === "prefs.languagesNeeded") {
+      setLanguages(known.prefs.languagesNeeded.length > 0 ? known.prefs.languagesNeeded : [known.locale ?? locale]);
+    }
   };
 
   // Reads a typed sentence as a directory topic: a procedure name first, then a treatment group, then an area.
@@ -239,103 +216,127 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     return { text, clinics: { ids: clinics.map((clinic) => clinic.id), focus } };
   };
 
-  // First message from the landing: keep it as firstIntent, answer from the directory when the message names
-  // a procedure, group or area, then start onboarding at the locale step.
-  const start = (intent?: string, topic?: DirectoryTopic) => {
-    setStarted(true);
-    if (!intent) {
-      agentSays([c.say.locale]);
-      return;
+  const send = async (body: { message: string; widgetValue?: { slot: string; value?: unknown; skip?: boolean } }, userText?: string) => {
+    if (userText) addMessage("user", userText);
+    setBusy(true);
+    setStreaming(false);
+    setWidget(null);
+    setPickingEdit(false);
+    if (!sessionId.current) sessionId.current = newSessionId();
+
+    let latest = draft;
+    let pendingWidget: WidgetSpec | null = null;
+    try {
+      const response = await fetch("/api/onboarding/customer", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sessionId: sessionId.current, locale, ...body }),
+      });
+      if (!response.ok || !response.body) throw new Error(`onboarding ${response.status}`);
+      await readSse(response.body, ({ event, data }) => {
+        if (event === "text") {
+          const { id, delta } = data as { id: string; delta: string };
+          setStreaming(true);
+          setMessages((prev) => {
+            const index = prev.findIndex((m) => m.id === id);
+            if (index < 0) return [...prev, { id, from: "agent", text: delta }];
+            const next = prev.slice();
+            next[index] = { ...next[index]!, text: next[index]!.text + delta };
+            return next;
+          });
+        } else if (event === "profile_patch") {
+          latest = (data as { draft: OnboardingDraft }).draft;
+          setDraft(latest);
+        } else if (event === "widget") {
+          pendingWidget = (data as { widget: WidgetSpec }).widget;
+        } else if (event === "done") {
+          const done = data as DoneData;
+          latest = done.draft;
+          setDraft(done.draft);
+          setNextSlot(done.nextSlot);
+          setStatus(done.status);
+          setToday(done.today);
+          if (done.status === "completed" && done.profile) {
+            setAgentId(done.profile.agentId);
+            // AUTH not landed (401/404) or the save failed: keep the browser demo state as before
+            if (done.saved !== "account") updateDemoState((state) => ({ ...state, nickname: done.profile!.nickname }));
+          }
+        }
+      });
+      if (pendingWidget) {
+        prepareWidget(pendingWidget, latest);
+        setWidget(pendingWidget);
+      }
+    } catch {
+      addMessage("agent", c.connectionError);
+      setWidget(pendingWidget);
+    } finally {
+      setBusy(false);
+      setStreaming(false);
     }
-    setMessages([message("user", intent)]);
-    setDraft({ ...EMPTY_DRAFT, firstIntent: intent });
-    const resolved = topic ?? topicFromText(intent);
-    agentSays(resolved ? [directoryAnswer(resolved), c.say.locale] : [c.say.intentAck(intent), c.say.locale]);
   };
 
-  const nudge = (userText: string, line: string) => {
-    setMessages((prev) => [...prev, message("user", userText)]);
-    agentSays([line]);
+  // First message from the landing: when it names a procedure, group or area, answer from the clinic directory
+  // first (landing carousel), then hand the message to the onboarding API, which keeps it as firstIntent.
+  const start = (intent?: string, topic?: DirectoryTopic) => {
+    setStarted(true);
+    const resolved = intent ? (topic ?? topicFromText(intent)) : undefined;
+    if (intent && resolved) {
+      addMessage("user", intent);
+      setMessages((prev) => [...prev, agentMessage(directoryAnswer(resolved))]);
+      void send({ message: intent });
+      return;
+    }
+    void send({ message: intent ?? "" }, intent);
   };
+
+  const answer = (slot: SlotId | "summary", value: unknown, label: string) => void send({ message: label, widgetValue: { slot, value } }, label);
+  const skip = (slot: SlotId) => void send({ message: c.skip, widgetValue: { slot, skip: true } }, c.skip);
 
   const chooseLocale = (value: Locale) => {
     if (value !== locale) {
       router.push(`/${value}`);
       return;
     }
-    advance({ ...draft, locale: value, languages: [value] }, LOCALE_NAME[value]);
+    answer("locale", value, LOCALE_NAME[value]);
   };
 
-  const editStep = (target: StepId) => {
-    setMessages((prev) => [...prev, message("user", c.slots[STEP_SLOT[target] ?? "nickname"])]);
-    setPickingEdit(false);
-    setReturnToSummary(true);
-    if (target === "trip") setRange({ start: draft.trip.arrival ?? "", end: draft.trip.departure ?? "" });
-    if (target === "concerns") setConcerns(draft.concerns);
-    if (target === "languages") setLanguages(draft.languages);
-    if (target === "downtime" && draft.downtime !== undefined) setDowntime(draft.downtime);
-    if (target === "budget") setBudget(draft.budget ?? { currency: defaultCurrency(draft.nationality), amount: null });
-    agentSays([question(target, draft, c)], () => setStep(target));
-  };
-
+  const done = status === "completed";
   const handleText = (text: string) => {
-    switch (step) {
-      case "locale": {
-        const value = matchOption(text, LOCALE_NAME);
-        return value ? chooseLocale(value) : nudge(text, c.nudge);
-      }
-      case "nickname":
-        return advance({ ...draft, nickname: text }, text);
-      case "nationality": {
-        const value = matchOption(text, c.nationality);
-        return value ? advance({ ...draft, nationality: value }, text) : nudge(text, c.nudge);
-      }
-      case "residency": {
-        const value = matchOption(text, c.residency);
-        if (!value) return nudge(text, c.nudge);
-        return advance({ ...draft, residency: value }, text, value === "resident" ? [c.say.residentNote] : []);
-      }
-      case "ageBand": {
-        const value = matchOption(text, c.ageBand);
-        return value ? advance({ ...draft, ageBand: value }, text) : nudge(text, c.nudge);
-      }
-      case "stayArea": {
-        const value = matchOption(text, c.area);
-        return value ? advance({ ...draft, trip: { ...draft.trip, stayArea: value } }, text) : nudge(text, c.nudge);
-      }
-      case "history":
-        return advance({ ...draft, history: text }, text);
-      case "pregnant": {
-        const value = matchOption(text, { yes: c.yes, no: c.no });
-        return value ? advance({ ...draft, pregnant: value === "yes" }, text) : nudge(text, c.nudge);
-      }
-      case "channel": {
-        const value = matchOption(text, c.channel);
-        return value ? advance({ ...draft, channel: value }, text) : nudge(text, c.nudge);
-      }
-      case "handle":
-        return advance({ ...draft, handle: text }, text);
-      default:
-        return nudge(text, c.widgetNudge);
-    }
+    if (busy || done) return;
+    void send({ message: text }, text);
   };
 
   const submitConsents = () => {
-    if (BLOCKING_CONSENTS.some((type) => draft.consents[type] !== true)) {
-      agentSays([c.say.consentBlocked]);
-      return;
-    }
-    const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
-    advance(draft, agreed.join(" · "), draft.consents.sensitiveHealth ? [] : [c.say.sensitiveDeclined]);
+    const agreed = CONSENT_TYPES.filter((type) => consents[type]).map((type) => c.consents[type].title);
+    answer("consents", consents, agreed.length > 0 ? agreed.join(" · ") : c.decline);
   };
 
   const percent = progressPercent(draft);
-  const done = step === "done";
-  const card = buildAgentCard(done);
-  const today = DEMO_TODAY;
+  const card = buildAgentCard(done, agentId);
+  const firstIntent = draft.firstIntent;
 
-  const widget = () => {
-    switch (step) {
+  const renderWidget = () => {
+    if (done) {
+      return (
+        <Button
+          fullWidth
+          onClick={() =>
+            router.push(firstIntent ? `/${locale}/chat?intent=${encodeURIComponent(firstIntent)}` : `/${locale}/home`)
+          }
+        >
+          {firstIntent ? c.goChat : c.goHome}
+        </Button>
+      );
+    }
+    if (!widget) return null;
+    const optionalSkip = widget.skippable ? (
+      <Button variant="ghost" fullWidth onClick={() => skip(widget.slot as SlotId)}>
+        {c.skip}
+      </Button>
+    ) : null;
+
+    switch (widget.slot) {
       case "locale":
         return (
           <ChipGroup
@@ -345,10 +346,11 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             onChange={chooseLocale}
           />
         );
-      case "consent":
+      case "consents": {
+        const types = widget.consentTypes ?? [...CONSENT_TYPES];
         return (
           <div className="flex flex-col gap-sp-3">
-            {CONSENTS.map((type) => (
+            {types.map((type) => (
               <ConsentCard
                 key={type}
                 title={c.consents[type].title}
@@ -356,26 +358,27 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
                 requiredLabel={REQUIRED_CONSENTS.includes(type) ? c.required : c.optional}
                 agreeLabel={c.agree}
                 declineLabel={c.decline}
-                value={draft.consents[type] ?? null}
-                onChange={(granted) => setDraft({ ...draft, consents: { ...draft.consents, [type]: granted } })}
+                value={consents[type] ?? null}
+                onChange={(granted) => setConsents((prev) => ({ ...prev, [type]: granted }))}
               />
             ))}
             <Button
               fullWidth
-              disabled={REQUIRED_CONSENTS.some((type) => draft.consents[type] === undefined)}
+              disabled={REQUIRED_CONSENTS.filter((type) => types.includes(type)).some((type) => consents[type] === undefined)}
               onClick={submitConsents}
             >
               {c.next}
             </Button>
           </div>
         );
+      }
       case "nationality":
         return (
           <ChipGroup
             label={c.slots.nationality}
-            options={NATIONALITIES.map((value) => ({ value, label: c.nationality[value] }))}
-            value={draft.nationality ?? null}
-            onChange={(value) => advance({ ...draft, nationality: value }, c.nationality[value])}
+            options={NATIONALITY_OPTIONS.map((value) => ({ value, label: c.nationality[value] }))}
+            value={nationalityOption(draft.nationality)}
+            onChange={(value) => answer("nationality", value, c.nationality[value])}
           />
         );
       case "residency":
@@ -384,9 +387,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             label={c.slots.residency}
             options={RESIDENCIES.map((value) => ({ value, label: c.residency[value] }))}
             value={draft.residency ?? null}
-            onChange={(value) =>
-              advance({ ...draft, residency: value }, c.residency[value], value === "resident" ? [c.say.residentNote] : [])
-            }
+            onChange={(value) => answer("residency", value, c.residency[value])}
           />
         );
       case "ageBand":
@@ -395,42 +396,43 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             label={c.slots.ageBand}
             options={AGE_BANDS.map((value) => ({ value, label: c.ageBand[value] }))}
             value={draft.ageBand ?? null}
-            onChange={(value) => advance({ ...draft, ageBand: value }, c.ageBand[value])}
+            onChange={(value) => answer("ageBand", value, c.ageBand[value])}
           />
         );
       case "trip":
         return (
           <Card className="flex flex-col gap-sp-3">
-            <WidgetDateRange value={range} onChange={setRange} startLabel={c.dates.start} endLabel={c.dates.end} min={today} />
+            <WidgetDateRange
+              value={range}
+              onChange={setRange}
+              startLabel={c.dates.start}
+              endLabel={c.dates.end}
+              min={today || undefined}
+            />
             <Button
               fullWidth
               disabled={!range.start || !range.end}
-              onClick={() =>
-                advance(
-                  { ...draft, trip: { ...draft.trip, arrival: range.start, departure: range.end } },
-                  `${range.start} ~ ${range.end}`,
-                )
-              }
+              onClick={() => answer("trip", { arrival: range.start, departure: range.end }, `${range.start} ~ ${range.end}`)}
             >
               {c.next}
             </Button>
           </Card>
         );
-      case "stayArea":
+      case "trip.stayArea":
         return (
           <div className="flex flex-col gap-sp-2">
             <ChipGroup
               label={c.slots.stayArea}
               options={AREAS.map((value) => ({ value, label: c.area[value] }))}
               value={draft.trip.stayArea ?? null}
-              onChange={(value) => advance({ ...draft, trip: { ...draft.trip, stayArea: value } }, c.area[value])}
+              onChange={(value) => answer("trip.stayArea", value, c.area[value])}
             />
-            <Button variant="ghost" className="self-start" onClick={() => advance(draft, c.skip)}>
+            <Button variant="ghost" className="self-start" onClick={() => skip("trip.stayArea")}>
               {c.skip}
             </Button>
           </div>
         );
-      case "concerns":
+      case "skin.concerns":
         return (
           <div className="flex flex-col gap-sp-3">
             <ChipGroup
@@ -438,12 +440,12 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
               label={c.slots.concerns}
               options={CONCERNS.map((value) => ({ value, label: c.concern[value] }))}
               value={concerns}
-              onChange={setConcerns}
+              onChange={(value) => setConcerns(value as Concern[])}
             />
             <Button
               fullWidth
               disabled={concerns.length === 0}
-              onClick={() => advance({ ...draft, concerns }, concerns.map((value) => c.concern[value]).join(" · "))}
+              onClick={() => answer("skin.concerns", concerns, concerns.map((value) => c.concern[value]).join(" · "))}
             >
               {c.next}
             </Button>
@@ -455,10 +457,10 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             label={c.slots.history}
             options={[{ value: "none", label: c.historyNone }]}
             value={null}
-            onChange={() => advance({ ...draft, history: c.historyNone }, c.historyNone)}
+            onChange={() => answer("history", "none", c.historyNone)}
           />
         );
-      case "pregnant":
+      case "safety.pregnantOrBreastfeeding":
         return (
           <ChipGroup
             label={c.slots.pregnant}
@@ -466,11 +468,11 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
               { value: "yes", label: c.yes },
               { value: "no", label: c.no },
             ]}
-            value={draft.pregnant === undefined ? null : draft.pregnant ? "yes" : "no"}
-            onChange={(value) => advance({ ...draft, pregnant: value === "yes" }, value === "yes" ? c.yes : c.no)}
+            value={draft.safety.pregnantOrBreastfeeding === undefined ? null : draft.safety.pregnantOrBreastfeeding ? "yes" : "no"}
+            onChange={(value) => answer("safety.pregnantOrBreastfeeding", value === "yes", value === "yes" ? c.yes : c.no)}
           />
         );
-      case "budget":
+      case "prefs.budgetKrw":
         return (
           <Card className="flex flex-col gap-sp-3">
             <WidgetCurrency
@@ -488,21 +490,20 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
                 disabled={budget.amount === null}
                 onClick={() => {
                   if (budget.amount === null) return;
-                  advance(
-                    { ...draft, budget: { currency: budget.currency, amount: budget.amount } },
+                  answer(
+                    "prefs.budgetKrw",
+                    { currency: budget.currency, amount: budget.amount },
                     `${budget.currency} ${budget.amount.toLocaleString("en-US")}`,
                   );
                 }}
               >
                 {c.next}
               </Button>
-              <Button variant="ghost" fullWidth onClick={() => advance(draft, c.skip)}>
-                {c.skip}
-              </Button>
+              {optionalSkip}
             </div>
           </Card>
         );
-      case "downtime":
+      case "prefs.downtimeToleranceDays":
         return (
           <Card className="flex flex-col gap-sp-3">
             <WidgetSlider
@@ -512,16 +513,14 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
               onChange={setDowntime}
             />
             <div className="flex flex-col gap-sp-2 sm:flex-row">
-              <Button fullWidth onClick={() => advance({ ...draft, downtime }, c.days(downtime))}>
+              <Button fullWidth onClick={() => answer("prefs.downtimeToleranceDays", downtime, c.days(downtime))}>
                 {c.next}
               </Button>
-              <Button variant="ghost" fullWidth onClick={() => advance(draft, c.skip)}>
-                {c.skip}
-              </Button>
+              {optionalSkip}
             </div>
           </Card>
         );
-      case "languages":
+      case "prefs.languagesNeeded":
         return (
           <div className="flex flex-col gap-sp-3">
             <ChipGroup
@@ -529,24 +528,24 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
               label={c.slots.languages}
               options={LOCALES.map((value) => ({ value, label: LOCALE_NAME[value] }))}
               value={languages}
-              onChange={setLanguages}
+              onChange={(value) => setLanguages(value as Locale[])}
             />
             <Button
               fullWidth
               disabled={languages.length === 0}
-              onClick={() => advance({ ...draft, languages }, languages.map((value) => LOCALE_NAME[value]).join(" · "))}
+              onClick={() => answer("prefs.languagesNeeded", languages, languages.map((value) => LOCALE_NAME[value]).join(" · "))}
             >
               {c.next}
             </Button>
           </div>
         );
-      case "channel":
+      case "contact.channel":
         return (
           <ChipGroup
             label={c.slots.channel}
             options={CHANNELS.map((value) => ({ value, label: c.channel[value] }))}
-            value={draft.channel ?? null}
-            onChange={(value) => advance({ ...draft, channel: value }, c.channel[value])}
+            value={draft.contact.channel ?? null}
+            onChange={(value) => answer("contact.channel", value, c.channel[value])}
           />
         );
       case "summary":
@@ -556,25 +555,23 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             <SlotList draft={draft} copy={c} locale={locale} />
             {pickingEdit ? (
               <ChipGroup
-                label={c.say.editPick}
-                options={EDITABLE_STEPS.filter((s) => isStepApplicable(s, draft)).map((s) => ({
-                  value: s,
-                  label: c.slots[STEP_SLOT[s] ?? "nickname"],
-                }))}
+                label={c.editPick}
+                options={EDITABLE.filter((id) => slotDef(id)?.applies(draft)).map((id) => ({ value: id, label: c.slots[SLOT_LABEL[id]] }))}
                 value={null}
-                onChange={editStep}
+                onChange={(id) => answer("summary", { edit: id }, c.slots[SLOT_LABEL[id]])}
               />
             ) : (
               <div className="flex flex-col gap-sp-2 sm:flex-row">
-                <Button fullWidth onClick={() => advance(draft, c.summary.create)}>
+                <Button fullWidth onClick={() => answer("summary", "confirm", c.summary.create)}>
                   {c.summary.create}
                 </Button>
                 <Button
                   variant="secondary"
                   fullWidth
                   onClick={() => {
-                    setMessages((prev) => [...prev, message("user", c.summary.edit)]);
-                    agentSays([c.say.editPick], () => setPickingEdit(true));
+                    addMessage("user", c.summary.edit);
+                    addMessage("agent", c.editPick);
+                    setPickingEdit(true);
                   }}
                 >
                   {c.summary.edit}
@@ -583,43 +580,28 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             )}
           </Card>
         );
-      case "done":
-        return (
-          <Button
-            fullWidth
-            onClick={() => {
-              updateDemoState((state) => ({ ...state, nickname: draft.nickname }));
-              router.push(`/${locale}/home`);
-            }}
-          >
-            {c.goHome}
-          </Button>
-        );
       default:
         return null;
     }
   };
 
-  // Checklist of the onboarding slots: answered or passed steps are done, the open one is active, and a
-  // declined required consent shows as an error.
-  const currentIndex = STEP_ORDER.indexOf(step);
+  // Checklist of the onboarding slots: answered or passed slots are done, the open one is active, and a
+  // declined blocking consent shows as an error.
+  const order = SLOTS.map((slot) => slot.id);
+  const currentIndex = nextSlot === null ? order.length : nextSlot === "summary" ? order.length - 0.5 : order.indexOf(nextSlot);
   const declinedRequired = BLOCKING_CONSENTS.some((type) => draft.consents[type] === false);
   const taskSteps: TaskStep[] = [
-    ...(draft.firstIntent
-      ? [{ id: "firstIntent", label: c.slots.firstIntent, value: draft.firstIntent, status: "done" as const }]
-      : []),
-    ...STEP_ORDER.filter((s) => STEP_SLOT[s] && isStepApplicable(s, draft)).map((s): TaskStep => {
-      const answer = slotValue(s, draft, c, locale);
-      const agreed = CONSENTS.filter((type) => draft.consents[type]).length;
-      const passed = STEP_ORDER.indexOf(s) < currentIndex;
-      // the language answer is pre-filled from the page language, so it only counts once the step was reached
-      const answered = answer !== undefined && (s !== "languages" || passed);
-      let status: TaskStep["status"] = s === step ? "active" : answered || passed ? "done" : "pending";
-      if (s === "consent" && declinedRequired) status = "error";
+    ...(firstIntent ? [{ id: "firstIntent", label: c.slots.firstIntent, value: firstIntent, status: "done" as const }] : []),
+    ...SLOTS.filter((slot) => slot.applies(draft)).map((slot): TaskStep => {
+      const passed = order.indexOf(slot.id) < currentIndex;
+      const answer = slotValue(slot.id, draft, c, locale);
+      let status: TaskStep["status"] = slot.id === nextSlot ? "active" : slot.filled(draft) || passed ? "done" : "pending";
+      if (slot.id === "consents" && declinedRequired) status = "error";
+      const agreed = CONSENT_TYPES.filter((type) => draft.consents[type]).length;
       return {
-        id: s,
-        label: c.slots[STEP_SLOT[s] ?? "nickname"],
-        value: s === "consent" ? (agreed > 0 ? `${agreed}/${CONSENTS.length}` : undefined) : s === "languages" && !passed && s !== step ? undefined : answer,
+        id: slot.id,
+        label: c.slots[SLOT_LABEL[slot.id]],
+        value: slot.id === "consents" ? (agreed > 0 ? `${agreed}/${CONSENT_TYPES.length}` : undefined) : answer,
         status,
       };
     }),
@@ -696,8 +678,8 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
                 ) : null}
               </div>
             ))}
-            {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
-            {!typing ? widget() : null}
+            {busy && !streaming ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
+            {!busy ? renderWidget() : null}
             <div ref={endRef} />
           </div>
         </div>
@@ -707,7 +689,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             label={c.inputLabel}
             sendLabel={c.send}
             placeholder={c.placeholder}
-            disabled={typing || done}
+            disabled={busy || done}
             hint={<span className="hidden sm:inline">{c.inputHint}</span>}
           />
         </div>
@@ -751,7 +733,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         brand={intro.wordmark}
         copy={intro.signup}
         personas={intro.signup.personas}
-        // mock: no account backend yet, signing up or in simply starts the conversation
+        // signing up or in starts the conversation; the account itself is the AUTH track's dialog
         onDone={() => {
           setSignupOpen(false);
           start();
@@ -764,65 +746,70 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   );
 }
 
-// What the customer answered for a step, or undefined while it is open.
-function slotValue(step: StepId, draft: Draft, c: OnboardingCopy, locale: Locale): ReactNode {
-  switch (step) {
+function nationalityOption(nationality: string | undefined): NationalityOption | null {
+  if (nationality === undefined) return null;
+  if (nationality === UNKNOWN_NATIONALITY) return "other";
+  return (NATIONALITY_OPTIONS as readonly string[]).includes(nationality) ? (nationality as NationalityOption) : "other";
+}
+
+// What the customer answered for a slot, or undefined while it is open.
+function slotValue(slot: SlotId, draft: OnboardingDraft, c: OnboardingCopy, locale: Locale): ReactNode {
+  switch (slot) {
     case "locale":
       return draft.locale ? LOCALE_NAME[draft.locale] : undefined;
-    case "consent": {
-      const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
+    case "consents": {
+      const agreed = CONSENT_TYPES.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
       return agreed.length > 0 ? agreed.join(" · ") : undefined;
     }
     case "nickname":
       return draft.nickname;
-    case "nationality":
-      return draft.nationality ? c.nationality[draft.nationality] : undefined;
+    case "nationality": {
+      const option = nationalityOption(draft.nationality);
+      return option ? (option === "other" && draft.nationality !== UNKNOWN_NATIONALITY ? draft.nationality : c.nationality[option]) : undefined;
+    }
     case "residency":
       return draft.residency ? c.residency[draft.residency] : undefined;
     case "ageBand":
       return draft.ageBand ? c.ageBand[draft.ageBand] : undefined;
     case "trip":
       return draft.trip.arrival && draft.trip.departure ? `${draft.trip.arrival} ~ ${draft.trip.departure}` : undefined;
-    case "stayArea":
+    case "trip.stayArea":
       return draft.trip.stayArea ? c.area[draft.trip.stayArea] : undefined;
-    case "concerns":
-      return draft.concerns.length > 0 ? draft.concerns.map((v) => c.concern[v]).join(" · ") : undefined;
+    case "skin.concerns":
+      return draft.skin.concerns.length > 0 ? draft.skin.concerns.map((v) => c.concern[v]).join(" · ") : undefined;
     case "history":
-      return draft.history;
-    case "pregnant":
-      return draft.pregnant === undefined ? undefined : draft.pregnant ? c.yes : c.no;
-    case "budget": {
-      if (!draft.budget) return undefined;
-      const { currency, amount } = draft.budget;
-      const krw = Math.round(amount * FX_RATES[currency]);
-      const reference = currency === "KRW" ? undefined : { currency: currency as ReferenceCurrency, amount };
-      return <Money krw={krw} reference={reference} locale={locale} />;
+      if (!draft.history) return undefined;
+      return draft.history.none ? c.historyNone : draft.history.items.map((item) => item.text).join(" · ");
+    case "safety.pregnantOrBreastfeeding":
+      return draft.safety.pregnantOrBreastfeeding === undefined ? undefined : draft.safety.pregnantOrBreastfeeding ? c.yes : c.no;
+    case "prefs.budgetKrw": {
+      if (!draft.prefs.budgetKrw) return undefined;
+      const input = draft.prefs.budgetInput;
+      const reference = input && input.currency !== "KRW" ? { currency: input.currency as ReferenceCurrency, amount: input.amount } : undefined;
+      return <Money krw={draft.prefs.budgetKrw.max} reference={reference} locale={locale} />;
     }
-    case "downtime":
-      return draft.downtime === undefined ? undefined : c.days(draft.downtime);
-    case "languages":
-      return draft.languages.length > 0 ? draft.languages.map((v) => LOCALE_NAME[v]).join(" · ") : undefined;
-    case "channel":
-      return draft.channel ? c.channel[draft.channel] : undefined;
-    case "handle":
-      return draft.handle;
-    default:
-      return undefined;
+    case "prefs.downtimeToleranceDays":
+      return draft.prefs.downtimeToleranceDays === undefined ? undefined : c.days(draft.prefs.downtimeToleranceDays);
+    case "prefs.languagesNeeded":
+      return draft.prefs.languagesNeeded.length > 0 ? draft.prefs.languagesNeeded.map((v) => LOCALE_NAME[v]).join(" · ") : undefined;
+    case "contact.channel":
+      return draft.contact.channel ? c.channel[draft.contact.channel] : undefined;
+    case "contact.handle":
+      return draft.contact.handle;
   }
 }
 
-// Live slot rows for the agent preview and the summary card. Empty values show a middle dot.
-function SlotList({ draft, copy: c, locale }: { draft: Draft; copy: OnboardingCopy; locale: Locale }) {
-  const value = (step: StepId) => slotValue(step, draft, c, locale);
-
-  const rows = STEP_ORDER.filter((step) => STEP_SLOT[step] && isStepApplicable(step, draft));
-
+// Live slot rows for the summary card. Empty values show a middle dot.
+function SlotList({ draft, copy: c, locale }: { draft: OnboardingDraft; copy: OnboardingCopy; locale: Locale }) {
+  const rows = SLOTS.filter((slot) => slot.id !== "consents" && slot.applies(draft));
   return (
     <dl className="flex flex-col gap-sp-2">
-      {rows.map((step) => (
-        <div key={step} className="flex items-baseline justify-between gap-sp-3">
-          <dt className="shrink-0 text-label text-muted">{c.slots[STEP_SLOT[step] ?? "nickname"]}</dt>
-          <dd className="min-w-0 break-words text-end text-body">{value(step) ?? <span className="text-subtle">·</span>}</dd>
+      {rows.map((slot) => (
+        <div key={slot.id} className="flex items-baseline justify-between gap-sp-3">
+          <dt className="shrink-0 text-label text-muted">{c.slots[SLOT_LABEL[slot.id]]}</dt>
+          <dd className="min-w-0 break-words text-end text-body">
+            {slotValue(slot.id, draft, c, locale) ?? <span className="text-subtle">·</span>}
+          </dd>
         </div>
       ))}
       {draft.firstIntent ? (
