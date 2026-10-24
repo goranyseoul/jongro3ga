@@ -168,6 +168,7 @@ export function InboxBoard({ initialTasks }: { initialTasks: InboxTask[] }) {
       key: "request",
       header: "요청",
       card: "title",
+      sort: (task) => task.from,
       cell: (task) => (
         <div className="flex flex-col gap-sp-1">
           <span className="text-body font-med">{task.from}</span>
@@ -192,11 +193,13 @@ export function InboxBoard({ initialTasks }: { initialTasks: InboxTask[] }) {
     {
       key: "slot",
       header: "희망 시간",
+      sort: (task) => (task.slot ? Date.parse(task.slot) : null),
       cell: (task) => <span className="tabular-nums">{task.slot ? formatSlot(task.slot) : "·"}</span>,
     },
     {
       key: "received",
       header: "접수",
+      sort: (task) => Date.parse(task.receivedAt),
       cell: (task) => <span className="tabular-nums text-muted">{formatSlot(task.receivedAt)}</span>,
     },
     {
@@ -270,6 +273,10 @@ export function InboxBoard({ initialTasks }: { initialTasks: InboxTask[] }) {
         rows={visible}
         rowKey={(task) => task.id}
         empty="해당하는 요청이 없어요"
+        pagination={{
+          pageSize: 8,
+          labels: { previous: "이전", next: "다음", summary: (page, pages, total) => `${page} / ${pages} 페이지 · ${total}건` },
+        }}
       />
 
       {selected.length > 0 ? (

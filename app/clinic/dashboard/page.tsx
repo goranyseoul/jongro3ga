@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardHeader, Money, Stat, buttonStyles } from "@/components/ui";
-import { DeltaStat } from "@/components/clinic/delta-stat";
 import { formatCurrency } from "@/lib/money";
 import { PageHeader } from "@/components/clinic/page-header";
 import { SignedOut } from "@/components/clinic/signed-out";
 import { StateText } from "@/components/clinic/task-state";
-import { daysBetween, formatAmount, formatDate, formatDay, formatSlot } from "@/components/clinic/format";
+import { changeOf, daysBetween, formatAmount, formatDate, formatDay, formatSlot } from "@/components/clinic/format";
 import { getDashboard } from "@/lib/agents/clinic/console";
 import { OPERATION_MODE_TEXT } from "@/lib/ui-data/clinic";
 import { currentClinicId } from "../console-session";
@@ -32,11 +31,11 @@ export default async function ClinicDashboardPage() {
 
       <section aria-label="오늘 현황" className="grid grid-cols-1 gap-sp-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <DeltaStat
+          <Stat
             label="오늘 견적 요청"
             value={`${data.quotesToday}건`}
             caption="에이전트가 자동으로 답했어요"
-            delta={{ diff: data.quotesToday - data.quotesYesterdayByNow, unit: "건", against: "어제 이 시각" }}
+            delta={changeOf(data.quotesToday - data.quotesYesterdayByNow, "건", "어제 이 시각 대비")}
           />
         </Card>
         <Card>
@@ -47,20 +46,20 @@ export default async function ClinicDashboardPage() {
           />
         </Card>
         <Card>
-          <DeltaStat
+          <Stat
             label="이번 주 예약"
             value={`${thisWeek.length}건`}
             caption="오늘부터 7일 안에 확정된 예약"
-            delta={{ diff: thisWeek.length - data.bookingsLastWeek, unit: "건", against: "지난주" }}
+            delta={changeOf(thisWeek.length - data.bookingsLastWeek, "건", "지난주 대비")}
           />
         </Card>
         <Card>
           {response.percent !== null && response.previousPercent !== null ? (
-            <DeltaStat
+            <Stat
               label="응답률"
               value={responseValue}
               caption={responseCaption}
-              delta={{ diff: response.percent - response.previousPercent, unit: "%p", against: "지난주" }}
+              delta={changeOf(response.percent - response.previousPercent, "%p", "지난주 대비")}
             />
           ) : (
             <Stat label="응답률" value={responseValue} caption={responseCaption} />

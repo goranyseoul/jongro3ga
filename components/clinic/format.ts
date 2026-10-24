@@ -1,3 +1,4 @@
+import type { StatDelta } from "@/components/ui";
 import { UNIT_TEXT, type Amount } from "@/lib/ui-data/clinic";
 
 // Fixed to Asia/Seoul so server and browser render the same text (no hydration drift).
@@ -57,4 +58,10 @@ export function daysBetween(from: string, to: string): number {
 export function formatDate(date: string): string {
   const [, month, day] = date.split("-");
   return `${Number(month)}월 ${Number(day)}일`;
+}
+
+/** A Stat change line from a difference: "+1건", "-2건", or "변화 없음". More is treated as better. */
+export function changeOf(diff: number, unit: string, against: string): StatDelta {
+  const dir = diff > 0 ? "up" : diff < 0 ? "down" : "flat";
+  return { dir, against, value: dir === "flat" ? "변화 없음" : `${dir === "up" ? "+" : "-"}${Math.abs(diff)}${unit}` };
 }
