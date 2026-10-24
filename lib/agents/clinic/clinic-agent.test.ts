@@ -467,7 +467,6 @@ describe("ZK offer proof in clinic.quote (03 zk-offer-proof/v1, docs/INTEGRATION
   it.each([
     ["the verifier refuses", () => vi.mocked(verifyOffer).mockResolvedValue({ ok: false, reason: "증명 검증 실패" }), "rejected"],
     ["the verifier is unreachable", () => vi.mocked(verifyOffer).mockRejectedValue(new Error("fetch failed: ECONNREFUSED")), "verifier_unreachable"],
-    ["ZK is off", () => delete process.env.ZK_SERVER_URL, "zk_disabled"],
   ])("quotes the list price, not a rejection, when %s", async (_label, arrange, reason) => {
     arrange();
     const result = await quoteAt("mint", 2, { offerProof: offerProof() });
@@ -477,6 +476,17 @@ describe("ZK offer proof in clinic.quote (03 zk-offer-proof/v1, docs/INTEGRATION
     expect(warn).toHaveBeenCalledWith(expect.stringContaining(`cln_mint offer proof not applied: ${reason}`), expect.anything());
     const [task] = await clinicStore().tasks("cln_mint");
     expect(task?.summary).toBe(`메뉴 견적 · 오퍼 증명 미적용 (${reason})`);
+  });
+
+  it("applies the event like a plain one when no ZK server is configured, with or without a proof (BUILD-LOG P12)", async () => {
+    delete process.env.ZK_SERVER_URL;
+    for (const metadata of [{}, { offerProof: offerProof() }]) {
+      const quote = QuoteV1Schema.parse((await quoteAt("mint", 2, metadata)).data);
+      expect([quote.amount.value, quote.priceKrw, quote.event?.regularPriceKrw, quote.event?.zkClauses, quote.offerApplied]).toEqual([
+        1, 99000, 150000, undefined, undefined,
+      ]);
+    }
+    expect(verifyOffer).not.toHaveBeenCalled();
   });
 
   it("gives up on a verifier that does not answer in time", async () => {

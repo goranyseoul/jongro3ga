@@ -43,6 +43,12 @@ export interface SelectInput {
   offers: StoredOffer[];
   /** Offer whose proof the clinic verified for this request (checkOfferProof in offer-proof.ts). */
   verifiedOfferId?: string;
+  /**
+   * False when no ZK server is configured (ZK_SERVER_URL unset, as on the Vercel demo): nobody can prove anything
+   * there, so proof-only events apply like plain events and the quote looks as it did before the ZK port
+   * (owner decision 2026-10-24 evening, BUILD-LOG P12). Default true.
+   */
+  proofsRequired?: boolean;
 }
 
 /** An event with zkClauses applies only with a verified offer proof (03 "ZK 확장 필드"). */
@@ -83,7 +89,7 @@ function eventProduct(offer: StoredOffer, facts: MenuItem | undefined): string {
   return facts?.product ?? getProcedure(offer.procedureId)?.name.en ?? offer.title;
 }
 
-function eventSelection(offer: StoredOffer, menu: MenuItem[]): QuoteSelection {
+function eventSelection(offer: StoredOffer, menu: MenuItem[], gated = true): QuoteSelection {
   const facts = menuFor(offer, menu);
   const includes = facts?.includes ?? [];
   return {
@@ -100,7 +106,7 @@ function eventSelection(offer: StoredOffer, menu: MenuItem[]): QuoteSelection {
       validFrom: offer.validFrom,
       validUntil: offer.validUntil,
       conditions: offer.conditions,
-      ...(isProofOnly(offer) ? { zkClauses: offer.zkClauses } : {}),
+      ...(gated && isProofOnly(offer) ? { zkClauses: offer.zkClauses } : {}),
     },
     offerId: offer.id,
     menuItemId: facts?.id,
@@ -113,18 +119,20 @@ function eventSelection(offer: StoredOffer, menu: MenuItem[]): QuoteSelection {
  * 2. Otherwise the menu item closest to the requested amount (ties: larger amount).
  * 3. Only an unproven proof-only event for the procedure: that item at its regular price, no event (Mint 1cc 150,000).
  * 4. Nothing for the procedure: null, the handler answers TASK_STATE_REJECTED.
+ * With `proofsRequired: false` (no ZK server) proof-only events count as plain ones in step 1, without zkClauses.
  */
 export function selectQuoteItem(input: SelectInput): QuoteSelection | null {
   const running = currentOffers(input.offers, input.procedureId, input.today);
-  const proofOnly = running.filter(isProofOnly);
-  const plain = running.filter((offer) => !isProofOnly(offer));
+  const gated = input.proofsRequired !== false;
+  const proofOnly = gated ? running.filter(isProofOnly) : [];
+  const plain = gated ? running.filter((offer) => !isProofOnly(offer)) : running;
   const menu = input.menu.filter((item) => item.procedureId === input.procedureId);
 
   const proven = input.verifiedOfferId ? proofOnly.find((offer) => offer.id === input.verifiedOfferId) : undefined;
   if (proven) return { ...eventSelection(proven, input.menu), offerApplied: { offerId: proven.id, verified: true } };
 
   const event = closest(plain, input.amount);
-  if (event) return eventSelection(event, input.menu);
+  if (event) return eventSelection(event, input.menu, gated);
 
   const item = closest(menu, input.amount);
   if (item) {

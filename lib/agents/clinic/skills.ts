@@ -14,6 +14,7 @@ import type {
 } from "../../a2a/schemas";
 import { clock } from "../../clock";
 import type { ClinicProfile } from "../../domain/clinic";
+import { zkEnabled } from "../../zk";
 import { ACCEPT_PROPOSED_SLOT, announceConfirmation, holdSlot, releaseSlot } from "./booking";
 import { checkOfferProof, type ProofCheck } from "./offer-proof";
 import { freeSlots, quoteValidUntil, selectQuoteItem } from "./quote";
@@ -176,6 +177,7 @@ const quote: SkillHandler = async (data, ctx) => {
     menu,
     offers,
     verifiedOfferId: proof.verified ? proof.offerId : undefined,
+    proofsRequired: zkEnabled(),
   });
   if (!selection) {
     const result = rejected(`procedure_not_offered: ${request.procedureId} is not on this clinic's menu`);
