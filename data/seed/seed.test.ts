@@ -28,7 +28,7 @@ describe("loadSeed", () => {
       "customer.accounts": 6,
       "customer.profiles": 5,
       "customer.consents": 24,
-      "customer.records": 3,
+      "customer.records": 13,
     });
     expect(await store.list("platform", SEED_COLLECTIONS.platform.rules, { status: "active" })).toHaveLength(2);
     expect(await store.get("clinic", "slot_policies", "cln_seoul_glow")).toMatchObject({ autoConfirm: false, foreignSlotsPerDay: 4 });
