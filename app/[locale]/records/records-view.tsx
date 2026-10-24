@@ -24,7 +24,6 @@ import { RecordsCalendar } from "./records-calendar";
 import {
   DEMO_TODAY,
   addDays,
-  canMatch,
   detectProcedure,
   getProcedure,
   upcomingSessionNumber,
@@ -65,7 +64,7 @@ export function RecordsView() {
   const t = useTranslations("records");
   const common = useTranslations("common");
   const label = useLabels();
-  const { locale, profile, records } = useCustomer();
+  const { locale, records } = useCustomer();
   const [filter, setFilter] = useState<{ kind: PresetKind; value: string } | null>(null);
   const [query, setQuery] = useState("");
   const topRail = useRef<HTMLUListElement>(null);
@@ -105,8 +104,9 @@ export function RecordsView() {
     setPage(0);
   };
 
-  // "Find clinics" opens the agent chat with the procedure and the next month. Only foreign visitors
-  // see it: matching is closed to Korean nationals and residents (08-compliance.md section 2).
+  // "Find clinics" opens the agent chat with the procedure and the next month. Shown to every customer
+  // (records owner decision 2026-10-24); the chat itself still refuses matching for Korean nationals and
+  // residents (08-compliance.md section 2) and shows its notice instead.
   const findTo = addDays(DEMO_TODAY, FIND_DAYS);
   const findHref = (procedureId: string) =>
     `/chat?intent=${encodeURIComponent(
@@ -283,7 +283,7 @@ export function RecordsView() {
                             </button>
                           ))}
                         </div>
-                        {record.status === "active" && canMatch(profile) ? (
+                        {record.status === "active" ? (
                           <Link href={findHref(record.procedureId)} className={cn(smallChip, "ms-auto", chipState(false), focusRing)}>
                             <FiSearch aria-hidden />
                             {t("plan.findClinic")}
