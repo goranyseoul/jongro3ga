@@ -122,6 +122,8 @@ export type Offer = {
   conditions: string;
   /** Off means the offer is kept but not sent to customer agents (clinic.offers and clinic.quote skip it). */
   active: boolean;
+  /** ZK offer conditions (teammate ZK work); absent means a plain event. */
+  zkClauses?: ZkClause[];
 };
 
 export type MenuData = { today: IsoDate; items: MenuItem[]; offers: Offer[] };
@@ -205,10 +207,10 @@ export const ZK_PRESET_TEXT: Record<ZkPreset, { option: string; short: string }>
 };
 
 /** The clauses a preset writes for an event on `procedureId`. "none" writes nothing. */
-export function zkClausesFor(preset: ZkPreset, procedureId: string): ZkClause[] | undefined {
+export function zkClausesFor(preset: ZkPreset, procedureId: string, clinicId = "cln_seoul_glow"): ZkClause[] | undefined {
   switch (preset) {
     case "first_visit":
-      return [{ clinicId: CLINIC.id, maxCount: 0 }];
+      return [{ clinicId, maxCount: 0 }];
     case "second_session":
       return [{ type: procedureId, minCount: 1, maxCount: 1 }];
     case "regular":
