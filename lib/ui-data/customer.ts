@@ -38,6 +38,19 @@ export type ProcedureId =
   | "shrink_universe"
   | "skin_booster_juvelook";
 
+/**
+ * One condition of a record-based offer (docs/INTEGRATION.md section 3): "records of `type` from `clinicId`,
+ * made `minDays`~`maxDays` days before today, number `minCount`~`maxCount`". A missing type or clinic means any.
+ */
+export interface ZkClause {
+  type?: string;
+  clinicId?: string;
+  minDays?: number;
+  maxDays?: number;
+  minCount?: number;
+  maxCount?: number;
+}
+
 /** The demo clock (06-data-model.md "시계"): the day before Yuki arrives. */
 export const DEMO_NOW: IsoDateTime = "2026-11-12T10:00:00+09:00";
 export const DEMO_TODAY: IsoDate = "2026-11-12";
@@ -225,6 +238,8 @@ export interface TreatmentRecord {
   status: RecordStatus;
   stopReason?: "no_effect" | "expensive" | "side_effect" | "other";
   sharedToPlatform: boolean;
+  /** A clinic-confirmed record appended to the chain (ZK record layer). Absent: not usable for offer proofs. */
+  anchor?: { subjectId: string; version: number; tx: string };
 }
 
 /** Session number of a new record: continues the previous one unless the gap is too long. */
@@ -517,6 +532,140 @@ export function consentsFor(profile: CustomerProfile): ConsentEntry[] {
 }
 
 // ---------------------------------------------------------------------------
+// ZK record layer (docs/INTEGRATION.md sections 2, 7): pseudonyms, chart hashes, the public ledger
+// ---------------------------------------------------------------------------
+
+export const ZK_CHAIN = {
+  chainId: 84532,
+  name: "Base Sepolia",
+  registry: "0xcf47152e720508bf8c757a55aa30956ca8b58857",
+  explorer: "https://sepolia.basescan.org",
+  secondsPerDay: 60,
+} as const;
+
+/** Message extension that marks a clinic.quote carrying metadata.offerProof (INTEGRATION.md "확장 URI"). */
+export const ZK_OFFER_PROOF_EXTENSION = "https://pibu.app/ext/zk-offer-proof/v1";
+
+export const txUrl = (tx: string) => `${ZK_CHAIN.explorer}/tx/${tx}`;
+export const addressUrl = (address: string) => `${ZK_CHAIN.explorer}/address/${address}`;
+
+/** "0x1708…02b1": enough to tell hashes apart; the full value goes in a title or the export. */
+export function shortHex(hex: string): string {
+  return hex.length <= 12 ? hex : `${hex.slice(0, 6)}…${hex.slice(-4)}`;
+}
+
+export const YUKI_SUBJECT_ID = "0x12a4356ddc951f4c45d36db425629c955e20ec0dbebcb451b83add42ad48ebae";
+const LIN_SUBJECT_ID = "0xfdb6e679db657053cd5086ccd1efeee43dcc26eeaf3c8e53c39381d5774cb878";
+const LIN_COMMITMENT = "0x2af66e9d9b80b24be86fdc38f593595a6b02ac6a0d69cc461902715d5383f5cd";
+const LIN_ANCHOR_TX = "0x170839896bcee7d8e491cf34b840056b1ec6f972ca7c9b5b46a11d8fc98d02b1";
+
+/** What the device wallet knows about itself; the chart behind the commitment never leaves it. */
+export interface ZkWallet {
+  subjectId: string;
+  /** On-chain chart hash, null while nothing is anchored (version 0). */
+  commitment: string | null;
+  version: number;
+  anchoredRecords: number;
+}
+
+const YUKI_WALLET: ZkWallet = { subjectId: YUKI_SUBJECT_ID, commitment: null, version: 0, anchoredRecords: 0 };
+
+/** cus_yuki and cus_yuki_done are the same person, so they share one wallet (INTEGRATION.md section 2). */
+export const ZK_WALLETS: Record<string, ZkWallet> = {
+  cus_yuki: YUKI_WALLET,
+  cus_yuki_done: YUKI_WALLET,
+  cus_lin: { subjectId: LIN_SUBJECT_ID, commitment: LIN_COMMITMENT, version: 1, anchoredRecords: 1 },
+  cus_emily: {
+    subjectId: "0xb7e94f8cd686d7ded4c1c0c0839f4767f62acfdd8fe59f463413fa3bafe44184",
+    commitment: null,
+    version: 0,
+    anchoredRecords: 0,
+  },
+  cus_jisoo: {
+    subjectId: "0x70a614435ca20ac8ada2c59f61c403d635b0bccc480c31aec3fead02a598a386",
+    commitment: null,
+    version: 0,
+    anchoredRecords: 0,
+  },
+};
+
+/**
+ * The append the D0 outcome triggers (platform.anchor_record, demo scene 6). Demo values: the relayer has
+ * not sent this one, so the tx does not resolve on the explorer. The ops log shows the same call.
+ */
+export const D0_ANCHOR = {
+  tx: "0x2e04ea2daedd5ecd6b3bc81ec944de21c2526e24d4c2d9220eea7e895ecb7e4f",
+  day: 29880311,
+  newCommitment: "0x166ca89cd09fc29133a45e82aeaae8bbb180147532247087d5fd9f0390471772",
+  recordHash: "0x08fc18865fdab450ae997e365492a1a13135208f3594db406a56779598e4e13c",
+  recordNonce: "227588816530941371586866572581592759909336917924899762064909622446282245908",
+  ticketCommitment: "14078410970494923729765043812108485662905772649924261547249006040536441735",
+} as const;
+
+/** The seed wallet moved forward by records this browser anchored (the D0 outcome form adds one). */
+export function walletFor(customerId: string, records: TreatmentRecord[]): ZkWallet | undefined {
+  const seed = ZK_WALLETS[customerId];
+  if (!seed) return undefined;
+  const anchored = records.filter((record) => record.anchor?.subjectId === seed.subjectId);
+  const version = Math.max(seed.version, ...anchored.map((record) => record.anchor?.version ?? 0));
+  return {
+    ...seed,
+    commitment: version > seed.version ? D0_ANCHOR.newCommitment : seed.commitment,
+    version,
+    anchoredRecords: Math.max(seed.anchoredRecords, anchored.length),
+  };
+}
+
+/** One RecordAppended event: everything the chain holds about a record. */
+export interface LedgerEvent {
+  at: IsoDateTime;
+  subjectId: string;
+  commitment: string;
+  version: number;
+  tx: string;
+  /** Chain day (1 day = 60 s on the demo registry), not a calendar date. */
+  day: number;
+}
+
+// Every RecordAppended event of the registry as of 2026-10-24, read from Base Sepolia, newest first.
+// The pseudonyms other than Lin's belong to rehearsal wallets that have been reset since.
+export const LEDGER_EVENTS: LedgerEvent[] = [
+  { at: "2026-10-24T14:03:49+09:00", subjectId: LIN_SUBJECT_ID, commitment: LIN_COMMITMENT, version: 1, tx: LIN_ANCHOR_TX, day: 29880303 },
+  {
+    at: "2026-10-24T13:35:55+09:00",
+    subjectId: "0x74112ae7d152047455af46e0636d7982096c994748e73c7f3d59c4355ecc022e",
+    commitment: "0x1e89f53aa81d98bced19df48e49027c2a79f1ae2663c87bed8dbd7eca63574dc",
+    version: 1,
+    tx: "0x2c280eb67facc3aa72db31a9ffc15a5f6f0a8a19abc7804e1904e389f2a02097",
+    day: 29880275,
+  },
+  {
+    at: "2026-10-24T13:35:52+09:00",
+    subjectId: "0xf48b6ffdb8350e227091f92f20b5db1e83921cb34328547a80cc26c2e08ce4d2",
+    commitment: "0x1d43ab38442f1013b9cfd19f178d1d8a3066b6c7cf9de947313146ce4b622b9b",
+    version: 2,
+    tx: "0xd860bcc3048d0ea779829d8f95dfb81e26afafac68beb09841f96809352f080a",
+    day: 29880275,
+  },
+  {
+    at: "2026-10-24T13:29:58+09:00",
+    subjectId: "0xf48b6ffdb8350e227091f92f20b5db1e83921cb34328547a80cc26c2e08ce4d2",
+    commitment: "0x2118be61626760a267c4765c2c92b7f195f322565403b83138739c63e35bab33",
+    version: 1,
+    tx: "0x7ee821b6599aa015ba731bf39bfb8c678284b237212b68cfafbd6e621bc19c60",
+    day: 29880269,
+  },
+  {
+    at: "2026-10-24T13:29:55+09:00",
+    subjectId: "0xf1ab472d1ed7ef35a0b5073ec47b53370790b60cf50b66cffb2f7472ccf72caf",
+    commitment: "0x1707883b26dfc4dc17db29e123d6b3709dd82e226418ef79dd6a459510fe5703",
+    version: 1,
+    tx: "0x2aade38b3f38d3129989af2005936d19ca65c42abf1e5205d251ee68c936f862",
+    day: 29880269,
+  },
+];
+
+// ---------------------------------------------------------------------------
 // Treatment records (seed)
 // ---------------------------------------------------------------------------
 
@@ -585,6 +734,7 @@ export const TREATMENT_RECORDS: TreatmentRecord[] = [
     nextDue: "2026-11-30",
     status: "active",
     sharedToPlatform: false,
+    anchor: { subjectId: LIN_SUBJECT_ID, version: 1, tx: LIN_ANCHOR_TX },
   },
 ];
 
@@ -672,7 +822,15 @@ export interface ClinicShortlistV1 {
     sampleSize: number;
     windowDays: number;
   };
-  candidates: { clinicId: string; score: number; reasons: string[] }[];
+  candidates: {
+    clinicId: string;
+    score: number;
+    reasons: string[];
+    /** Clinic-confirmed visits of PibooK users (visit tickets). Display only, never part of the score. */
+    verifiedVisits?: number;
+    /** Aggregate of verified reviews, present only when n >= 5. Review text is never shown. */
+    reviewStats?: { n: number; avgRating: number };
+  }[];
 }
 
 export const SHORTLIST: ClinicShortlistV1 = {
@@ -695,9 +853,23 @@ export const SHORTLIST: ClinicShortlistV1 = {
       clinicId: "cln_seoul_glow",
       score: 0.86,
       reasons: ["Japanese-speaking coordinator on site", "Paid prices close to quotes in 18 past outcomes", "Open slots on 11-14"],
+      verifiedVisits: 1240,
+      reviewStats: { n: 18, avgRating: 4.6 },
     },
-    { clinicId: "cln_ara", score: 0.74, reasons: ["Japanese interpreter available", "Same area group as your stay"] },
-    { clinicId: "cln_mint", score: 0.68, reasons: ["Japanese interpreter available", "Open slots on 11-13"] },
+    {
+      clinicId: "cln_ara",
+      score: 0.74,
+      reasons: ["Japanese interpreter available", "Same area group as your stay"],
+      verifiedVisits: 640,
+      reviewStats: { n: 7, avgRating: 3.9 },
+    },
+    {
+      clinicId: "cln_mint",
+      score: 0.68,
+      reasons: ["Japanese interpreter available", "Open slots on 11-13"],
+      verifiedVisits: 980,
+      reviewStats: { n: 12, avgRating: 4.1 },
+    },
   ],
 };
 
@@ -713,7 +885,18 @@ export interface QuoteV1 {
   vatIncluded: boolean;
   includes: string[];
   excludes: string[];
-  event?: { title: string; regularPriceKrw: Krw; validFrom: IsoDate; validUntil: IsoDate; conditions: string };
+  event?: {
+    title: string;
+    regularPriceKrw: Krw;
+    validFrom: IsoDate;
+    validUntil: IsoDate;
+    /** Human readable conditions stay required even when zkClauses exist (의료법 시행령 제23조). */
+    conditions: string;
+    /** Set: the event applies only with a proof of these clauses. */
+    zkClauses?: ZkClause[];
+  };
+  /** The clinic verified an offer proof and applied the event price. */
+  offerApplied?: { offerId: string; verified: true };
   slots: IsoDateTime[];
   languages: Locale[];
   indicative: boolean;
@@ -722,6 +905,25 @@ export interface QuoteV1 {
 }
 
 const kst = (date: string, hour: number) => `${date}T${String(hour).padStart(2, "0")}:00:00+09:00`;
+
+const MINT_FIRST_VISIT_OFFER_ID = "ofr_mint_rejuran_first_visit";
+
+/**
+ * pibu/offer-proof@1 the customer agent attached to Mint's clinic.quote (metadata.offerProof), as the A2A
+ * log stores it: proof bytes shortened. publicInputs follow the circuit order
+ * [commitment, today, type, clinic, min_days, max_days, min_count, max_count]; Yuki has no anchored
+ * record yet, so the commitment input is the empty chart's 0x0.
+ */
+export const MINT_OFFER_PROOF = {
+  schema: "pibu/offer-proof@1",
+  offerId: MINT_FIRST_VISIT_OFFER_ID,
+  clinicId: "cln_mint",
+  subjectId: YUKI_SUBJECT_ID,
+  chainId: ZK_CHAIN.chainId,
+  registry: ZK_CHAIN.registry,
+  today: 29880272,
+  proofs: [{ proof: "[proof 14.1KB]", publicInputs: ["0x0", "29880272", "0", "2", "0", "100000", "0", "0"] }],
+};
 
 export const QUOTES: QuoteV1[] = [
   {
@@ -768,7 +970,9 @@ export const QUOTES: QuoteV1[] = [
       validFrom: "2026-11-01",
       validUntil: "2026-11-30",
       conditions: "First visit only",
+      zkClauses: [{ clinicId: "cln_mint", maxCount: 0 }],
     },
+    offerApplied: { offerId: MINT_FIRST_VISIT_OFFER_ID, verified: true },
     slots: [kst("2026-11-13", 15), kst("2026-11-14", 11), kst("2026-11-15", 10)],
     languages: ["ja", "en"],
     indicative: true,
@@ -885,7 +1089,7 @@ export function normalizedTotal(quote: QuoteV1): Krw {
   return quote.vatIncluded ? quote.priceKrw : Math.round(quote.priceKrw * 1.1);
 }
 
-// A2A log of the request (A2ALogEntry), grouped into the three lines the progress screen shows.
+// A2A log of the request (A2ALogEntry), grouped into the lines the progress screen shows.
 export interface A2ALogEntry {
   id: string;
   at: IsoDateTime;
@@ -918,8 +1122,15 @@ function logEntry(args: {
   latencyMs: number;
   humanSummary: I18nText;
   referral?: boolean;
+  /** Offer proof for this clinic, attached in metadata with the zk-offer-proof extension. */
+  offerProof?: unknown;
 }): A2ALogEntry {
   const rpcId = `rpc_${String(args.n).padStart(4, "0")}`;
+  const metadata = {
+    skillId: args.skillId,
+    ...(args.referral ? { referralToken: "eyJhbGciOiJFUzI1NiJ9.example.signature" } : {}),
+    ...(args.offerProof ? { offerProof: args.offerProof } : {}),
+  };
   return {
     id: `log_${String(args.n).padStart(4, "0")}`,
     at: args.at,
@@ -939,9 +1150,8 @@ function logEntry(args: {
           contextId: REQUEST_ID,
           role: "ROLE_USER",
           parts: [{ text: args.text }, { data: args.data, mediaType: "application/json" }],
-          metadata: args.referral
-            ? { skillId: args.skillId, referralToken: "eyJhbGciOiJFUzI1NiJ9.example.signature" }
-            : { skillId: args.skillId },
+          metadata,
+          ...(args.offerProof ? { extensions: [ZK_OFFER_PROOF_EXTENSION] } : {}),
         },
         configuration: { acceptedOutputModes: ["application/json", "text/plain"] },
       },
@@ -1020,6 +1230,8 @@ export const A2A_LOG: A2ALogEntry[] = [
         ko: `${clinicName(quote.clinicId, "ko")}에 견적을 요청했어요`,
       },
       referral: true,
+      // only the clinic whose offer matched on the device gets a proof (INTEGRATION.md section 4)
+      offerProof: quote.clinicId === MINT_OFFER_PROOF.clinicId ? MINT_OFFER_PROOF : undefined,
     }),
   ),
   logEntry({
@@ -1055,7 +1267,11 @@ export const A2A_LOG: A2ALogEntry[] = [
   }),
 ];
 
-/** The three lines of the progress timeline (05-screens.md): match, quotes, judge. */
+/**
+ * The lines of the progress timeline (05-screens.md): match, the on-device offer proof (ZK record layer),
+ * quotes, judge. The proof step has no call of its own: matching runs on the device, and the proof rides on
+ * Mint's clinic.quote, which is the entry behind it.
+ */
 export interface ProgressStep {
   id: string;
   at: IsoDateTime;
@@ -1078,6 +1294,23 @@ export const PROGRESS_STEPS: ProgressStep[] = [
       ko: "지역과 언어 조건에 맞는 병원 3곳을 찾았어요",
     },
     entries: [A2A_LOG[0]!],
+  },
+  {
+    id: "step_offer_proof",
+    at: "2026-11-12T10:00:02+09:00",
+    humanSummary: {
+      ja: "端末の中で特典の条件を確かめ、ミントに初回来院の証明を添えました",
+      "zh-CN": "已在设备内核对优惠条件,并向薄荷附上首次到访证明",
+      en: "I checked offer conditions on your device and attached a first-visit proof for Mint",
+      ko: "기기 안에서 혜택 조건을 확인하고 민트에 첫 방문 증명을 붙였어요",
+    },
+    detail: {
+      ja: "施術の履歴は送りません。条件を満たしているという証明だけが届きます",
+      "zh-CN": "不会发送施术记录,只发送满足条件的证明",
+      en: "Your treatment history is not sent. Only a proof that you meet the condition goes out",
+      ko: "시술 이력은 보내지 않아요. 조건을 만족한다는 증명만 가요",
+    },
+    entries: [A2A_LOG[1 + QUOTES.findIndex((quote) => quote.clinicId === MINT_OFFER_PROOF.clinicId)]!],
   },
   {
     id: "step_quote",
