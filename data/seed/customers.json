@@ -1,0 +1,556 @@
+[
+  {
+    "account": {
+      "id": "cus_yuki",
+      "demoPersona": "yuki",
+      "agentId": "cag_2m9q4",
+      "createdAt": "2026-10-24T09:00:00+09:00"
+    },
+    "note": "Not onboarded: demo row 1 starts the onboarding chat from here."
+  },
+  {
+    "account": {
+      "id": "cus_yuki_done",
+      "email": "yuki.demo@example.com",
+      "demoPersona": "yuki_done",
+      "agentId": "cag_7f3k2",
+      "createdAt": "2026-10-20T20:40:00+09:00"
+    },
+    "profile": {
+      "id": "cus_yuki_done",
+      "agentId": "cag_7f3k2",
+      "locale": "ja",
+      "nickname": "Yuki",
+      "nationality": "JP",
+      "residency": "short_term_visitor",
+      "ageBand": "25-29",
+      "trip": {
+        "arrival": "2026-11-08",
+        "departure": "2026-11-10",
+        "stayArea": "sinsa",
+        "flightTimeHome": "19:00"
+      },
+      "skin": {
+        "type": "combination",
+        "concerns": [
+          "elasticity",
+          "fine_lines"
+        ]
+      },
+      "safety": {
+        "pregnantOrBreastfeeding": false,
+        "allergies": [],
+        "anticoagulants": false,
+        "recentIsotretinoin": false,
+        "keloidHistory": false
+      },
+      "prefs": {
+        "budgetKrw": {
+          "max": 450000
+        },
+        "downtimeToleranceDays": 1,
+        "painTolerance": "mid",
+        "languagesNeeded": [
+          "ja"
+        ],
+        "doctorGender": "any"
+      },
+      "contact": {
+        "channel": "line",
+        "handle": "yuki_demo"
+      },
+      "completedAt": "2026-10-20T21:00:00+09:00"
+    },
+    "consents": [
+      {
+        "id": "cns_yuki_done_1",
+        "customerId": "cus_yuki_done",
+        "type": "terms",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-20T20:45:00+09:00"
+      },
+      {
+        "id": "cns_yuki_done_2",
+        "customerId": "cus_yuki_done",
+        "type": "privacy",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-20T20:45:00+09:00"
+      },
+      {
+        "id": "cns_yuki_done_3",
+        "customerId": "cus_yuki_done",
+        "type": "sensitiveHealth",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-20T20:45:00+09:00"
+      },
+      {
+        "id": "cns_yuki_done_4",
+        "customerId": "cus_yuki_done",
+        "type": "crossBorder",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-20T20:45:00+09:00"
+      },
+      {
+        "id": "cns_yuki_done_5",
+        "customerId": "cus_yuki_done",
+        "type": "shareWithClinic",
+        "granted": true,
+        "scope": [
+          "safetyInfo.*",
+          "contact.handle"
+        ],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-20T20:45:00+09:00",
+        "recipientRole": "clinic"
+      }
+    ]
+  },
+  {
+    "account": {
+      "id": "cus_lin",
+      "email": "lin.demo@example.com",
+      "demoPersona": "lin",
+      "agentId": "cag_5h8w1",
+      "createdAt": "2026-09-30T20:00:00+09:00"
+    },
+    "profile": {
+      "id": "cus_lin",
+      "agentId": "cag_5h8w1",
+      "locale": "zh-CN",
+      "nickname": "Lin",
+      "nationality": "CN",
+      "residency": "short_term_visitor",
+      "ageBand": "30-34",
+      "trip": {
+        "arrival": "2026-11-20",
+        "departure": "2026-11-24",
+        "stayArea": "myeongdong",
+        "flightTimeHome": "15:00"
+      },
+      "skin": {
+        "type": "dry",
+        "concerns": [
+          "elasticity",
+          "dryness"
+        ]
+      },
+      "safety": {
+        "pregnantOrBreastfeeding": false,
+        "allergies": [],
+        "anticoagulants": false,
+        "recentIsotretinoin": false,
+        "keloidHistory": false
+      },
+      "prefs": {
+        "budgetKrw": {
+          "max": 500000
+        },
+        "downtimeToleranceDays": 2,
+        "painTolerance": "mid",
+        "languagesNeeded": [
+          "zh-CN"
+        ],
+        "doctorGender": "any"
+      },
+      "contact": {
+        "channel": "wechat",
+        "handle": "lin_demo"
+      },
+      "completedAt": "2026-09-30T20:30:00+09:00"
+    },
+    "consents": [
+      {
+        "id": "cns_lin_1",
+        "customerId": "cus_lin",
+        "type": "terms",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-09-30T20:10:00+09:00"
+      },
+      {
+        "id": "cns_lin_2",
+        "customerId": "cus_lin",
+        "type": "privacy",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-09-30T20:10:00+09:00"
+      },
+      {
+        "id": "cns_lin_3",
+        "customerId": "cus_lin",
+        "type": "sensitiveHealth",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-09-30T20:10:00+09:00"
+      },
+      {
+        "id": "cns_lin_4",
+        "customerId": "cus_lin",
+        "type": "crossBorder",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-09-30T20:10:00+09:00"
+      },
+      {
+        "id": "cns_lin_5",
+        "customerId": "cus_lin",
+        "type": "shareWithClinic",
+        "granted": true,
+        "scope": [
+          "safetyInfo.*",
+          "contact.handle"
+        ],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-09-30T20:10:00+09:00",
+        "recipientRole": "clinic"
+      }
+    ],
+    "records": [
+      {
+        "id": "rec_lin_1",
+        "customerId": "cus_lin",
+        "procedureId": "rejuran",
+        "date": "2026-08-12",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 380000,
+        "clinicId": "cln_hanbit",
+        "source": "onboarding_history",
+        "sessionNumber": 1,
+        "nextDue": "2026-09-11",
+        "status": "active",
+        "sharedToPlatform": false
+      }
+    ]
+  },
+  {
+    "account": {
+      "id": "cus_emily",
+      "email": "emily.demo@example.com",
+      "demoPersona": "emily",
+      "agentId": "cag_9c4e6",
+      "createdAt": "2026-10-18T09:00:00+09:00"
+    },
+    "profile": {
+      "id": "cus_emily",
+      "agentId": "cag_9c4e6",
+      "locale": "en",
+      "nickname": "Emily",
+      "nationality": "US",
+      "residency": "short_term_visitor",
+      "ageBand": "25-29",
+      "trip": {
+        "arrival": "2026-11-05",
+        "departure": "2026-11-15",
+        "stayArea": "hongdae",
+        "flightTimeHome": "21:00"
+      },
+      "skin": {
+        "type": "oily",
+        "concerns": [
+          "pores",
+          "acne_scars"
+        ]
+      },
+      "safety": {
+        "pregnantOrBreastfeeding": false,
+        "allergies": [],
+        "anticoagulants": false,
+        "recentIsotretinoin": false,
+        "keloidHistory": false
+      },
+      "prefs": {
+        "budgetKrw": {
+          "max": 600000
+        },
+        "downtimeToleranceDays": 3,
+        "painTolerance": "low",
+        "languagesNeeded": [
+          "en"
+        ],
+        "doctorGender": "female"
+      },
+      "contact": {
+        "channel": "email",
+        "handle": "emily.demo@example.com"
+      },
+      "completedAt": "2026-10-18T09:20:00+09:00"
+    },
+    "consents": [
+      {
+        "id": "cns_emily_1",
+        "customerId": "cus_emily",
+        "type": "terms",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-18T09:05:00+09:00"
+      },
+      {
+        "id": "cns_emily_2",
+        "customerId": "cus_emily",
+        "type": "privacy",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-18T09:05:00+09:00"
+      },
+      {
+        "id": "cns_emily_3",
+        "customerId": "cus_emily",
+        "type": "sensitiveHealth",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-18T09:05:00+09:00"
+      },
+      {
+        "id": "cns_emily_4",
+        "customerId": "cus_emily",
+        "type": "crossBorder",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-10-18T09:05:00+09:00"
+      }
+    ]
+  },
+  {
+    "account": {
+      "id": "cus_jisoo",
+      "email": "jisoo.demo@example.com",
+      "demoPersona": "jisoo",
+      "agentId": "cag_3j7r5",
+      "createdAt": "2026-07-01T21:00:00+09:00"
+    },
+    "profile": {
+      "id": "cus_jisoo",
+      "agentId": "cag_3j7r5",
+      "locale": "ko",
+      "nickname": "지수",
+      "nationality": "KR",
+      "ageBand": "30-34",
+      "skin": {
+        "type": "combination",
+        "concerns": [
+          "elasticity",
+          "fine_lines"
+        ]
+      },
+      "safety": {
+        "pregnantOrBreastfeeding": false,
+        "allergies": [],
+        "anticoagulants": false,
+        "recentIsotretinoin": false,
+        "keloidHistory": false
+      },
+      "prefs": {
+        "painTolerance": "high",
+        "languagesNeeded": [
+          "ko"
+        ]
+      },
+      "contact": {
+        "channel": "email",
+        "handle": "jisoo.demo@example.com"
+      },
+      "completedAt": "2026-07-01T21:10:00+09:00"
+    },
+    "consents": [
+      {
+        "id": "cns_jisoo_1",
+        "customerId": "cus_jisoo",
+        "type": "terms",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-07-01T21:02:00+09:00"
+      },
+      {
+        "id": "cns_jisoo_2",
+        "customerId": "cus_jisoo",
+        "type": "privacy",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-07-01T21:02:00+09:00"
+      },
+      {
+        "id": "cns_jisoo_3",
+        "customerId": "cus_jisoo",
+        "type": "sensitiveHealth",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-07-01T21:02:00+09:00"
+      },
+      {
+        "id": "cns_jisoo_4",
+        "customerId": "cus_jisoo",
+        "type": "crossBorder",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-07-01T21:02:00+09:00"
+      },
+      {
+        "id": "cns_jisoo_5",
+        "customerId": "cus_jisoo",
+        "type": "shareAnonymizedRecords",
+        "granted": true,
+        "scope": [
+          "records.*"
+        ],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-07-01T21:02:00+09:00",
+        "recipientRole": "platform"
+      }
+    ],
+    "records": [
+      {
+        "id": "rec_jisoo_1",
+        "customerId": "cus_jisoo",
+        "procedureId": "rejuran",
+        "date": "2026-09-10",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 320000,
+        "clinicName": "Demo clinic (unlisted)",
+        "source": "manual",
+        "rating": 4,
+        "sessionNumber": 1,
+        "nextDue": "2026-10-10",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_2",
+        "customerId": "cus_jisoo",
+        "procedureId": "botox_wrinkle",
+        "date": "2026-09-28",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 110000,
+        "clinicName": "Demo clinic (unlisted)",
+        "source": "manual",
+        "rating": 5,
+        "sessionNumber": 1,
+        "nextDue": "2026-12-27",
+        "status": "active",
+        "sharedToPlatform": true
+      }
+    ]
+  },
+  {
+    "account": {
+      "id": "cus_sua",
+      "email": "sua.demo@example.com",
+      "demoPersona": "sua",
+      "agentId": "cag_8t2n6",
+      "createdAt": "2026-08-15T22:00:00+09:00"
+    },
+    "profile": {
+      "id": "cus_sua",
+      "agentId": "cag_8t2n6",
+      "locale": "ko",
+      "nickname": "수아",
+      "nationality": "KR",
+      "ageBand": "25-29",
+      "skin": {
+        "type": "oily",
+        "concerns": [
+          "pores"
+        ]
+      },
+      "safety": {
+        "pregnantOrBreastfeeding": false,
+        "allergies": [],
+        "anticoagulants": false,
+        "recentIsotretinoin": false,
+        "keloidHistory": false
+      },
+      "prefs": {
+        "budgetKrw": {
+          "max": 200000
+        },
+        "painTolerance": "low",
+        "languagesNeeded": [
+          "ko"
+        ]
+      },
+      "contact": {
+        "channel": "email",
+        "handle": "sua.demo@example.com"
+      },
+      "completedAt": "2026-08-15T22:15:00+09:00"
+    },
+    "consents": [
+      {
+        "id": "cns_sua_1",
+        "customerId": "cus_sua",
+        "type": "terms",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-08-15T22:05:00+09:00"
+      },
+      {
+        "id": "cns_sua_2",
+        "customerId": "cus_sua",
+        "type": "privacy",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-08-15T22:05:00+09:00"
+      },
+      {
+        "id": "cns_sua_3",
+        "customerId": "cus_sua",
+        "type": "sensitiveHealth",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-08-15T22:05:00+09:00"
+      },
+      {
+        "id": "cns_sua_4",
+        "customerId": "cus_sua",
+        "type": "crossBorder",
+        "granted": true,
+        "scope": [],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-08-15T22:05:00+09:00"
+      },
+      {
+        "id": "cns_sua_5",
+        "customerId": "cus_sua",
+        "type": "shareAnonymizedRecords",
+        "granted": true,
+        "scope": [
+          "records.*"
+        ],
+        "textVersion": "2026-10-24.v1",
+        "at": "2026-08-15T22:05:00+09:00",
+        "recipientRole": "platform"
+      }
+    ]
+  }
+]
