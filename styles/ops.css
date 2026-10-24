@@ -40,3 +40,53 @@
   background: var(--popover);
   color: var(--text);
 }
+
+/* Demo controls: three-split view (05-screens.md). The customer frame is 390px wide, the width
+   of the phone the customer app is designed for, so it is the one literal in this file. */
+:root {
+  --ops-phone-w: 390px;
+  --ops-demo-h: calc(var(--sp-16) * 13);
+}
+
+.ops-demo-grid {
+  display: grid;
+  align-items: start;
+  gap: var(--sp-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ops-demo-phone {
+  display: block;
+  width: 100%;
+  max-width: var(--ops-phone-w);
+  height: var(--ops-demo-h);
+  margin-inline: auto;
+}
+
+.ops-demo-panel {
+  display: flex;
+  min-width: 0;
+  max-height: var(--ops-demo-h);
+  flex-direction: column;
+}
+
+.ops-demo-scroll {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .ops-demo-grid {
+    grid-template-columns: var(--ops-phone-w) minmax(0, 1fr);
+  }
+
+  .ops-demo-phone {
+    margin-inline: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .ops-demo-grid {
+    grid-template-columns: var(--ops-phone-w) minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

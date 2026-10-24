@@ -1042,3 +1042,92 @@ export const A2A_LOG: A2ALogEntry[] = [
     summary: "민트피부과의원에 예약을 요청했어요. 병원 확인을 기다려요",
   }),
 ].sort((a, b) => a.at.localeCompare(b.at));
+
+// ---- Demo controls (05-screens.md "데모 컨트롤", scenario in 10-build-plan.md) ----
+
+export type DemoPersonaKind = "customer" | "clinic" | "operator";
+
+export type DemoPersona = {
+  id: string;
+  label: string;
+  kind: DemoPersonaKind;
+  /** Customer personas only: the language of the customer screen. */
+  locale?: Locale;
+  hint: string;
+};
+
+export const DEMO_PERSONAS: DemoPersona[] = [
+  { id: "yuki", label: "Yuki", kind: "customer", locale: "ja", hint: "일본 · 29세 · 온보딩부터 시작" },
+  { id: "lin", label: "Lin", kind: "customer", locale: "zh-CN", hint: "중국 · 33세 · 리쥬란 3회 코스" },
+  { id: "emily", label: "Emily", kind: "customer", locale: "en", hint: "미국 · 26세 · 처음 받는 K시술" },
+  { id: "jisoo", label: "지수", kind: "customer", locale: "ko", hint: "한국 거주 · 기록 중심 홈, 매칭 없음" },
+  { id: "clinic", label: "병원 계정", kind: "clinic", hint: "서울글로우의원 요청함" },
+  { id: "operator", label: "운영자", kind: "operator", hint: "대행 응답 큐" },
+];
+
+/** The customer screen shown in the left frame. Only onboarding exists so far, home and chat follow. */
+export function customerScreenPath(persona: DemoPersona): string {
+  return `/${persona.locale ?? "ja"}/onboarding`;
+}
+
+export const DEMO_CLOCK_PRESETS = [
+  { value: OPS_NOW, label: "11/12 10:00", hint: "방한 전날 (기본)" },
+  { value: "2026-11-14T13:00:00+09:00", label: "11/14 13:00", hint: "시술 당일" },
+  { value: "2026-11-21T10:00:00+09:00", label: "11/21 10:00", hint: "D7 체크인" },
+  { value: "2026-12-14T10:00:00+09:00", label: "12/14 10:00", hint: "2회차 예정일" },
+];
+
+export type DemoBookingState = "pending" | "confirmed" | "rejected" | "proposed";
+
+export const DEMO_BOOKING_STATE_LABEL: Record<DemoBookingState, string> = {
+  pending: "확인 대기",
+  confirmed: "확정",
+  rejected: "거절",
+  proposed: "시간 제안함",
+};
+
+export type DemoBooking = {
+  id: string;
+  mode: OperationMode;
+  clinicId: string;
+  guestName: string;
+  agentId: string;
+  summary: string;
+  slot: string;
+  state: DemoBookingState;
+  /** Hidden until this many calls of Yuki's request have been replayed in the log. */
+  revealAtStep?: number;
+};
+
+/** Yuki's request (demo scenario steps 2 to 5): the calls up to the booking request are replayed. */
+export const YUKI_CONTEXT_ID = "req_01J9Z8";
+export const YUKI_BOOKING_STEP = 7;
+
+export function buildDemoBookings(): DemoBooking[] {
+  const proxy = PROXY_BOOKINGS.filter((booking) => booking.state === "waiting_clinic").map(
+    (booking): DemoBooking => ({
+      id: booking.id,
+      mode: "proxy",
+      clinicId: booking.clinicId,
+      guestName: booking.guest.displayName,
+      agentId: booking.guest.agentId,
+      summary: `${booking.procedure} ${booking.amountText}`,
+      slot: booking.slot,
+      state: "pending",
+    }),
+  );
+  return [
+    {
+      id: "bk_demo_yuki",
+      mode: "clinic",
+      clinicId: "cln_seoul_glow",
+      guestName: "Yuki T.",
+      agentId: "cag_7f3k2",
+      summary: "리쥬란 힐러 2cc",
+      slot: "2026-11-14T11:00:00+09:00",
+      state: "pending",
+      revealAtStep: YUKI_BOOKING_STEP,
+    },
+    ...proxy,
+  ];
+}
