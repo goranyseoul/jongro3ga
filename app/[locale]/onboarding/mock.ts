@@ -209,10 +209,10 @@ export const MOCK_AGENT_ID = "cag_7f3k2";
 export function buildAgentCard(active: boolean): AgentCard {
   const base = "https://pibu.example";
   return {
-    name: `Pibuk Customer Agent ${MOCK_AGENT_ID}`,
-    description: "Personal agent acting on behalf of one Pibuk customer. Receives booking updates and outcome check-ins.",
+    name: `PibooK Customer Agent ${MOCK_AGENT_ID}`,
+    description: "Personal agent acting on behalf of one PibooK customer. Receives booking updates and outcome check-ins.",
     version: active ? "0.1.0" : "0.0.0-draft",
-    provider: { organization: "Pibuk (hosting on behalf of the customer)", url: base },
+    provider: { organization: "PibooK (hosting on behalf of the customer)", url: base },
     supportedInterfaces: active
       ? [{ url: `${base}/a2a/customers/${MOCK_AGENT_ID}/rpc`, protocolBinding: "JSONRPC", protocolVersion: "1.0" }]
       : [],

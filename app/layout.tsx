@@ -5,7 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pibuk",
+  title: "PibooK",
   description: "The skin log Korean women actually use",
 };
 
