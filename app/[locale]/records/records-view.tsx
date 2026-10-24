@@ -336,9 +336,21 @@ export function RecordsView() {
       <RecordsCalendar records={records} latest={latest} locale={locale} />
 
       <section aria-labelledby="rec-history" className="flex scroll-mt-sp-16 flex-col gap-sp-3">
-        <h2 id="rec-history" className="text-title font-semi">
-          {t("history.title")}
-        </h2>
+        <div className="flex items-center justify-between gap-sp-2">
+          <h2 id="rec-history" className="text-title font-semi">
+            {t("history.title")}
+          </h2>
+          {history.length > 0 ? (
+            <button
+              type="button"
+              aria-pressed={!filter && needle === ""}
+              onClick={() => choosePreset(null)}
+              className={cn(smallChip, chipState(!filter && needle === ""), focusRing)}
+            >
+              {t("history.all")}
+            </button>
+          ) : null}
+        </div>
         {history.length === 0 ? (
           <p className="text-body text-muted">{t("history.empty")}</p>
         ) : (
@@ -355,14 +367,6 @@ export function RecordsView() {
               }}
             />
             <div className="flex flex-col gap-sp-2">
-              <button
-                type="button"
-                aria-pressed={!filter && needle === ""}
-                onClick={() => choosePreset(null)}
-                className={cn(smallChip, "self-start", chipState(!filter && needle === ""), focusRing)}
-              >
-                {t("history.all")}
-              </button>
               {PRESET_KINDS.map((kind) => {
                 const values = topValues(records, presetValue[kind]);
                 if (values.length === 0) return null;
