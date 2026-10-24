@@ -166,5 +166,11 @@ describe("demo scenario driver", () => {
     expect(result.booking?.state).toBe("TASK_STATE_WORKING");
     const confirmed = await (await confirmRoute.POST(post({}))).json();
     expect(confirmed.clinicId).toBe("cln_seoul_glow");
+
+    setClock("2026-11-14T13:00:00+09:00");
+    const { submitYukiD0 } = await import("./demo-scenario");
+    const d0 = await submitYukiD0();
+    expect(d0.steps[0]).toEqual({ step: "platform.submit_outcome", state: "TASK_STATE_COMPLETED" });
+    expect(d0.steps[1].step).toBe("platform.anchor_record");
   }, 60_000);
 });

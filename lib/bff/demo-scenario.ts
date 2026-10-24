@@ -1,3 +1,4 @@
+import { listBookings } from "../agents/clinic/store";
 import { sendMessage, A2AClientError } from "../a2a/client";
 import { taskArtifactData, type WireTask } from "../a2a/wire";
 import { clock } from "../clock";
@@ -170,4 +171,57 @@ export async function runYukiScenario(): Promise<ScenarioResult> {
     result.booking = { taskId: book.id, clinicId: "cln_seoul_glow", state: stateOf(book) };
   }
   return result;
+}
+
+// ---- 10 데모 6행: D0 outcome after the clock moved to the treatment day ----
+
+
+/** Yuki's latest confirmed booking: D0 outcome to the platform, then the record anchor (ZK server, skipped if down). */
+export async function submitYukiD0(): Promise<{ bookingId?: string; steps: { step: string; state: string; detail?: string }[] }> {
+  const steps: { step: string; state: string; detail?: string }[] = [];
+  const confirmed = (await listBookings({ status: "confirmed" }))
+    .filter((b) => b.customerAgentId === YUKI.agentId)
+    .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
+  const booking = confirmed[0];
+  if (!booking) return { steps: [{ step: "find_booking", state: "none", detail: "no confirmed Yuki booking" }] };
+  const platformCard = `${base()}/a2a/platform/agent-card.json`;
+  const contextId = booking.request.requestId;
+
+  const outcome = await call("platform.submit_outcome", platformCard, contextId, {
+    schema: "pibu/outcome@1",
+    outcomeId: `out_${booking.id.replace(/^bkg_/, "")}_d0`,
+    bookingId: booking.id,
+    clinicId: booking.clinicId,
+    procedureId: booking.procedureId,
+    checkpoint: "D0",
+    paidKrw: booking.priceKrw,
+    receivedAmount: { value: 2, unit: "cc" },
+    productVerified: "vial_shown",
+    receiptAttached: true,
+    satisfaction: 5,
+    painScore: 3,
+    downtimeDaysActual: null,
+    wouldReturn: true,
+    sideEffects: [],
+    comment: "Explained everything in Japanese.",
+    visitorProfile: { nationality: "JP", ageBand: "25-29" },
+    submittedAt: clock.nowIso(),
+  });
+  steps.push({ step: "platform.submit_outcome", state: stateOf(outcome) });
+
+  const anchor = await call("platform.anchor_record", platformCard, contextId, {
+    schema: "pibu/record-anchor@1",
+    bookingId: booking.id,
+    clinicId: booking.clinicId,
+    procedureId: booking.procedureId,
+    subjectId: `0x${"0".repeat(64)}`,
+    record: { day: Math.floor(clock.now().getTime() / 60000), recordNonce: "1", ticketCommitment: "1" },
+    oldCommitment: "0x0",
+    newCommitment: "0x0",
+    recordHash: "0x0",
+    proof: "0x0",
+  }).catch((error: unknown) => error);
+  if (anchor instanceof Error) steps.push({ step: "platform.anchor_record", state: "error", detail: anchor.message });
+  else steps.push({ step: "platform.anchor_record", state: stateOf(anchor as WireTask) });
+  return { bookingId: booking.id, steps };
 }

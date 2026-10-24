@@ -22,7 +22,7 @@ import {
   type DemoBooking,
   type A2ALogEntry,
 } from "@/lib/ui-data/ops";
-import { confirmBooking, injectOutcomes, moveClock, resetSeed, runScenario } from "./demo-api";
+import { confirmBooking, injectOutcomes, moveClock, resetSeed, runScenario, submitD0 } from "./demo-api";
 import { DemoControls } from "./controls";
 import { LiveLog } from "./live-log";
 import { SidePanel, type SideMode } from "./side-panel";
@@ -176,7 +176,13 @@ export function DemoConsole() {
       const result = await moveClock(to);
       setClock(result.now);
       const preset = DEMO_CLOCK_PRESETS.find((item) => item.value === result.now);
-      setMessage(`시계를 옮겼어요: ${preset?.label ?? result.now}${preset ? ` (${preset.hint})` : ""}`);
+      let d0 = "";
+      // On the treatment day the customer's D0 record goes to the platform (10 데모 6행).
+      if (result.now >= "2026-11-14T13:00") {
+        const submitted = await submitD0().catch(() => undefined);
+        if (submitted?.bookingId) d0 = ` · D0 결과 제출: ${submitted.steps.map((s) => `${s.step} ${s.state.replace("TASK_STATE_", "")}`).join(", ")}`;
+      }
+      setMessage(`시계를 옮겼어요: ${preset?.label ?? result.now}${preset ? ` (${preset.hint})` : ""}${d0}`);
     });
 
   const confirm = (booking: DemoBooking) =>

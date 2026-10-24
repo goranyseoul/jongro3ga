@@ -42,3 +42,8 @@ export async function confirmBooking(booking: DemoBooking): Promise<{ confirmedB
 export async function runScenario(): Promise<{ requestId: string; quotes: unknown[]; steps: { step: string; state: string }[] }> {
   return call("/api/demo/run-scenario");
 }
+
+/** POST /api/demo/submit-d0: Yuki's D0 outcome (paid 340,000, 2cc, satisfaction 5) and the record anchor. */
+export async function submitD0(): Promise<{ bookingId?: string; steps: { step: string; state: string }[] }> {
+  return call("/api/demo/submit-d0");
+}
