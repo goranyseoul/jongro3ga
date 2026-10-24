@@ -3,8 +3,8 @@
 // flow keep their ids so a recommendation can lead into the quote screens.
 
 import type { Locale } from "@/lib/domain/common";
-import { procedureMaster } from "@/lib/domain/procedure-master";
-import type { Procedure } from "@/lib/domain/procedure";
+import { procedureMaster } from "../domain/procedure-master";
+import type { Procedure } from "../domain/procedure";
 import type { Area, I18nText } from "./customer";
 
 export type ProcedureArea = Procedure["areas"][number];
