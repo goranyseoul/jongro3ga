@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sunrise" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="oklch(0.80 0.06 285)"/>
+      <stop offset="0.55" stop-color="oklch(0.80 0.10 350)"/>
+      <stop offset="1" stop-color="oklch(0.80 0.14 55)"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#sunrise)"/>
+  <g fill="none" stroke="oklch(0.22 0.04 310)" stroke-width="6.5" stroke-linejoin="miter">
+    <path d="M12.5 49V16.5H21a8.2 8.2 0 0 1 0 16.4h-8.5" stroke-linecap="butt"/>
+    <path d="M37 15v34"/>
+    <path d="M53 15.5 39.5 32 53 48.5"/>
+  </g>
+</svg>

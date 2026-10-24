@@ -1,4 +1,4 @@
-# Pibu (피부)
+# PibooK
 
 **내 시술 기록부터 다음 병원까지** · The skin log Korean women actually use
 
@@ -28,10 +28,10 @@ P0 전체 목록: [docs/spec/00-overview.md](docs/spec/00-overview.md#범위)
 세 에이전트가 각자 Agent Card를 들고 A2A 1.0 JSON-RPC로 대화한다. 상세: [docs/spec/03-a2a-protocol.md](docs/spec/03-a2a-protocol.md), [docs/spec/09-architecture.md](docs/spec/09-architecture.md)
 
 ```
-[고객 에이전트 · Pibu 실장]  ──A2A──→  [플랫폼 에이전트]  매칭 · 가격/용량 판정 · 후기 수집 · 연결 규칙 개선
-        │  (고객 소유)                    (Pibu 소유)
+[고객 에이전트 · PibooK 실장]  ──A2A──→  [플랫폼 에이전트]  매칭 · 가격/용량 판정 · 후기 수집 · 연결 규칙 개선
+        │  (고객 소유)                    (PibooK 소유)
         └────────A2A (추천 토큰)────────→  [병원 에이전트 × N]  가격 · 용량 · 이벤트 · 예약
-                                           (병원 소유, 초기엔 Pibu 대행 운영 → 병원이 인수)
+                                           (병원 소유, 초기엔 PibooK 대행 운영 → 병원이 인수)
 ```
 
 ## 데이터
