@@ -22,6 +22,7 @@
 | 14 | 다운타임과 출국일 | 06: 출국 전 다운타임 미종료는 경고만. `PLANNING.md` 8-8: 제외 | **결정됨 (2026-10-24, 오너): 출국일을 넘으면 체류 연장이 가능한지 확인하라고 안내.** 필터는 가장 빠른 경우(도착일 시술, 최소 다운타임)에도 안 끝나면 제외하고 `extendDays`(연장해야 가능한 날수)를, 최대값 기준으로만 겹치면 경고와 `daysOver`를 돌려줌. `lib/agents/platform/procedure-filter-copy.ts`가 ko, ja, en, zh-CN 문장으로 바꿈 | 일본어와 중국어 문구는 원어민 검수 필요 |
 | 15 | 시술 필터 | 스펙 02, 03, 07에 없음 (`PLANNING.md` 8-8 신규) | `lib/agents/platform/procedure-filter.ts`: 영역 40, 부위 20, 한국 여성 선택률 20, 예산 10, 통증 10 | 선택률 데이터(`kr-patterns`)는 아직 없어 호출자가 함수로 주입. 03에 해당 A2A 스킬이 없음: `platform.recipe`를 확장할지 새 스킬로 둘지 결정 필요 |
 | 16 | 데모 시계 | 09: `lib/clock.ts` 하나, `DEMO_NOW` | `lib/clock.ts` 구현 완료(기본 2026-10-24T10:00+09:00). 화면 쪽 상수는 아직 따로: 고객 `DEMO_TODAY` 2026-11-12, 운영 `OPS_TODAY` 2026-11-12, 병원 `TODAY` 2026-10-24 | UI 세션이 세 상수를 `clock`과 같은 값으로 맞추고, 목데이터를 `DEMO.md` 시나리오(유키 쥬베룩 볼륨, 지수 메모장, 그레이스, 린)와 가상 병원으로 바꿔야 함. 지금 화면의 목데이터는 스펙 10의 리쥬란 데모 기준 |
+| 17 | 콘솔 계정 화면 | 05에 `/clinic/login`, `/clinic/settings`, `/ops/login`, `/ops/account` 없음 (`/clinic/signup`은 P1) | 네 화면과 셸 계정 메뉴를 추가. 세션은 브라우저 목(`components/clinic/clinic-session.ts`, `components/ops/ops-session.ts`, 공통 `lib/local-store.ts`), 아무 이메일·비밀번호 또는 데모 계정(`CLINIC_ACCOUNTS`, `OPERATOR_ACCOUNTS`). `?next=`는 같은 사이트 경로만(`lib/safe-next.ts`). 기존 콘솔 화면은 막지 않고, 계정이 필요한 화면만 로그인 카드를 보여 줌. 알림 채널은 콘솔만 P0, 카카오·전화는 P1로 비활성. 플랫폼 토큰은 가짜 자리표시자 | 백엔드 계정이 생기면 세션 모듈만 교체. 다른 병원으로 로그인해도 요청함·메뉴 목데이터는 민트피부과의원 기준. 05에 네 라우트를 추가해야 함 |
 
 ## 통합 기록
 
