@@ -87,3 +87,14 @@ npm run dev
 ## Claude Code에게 (빌드 순서)
 
 빌드 순서와 태스크별 수용 기준은 [docs/spec/10-build-plan.md](docs/spec/10-build-plan.md)를 따른다 (T00 ~ T15). 기획 의도는 `PLANNING.md`, 규제 근거는 [docs/spec/08-compliance.md](docs/spec/08-compliance.md).
+
+## 개발
+
+```bash
+npm install
+npm run dev          # http://localhost:3000, 공통 컴포넌트 카탈로그는 /ui-kit
+npm run typecheck
+npm run build        # prebuild가 토큰 가드와 컴포넌트 목록을 먼저 검사한다
+```
+
+디자인 값(색, 간격, 모서리, 타이포)은 `app/globals.css`의 CSS 변수가 유일한 출처이고, `tailwind.config.ts`는 그 변수만 매핑한다. 토큰 이름과 UI 규칙은 스펙의 `docs/spec/05-screens.md`를 따른다.
