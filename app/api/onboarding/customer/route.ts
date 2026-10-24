@@ -21,7 +21,13 @@ export async function POST(request: Request) {
   const parsed = OnboardingRequestSchema.safeParse(body);
   if (!parsed.success) return Response.json({ error: formatZodError(parsed.error) }, { status: 400 });
 
-  const user = await getSessionUser(request.headers);
+  // The landing opens this conversation for signed-out visitors, so an auth layer that cannot answer (for
+  // example a production build started without BETTER_AUTH_SECRET, as the e2e run does) means "signed out",
+  // not a failed turn.
+  const user = await getSessionUser(request.headers).catch((error: unknown) => {
+    console.warn("[onboarding] session lookup failed, continuing signed out:", error instanceof Error ? error.message : error);
+    return null;
+  });
   const identity = user ? { id: user.id, agentId: user.customerAgentId } : undefined;
 
   let events: OnboardingEvent[];
