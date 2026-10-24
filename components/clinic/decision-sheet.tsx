@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, ChipGroup, Sheet } from "@/components/ui";
+import { Button, ChipGroup, Input, Sheet } from "@/components/ui";
 import { PROPOSAL_SLOTS, type InboxTask } from "@/lib/ui-data/clinic";
 import { formatAmount, formatSlot } from "./format";
 
@@ -12,7 +12,7 @@ export type Decision = { task: InboxTask; mode: DecisionMode };
 // What the clinic sends back for each mode; the board turns it into the task's next state.
 export type DecisionResult =
   | { mode: "propose"; slot: string }
-  | { mode: "reject"; reason: string }
+  | { mode: "reject"; reason: string; memo: string }
   | { mode: "ask"; fields: string[] };
 
 const REJECT_REASONS = ["희망 시간이 마감됐어요", "시술이 어려워요 (안전 정보)", "해당 시술을 운영하지 않아요", "그 밖의 사유"];
@@ -44,13 +44,14 @@ function DecisionForm({ decision, onSubmit }: { decision: Decision; onSubmit: De
   const { task, mode } = decision;
   const [slot, setSlot] = useState<string | null>(null);
   const [reason, setReason] = useState<string | null>(null);
+  const [memo, setMemo] = useState("");
   const [fields, setFields] = useState<string[]>([]);
 
   const ready = mode === "propose" ? slot !== null : mode === "reject" ? reason !== null : fields.length > 0;
 
   const submit = () => {
     if (mode === "propose" && slot) onSubmit(task, { mode, slot });
-    if (mode === "reject" && reason) onSubmit(task, { mode, reason });
+    if (mode === "reject" && reason) onSubmit(task, { mode, reason, memo: memo.trim() });
     if (mode === "ask") onSubmit(task, { mode, fields });
   };
 
@@ -74,12 +75,21 @@ function DecisionForm({ decision, onSubmit }: { decision: Decision; onSubmit: De
         />
       ) : null}
       {mode === "reject" ? (
-        <ChipGroup
-          label="거절 사유"
-          value={reason}
-          onChange={setReason}
-          options={REJECT_REASONS.map((value) => ({ value, label: value }))}
-        />
+        <>
+          <ChipGroup
+            label="거절 사유"
+            value={reason}
+            onChange={setReason}
+            options={REJECT_REASONS.map((value) => ({ value, label: value }))}
+          />
+          <Input
+            label="메모 (선택)"
+            value={memo}
+            maxLength={200}
+            onChange={(event) => setMemo(event.target.value)}
+            hint="사유와 함께 고객 에이전트에게 전달돼요"
+          />
+        </>
       ) : null}
       {mode === "ask" ? (
         <ChipGroup
