@@ -144,6 +144,164 @@
       "add": "3秒记录"
     }
   },
+  "me": {
+    "metaTitle": "我的页面",
+    "signedOut": {
+      "title": "登录后查看我的页面",
+      "body": "登录后，可以在这里查看项目记录、下次时间和代理设置。",
+      "login": "登录"
+    },
+    "header": {
+      "greeting": "{name}，你好",
+      "agentActive": "代理已启用",
+      "agentInactive": "代理已停用",
+      "agentId": "代理 {id}",
+      "startRequest": "发起新的咨询",
+      "addRecord": "添加记录"
+    },
+    "kpi": {
+      "label": "概览",
+      "treatments": "已记录的项目",
+      "treatmentsCaption": "{count}个项目在持续中",
+      "treatmentsEmpty": "还没有记录",
+      "nextDue": "下次时间",
+      "nextDueEmpty": "暂无安排",
+      "dueIn": "还有{days}天",
+      "dueToday": "今天",
+      "overdue": "已过{days}天",
+      "status": "咨询与预约",
+      "plans": "持续中的项目",
+      "plansCaption": "正在坚持的项目数",
+      "plansEmpty": "暂无持续中的项目",
+      "spent": "累计花费",
+      "spentCaption": "{count}条记录有金额",
+      "spentEmpty": "还没有金额记录"
+    },
+    "status": {
+      "none": "还没有咨询",
+      "comparing": "正在比较报价"
+    },
+    "upcoming": {
+      "title": "接下来的项目",
+      "description": "按各项目的常规间隔推算",
+      "session": "第{n}次",
+      "empty": "暂无安排。添加记录后会显示在这里。",
+      "all": "查看记录"
+    },
+    "journey": {
+      "title": "咨询与预约进度",
+      "description": "共{total}步，已完成{done}步",
+      "steps": {
+        "request": "已发送咨询",
+        "quotes": "比较报价",
+        "booking": "预约确认",
+        "visit": "到店与结果"
+      },
+      "stepStatus": {
+        "pending": "未开始",
+        "active": "进行中",
+        "done": "已完成",
+        "error": "已中止"
+      },
+      "quotesCount": "{count}份报价",
+      "empty": "在聊天中说出想做的项目，代理会向诊所询价。",
+      "start": "去聊天开始",
+      "openRequest": "查看咨询",
+      "openBooking": "查看预约",
+      "lockedTitle": "诊所介绍",
+      "lockedBody": "诊所介绍和预约仅面向外国籍短期访客。项目记录和下次提醒可以全部使用。",
+      "lockedAction": "添加记录"
+    },
+    "recent": {
+      "title": "最近的记录",
+      "description": "最新的5条",
+      "session": "第{n}次",
+      "empty": "还没有记录。几秒钟就能添加。",
+      "all": "查看全部记录",
+      "add": "添加记录"
+    },
+    "agent": {
+      "title": "我的代理",
+      "status": "状态",
+      "languages": "所需语言",
+      "stay": "停留",
+      "contact": "联系方式",
+      "edit": "编辑资料",
+      "card": "查看代理卡"
+    },
+    "consents": {
+      "title": "同意情况",
+      "description": "共{total}项，已同意{granted}项",
+      "on": "已同意",
+      "off": "未同意",
+      "manage": "在我的数据中管理",
+      "types": {
+        "terms": "服务条款",
+        "privacy": "个人信息处理",
+        "sensitiveHealth": "健康相关信息",
+        "crossBorder": "向韩国传输信息",
+        "shareAnonymizedRecords": "匿名共享记录",
+        "shareWithClinic": "提供给诊所"
+      }
+    },
+    "links": {
+      "title": "常用功能",
+      "records": "记录",
+      "newRecord": "添加记录",
+      "chat": "聊天",
+      "data": "我的数据",
+      "profile": "资料"
+    },
+    "channel": {
+      "email": "邮箱",
+      "line": "LINE",
+      "wechat": "微信",
+      "whatsapp": "WhatsApp"
+    },
+    "profile": {
+      "metaTitle": "编辑资料",
+      "back": "返回我的页面",
+      "title": "编辑资料",
+      "description": "代理与诊所沟通时会使用这些信息。",
+      "basics": "基本信息",
+      "nickname": "昵称",
+      "nicknameHint": "显示在我的页面，最多20个字",
+      "languages": "所需语言",
+      "languagesHint": "优先选择能使用其中一种语言的诊所",
+      "trip": "行程",
+      "tripHint": "项目时间会安排在这段日期内",
+      "arrival": "到达日期",
+      "departure": "离开日期",
+      "stayArea": "住宿区域",
+      "contact": "联系方式",
+      "contactHint": "预约通知会发到这里",
+      "channel": "联系渠道",
+      "handle": "账号或地址",
+      "identity": "国籍与居留身份",
+      "identityNote": "根据韩国法律，这些信息决定能否为你介绍诊所，因此无法在此修改。如有错误请联系客服。",
+      "nationality": "国籍",
+      "residency": "居留身份",
+      "nationalityValue": {
+        "JP": "日本",
+        "CN": "中国",
+        "US": "美国",
+        "KR": "韩国"
+      },
+      "residencyValue": {
+        "short_term_visitor": "短期访客",
+        "resident": "在韩居住"
+      },
+      "save": "保存",
+      "saved": "已保存。之后代理会使用新的信息。",
+      "backToMe": "返回我的页面",
+      "errors": {
+        "nickname": "请输入昵称",
+        "languages": "请至少选择一种语言",
+        "handle": "请输入联系方式",
+        "trip": "请填写到达和离开日期"
+      }
+    }
+  },
   "chat": {
     "metaTitle": "咨询",
     "title": "向专属代理咨询",

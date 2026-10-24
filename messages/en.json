@@ -144,6 +144,164 @@
       "add": "Log in 3 seconds"
     }
   },
+  "me": {
+    "metaTitle": "My page",
+    "signedOut": {
+      "title": "Log in to see your page",
+      "body": "Your treatment records, next sessions and agent settings appear here once you log in.",
+      "login": "Log in"
+    },
+    "header": {
+      "greeting": "Hi, {name}",
+      "agentActive": "Agent active",
+      "agentInactive": "Agent off",
+      "agentId": "Agent {id}",
+      "startRequest": "Start a new request",
+      "addRecord": "Add a record"
+    },
+    "kpi": {
+      "label": "Summary",
+      "treatments": "Treatments recorded",
+      "treatmentsCaption": "{count, plural, one {# procedure in care} other {# procedures in care}}",
+      "treatmentsEmpty": "No records yet",
+      "nextDue": "Next session",
+      "nextDueEmpty": "Nothing scheduled",
+      "dueIn": "{days, plural, one {In # day} other {In # days}}",
+      "dueToday": "Today",
+      "overdue": "{days, plural, one {# day overdue} other {# days overdue}}",
+      "status": "Request and booking",
+      "plans": "Procedures in care",
+      "plansCaption": "Procedures you are keeping up with",
+      "plansEmpty": "None active",
+      "spent": "Total spent",
+      "spentCaption": "{count, plural, one {From # record with a price} other {From # records with a price}}",
+      "spentEmpty": "No prices recorded"
+    },
+    "status": {
+      "none": "No request yet",
+      "comparing": "Comparing quotes"
+    },
+    "upcoming": {
+      "title": "Upcoming sessions",
+      "description": "Based on the usual interval for each procedure",
+      "session": "Session {n}",
+      "empty": "No upcoming sessions. They appear once you add a record.",
+      "all": "Open records"
+    },
+    "journey": {
+      "title": "Request and booking",
+      "description": "{done} of {total} steps done",
+      "steps": {
+        "request": "Request sent",
+        "quotes": "Quotes compared",
+        "booking": "Booking confirmed",
+        "visit": "Visit and outcome"
+      },
+      "stepStatus": {
+        "pending": "Not started",
+        "active": "In progress",
+        "done": "Done",
+        "error": "Stopped"
+      },
+      "quotesCount": "{count, plural, one {# quote} other {# quotes}}",
+      "empty": "Tell your agent what you want in chat and it asks clinics for quotes.",
+      "start": "Start in chat",
+      "openRequest": "Open request",
+      "openBooking": "Open booking",
+      "lockedTitle": "Clinic matching",
+      "lockedBody": "Clinic introductions and booking are only for foreign short-term visitors. Records and next session reminders are all yours to use.",
+      "lockedAction": "Add a record"
+    },
+    "recent": {
+      "title": "Recent records",
+      "description": "Your latest five treatments",
+      "session": "Session {n}",
+      "empty": "No records yet. Add one in a few seconds.",
+      "all": "All records",
+      "add": "Add a record"
+    },
+    "agent": {
+      "title": "My agent",
+      "status": "Status",
+      "languages": "Languages",
+      "stay": "Stay",
+      "contact": "Contact",
+      "edit": "Edit profile",
+      "card": "View agent card"
+    },
+    "consents": {
+      "title": "Consents",
+      "description": "{granted} of {total} on",
+      "on": "On",
+      "off": "Off",
+      "manage": "Manage in My data",
+      "types": {
+        "terms": "Terms of service",
+        "privacy": "Personal information",
+        "sensitiveHealth": "Health information",
+        "crossBorder": "Transfer to Korea",
+        "shareAnonymizedRecords": "Anonymous record sharing",
+        "shareWithClinic": "Sharing with clinics"
+      }
+    },
+    "links": {
+      "title": "Quick links",
+      "records": "Records",
+      "newRecord": "New record",
+      "chat": "Chat",
+      "data": "My data",
+      "profile": "Profile"
+    },
+    "channel": {
+      "email": "Email",
+      "line": "LINE",
+      "wechat": "WeChat",
+      "whatsapp": "WhatsApp"
+    },
+    "profile": {
+      "metaTitle": "Edit profile",
+      "back": "Back to My page",
+      "title": "Edit profile",
+      "description": "Your agent uses these details when it talks to clinics for you.",
+      "basics": "About you",
+      "nickname": "Nickname",
+      "nicknameHint": "Shown on your page, up to 20 characters",
+      "languages": "Languages you need",
+      "languagesHint": "Clinics that cover one of these are preferred",
+      "trip": "Trip",
+      "tripHint": "Sessions are planned inside these dates",
+      "arrival": "Arrival",
+      "departure": "Departure",
+      "stayArea": "Where you stay",
+      "contact": "Contact",
+      "contactHint": "Booking updates go here",
+      "channel": "Channel",
+      "handle": "ID or address",
+      "identity": "Nationality and residency",
+      "identityNote": "These decide whether clinics can be introduced under Korean law, so they cannot be changed here. Contact support if they are wrong.",
+      "nationality": "Nationality",
+      "residency": "Residency",
+      "nationalityValue": {
+        "JP": "Japan",
+        "CN": "China",
+        "US": "United States",
+        "KR": "Korea"
+      },
+      "residencyValue": {
+        "short_term_visitor": "Short-term visitor",
+        "resident": "Resident in Korea"
+      },
+      "save": "Save",
+      "saved": "Saved. Your agent uses the new details from now on.",
+      "backToMe": "Back to My page",
+      "errors": {
+        "nickname": "Enter a nickname",
+        "languages": "Pick at least one language",
+        "handle": "Enter how clinics can reach you",
+        "trip": "Enter both arrival and departure"
+      }
+    }
+  },
   "chat": {
     "metaTitle": "Chat",
     "title": "Talk to your agent",
