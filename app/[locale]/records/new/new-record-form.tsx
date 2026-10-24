@@ -36,6 +36,8 @@ export function NewRecordForm() {
   const [clinicText, setClinicText] = useState("");
   const [price, setPrice] = useState<CurrencyAmount>({ currency: "KRW", amount: null });
   const [date, setDate] = useState(DEMO_TODAY);
+  // "I only remember the month": the record keeps the 1st of that month with datePrecision "month".
+  const [monthOnly, setMonthOnly] = useState(false);
   const [rating, setRating] = useState<string | null>(null);
   const [saved, setSaved] = useState<TreatmentRecord | null>(null);
 
@@ -63,6 +65,7 @@ export function NewRecordForm() {
       customerId: profile.id,
       procedureId: procedure.id,
       date,
+      datePrecision: monthOnly ? "month" : undefined,
       amount: amount === null ? undefined : { value: amount, unit: procedure.unit },
       priceKrw: price.amount === null ? undefined : Math.round(price.amount * RATES[price.currency]),
       clinicId: clinic?.id,
@@ -172,7 +175,29 @@ export function NewRecordForm() {
           rateNote={t("rateNote")}
         />
 
-        <Input type="date" label={t("date")} value={date} max={DEMO_TODAY} onChange={(event) => setDate(event.target.value)} />
+        <div className="flex flex-col gap-sp-2">
+          {monthOnly ? (
+            <Input
+              type="month"
+              label={t("month")}
+              value={date.slice(0, 7)}
+              max={DEMO_TODAY.slice(0, 7)}
+              onChange={(event) => setDate(event.target.value ? `${event.target.value}-01` : "")}
+            />
+          ) : (
+            <Input type="date" label={t("date")} value={date} max={DEMO_TODAY} onChange={(event) => setDate(event.target.value)} />
+          )}
+          <Chip
+            selected={monthOnly}
+            className="self-start"
+            onClick={() => {
+              setMonthOnly(!monthOnly);
+              if (!monthOnly && date) setDate(`${date.slice(0, 7)}-01`);
+            }}
+          >
+            {t("dateUnknown")}
+          </Chip>
+        </div>
 
         <section aria-label={t("optional")} className="flex flex-col gap-sp-4">
           <p className="text-label font-med text-muted">{t("optional")}</p>

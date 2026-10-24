@@ -363,7 +363,17 @@
       "shared": "익명 공유: 켬",
       "notShared": "익명 공유: 끔",
       "fromBooking": "예약에서 자동 기록",
-      "rating": "만족도 {n}/5"
+      "rating": "만족도 {n}/5",
+      "search": "시술 검색",
+      "searchPlaceholder": "예: 리쥬란",
+      "all": "전체",
+      "noMatch": "찾는 시술의 기록이 없어요.",
+      "month": "{count}건 · 총 {total}",
+      "unknownDay": "{month} (날짜 기억 안 남)",
+      "summary": "{first}부터 {count}회 · 총 {total}",
+      "pages": "페이지",
+      "prevPage": "이전 페이지",
+      "nextPage": "다음 페이지"
     },
     "calendar": {
       "title": "달력",
@@ -375,7 +385,36 @@
       "empty": "이 날은 기록이 없어요.",
       "hasEvents": "일정 {n}개",
       "doneSession": "{n}회차 받음",
-      "plannedSession": "{n}회차 예정"
+      "plannedSession": "{n}회차 예정",
+      "monthTotal": "이 달 {count}건 · 총 {total}",
+      "monthNone": "이 달은 기록이 없어요."
+    },
+    "plan": {
+      "title": "내 관리 계획",
+      "lead": "기록을 시술별 권장 주기와 비교해서 다음에 할 일을 알려줘요.",
+      "showAll": "관리 카드 모두 보기 ({n})",
+      "showLess": "접기"
+    },
+    "cycle": {
+      "course": "권장: {interval}일 간격 {count}회, 이후 {every}",
+      "maintenance": "권장: {every}",
+      "range": "{min}~{max}일마다",
+      "every": "{days}일마다"
+    },
+    "point": {
+      "courseOnTrack": "{count}회 중 {done}회 했어요. {days}일 안에 {next}회차를 받으면 좋아요.",
+      "courseLate": "{count}회 중 {done}회 했고, 마지막 시술 후 {since}일 지났어요. 권장 간격보다 {late}일 늦었어요.",
+      "early": "마지막 시술 후 {since}일. 다음 관리까지 {days}일 남았어요.",
+      "window": "마지막 시술 후 {since}일. 지금이 관리 적기예요.",
+      "late": "마지막 시술 후 {since}일. 권장 주기보다 {late}일 지났어요."
+    },
+    "top": {
+      "title": "자주 받는 시술",
+      "count": "{n}회",
+      "last": "마지막 {date}",
+      "total": "총 {amount}",
+      "prev": "이전 시술",
+      "next": "다음 시술"
     }
   },
   "recordsNew": {
@@ -403,7 +442,9 @@
       "next": "다음 회차",
       "all": "기록 보기",
       "another": "계속 추가"
-    }
+    },
+    "month": "시술한 달",
+    "dateUnknown": "날짜는 기억 안 나요 (월만 기록)"
   },
   "outcomes": {
     "metaTitle": "시술 기록",

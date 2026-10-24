@@ -363,7 +363,17 @@
       "shared": "匿名共有: オン",
       "notShared": "匿名共有: オフ",
       "fromBooking": "予約から自動で記録",
-      "rating": "満足度 {n}/5"
+      "rating": "満足度 {n}/5",
+      "search": "施術を検索",
+      "searchPlaceholder": "例: リジュラン",
+      "all": "すべて",
+      "noMatch": "該当する施術の記録はありません。",
+      "month": "{count}件 · 合計 {total}",
+      "unknownDay": "{month} (日付は不明)",
+      "summary": "{first}から{count}回 · 合計 {total}",
+      "pages": "ページ",
+      "prevPage": "前のページ",
+      "nextPage": "次のページ"
     },
     "calendar": {
       "title": "カレンダー",
@@ -375,7 +385,36 @@
       "empty": "この日の記録はありません。",
       "hasEvents": "予定{n}件",
       "doneSession": "{n}回目 済み",
-      "plannedSession": "{n}回目 予定"
+      "plannedSession": "{n}回目 予定",
+      "monthTotal": "この月 {count}件 · 合計 {total}",
+      "monthNone": "この月の記録はありません。"
+    },
+    "plan": {
+      "title": "私のケアプラン",
+      "lead": "記録を施術ごとの推奨周期と比べて、次にすることをお知らせします。",
+      "showAll": "ケアカードをすべて表示 ({n})",
+      "showLess": "閉じる"
+    },
+    "cycle": {
+      "course": "推奨: {interval}日間隔で{count}回、その後は{every}",
+      "maintenance": "推奨: {every}",
+      "range": "{min}~{max}日ごと",
+      "every": "{days}日ごと"
+    },
+    "point": {
+      "courseOnTrack": "{count}回中{done}回済み。{days}日以内に{next}回目を受けるのがおすすめです。",
+      "courseLate": "{count}回中{done}回済み、前回から{since}日経過。推奨間隔より{late}日遅れています。",
+      "early": "前回から{since}日。次のケアまであと{days}日です。",
+      "window": "前回から{since}日。今がケアのタイミングです。",
+      "late": "前回から{since}日。推奨周期を{late}日過ぎています。"
+    },
+    "top": {
+      "title": "よく受ける施術",
+      "count": "{n}回",
+      "last": "前回 {date}",
+      "total": "合計 {amount}",
+      "prev": "前へ",
+      "next": "次へ"
     }
   },
   "recordsNew": {
@@ -403,7 +442,9 @@
       "next": "次回の目安",
       "all": "記録を見る",
       "another": "続けて追加"
-    }
+    },
+    "month": "施術した月",
+    "dateUnknown": "日付は覚えていない (月のみ記録)"
   },
   "outcomes": {
     "metaTitle": "施術の記録",
