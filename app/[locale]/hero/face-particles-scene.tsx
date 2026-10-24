@@ -3,7 +3,7 @@
 // FBO curl-noise particles from the IRONACT design system (primitives/code/hero/fbo-particles-scene.tsx,
 // PA landing). Kept: the simulation shader and cursor push. Changed: the target is a procedural 3D head in
 // profile (./profile-target) that forms once and stays (owner: never fall back to the cloud), the head
-// sways a little instead of spinning, the colour comes from the --particle token, and the cursor is
+// turns slowly all the way round, the colour comes from the --particle token, and the cursor is
 // measured against this canvas instead of the window.
 
 import { Canvas, createPortal, extend, useFrame, type ThreeElement } from "@react-three/fiber";
@@ -273,7 +273,7 @@ function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x
     const u = simulation.current.uniforms;
     u.uTime.value = t;
     u.uMorph.value = still ? 1 : morphAt(t);
-    u.uYaw.value = still ? 0 : Math.sin(t * 0.25) * 0.16; // small sway keeps the profile line readable
+    u.uYaw.value = still ? 0 : t * 0.3; // one full turn about every 21 s
     // world units visible at the face plane: camera z 4, fov 50 gives a half height near 1.86
     u.uMouse.value.set(mouse.current.x * 1.86, mouse.current.y * 1.86);
   });
@@ -290,8 +290,8 @@ function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x
         </mesh>,
         scene,
       )}
-      {/* the head spans X -1.32..1.05 and Y -1.35..1.15; centre it */}
-      <points ref={points} position={[0.13, 0.1, 0]}>
+      {/* the head turns about its own axis near X -0.1; Y spans -1.35..1.15 */}
+      <points ref={points} position={[0, 0.1, 0]}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[lookup, 3]} />
         </bufferGeometry>

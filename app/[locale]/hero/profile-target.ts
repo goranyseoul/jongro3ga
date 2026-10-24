@@ -1,6 +1,7 @@
-// Procedural 3D head of a woman in profile, facing right, as a particle target.
-// Pose after the owner's reference (eyes lowered, high nose bridge, full lips, hair pulled back into a bun);
-// nothing is traced from the photo. The head is lofted from a side profile: at each height an ellipse
+// Procedural 3D head of a woman, abstracted as a scan: contour rings and meridians over the head,
+// a dense profile line, lowered lids and brows, hair pulled back into a bun. Proportions after the
+// owner's references (straight bridge, slightly lifted tip, full lips, small rounded chin); nothing is
+// traced from the photos. The head is lofted from a side profile: at each height an ellipse
 // spans the face front f(y) to the skull back b(y) with half width w(y); the nose and lips sit on the
 // front as a narrow ridge. Face coordinates: x across (left to right of the face), y up, z forward.
 // The output maps face z to world X so the face looks to the right. Seeded: the same head every visit.
@@ -23,15 +24,15 @@ function sample(table: Table, y: number): number {
 
 // midline profile: crown, forehead, brow, bridge, nose tip, lips, chin, neck
 const FRONT: Table = [
-  [1.12, 0], [1.0, 0.32], [0.85, 0.5], [0.6, 0.64], [0.4, 0.71], [0.3, 0.74], [0.18, 0.69],
-  [0.05, 0.8], [-0.08, 0.92], [-0.19, 1.02], [-0.25, 0.98], [-0.3, 0.82], [-0.36, 0.8],
-  [-0.43, 0.86], [-0.5, 0.78], [-0.57, 0.84], [-0.66, 0.73], [-0.72, 0.71], [-0.84, 0.79],
-  [-0.95, 0.68], [-1.02, 0.45], [-1.08, 0.3], [-1.3, 0.27], [-1.8, 0.32],
+  [1.12, 0], [1.0, 0.32], [0.85, 0.5], [0.6, 0.63], [0.4, 0.69], [0.3, 0.7], [0.2, 0.67],
+  [0.05, 0.75], [-0.1, 0.86], [-0.2, 0.93], [-0.25, 0.9], [-0.29, 0.78], [-0.36, 0.79],
+  [-0.44, 0.84], [-0.5, 0.79], [-0.56, 0.82], [-0.64, 0.72], [-0.7, 0.7], [-0.8, 0.74],
+  [-0.9, 0.68], [-0.98, 0.5], [-1.04, 0.33], [-1.3, 0.27], [-1.8, 0.32],
 ];
 // the face plane without nose and lips
 const BASE: Table = [
-  [1.12, 0], [1.0, 0.32], [0.85, 0.5], [0.6, 0.64], [0.4, 0.71], [0.3, 0.72], [0.18, 0.66],
-  [0, 0.62], [-0.3, 0.6], [-0.6, 0.6], [-0.8, 0.68], [-0.95, 0.66], [-1.02, 0.45], [-1.08, 0.3],
+  [1.12, 0], [1.0, 0.32], [0.85, 0.5], [0.6, 0.63], [0.4, 0.69], [0.3, 0.69], [0.2, 0.65],
+  [0, 0.62], [-0.3, 0.6], [-0.6, 0.6], [-0.8, 0.66], [-0.9, 0.64], [-0.98, 0.5], [-1.04, 0.33],
   [-1.3, 0.27], [-1.8, 0.32],
 ];
 const BACK: Table = [
@@ -52,7 +53,7 @@ function headPoint(y: number, theta: number, offset = 0): [number, number] {
   const d = (base - back) / 2 + offset;
   const x = w * Math.sin(theta);
   let z = c + d * Math.cos(theta);
-  if (Math.cos(theta) > 0) z += Math.max(0, sample(FRONT, y) - base) * Math.exp(-((x / 0.1) ** 2));
+  if (Math.cos(theta) > 0) z += Math.max(0, sample(FRONT, y) - base) * Math.exp(-((x / 0.12) ** 2));
   return [x, z];
 }
 
@@ -101,19 +102,36 @@ export function buildProfileTarget(count: number, seed = 11): Float32Array {
   };
   const onSide = (y: number, z: number, lift = 0.012) => {
     const [x, zz] = headPoint(y, sideTheta(y, z), lift);
-    push(x + jitter(0.005), y + jitter(0.005), zz + jitter(0.005));
+    const side = rand() < 0.5 ? -1 : 1; // the head turns all the way round, so draw both sides
+    push(side * x + jitter(0.005), y + jitter(0.005), zz + jitter(0.005));
   };
 
   const budget = (share: number) => i + Math.floor(count * share);
 
   // 1. skin: head and neck surface, thinning out down the neck
-  const skinEnd = budget(0.4);
+  const skinEnd = budget(0.2);
   while (i < skinEnd) {
     const y = -1.35 + rand() * 2.47;
     if (y < -1.1 && rand() > 1 - (y + 1.35) / 0.25) continue;
     const theta = rand() * Math.PI * 2;
     if (y > hairline(theta) + 0.02) continue; // hair covers it
     const [x, z] = headPoint(y, theta);
+    push(x, y, z);
+  }
+
+  // scan: horizontal contour rings and a few meridians over head and neck
+  const RINGS = 30;
+  const ringEnd = budget(0.24);
+  while (i < ringEnd) {
+    const y = -1.3 + (Math.floor(rand() * RINGS) + 0.5) * (2.4 / RINGS);
+    const [x, z] = headPoint(y, rand() * Math.PI * 2, 0.004);
+    push(x, y, z);
+  }
+  const MERIDIANS = 12;
+  const meridianEnd = budget(0.08);
+  while (i < meridianEnd) {
+    const y = -1.3 + rand() * 2.4;
+    const [x, z] = headPoint(y, (Math.floor(rand() * MERIDIANS) / MERIDIANS) * Math.PI * 2, 0.004);
     push(x, y, z);
   }
 
@@ -125,7 +143,7 @@ export function buildProfileTarget(count: number, seed = 11): Float32Array {
   }
 
   // 3. features on the side facing the camera
-  const featureEnd = budget(0.13);
+  const featureEnd = budget(0.09);
   const features: (() => void)[] = [
     () => {
       const t = rand(); // lowered upper lid
@@ -140,24 +158,6 @@ export function buildProfileTarget(count: number, seed = 11): Float32Array {
       const t = rand(); // brow
       onSide(0.27 + 0.035 * Math.sin(Math.PI * Math.min(1, t * 1.2)) + jitter(0.02) * (1 - t), 0.38 + 0.3 * t);
     },
-    () => {
-      const t = rand() * Math.PI * 2; // nostril wing
-      onSide(-0.245 + 0.045 * Math.sin(t), 0.79 + 0.06 * Math.cos(t), 0.02);
-    },
-    () => {
-      const t = rand(); // mouth corner, tucked behind the lips
-      onSide(-0.5 - 0.015 * t, 0.66 - 0.08 * t);
-    },
-    () => {
-      const t = rand(); // jaw line, ear lobe to chin
-      onSide(-0.14 - 0.78 * t, -0.12 + 0.72 * t ** 1.3);
-    },
-    () => {
-      const t = rand() * Math.PI * 2; // ear rim
-      const y = 0.0 + 0.13 * Math.sin(t);
-      const [x, z] = headPoint(y, sideTheta(y, -0.12 + 0.065 * Math.cos(t)), 0.03);
-      push(x, y, z);
-    },
   ];
   let k = 0;
   while (i < featureEnd) {
@@ -168,7 +168,7 @@ export function buildProfileTarget(count: number, seed = 11): Float32Array {
   // 4. hair: volume on the scalp, strands combed back, the bun
   const bunY = 0.42;
   const bunZ = sample(BACK, bunY) - 0.16;
-  const capEnd = budget(0.14);
+  const capEnd = budget(0.1);
   while (i < capEnd) {
     const y = -0.45 + rand() * 1.55;
     const theta = rand() * Math.PI * 2;
@@ -176,7 +176,7 @@ export function buildProfileTarget(count: number, seed = 11): Float32Array {
     const [x, z] = headPoint(Math.min(y, 1.08), theta, 0.03 + rand() * 0.03);
     push(x, Math.min(y, 1.1), z);
   }
-  const strandEnd = budget(0.18);
+  const strandEnd = budget(0.16);
   while (i < strandEnd) {
     const start = (rand() * 2 - 1) * Math.PI * 0.85;
     const t = rand();
