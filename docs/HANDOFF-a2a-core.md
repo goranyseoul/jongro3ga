@@ -125,3 +125,27 @@ feat/zk-integration과 main에는 커밋하지 말고 이 브랜치에만 커밋
 - [INTEGRATION.md](INTEGRATION.md): ZK 연동 규약 v3 (스키마, 에이전트 처리 순서, GlowPass HTTP API)
 - [spec/03-a2a-protocol.md](spec/03-a2a-protocol.md), [spec/07-platform-intelligence.md](spec/07-platform-intelligence.md): 오늘 개정분 반영됨
 - PR #9·#19·#16(전부 머지): ZK 세션 소유. #15는 #19로 대체. #5: 팀원 핸드오프 원본
+
+## 9. 데모 실행 (2026-10-24 마감 시점, 코디네이터 세션)
+
+에이전트 3종(병원·플랫폼, 고객은 WP6 진행 중), 시드, LLM 계층, 데모·운영 API가 이 브랜치에 들어갔다. 고객 화면(`app/[locale]/**`)은 아직 목데이터라 데모는 `/demo` 콘솔과 운영 콘솔로 실제 A2A 흐름을 보여준다 (BUILD-LOG 26행).
+
+```bash
+cd /Users/junggonkim/orca/workspaces/jongro3ga/a2a-core
+# .env: ANTHROPIC_API_KEY, DEMO_MODE=true, LLM_FORCE_LIVE=true (실호출), ZK 서버는 glowpass (포트 4000)
+npm run build && npm start            # http://localhost:3000
+npm run llm:smoke                     # 키 확인 (선택)
+```
+
+| 순서 | 어디서 | 누르기 | 실제로 일어나는 일 |
+| --- | --- | --- | --- |
+| 0 | `/demo` | [시드 리셋] | 저장소·시계(11/12 10:00)·태스크 초기화, 병원 5곳 `clinic.offers`로 플랫폼 오퍼 캐시 채움 |
+| 2~4 | `/demo` | [시나리오 재생] | 유키(cus_yuki_done)로 recipe → match_clinics(서울글로우·민트·아라) → 민트 첫 방문 증명(ZK 서버 있을 때) → quote × 3 → judge_quote. 민트 99,000 + offerApplied, 판정 underdosed / fair / fair. 가운데 패널에 실제 A2A 로그 |
+| 5 | `/demo` | [예약 확정] | 서울글로우 11/14 11:00 예약을 병원이 확정 → 고객 태스크 COMPLETED, platform.report_booking |
+| 6 | `/demo` | [시계 이동] 11/14 13:00 | D0 결과 platform.submit_outcome + platform.anchor_record(ZK 서버가 체인에 기록) |
+| 7 | `/demo` → `/ops/rules` | [결과 20건 주입] → [규칙 제안 실행] | rule_003 "아라의원 · 일본 고객 · 매칭 제외 · 근거: 견적 대비 실결제 평균 +31% (n=20)" |
+| 8 | `/ops/rules` → `/demo` | [승인] → [시나리오 재생] | 다음 매칭에서 아라 제외, shortlist `appliedRuleIds`에 rule_003 |
+
+대행 병원 예약은 `/ops/proxy-queue`(3초 폴링)에서 확정할 수 있고, 전체 호출은 `/ops/a2a-log`에서 contextId로 묶어 본다.
+
+남은 일: WP6(고객 에이전트) 머지, 고객 BFF(`app/api/customer/**`)와 고객 화면 연결(그때 `/api/demo/run-scenario`는 고객 BFF 호출로 교체), 병원 콘솔 화면 연결, 규칙 제안 Claude 2단계 연결, 시술 필터 A2A 노출(BUILD-LOG 15·23행), e2e(T14).
