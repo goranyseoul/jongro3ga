@@ -1,0 +1,948 @@
+[
+  {
+    "id": "cln_seoul_glow",
+    "slug": "seoul-glow",
+    "name": {
+      "ko": "서울글로우의원",
+      "en": "Seoul Glow Clinic",
+      "ja": "ソウルグロウ医院",
+      "zh-CN": "首尔光彩医院"
+    },
+    "area": "sinsa",
+    "registry": {
+      "id": "cln_seoul_glow",
+      "slug": "seoul-glow",
+      "name": {
+        "ko": "서울글로우의원",
+        "en": "Seoul Glow Clinic",
+        "ja": "ソウルグロウ医院",
+        "zh-CN": "首尔光彩医院"
+      },
+      "area": "sinsa",
+      "agentCardUrl": "/a2a/clinics/seoul-glow/agent-card.json",
+      "operationMode": "clinic",
+      "dataSources": [
+        "clinic_input"
+      ],
+      "lastVerifiedAt": "2026-10-20",
+      "foreignPatientFacilityRegistered": true,
+      "verificationStatus": "verified",
+      "languages": [
+        {
+          "locale": "ja",
+          "mode": "staff"
+        },
+        {
+          "locale": "en",
+          "mode": "staff"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ]
+    },
+    "profile": {
+      "id": "cln_seoul_glow",
+      "slug": "seoul-glow",
+      "name": {
+        "ko": "서울글로우의원",
+        "en": "Seoul Glow Clinic",
+        "ja": "ソウルグロウ医院",
+        "zh-CN": "首尔光彩医院"
+      },
+      "address": "Sinsa-dong, Gangnam-gu, Seoul (fictional demo address)",
+      "area": "sinsa",
+      "medicalInstitutionId": "demo-mi-seoul_glow",
+      "businessRegistrationNo": "demo-brn-seoul_glow",
+      "foreignPatientFacilityRegNo": "demo-fpf-seoul_glow",
+      "doctors": [
+        {
+          "name": "Doctor A (demo)",
+          "boardCertifiedDermatology": true,
+          "yearsOfPractice": 12
+        }
+      ],
+      "languages": [
+        {
+          "locale": "ja",
+          "mode": "staff"
+        },
+        {
+          "locale": "en",
+          "mode": "staff"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ],
+      "operationMode": "clinic",
+      "contactPerson": {
+        "name": "Coordinator (demo)",
+        "role": "Japanese coordinator"
+      }
+    },
+    "menu": [
+      {
+        "id": "menu_seoul_glow_1",
+        "clinicId": "cln_seoul_glow",
+        "procedureId": "rejuran",
+        "product": "Rejuran Healer",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 340000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream",
+          "soothing_mask"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_seoul_glow_2",
+        "clinicId": "cln_seoul_glow",
+        "procedureId": "botox_wrinkle",
+        "product": "Botox (imported)",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 180000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_seoul_glow_3",
+        "clinicId": "cln_seoul_glow",
+        "procedureId": "thermage",
+        "product": "Thermage FLX",
+        "amount": {
+          "value": 300,
+          "unit": "shot"
+        },
+        "priceKrw": 1600000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_seoul_glow_4",
+        "clinicId": "cln_seoul_glow",
+        "procedureId": "skin_booster",
+        "product": "Skin booster",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 250000,
+        "vatIncluded": true,
+        "includes": [
+          "soothing_mask"
+        ],
+        "foreignerSamePrice": true
+      }
+    ],
+    "offers": [],
+    "slotPolicy": {
+      "clinicId": "cln_seoul_glow",
+      "durationMinByProcedure": {
+        "rejuran": 40,
+        "botox_wrinkle": 20,
+        "thermage": 90,
+        "skin_booster": 40
+      },
+      "foreignSlotsPerDay": 4,
+      "autoConfirm": false,
+      "hours": {
+        "mon": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "tue": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "wed": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "thu": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "fri": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sat": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sun": {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      }
+    }
+  },
+  {
+    "id": "cln_mint",
+    "slug": "mint",
+    "name": {
+      "ko": "민트피부과의원",
+      "en": "Mint Dermatology Clinic",
+      "ja": "ミント皮膚科医院",
+      "zh-CN": "薄荷皮肤科医院"
+    },
+    "area": "gangnam",
+    "registry": {
+      "id": "cln_mint",
+      "slug": "mint",
+      "name": {
+        "ko": "민트피부과의원",
+        "en": "Mint Dermatology Clinic",
+        "ja": "ミント皮膚科医院",
+        "zh-CN": "薄荷皮肤科医院"
+      },
+      "area": "gangnam",
+      "agentCardUrl": "/a2a/clinics/mint/agent-card.json",
+      "operationMode": "proxy",
+      "dataSources": [
+        "sms",
+        "public_web"
+      ],
+      "lastVerifiedAt": "2026-10-20",
+      "foreignPatientFacilityRegistered": true,
+      "verificationStatus": "verified",
+      "languages": [
+        {
+          "locale": "ja",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "en",
+          "mode": "staff"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ]
+    },
+    "profile": {
+      "id": "cln_mint",
+      "slug": "mint",
+      "name": {
+        "ko": "민트피부과의원",
+        "en": "Mint Dermatology Clinic",
+        "ja": "ミント皮膚科医院",
+        "zh-CN": "薄荷皮肤科医院"
+      },
+      "address": "Gangnam-daero, Gangnam-gu, Seoul (fictional demo address)",
+      "area": "gangnam",
+      "medicalInstitutionId": "demo-mi-mint",
+      "businessRegistrationNo": "demo-brn-mint",
+      "foreignPatientFacilityRegNo": "demo-fpf-mint",
+      "doctors": [
+        {
+          "name": "Doctor B (demo)",
+          "boardCertifiedDermatology": true
+        }
+      ],
+      "languages": [
+        {
+          "locale": "ja",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "en",
+          "mode": "staff"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ],
+      "operationMode": "proxy"
+    },
+    "menu": [
+      {
+        "id": "menu_mint_1",
+        "clinicId": "cln_mint",
+        "procedureId": "botox_wrinkle",
+        "product": "Botox (domestic)",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 99000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_mint_2",
+        "clinicId": "cln_mint",
+        "procedureId": "laser_toning",
+        "product": "Laser toning",
+        "amount": {
+          "value": 1,
+          "unit": "session"
+        },
+        "priceKrw": 79000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_mint_3",
+        "clinicId": "cln_mint",
+        "procedureId": "skin_booster",
+        "product": "Skin booster",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 190000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      }
+    ],
+    "offers": [
+      {
+        "id": "offer_mint_1",
+        "clinicId": "cln_mint",
+        "procedureId": "rejuran",
+        "title": "First visit 1cc event",
+        "amount": {
+          "value": 1,
+          "unit": "cc"
+        },
+        "priceKrw": 99000,
+        "regularPriceKrw": 150000,
+        "validFrom": "2026-10-01",
+        "validUntil": "2026-11-30",
+        "conditions": "First visit only"
+      }
+    ],
+    "slotPolicy": {
+      "clinicId": "cln_mint",
+      "durationMinByProcedure": {
+        "rejuran": 30,
+        "botox_wrinkle": 20,
+        "laser_toning": 30,
+        "skin_booster": 40
+      },
+      "foreignSlotsPerDay": 4,
+      "autoConfirm": false,
+      "hours": {
+        "mon": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "tue": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "wed": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "thu": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "fri": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sat": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sun": {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      }
+    }
+  },
+  {
+    "id": "cln_ara",
+    "slug": "ara",
+    "name": {
+      "ko": "아라의원",
+      "en": "Ara Clinic",
+      "ja": "アラ医院",
+      "zh-CN": "阿拉医院"
+    },
+    "area": "apgujeong",
+    "registry": {
+      "id": "cln_ara",
+      "slug": "ara",
+      "name": {
+        "ko": "아라의원",
+        "en": "Ara Clinic",
+        "ja": "アラ医院",
+        "zh-CN": "阿拉医院"
+      },
+      "area": "apgujeong",
+      "agentCardUrl": "/a2a/clinics/ara/agent-card.json",
+      "operationMode": "proxy",
+      "dataSources": [
+        "sms",
+        "public_web"
+      ],
+      "lastVerifiedAt": "2026-10-20",
+      "foreignPatientFacilityRegistered": true,
+      "verificationStatus": "verified",
+      "languages": [
+        {
+          "locale": "ja",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "en",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "zh-CN",
+          "mode": "app_translation"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ]
+    },
+    "profile": {
+      "id": "cln_ara",
+      "slug": "ara",
+      "name": {
+        "ko": "아라의원",
+        "en": "Ara Clinic",
+        "ja": "アラ医院",
+        "zh-CN": "阿拉医院"
+      },
+      "address": "Apgujeong-ro, Gangnam-gu, Seoul (fictional demo address)",
+      "area": "apgujeong",
+      "medicalInstitutionId": "demo-mi-ara",
+      "businessRegistrationNo": "demo-brn-ara",
+      "foreignPatientFacilityRegNo": "demo-fpf-ara",
+      "doctors": [
+        {
+          "name": "Doctor C (demo)",
+          "boardCertifiedDermatology": false,
+          "yearsOfPractice": 6
+        }
+      ],
+      "languages": [
+        {
+          "locale": "ja",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "en",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "zh-CN",
+          "mode": "app_translation"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ],
+      "operationMode": "proxy"
+    },
+    "menu": [
+      {
+        "id": "menu_ara_1",
+        "clinicId": "cln_ara",
+        "procedureId": "rejuran",
+        "product": "Rejuran Healer",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 300000,
+        "vatIncluded": false,
+        "includes": [
+          "numbing_cream"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_ara_2",
+        "clinicId": "cln_ara",
+        "procedureId": "juvelook_volume",
+        "product": "Juvelook Volume",
+        "amount": {
+          "value": 1,
+          "unit": "vial"
+        },
+        "priceKrw": 450000,
+        "vatIncluded": false,
+        "includes": [],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_ara_3",
+        "clinicId": "cln_ara",
+        "procedureId": "botox_wrinkle",
+        "product": "Botox (domestic)",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 120000,
+        "vatIncluded": false,
+        "includes": [],
+        "foreignerSamePrice": true
+      }
+    ],
+    "offers": [],
+    "slotPolicy": {
+      "clinicId": "cln_ara",
+      "durationMinByProcedure": {
+        "rejuran": 40,
+        "juvelook_volume": 40,
+        "botox_wrinkle": 20
+      },
+      "foreignSlotsPerDay": 4,
+      "autoConfirm": false,
+      "hours": {
+        "mon": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "tue": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "wed": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "thu": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "fri": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sat": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sun": {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      }
+    }
+  },
+  {
+    "id": "cln_hanbit",
+    "slug": "hanbit",
+    "name": {
+      "ko": "한빛의원",
+      "en": "Hanbit Clinic",
+      "ja": "ハンビッ医院",
+      "zh-CN": "韩光医院"
+    },
+    "area": "myeongdong",
+    "registry": {
+      "id": "cln_hanbit",
+      "slug": "hanbit",
+      "name": {
+        "ko": "한빛의원",
+        "en": "Hanbit Clinic",
+        "ja": "ハンビッ医院",
+        "zh-CN": "韩光医院"
+      },
+      "area": "myeongdong",
+      "agentCardUrl": "/a2a/clinics/hanbit/agent-card.json",
+      "operationMode": "proxy",
+      "dataSources": [
+        "sms",
+        "public_web"
+      ],
+      "lastVerifiedAt": "2026-10-20",
+      "foreignPatientFacilityRegistered": true,
+      "verificationStatus": "verified",
+      "languages": [
+        {
+          "locale": "zh-CN",
+          "mode": "staff"
+        },
+        {
+          "locale": "ja",
+          "mode": "staff"
+        },
+        {
+          "locale": "en",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ]
+    },
+    "profile": {
+      "id": "cln_hanbit",
+      "slug": "hanbit",
+      "name": {
+        "ko": "한빛의원",
+        "en": "Hanbit Clinic",
+        "ja": "ハンビッ医院",
+        "zh-CN": "韩光医院"
+      },
+      "address": "Myeongdong-gil, Jung-gu, Seoul (fictional demo address)",
+      "area": "myeongdong",
+      "medicalInstitutionId": "demo-mi-hanbit",
+      "businessRegistrationNo": "demo-brn-hanbit",
+      "foreignPatientFacilityRegNo": "demo-fpf-hanbit",
+      "doctors": [
+        {
+          "name": "Doctor D (demo)",
+          "boardCertifiedDermatology": true,
+          "yearsOfPractice": 9
+        }
+      ],
+      "languages": [
+        {
+          "locale": "zh-CN",
+          "mode": "staff"
+        },
+        {
+          "locale": "ja",
+          "mode": "staff"
+        },
+        {
+          "locale": "en",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ],
+      "operationMode": "proxy"
+    },
+    "menu": [
+      {
+        "id": "menu_hanbit_1",
+        "clinicId": "cln_hanbit",
+        "procedureId": "rejuran",
+        "product": "Rejuran Healer",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 420000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream",
+          "soothing_mask"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_hanbit_2",
+        "clinicId": "cln_hanbit",
+        "procedureId": "skin_botox",
+        "product": "Skin botox",
+        "amount": {
+          "value": 100,
+          "unit": "unit"
+        },
+        "priceKrw": 250000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_hanbit_3",
+        "clinicId": "cln_hanbit",
+        "procedureId": "aqua_peel",
+        "product": "Aqua peel",
+        "amount": {
+          "value": 1,
+          "unit": "session"
+        },
+        "priceKrw": 50000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_hanbit_4",
+        "clinicId": "cln_hanbit",
+        "procedureId": "thermage",
+        "product": "Thermage FLX",
+        "amount": {
+          "value": 300,
+          "unit": "shot"
+        },
+        "priceKrw": 1800000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream"
+        ],
+        "foreignerSamePrice": true
+      }
+    ],
+    "offers": [],
+    "slotPolicy": {
+      "clinicId": "cln_hanbit",
+      "durationMinByProcedure": {
+        "rejuran": 40,
+        "skin_botox": 30,
+        "aqua_peel": 30,
+        "thermage": 90
+      },
+      "foreignSlotsPerDay": 4,
+      "autoConfirm": false,
+      "hours": {
+        "mon": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "tue": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "wed": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "thu": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "fri": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sat": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sun": {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      }
+    }
+  },
+  {
+    "id": "cln_dahye",
+    "slug": "dahye",
+    "name": {
+      "ko": "다혜피부과의원",
+      "en": "Dahye Dermatology Clinic",
+      "ja": "ダヘ皮膚科医院",
+      "zh-CN": "多慧皮肤科医院"
+    },
+    "area": "hongdae",
+    "registry": {
+      "id": "cln_dahye",
+      "slug": "dahye",
+      "name": {
+        "ko": "다혜피부과의원",
+        "en": "Dahye Dermatology Clinic",
+        "ja": "ダヘ皮膚科医院",
+        "zh-CN": "多慧皮肤科医院"
+      },
+      "area": "hongdae",
+      "agentCardUrl": "/a2a/clinics/dahye/agent-card.json",
+      "operationMode": "clinic",
+      "dataSources": [
+        "clinic_input"
+      ],
+      "lastVerifiedAt": "2026-10-20",
+      "foreignPatientFacilityRegistered": true,
+      "verificationStatus": "verified",
+      "languages": [
+        {
+          "locale": "en",
+          "mode": "staff"
+        },
+        {
+          "locale": "zh-CN",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "ja",
+          "mode": "app_translation"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ]
+    },
+    "profile": {
+      "id": "cln_dahye",
+      "slug": "dahye",
+      "name": {
+        "ko": "다혜피부과의원",
+        "en": "Dahye Dermatology Clinic",
+        "ja": "ダヘ皮膚科医院",
+        "zh-CN": "多慧皮肤科医院"
+      },
+      "address": "Hongik-ro, Mapo-gu, Seoul (fictional demo address)",
+      "area": "hongdae",
+      "medicalInstitutionId": "demo-mi-dahye",
+      "businessRegistrationNo": "demo-brn-dahye",
+      "foreignPatientFacilityRegNo": "demo-fpf-dahye",
+      "doctors": [
+        {
+          "name": "Doctor E (demo)",
+          "boardCertifiedDermatology": true,
+          "yearsOfPractice": 15
+        }
+      ],
+      "languages": [
+        {
+          "locale": "en",
+          "mode": "staff"
+        },
+        {
+          "locale": "zh-CN",
+          "mode": "interpreter"
+        },
+        {
+          "locale": "ja",
+          "mode": "app_translation"
+        },
+        {
+          "locale": "ko",
+          "mode": "staff"
+        }
+      ],
+      "operationMode": "clinic",
+      "contactPerson": {
+        "name": "Manager (demo)",
+        "role": "Front desk"
+      }
+    },
+    "menu": [
+      {
+        "id": "menu_dahye_1",
+        "clinicId": "cln_dahye",
+        "procedureId": "rejuran",
+        "product": "Rejuran Healer",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 360000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_dahye_2",
+        "clinicId": "cln_dahye",
+        "procedureId": "ulthera",
+        "product": "Ulthera",
+        "amount": {
+          "value": 300,
+          "unit": "shot"
+        },
+        "priceKrw": 1300000,
+        "vatIncluded": true,
+        "includes": [
+          "numbing_cream"
+        ],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_dahye_3",
+        "clinicId": "cln_dahye",
+        "procedureId": "juvelook_volume",
+        "product": "Juvelook Volume",
+        "amount": {
+          "value": 1,
+          "unit": "vial"
+        },
+        "priceKrw": 400000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      },
+      {
+        "id": "menu_dahye_4",
+        "clinicId": "cln_dahye",
+        "procedureId": "aqua_peel",
+        "product": "Aqua peel",
+        "amount": {
+          "value": 1,
+          "unit": "session"
+        },
+        "priceKrw": 45000,
+        "vatIncluded": true,
+        "includes": [],
+        "foreignerSamePrice": true
+      }
+    ],
+    "offers": [],
+    "slotPolicy": {
+      "clinicId": "cln_dahye",
+      "durationMinByProcedure": {
+        "rejuran": 40,
+        "ulthera": 60,
+        "juvelook_volume": 40,
+        "aqua_peel": 30
+      },
+      "foreignSlotsPerDay": 4,
+      "autoConfirm": true,
+      "hours": {
+        "mon": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "tue": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "wed": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "thu": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "fri": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sat": {
+          "open": "10:00",
+          "close": "19:00"
+        },
+        "sun": {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      }
+    }
+  }
+]

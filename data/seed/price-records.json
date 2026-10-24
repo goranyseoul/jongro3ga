@@ -1,0 +1,2134 @@
+[
+  {
+    "id": "pr_0001",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 220000,
+    "normalizedUnitKrw": 110000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-07-16"
+  },
+  {
+    "id": "pr_0002",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 345000,
+    "normalizedUnitKrw": 115000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-08-26"
+  },
+  {
+    "id": "pr_0003",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 240000,
+    "normalizedUnitKrw": 120000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-10-05"
+  },
+  {
+    "id": "pr_0004",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "paidKrw": 125000,
+    "normalizedUnitKrw": 125000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-07"
+  },
+  {
+    "id": "pr_0005",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 256000,
+    "normalizedUnitKrw": 128000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-09-16"
+  },
+  {
+    "id": "pr_0006",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 390000,
+    "normalizedUnitKrw": 130000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-07-18"
+  },
+  {
+    "id": "pr_0007",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 264000,
+    "normalizedUnitKrw": 132000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_ara",
+    "date": "2026-08-28"
+  },
+  {
+    "id": "pr_0008",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 268000,
+    "normalizedUnitKrw": 134000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-10-08"
+  },
+  {
+    "id": "pr_0009",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 408000,
+    "normalizedUnitKrw": 136000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-08-09"
+  },
+  {
+    "id": "pr_0010",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 276000,
+    "normalizedUnitKrw": 138000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_mint",
+    "date": "2026-09-19"
+  },
+  {
+    "id": "pr_0011",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 4,
+      "unit": "cc"
+    },
+    "paidKrw": 560000,
+    "normalizedUnitKrw": 140000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-07-21"
+  },
+  {
+    "id": "pr_0012",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 280000,
+    "normalizedUnitKrw": 140000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-08-30"
+  },
+  {
+    "id": "pr_0013",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 426000,
+    "normalizedUnitKrw": 142000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-10-10"
+  },
+  {
+    "id": "pr_0014",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 290000,
+    "normalizedUnitKrw": 145000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-08-11"
+  },
+  {
+    "id": "pr_0015",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 296000,
+    "normalizedUnitKrw": 148000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-09-21"
+  },
+  {
+    "id": "pr_0016",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 450000,
+    "normalizedUnitKrw": 150000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-23"
+  },
+  {
+    "id": "pr_0017",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "paidKrw": 152000,
+    "normalizedUnitKrw": 152000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-09-02"
+  },
+  {
+    "id": "pr_0018",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 308000,
+    "normalizedUnitKrw": 154000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-10-12"
+  },
+  {
+    "id": "pr_0019",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 468000,
+    "normalizedUnitKrw": 156000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_ara",
+    "date": "2026-08-14"
+  },
+  {
+    "id": "pr_0020",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 316000,
+    "normalizedUnitKrw": 158000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-09-23"
+  },
+  {
+    "id": "pr_0021",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 320000,
+    "normalizedUnitKrw": 160000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-07-26"
+  },
+  {
+    "id": "pr_0022",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 480000,
+    "normalizedUnitKrw": 160000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_mint",
+    "date": "2026-09-04"
+  },
+  {
+    "id": "pr_0023",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 326000,
+    "normalizedUnitKrw": 163000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-10-15"
+  },
+  {
+    "id": "pr_0024",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 498000,
+    "normalizedUnitKrw": 166000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-08-16"
+  },
+  {
+    "id": "pr_0025",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 338000,
+    "normalizedUnitKrw": 169000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-09-26"
+  },
+  {
+    "id": "pr_0026",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "paidKrw": 172000,
+    "normalizedUnitKrw": 172000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-07-28"
+  },
+  {
+    "id": "pr_0027",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 525000,
+    "normalizedUnitKrw": 175000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-09-07"
+  },
+  {
+    "id": "pr_0028",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 356000,
+    "normalizedUnitKrw": 178000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-17"
+  },
+  {
+    "id": "pr_0029",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 360000,
+    "normalizedUnitKrw": 180000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-08-18"
+  },
+  {
+    "id": "pr_0030",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 549000,
+    "normalizedUnitKrw": 183000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-09-28"
+  },
+  {
+    "id": "pr_0031",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 370000,
+    "normalizedUnitKrw": 185000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_ara",
+    "date": "2026-07-30"
+  },
+  {
+    "id": "pr_0032",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 555000,
+    "normalizedUnitKrw": 185000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-09-09"
+  },
+  {
+    "id": "pr_0033",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 4,
+      "unit": "cc"
+    },
+    "paidKrw": 760000,
+    "normalizedUnitKrw": 190000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "pr_0034",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 390000,
+    "normalizedUnitKrw": 195000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_mint",
+    "date": "2026-08-21"
+  },
+  {
+    "id": "pr_0035",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 600000,
+    "normalizedUnitKrw": 200000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-09-30"
+  },
+  {
+    "id": "pr_0036",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 410000,
+    "normalizedUnitKrw": 205000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-08-02"
+  },
+  {
+    "id": "pr_0037",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "paidKrw": 210000,
+    "normalizedUnitKrw": 210000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-09-11"
+  },
+  {
+    "id": "pr_0038",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 420000,
+    "normalizedUnitKrw": 210000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-10-22"
+  },
+  {
+    "id": "pr_0039",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 645000,
+    "normalizedUnitKrw": 215000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_ara",
+    "date": "2026-08-23"
+  },
+  {
+    "id": "pr_0040",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 440000,
+    "normalizedUnitKrw": 220000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-03"
+  },
+  {
+    "id": "pr_0041",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 3,
+      "unit": "cc"
+    },
+    "paidKrw": 675000,
+    "normalizedUnitKrw": 225000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_seoul_glow",
+    "date": "2026-08-04"
+  },
+  {
+    "id": "pr_0042",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 460000,
+    "normalizedUnitKrw": 230000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "clinicId": "cln_mint",
+    "date": "2026-09-14"
+  },
+  {
+    "id": "pr_0043",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 190000,
+    "normalizedUnitKrw": 95000,
+    "source": "shared_record",
+    "verified": false,
+    "nationalityGroup": "KR",
+    "date": "2026-09-02"
+  },
+  {
+    "id": "pr_0044",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 520000,
+    "normalizedUnitKrw": 260000,
+    "source": "shared_record",
+    "verified": false,
+    "nationalityGroup": "KR",
+    "date": "2026-09-18"
+  },
+  {
+    "id": "pr_0045",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 350000,
+    "normalizedUnitKrw": 175000,
+    "source": "outcome",
+    "verified": false,
+    "nationalityGroup": "foreign",
+    "date": "2026-10-05"
+  },
+  {
+    "id": "pr_0046",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 198000,
+    "normalizedUnitKrw": 99000,
+    "source": "public_offer",
+    "verified": true,
+    "nationalityGroup": "KR",
+    "date": "2026-10-01"
+  },
+  {
+    "id": "pr_0047",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 240000,
+    "normalizedUnitKrw": 120000,
+    "source": "public_offer",
+    "verified": true,
+    "nationalityGroup": "KR",
+    "date": "2026-10-10"
+  },
+  {
+    "id": "pr_0048",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "apgujeong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 300000,
+    "normalizedUnitKrw": 150000,
+    "source": "shared_record",
+    "verified": true,
+    "nationalityGroup": "KR",
+    "date": "2026-05-20"
+  },
+  {
+    "id": "pr_0049",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "sinsa",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 310000,
+    "normalizedUnitKrw": 155000,
+    "source": "shared_record",
+    "verified": true,
+    "nationalityGroup": "KR",
+    "date": "2026-06-02"
+  },
+  {
+    "id": "pr_0050",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "gangnam",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 330000,
+    "normalizedUnitKrw": 165000,
+    "source": "outcome",
+    "verified": true,
+    "nationalityGroup": "foreign",
+    "date": "2026-06-12"
+  },
+  {
+    "id": "pr_0051",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 330000,
+    "normalizedUnitKrw": 165000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-07-20"
+  },
+  {
+    "id": "pr_0052",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 370000,
+    "normalizedUnitKrw": 185000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-27"
+  },
+  {
+    "id": "pr_0053",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 410000,
+    "normalizedUnitKrw": 205000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-08-03"
+  },
+  {
+    "id": "pr_0054",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 338000,
+    "normalizedUnitKrw": 169000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-10"
+  },
+  {
+    "id": "pr_0055",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 378000,
+    "normalizedUnitKrw": 189000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-08-17"
+  },
+  {
+    "id": "pr_0056",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 418000,
+    "normalizedUnitKrw": 209000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-24"
+  },
+  {
+    "id": "pr_0057",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 346000,
+    "normalizedUnitKrw": 173000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-08-31"
+  },
+  {
+    "id": "pr_0058",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 386000,
+    "normalizedUnitKrw": 193000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-08"
+  },
+  {
+    "id": "pr_0059",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 426000,
+    "normalizedUnitKrw": 213000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-09-15"
+  },
+  {
+    "id": "pr_0060",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 354000,
+    "normalizedUnitKrw": 177000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-22"
+  },
+  {
+    "id": "pr_0061",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 394000,
+    "normalizedUnitKrw": 197000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-09-29"
+  },
+  {
+    "id": "pr_0062",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 434000,
+    "normalizedUnitKrw": 217000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-06"
+  },
+  {
+    "id": "pr_0063",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 362000,
+    "normalizedUnitKrw": 181000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-10-13"
+  },
+  {
+    "id": "pr_0064",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "myeongdong",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 402000,
+    "normalizedUnitKrw": 201000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "pr_0065",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 300000,
+    "normalizedUnitKrw": 150000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-07-20"
+  },
+  {
+    "id": "pr_0066",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 335000,
+    "normalizedUnitKrw": 167500,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-28"
+  },
+  {
+    "id": "pr_0067",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 370000,
+    "normalizedUnitKrw": 185000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-08-06"
+  },
+  {
+    "id": "pr_0068",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 321000,
+    "normalizedUnitKrw": 160500,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-14"
+  },
+  {
+    "id": "pr_0069",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 356000,
+    "normalizedUnitKrw": 178000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-08-22"
+  },
+  {
+    "id": "pr_0070",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 307000,
+    "normalizedUnitKrw": 153500,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-31"
+  },
+  {
+    "id": "pr_0071",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 342000,
+    "normalizedUnitKrw": 171000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-09-08"
+  },
+  {
+    "id": "pr_0072",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 377000,
+    "normalizedUnitKrw": 188500,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-17"
+  },
+  {
+    "id": "pr_0073",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 328000,
+    "normalizedUnitKrw": 164000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-09-25"
+  },
+  {
+    "id": "pr_0074",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 363000,
+    "normalizedUnitKrw": 181500,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-03"
+  },
+  {
+    "id": "pr_0075",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 314000,
+    "normalizedUnitKrw": 157000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-10-12"
+  },
+  {
+    "id": "pr_0076",
+    "procedureId": "rejuran",
+    "product": "Rejuran Healer",
+    "area": "hongdae",
+    "amount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "paidKrw": 349000,
+    "normalizedUnitKrw": 174500,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "pr_0077",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1350000,
+    "normalizedUnitKrw": 4500,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-07-20"
+  },
+  {
+    "id": "pr_0078",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "sinsa",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1575000,
+    "normalizedUnitKrw": 5250,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-28"
+  },
+  {
+    "id": "pr_0079",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "apgujeong",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1800000,
+    "normalizedUnitKrw": 6000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-08-06"
+  },
+  {
+    "id": "pr_0080",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1485000,
+    "normalizedUnitKrw": 4950,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-14"
+  },
+  {
+    "id": "pr_0081",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "sinsa",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1710000,
+    "normalizedUnitKrw": 5700,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-08-22"
+  },
+  {
+    "id": "pr_0082",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "apgujeong",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1395000,
+    "normalizedUnitKrw": 4650,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-31"
+  },
+  {
+    "id": "pr_0083",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1620000,
+    "normalizedUnitKrw": 5400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-09-08"
+  },
+  {
+    "id": "pr_0084",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "sinsa",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1845000,
+    "normalizedUnitKrw": 6150,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-17"
+  },
+  {
+    "id": "pr_0085",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "apgujeong",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1530000,
+    "normalizedUnitKrw": 5100,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-09-25"
+  },
+  {
+    "id": "pr_0086",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1755000,
+    "normalizedUnitKrw": 5850,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-03"
+  },
+  {
+    "id": "pr_0087",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "sinsa",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1440000,
+    "normalizedUnitKrw": 4800,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-10-12"
+  },
+  {
+    "id": "pr_0088",
+    "procedureId": "thermage",
+    "product": "Thermage FLX",
+    "area": "apgujeong",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1665000,
+    "normalizedUnitKrw": 5550,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "pr_0089",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "gangnam",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 120000,
+    "normalizedUnitKrw": 2400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-07-20"
+  },
+  {
+    "id": "pr_0090",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "sinsa",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 145000,
+    "normalizedUnitKrw": 2900,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-27"
+  },
+  {
+    "id": "pr_0091",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "myeongdong",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 170000,
+    "normalizedUnitKrw": 3400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-08-02"
+  },
+  {
+    "id": "pr_0092",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "hongdae",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 120000,
+    "normalizedUnitKrw": 2400,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-09"
+  },
+  {
+    "id": "pr_0093",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "gangnam",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 145000,
+    "normalizedUnitKrw": 2900,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-08-15"
+  },
+  {
+    "id": "pr_0094",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "sinsa",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 170000,
+    "normalizedUnitKrw": 3400,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-22"
+  },
+  {
+    "id": "pr_0095",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "myeongdong",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 120000,
+    "normalizedUnitKrw": 2400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-08-28"
+  },
+  {
+    "id": "pr_0096",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "hongdae",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 145000,
+    "normalizedUnitKrw": 2900,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-04"
+  },
+  {
+    "id": "pr_0097",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "gangnam",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 170000,
+    "normalizedUnitKrw": 3400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-09-11"
+  },
+  {
+    "id": "pr_0098",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "sinsa",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 120000,
+    "normalizedUnitKrw": 2400,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-17"
+  },
+  {
+    "id": "pr_0099",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "myeongdong",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 145000,
+    "normalizedUnitKrw": 2900,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-09-24"
+  },
+  {
+    "id": "pr_0100",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "hongdae",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 170000,
+    "normalizedUnitKrw": 3400,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-30"
+  },
+  {
+    "id": "pr_0101",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "gangnam",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 120000,
+    "normalizedUnitKrw": 2400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-10-07"
+  },
+  {
+    "id": "pr_0102",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "sinsa",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 145000,
+    "normalizedUnitKrw": 2900,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-13"
+  },
+  {
+    "id": "pr_0103",
+    "procedureId": "botox_wrinkle",
+    "product": "Botox (domestic)",
+    "area": "myeongdong",
+    "amount": {
+      "value": 50,
+      "unit": "unit"
+    },
+    "paidKrw": 170000,
+    "normalizedUnitKrw": 3400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "pr_0104",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "apgujeong",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 380000,
+    "normalizedUnitKrw": 380000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-07-20"
+  },
+  {
+    "id": "pr_0105",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "gangnam",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 440000,
+    "normalizedUnitKrw": 440000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-30"
+  },
+  {
+    "id": "pr_0106",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "hongdae",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 380000,
+    "normalizedUnitKrw": 380000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-08-09"
+  },
+  {
+    "id": "pr_0107",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "apgujeong",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 440000,
+    "normalizedUnitKrw": 440000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-20"
+  },
+  {
+    "id": "pr_0108",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "gangnam",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 380000,
+    "normalizedUnitKrw": 380000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-08-30"
+  },
+  {
+    "id": "pr_0109",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "hongdae",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 440000,
+    "normalizedUnitKrw": 440000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-09"
+  },
+  {
+    "id": "pr_0110",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "apgujeong",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 380000,
+    "normalizedUnitKrw": 380000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-09-19"
+  },
+  {
+    "id": "pr_0111",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "gangnam",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 440000,
+    "normalizedUnitKrw": 440000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-30"
+  },
+  {
+    "id": "pr_0112",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "hongdae",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 380000,
+    "normalizedUnitKrw": 380000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-10-10"
+  },
+  {
+    "id": "pr_0113",
+    "procedureId": "juvelook_volume",
+    "product": "Juvelook Volume",
+    "area": "apgujeong",
+    "amount": {
+      "value": 1,
+      "unit": "vial"
+    },
+    "paidKrw": 440000,
+    "normalizedUnitKrw": 440000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "pr_0114",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "hongdae",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1200000,
+    "normalizedUnitKrw": 4000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-07-20"
+  },
+  {
+    "id": "pr_0115",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1500000,
+    "normalizedUnitKrw": 5000,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "foreign",
+    "date": "2026-07-29"
+  },
+  {
+    "id": "pr_0116",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "hongdae",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1800000,
+    "normalizedUnitKrw": 6000,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "KR",
+    "date": "2026-08-07"
+  },
+  {
+    "id": "pr_0117",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1440000,
+    "normalizedUnitKrw": 4800,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "foreign",
+    "date": "2026-08-17"
+  },
+  {
+    "id": "pr_0118",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "hongdae",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1740000,
+    "normalizedUnitKrw": 5800,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "KR",
+    "date": "2026-08-26"
+  },
+  {
+    "id": "pr_0119",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1380000,
+    "normalizedUnitKrw": 4600,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-04"
+  },
+  {
+    "id": "pr_0120",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "hongdae",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1680000,
+    "normalizedUnitKrw": 5600,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "30-34",
+    "nationalityGroup": "KR",
+    "date": "2026-09-13"
+  },
+  {
+    "id": "pr_0121",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1320000,
+    "normalizedUnitKrw": 4400,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "20-24",
+    "nationalityGroup": "foreign",
+    "date": "2026-09-22"
+  },
+  {
+    "id": "pr_0122",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "hongdae",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1620000,
+    "normalizedUnitKrw": 5400,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "35-39",
+    "nationalityGroup": "KR",
+    "date": "2026-10-02"
+  },
+  {
+    "id": "pr_0123",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "gangnam",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1260000,
+    "normalizedUnitKrw": 4200,
+    "source": "outcome",
+    "verified": true,
+    "ageBand": "40+",
+    "nationalityGroup": "foreign",
+    "date": "2026-10-11"
+  },
+  {
+    "id": "pr_0124",
+    "procedureId": "ulthera",
+    "product": "Ulthera",
+    "area": "hongdae",
+    "amount": {
+      "value": 300,
+      "unit": "shot"
+    },
+    "paidKrw": 1560000,
+    "normalizedUnitKrw": 5200,
+    "source": "shared_record",
+    "verified": true,
+    "ageBand": "25-29",
+    "nationalityGroup": "KR",
+    "date": "2026-10-20"
+  }
+]

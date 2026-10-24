@@ -1,13 +1,84 @@
-// AgentDefinition for the platform agent. OWNER: track A2A core (+ OPS proposer, LLM recipe register their skills here). Stub so app/a2a routes compile before the track lands.
-import type { AgentDefinition } from "@/lib/a2a/contract";
+// AgentDefinition for the platform agent. OWNER: track A2A core (+ OPS proposer, LLM recipe register their skills here).
+import { buildAgentCard, rpcUrlFor } from "../../a2a/cards";
+import type { AgentDefinition } from "../../a2a/contract";
+import { recipeSkill } from "./recipe";
+import { judgeQuoteSkill, matchClinicsSkill, reportBookingSkill, reportSignalSkill, submitOutcomeSkill } from "./skills";
+
+export const PLATFORM_AGENT_ID = "platform";
 
 export const platformAgent: AgentDefinition = {
   role: "platform",
-  async card() {
-    throw new Error("platform agent card not implemented yet");
+  async card(_agentId, baseUrl) {
+    return buildAgentCard({
+      name: "PibooK Platform Agent",
+      description:
+        "Matches K-beauty clinic requests with clinics using real paid-price records, judges whether a quoted price and dose are fair, and collects post-procedure outcomes.",
+      rpcUrl: rpcUrlFor("platform", PLATFORM_AGENT_ID, baseUrl),
+      organization: "PibooK",
+      baseUrl,
+      skills: [
+        {
+          id: "platform.recipe",
+          name: "Korean women procedure recipe",
+          description:
+            "Returns which procedures Korean women with the same concern and age band actually chose, typical dose, cycle, downtime and onset, from recorded data.",
+          tags: ["recipe", "procedure", "data"],
+          examples: ['{"schema":"pibu/recipe-query@1","concerns":["elasticity"],"ageBand":"25-29"}'],
+          inputModes: ["application/json"],
+          outputModes: ["application/json"],
+        },
+        {
+          id: "platform.match_clinics",
+          name: "Match clinics",
+          description: "Ranks up to five clinics for a procedure request and issues a signed referral token per clinic.",
+          tags: ["matching", "clinic", "referral"],
+          inputModes: ["application/json"],
+          outputModes: ["application/json"],
+        },
+        {
+          id: "platform.judge_quote",
+          name: "Judge quote fairness",
+          description: "Judges each quote's unit price and dose against recent verified paid records in the same region.",
+          tags: ["price", "fairness", "dose"],
+          inputModes: ["application/json"],
+          outputModes: ["application/json"],
+        },
+        {
+          id: "platform.report_booking",
+          name: "Report booking",
+          description: "Clinic agents report confirmed bookings with the referral token for attribution.",
+          tags: ["booking", "attribution"],
+          inputModes: ["application/json"],
+          outputModes: ["text/plain"],
+        },
+        {
+          id: "platform.report_signal",
+          name: "Report signal",
+          description: "Customer agents report clinic response timeouts and rejections observed while requesting quotes.",
+          tags: ["signal", "reliability"],
+          inputModes: ["application/json"],
+          outputModes: ["text/plain"],
+        },
+        {
+          id: "platform.submit_outcome",
+          name: "Submit outcome",
+          description: "Customer agents submit paid price, received dose and satisfaction after a procedure.",
+          tags: ["review", "outcome"],
+          inputModes: ["application/json"],
+          outputModes: ["text/plain"],
+        },
+      ],
+    });
   },
-  async exists() {
-    return false;
+  async exists(agentId) {
+    return agentId === PLATFORM_AGENT_ID;
   },
-  skills: {},
+  skills: {
+    "platform.recipe": recipeSkill,
+    "platform.match_clinics": matchClinicsSkill,
+    "platform.judge_quote": judgeQuoteSkill,
+    "platform.report_booking": reportBookingSkill,
+    "platform.submit_outcome": submitOutcomeSkill,
+    "platform.report_signal": reportSignalSkill,
+  },
 };
