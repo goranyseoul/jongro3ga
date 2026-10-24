@@ -82,6 +82,22 @@ npm run dev
 
 3분 시나리오와 장면별 기대값: [docs/spec/10-build-plan.md](docs/spec/10-build-plan.md#데모-시나리오-3분-픽스처-모드-기준-기대값)
 
+### 제출 시점 구현 범위 (2026-10-24, 브랜치 `goranyseoul/a2a-core`)
+
+데모는 `npm run build && npm start` 후 `/demo`에서 진행한다. 버튼별 순서는 [docs/HANDOFF-a2a-core.md](docs/HANDOFF-a2a-core.md) 9절.
+
+| 영역 | 상태 |
+| --- | --- |
+| A2A 1.0 서버·클라이언트 (`app/a2a/**`, `lib/a2a`) | 구현. Agent Card, JSON-RPC, 에이전트 토큰과 추천 토큰(ES256), 호출 로그와 마스킹 |
+| 병원 에이전트 (`lib/agents/clinic`) | 구현. 스킬 5개, ZK 오퍼 증명 검증 후 이벤트가 적용, 대행·직접 예약 확정 |
+| 플랫폼 에이전트 (`lib/agents/platform`) | 구현. 스킬 8개, 가격·용량 판정, 규칙 기반 매칭, 결과 수집, 규칙 제안(결정론 트리거), 기록 앵커·후기 |
+| LLM 계층 (`lib/llm`, Claude만) | 구현. 키 없으면 픽스처, 키가 있으면 실제 Claude (`LLM_FORCE_LIVE=true`). 실호출 리허설 통과 |
+| 데모 컨트롤·운영 콘솔 (`/demo`, `/ops/rules`, `/ops/proxy-queue`, `/ops/a2a-log`) | 실제 에이전트에 연결 |
+| **고객 에이전트 (`lib/agents/customer`)** | **미구현.** executor는 스텁이라 `customer.notify`·`customer.checkin`은 실패로 답한다. 데모에서는 `/api/demo/run-scenario`가 고객 역할(요청 정리, 견적 요청, 증명 첨부, 예약, 결과 제출)을 유키의 고정 입력으로 대신 수행한다. 이 호출들은 실제 A2A이며 병원·플랫폼 에이전트가 실제로 답한다 |
+| 고객 화면 (`app/[locale]/**`)·병원 콘솔 화면 | 목데이터. 에이전트 연결은 다음 단계 |
+
+다음 단계: 고객 에이전트 구현과 고객 화면 연결, 병원 콘솔 연결, 규칙 제안의 Claude 2단계, e2e. 스펙과 구현의 차이는 [docs/spec/BUILD-LOG.md](docs/spec/BUILD-LOG.md) 18~26행.
+
 ---
 
 ## Claude Code에게 (빌드 순서)

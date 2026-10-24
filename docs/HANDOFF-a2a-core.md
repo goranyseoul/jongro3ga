@@ -1,5 +1,7 @@
 # 핸드오프: A2A 코어 이어받기
 
+> **2026-10-24 17시 마감 시점 갱신 (먼저 읽을 것): 10절이 현재 상태다.** WP0~WP5와 데모·운영 연결이 이 브랜치에 들어갔고 데모는 이 브랜치로 진행했다. 고객 에이전트(WP6)는 미구현으로 제출했다. main에는 팀원이 같은 일을 따로 구현해 머지해 두어 PR #31과 충돌한다. 0~9절은 작업 시작 시점의 기록이라 "A2A는 한 줄도 없다" 같은 문장은 더 이상 사실이 아니다.
+
 > 작성: 2026-10-24 저녁, 코디네이터 세션(오너 Gorany의 Claude, 컨텍스트 소진으로 세션 교체)
 > 받는 사람: 이 워크트리(`a2a-core`, 브랜치 `goranyseoul/a2a-core`)에서 시작하는 새 코디네이터 세션
 > 코드 기준: `origin/main` ba2855c (= 팀원 핸드오프 PR #5 + ZK 확장과 오늘 오너 결정 PR #19 + 브라우저 지갑 PR #16). 이 문서는 팀원 핸드오프 [HANDOFF-backend-a2a.md](HANDOFF-backend-a2a.md)를 **대체하지 않고 그 위에 얹는다.** 그 문서의 1절부터 5절(제품 방향, 입력 주체, 대화 흐름, 개선 루프)과 8절(시행착오)은 그대로 유효하다. 달라진 것만 여기 적는다.
@@ -149,3 +151,43 @@ npm run llm:smoke                     # 키 확인 (선택)
 대행 병원 예약은 `/ops/proxy-queue`(3초 폴링)에서 확정할 수 있고, 전체 호출은 `/ops/a2a-log`에서 contextId로 묶어 본다.
 
 남은 일: WP6(고객 에이전트) 머지, 고객 BFF(`app/api/customer/**`)와 고객 화면 연결(그때 `/api/demo/run-scenario`는 고객 BFF 호출로 교체), 병원 콘솔 화면 연결, 규칙 제안 Claude 2단계 연결, 시술 필터 A2A 노출(BUILD-LOG 15·23행), e2e(T14).
+
+## 10. 현재 상태와 다음 세션이 할 일 (2026-10-24 마감 시점)
+
+### 10.1 무엇이 어디에 있나
+
+| 항목 | 위치 | 상태 |
+| --- | --- | --- |
+| 데모·제출 브랜치 | `goranyseoul/a2a-core` (origin에 push됨), PR #31 → main | gate 통과 (lint 0 에러, typecheck 0, vitest 41파일 469개, 경계 0, 빌드). 데모 0~8행을 `next start` 실서버와 Orca 브라우저에서 확인 |
+| 결정 기록 | `docs/spec/BUILD-LOG.md` 18~26행 | WP별 해석과 코디네이터 결정 전부 |
+| 데모 실행표 | 이 문서 9절 | 버튼 순서와 기대 결과 |
+| 고객 에이전트 WIP | 브랜치 `worktree-agent-aafd7a450581084af` 커밋 95044b6 (워크트리 `/Users/junggonkim/Gorany-Workspace/jongro3ga/.claude/worktrees/agent-aafd7a450581084af`, 베이스 3d3b4dc) | **미완성·미검증.** 마감으로 워커를 멈추며 그대로 보관. push 안 됨 |
+| LLM 키 | 이 워크트리 `.env` (gitignore) | `ANTHROPIC_API_KEY`, `DEMO_MODE=true`, `LLM_FORCE_LIVE=true`. `npm run llm:smoke`로 확인. 리허설 테스트는 `lib/llm/live-rehearsal.test.ts` (키와 `LLM_FORCE_LIVE`가 있을 때만 돈다) |
+| ZK 서버 | glowpass, 포트 4000 (데모 맥) | 꺼져 있으면 민트는 정가, 앵커는 실패로 표시. 흐름은 계속됨 |
+
+### 10.2 가장 먼저 풀어야 할 문제: main과의 충돌
+
+같은 날 15:21~15:39에 팀원(Makim)이 `feat/track-a2a`, `feat/track-llm`, `feat/track-auth`를 PR #21로 main에 머지했다. 에이전트·LLM·시드·A2A 서버를 이 브랜치와 별개로 구현했고, 인증과 Postgres(drizzle, `lib/db`)도 있다.
+
+- PR #31을 main에 합치면 같은 파일 70곳이 충돌한다 (`lib/agents` 18, `lib/llm`·`data/seed` 9씩, `app/api` 8, `app/a2a` 7, `lib/a2a` 6 등).
+- 이 브랜치를 우선해 시험 머지하면 타입 에러 323개가 난다. main의 화면·병원 콘솔·온보딩 엔진·인증·DB가 main 구현에 맞춰져 있어서다.
+- **결정이 먼저다:** 오너와 팀원이 어느 구현을 정본으로 할지 정한다. 그 전에 PR #31을 머지하거나 충돌을 기계적으로 해소하지 않는다.
+- 비교 메모: 이 브랜치는 ZK 증명 경로(민트 99,000 + `offerApplied`), 실호출로 검증한 LLM 계층(BUILD-LOG 24), 스펙 수용 기준 테스트가 앞서 있다. main은 인증, DB 영속화, 화면 연결이 앞서 있다. 정본이 정해지면 다른 쪽의 장점을 옮겨 온다.
+
+### 10.3 미구현과 알려진 문제 (우선순위 순)
+
+1. **고객 에이전트(WP6, T08 + T18 고객 쪽).** `lib/agents/customer/executor.ts`는 스텁이라 `customer.notify`·`customer.checkin`이 FAILED로 답한다. 데모의 고객 역할은 `lib/bff/demo-scenario.ts`(`/api/demo/run-scenario`, `/api/demo/submit-d0`)가 고정 입력으로 대신한다. 브리프는 이 세션 대화의 WP6 지시를 BUILD-LOG 19~24행과 함께 다시 쓰면 된다. 요점: 오케스트레이터(recipe → match → 기기 안 오퍼 매칭과 해당 병원에만 증명 → 병렬 quote 20초 → judge), 동의 원장으로 병원 사본 10개 필드, 예약 폴링과 INPUT_REQUIRED 자동 응답, 다음 회차(달력 월), D0 결과와 anchor_record. 완성되면 `demo-scenario.ts`를 고객 에이전트 호출로 바꾼다.
+2. **고객 화면 연결(WP7).** `app/[locale]/**`는 목데이터. 고객 BFF(`app/api/customer/**`)를 만들고 `lib/bff/demo.ts`의 `ensurePlatformReady()`를 진입에서 부른다.
+3. **병원 콘솔 화면(`/clinic/**`).** 에이전트 함수(`listInbox`, `confirmClinicBooking`, `updateMenu`, `upsertOffer`)는 있고 API·화면 연결만 남았다.
+4. **[예약 확정] 메시지 문구.** 서버는 실제 대기 예약을 확정하지만 `/demo` 메시지는 왼쪽 목 카드 이름(예: "한빛의원 · Lin W.")을 보여 준다. `app/demo/demo-console.tsx`의 `confirm`이 서버 응답의 `clinicId`를 쓰게 고친다.
+5. **페이지 하이드레이션 전 클릭 무시.** `/ops/rules`와 `/demo`를 연 직후 첫 클릭이 사라진 적이 있다. 버튼을 하이드레이션 뒤에만 활성화한다.
+6. 규칙 제안의 Claude 2단계 연결(BUILD-LOG 21·23·26), 시술 필터 A2A 노출(15·23), e2e(T14), `lib/a2a/client.test.ts`의 가짜 타이머 테스트가 전체 실행 부하에서 가끔 5초를 넘긴다(단독 실행은 통과).
+
+### 10.4 다음 세션 첫 프롬프트
+
+```
+docs/HANDOFF-a2a-core.md의 10절을 먼저 읽고, 그다음 docs/spec/BUILD-LOG.md 18~26행을 읽어.
+PR #31(goranyseoul/a2a-core)과 main(팀원 구현, PR #21)이 충돌한다. 어느 쪽을 정본으로 할지는
+내가 정한다. 정하기 전에는 머지하지 말고, 두 구현을 영역별로 비교한 표(에이전트, LLM, 시드,
+A2A 서버, 화면 연결, 테스트)를 만들어 보고해. 정본이 정해지면 10.3의 순서로 진행해.
+```
