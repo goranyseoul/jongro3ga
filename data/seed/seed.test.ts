@@ -20,6 +20,8 @@ describe("loadSeed", () => {
       "platform.price_records": 124,
       "platform.outcomes": 30,
       "platform.rules": 2,
+      "platform.verified_visits": 10,
+      "platform.review_stats": 5,
       "clinic.profiles": 5,
       "clinic.menu_items": 18,
       "clinic.offers": 1,
