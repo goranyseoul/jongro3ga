@@ -40,3 +40,10 @@
 - 접근성: 푸터 언어 링크 폭을 44px로 맞췄다.
 - 알려진 남은 것: 병원 콘솔 `/clinic/inbox` 데스크톱 폭의 체크박스 20px (병원 콘솔 세션 영역). 채팅 입력창은 바 전체가 터치 영역이다.
 - 검사: CI와 같은 순서(`npm ci`, `typecheck`, `test` 112개, `build`와 가드 3종, `verify-spec`) 통과. 55개 라우트를 3개 폭으로 연 브라우저 검사에서 pageerror 0, 가로 넘침 0.
+
+## 트랙 ZK
+
+- GlowPass(`glowpass/**`)와 `zk/codes.json`을 팀원 `origin/feat/zk-record-registry` 최신(f8c0312, 스펙 id 정렬판)으로 맞췄다. 기준 브랜치에는 옛 가상 병원 판(`cln_hongdae_a` 등)이 들어 있었다. 팀원 파일에 한 변경은 `glowpass/wallet.mjs`의 `match-offers` 응답에 `procedureId` 추가 하나.
+- `lib/zk`: GlowPass HTTP 클라이언트(타임아웃, 실패 시 `null`)와 PibooK 고객 id·고객 에이전트 id·병원 id → GlowPass id 표(`lib/zk/identity.ts`). `cus_jisoo`는 국내 거주라 표에서 뺐다.
+- A2A 확장 `https://pibu.app/ext/zk-offer-proof/v1`: 증명은 `clinic.quote`의 `metadata.zkOfferProof`. 팀원 초안의 `metadata.offerProof` 봉투와 `EventSchema.zkClauses`·`offerApplied`는 `lib/a2a/schemas.ts`(공통, strict)를 바꿔야 해서 제안으로 남김. 할인 적용은 지금 스키마의 `event`로 표현. 상세: `docs/INTEGRATION.md` 3·4절.
+- 스모크에서 찾은 것: 체인 기록이 없는 가명(유키·에밀리)은 온체인 commitment가 0이라 첫 방문 증명이 회로에서 실패한다 (`match-offers`는 `eligible: true`). 팀원 결정 필요. `docs/INTEGRATION.md` 7절.
