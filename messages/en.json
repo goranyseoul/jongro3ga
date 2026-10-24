@@ -377,7 +377,18 @@
       "clinicConfirmed": "Confirmed by clinic",
       "selfReported": "Entered by you · not used for offer proofs",
       "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
-      "rating": "Satisfaction {n}/5"
+      "fromBooking": "Recorded from your booking",
+      "rating": "Satisfaction {n}/5",
+      "search": "Search procedures",
+      "searchPlaceholder": "e.g. Rejuran",
+      "all": "All",
+      "noMatch": "No records for that procedure.",
+      "month": "{count} · total {total}",
+      "unknownDay": "{month} (day not remembered)",
+      "summary": "Since {first}: {count} sessions · total {total}",
+      "pages": "Pages",
+      "prevPage": "Previous page",
+      "nextPage": "Next page"
     },
     "calendar": {
       "title": "Calendar",
@@ -389,7 +400,36 @@
       "empty": "Nothing on this day.",
       "hasEvents": "{n} items",
       "doneSession": "Session {n} done",
-      "plannedSession": "Session {n} planned"
+      "plannedSession": "Session {n} planned",
+      "monthTotal": "This month: {count} · total {total}",
+      "monthNone": "No records this month."
+    },
+    "plan": {
+      "title": "My care plan",
+      "lead": "Your records compared with each procedure's recommended cycle, so you know what to do next.",
+      "showAll": "Show all care cards ({n})",
+      "showLess": "Show less"
+    },
+    "cycle": {
+      "course": "Recommended: {count} sessions {interval} days apart, then {every}",
+      "maintenance": "Recommended: {every}",
+      "range": "every {min}~{max} days",
+      "every": "every {days} days"
+    },
+    "point": {
+      "courseOnTrack": "{done} of {count} sessions done. Session {next} within {days} days is ideal.",
+      "courseLate": "{done} of {count} sessions done, {since} days since the last one. {late} days past the recommended interval.",
+      "early": "{since} days since the last session. {days} days until the next one.",
+      "window": "{since} days since the last session. Now is a good time.",
+      "late": "{since} days since the last session. {late} days past the recommended cycle."
+    },
+    "top": {
+      "title": "Your top procedures",
+      "count": "{n} sessions",
+      "last": "Last {date}",
+      "total": "Total {amount}",
+      "prev": "Previous",
+      "next": "Next"
     }
   },
   "recordsNew": {
@@ -417,7 +457,9 @@
       "next": "Next session",
       "all": "View records",
       "another": "Add another"
-    }
+    },
+    "month": "Month of treatment",
+    "dateUnknown": "I only remember the month"
   },
   "outcomes": {
     "metaTitle": "Procedure record",
