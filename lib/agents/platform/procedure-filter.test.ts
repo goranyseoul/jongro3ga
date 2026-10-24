@@ -7,9 +7,9 @@ const rates = (table: Record<string, number>) => (id: string) => table[id] ?? 0;
 const reasonCodes = (result: ReturnType<typeof filterProcedures>, id: string) =>
   result.excluded.find((e) => e.procedure.id === id)?.reasons.map((r) => r.code).sort();
 
-// DEMO.md scenario 1: Yuki, volume area, nasolabial fold, in Seoul 10/11 to 10/13.
+// DEMO.md scenario 1: Yuki, volume area, nasolabial fold. Her 10/11 to 10/13 trip is moved +28 days (11/8 to 11/10).
 describe("scenario: Yuki asks about the nasolabial fold", () => {
-  const input = { areas: ["volume" as const], parts: ["nasolabial" as const], trip: { arrival: "2026-10-11", departure: "2026-10-13" } };
+  const input = { areas: ["volume" as const], parts: ["nasolabial" as const], trip: { arrival: "2026-11-08", departure: "2026-11-10" } };
   const context = { selectionRate: rates({ juvelook_volume: 0.5, filler: 0.3, sculptra: 0.1 }) };
 
   it("shows Juvelook Volume, filler and Sculptra, the three cards of the script, Juvelook first", () => {
@@ -27,22 +27,35 @@ describe("scenario: Yuki asks about the nasolabial fold", () => {
     expect(sculptra!.score).toBeCloseTo(72);
   });
 
-  it("warns that swelling may last past the flight, but only warns", () => {
+  it("warns that downtime may last past the flight and tells the agent to check a stay extension, but only warns", () => {
     for (const card of filterProcedures(input, context).ranked) {
-      expect(card.warnings).toContainEqual({ code: "downtime_may_overlap_departure", latestEnd: "2026-10-16", departure: "2026-10-13" });
+      expect(card.warnings).toContainEqual({
+        code: "downtime_may_overlap_departure",
+        latestEnd: "2026-11-13",
+        departure: "2026-11-10",
+        daysOver: 3,
+        suggestion: "check_stay_extension",
+      });
     }
   });
 
-  it("drops what cannot work even when treated on arrival: the boundary is the departure day itself", () => {
-    const sameDay = filterProcedures({ ...input, trip: { arrival: "2026-10-11", departure: "2026-10-13" } }, context);
+  it("drops what cannot work even when treated on arrival, says how many days of extension would fix it, and the boundary is the departure day itself", () => {
+    const sameDay = filterProcedures(input, context);
     expect(sameDay.ranked).toHaveLength(3);
-    const oneNightShort = filterProcedures({ ...input, trip: { arrival: "2026-10-11", departure: "2026-10-12" } }, context);
+    const oneNightShort = filterProcedures({ ...input, trip: { arrival: "2026-11-08", departure: "2026-11-09" } }, context);
     expect(oneNightShort.ranked).toEqual([]);
-    expect(oneNightShort.excluded.map((e) => e.reasons[0])).toEqual([
-      { code: "downtime_after_departure", earliestEnd: "2026-10-13", departure: "2026-10-12" },
-      { code: "downtime_after_departure", earliestEnd: "2026-10-13", departure: "2026-10-12" },
-      { code: "downtime_after_departure", earliestEnd: "2026-10-13", departure: "2026-10-12" },
-    ]);
+    expect(oneNightShort.excluded).toHaveLength(3);
+    for (const { reasons } of oneNightShort.excluded) {
+      expect(reasons[0]).toEqual({
+        code: "downtime_after_departure",
+        earliestEnd: "2026-11-10",
+        departure: "2026-11-09",
+        extendDays: 1,
+        suggestion: "check_stay_extension",
+      });
+    }
+    const threeDaysShort = filterProcedures({ ...input, trip: { arrival: "2026-11-08", departure: "2026-11-08" } }, context);
+    expect(threeDaysShort.excluded[0]!.reasons[0]).toMatchObject({ extendDays: 2 });
   });
 
   it("removes Juvelook Volume for the under eye and says why, keeping the others", () => {
@@ -54,7 +67,7 @@ describe("scenario: Yuki asks about the nasolabial fold", () => {
   });
 });
 
-// DEMO.md scenario 3: Grace, lifting once a year, no downtime, no needles or threads, a week in Seoul.
+// DEMO.md scenario 3: Grace, lifting once a year, no downtime, no needles or threads, a week in Seoul (moved +28 days).
 describe("scenario: Grace wants lifting once a year without downtime", () => {
   const input = {
     areas: ["lifting" as const],
@@ -62,7 +75,7 @@ describe("scenario: Grace wants lifting once a year without downtime", () => {
     excludeMethods: ["injection" as const, "thread" as const],
     minMaintenanceDays: 300,
     visitGapDays: 365,
-    trip: { arrival: "2026-10-20", departure: "2026-10-27" },
+    trip: { arrival: "2026-11-17", departure: "2026-11-24" },
   };
   const context = { selectionRate: rates({ ulthera: 0.4, thermage: 0.35 }) };
 
@@ -149,7 +162,7 @@ describe("conditions", () => {
 
   it("unknown data never removes a treatment: it warns and earns no points", () => {
     const result = filterProcedures(
-      { areas: ["texture_renewal"], maxDowntimeDays: 0, budgetKrw: 300_000, trip: { arrival: "2026-10-20", departure: "2026-10-27" } },
+      { areas: ["texture_renewal"], maxDowntimeDays: 0, budgetKrw: 300_000, trip: { arrival: "2026-11-17", departure: "2026-11-24" } },
       {},
     );
     const lituo = result.ranked.find((c) => c.procedure.id === "lituo")!;

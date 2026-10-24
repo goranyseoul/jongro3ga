@@ -43,12 +43,26 @@ export type ExclusionReason =
   | { code: "method_not_selected" }
   | { code: "method_excluded"; methods: ProcedureMethod[] }
   | { code: "downtime_too_long"; downtimeMaxDays: number; limitDays: number }
-  | { code: "downtime_after_departure"; earliestEnd: IsoDate; departure: IsoDate }
+  | {
+      code: "downtime_after_departure";
+      earliestEnd: IsoDate;
+      departure: IsoDate;
+      /** Days the stay would have to be extended for the best case to work. */
+      extendDays: number;
+      suggestion: "check_stay_extension";
+    }
   | { code: "cycle_too_frequent"; intervalDays: number; limitDays: number }
   | { code: "series_too_close"; intervalDays: number; visitGapDays: number };
 
 export type Warning =
-  | { code: "downtime_may_overlap_departure"; latestEnd: IsoDate; departure: IsoDate }
+  | {
+      code: "downtime_may_overlap_departure";
+      latestEnd: IsoDate;
+      departure: IsoDate;
+      /** Days the downtime could run past the departure day. */
+      daysOver: number;
+      suggestion: "check_stay_extension";
+    }
   | { code: "downtime_unknown" }
   | { code: "pain_above_preference"; pain: Pain }
   | { code: "over_budget" }
@@ -153,7 +167,13 @@ function exclusionReasons(procedure: Procedure, input: ProcedureFilterInput): Ex
   if (input.trip && downtime) {
     const earliestEnd = addDays(input.trip.arrival, downtime.min);
     if (dayNumber(earliestEnd) > dayNumber(input.trip.departure)) {
-      reasons.push({ code: "downtime_after_departure", earliestEnd, departure: input.trip.departure });
+      reasons.push({
+        code: "downtime_after_departure",
+        earliestEnd,
+        departure: input.trip.departure,
+        extendDays: dayNumber(earliestEnd) - dayNumber(input.trip.departure),
+        suggestion: "check_stay_extension",
+      });
     }
   }
 
@@ -182,7 +202,13 @@ function warningsFor(procedure: Procedure, input: ProcedureFilterInput): Warning
   if (input.trip && downtime) {
     const latestEnd = addDays(input.trip.arrival, downtime.max);
     if (dayNumber(latestEnd) > dayNumber(input.trip.departure)) {
-      warnings.push({ code: "downtime_may_overlap_departure", latestEnd, departure: input.trip.departure });
+      warnings.push({
+        code: "downtime_may_overlap_departure",
+        latestEnd,
+        departure: input.trip.departure,
+        daysOver: dayNumber(latestEnd) - dayNumber(input.trip.departure),
+        suggestion: "check_stay_extension",
+      });
     }
   }
   if (input.maxPain && procedure.pain && PAIN_RANK[procedure.pain] > PAIN_RANK[input.maxPain]) {
