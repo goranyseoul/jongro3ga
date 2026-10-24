@@ -363,7 +363,14 @@
       "shared": "匿名共享: 开",
       "notShared": "匿名共享: 关",
       "fromBooking": "由预约自动记录",
-      "rating": "满意度 {n}/5"
+      "rating": "满意度 {n}/5",
+      "search": "搜索项目",
+      "searchPlaceholder": "例: 丽珠兰",
+      "all": "全部",
+      "noMatch": "没有该项目的记录。",
+      "month": "{count}条 · 共 {total}",
+      "unknownDay": "{month} (日期不记得)",
+      "summary": "自{first}起{count}次 · 共 {total}"
     },
     "calendar": {
       "title": "日历",
@@ -375,7 +382,34 @@
       "empty": "这一天没有记录。",
       "hasEvents": "{n}项安排",
       "doneSession": "第{n}次 已完成",
-      "plannedSession": "第{n}次 预定"
+      "plannedSession": "第{n}次 预定",
+      "monthTotal": "本月 {count}条 · 共 {total}",
+      "monthNone": "本月没有记录。"
+    },
+    "plan": {
+      "title": "我的护理计划",
+      "lead": "将记录与各项目的建议周期对比，告诉你下一步该做什么。"
+    },
+    "cycle": {
+      "course": "建议: 每隔{interval}天做{count}次，之后{every}",
+      "maintenance": "建议: {every}",
+      "range": "每{min}~{max}天",
+      "every": "每{days}天"
+    },
+    "point": {
+      "courseOnTrack": "{count}次中已完成{done}次。建议在{days}天内做第{next}次。",
+      "courseLate": "{count}次中已完成{done}次，距上次已{since}天。比建议间隔晚了{late}天。",
+      "early": "距上次{since}天。距下次护理还有{days}天。",
+      "window": "距上次{since}天。现在正是护理的好时机。",
+      "late": "距上次{since}天。已超过建议周期{late}天。"
+    },
+    "top": {
+      "title": "常做的项目",
+      "count": "{n}次",
+      "last": "上次 {date}",
+      "total": "共 {amount}",
+      "more": "查看更多 ({n})",
+      "less": "收起"
     }
   },
   "recordsNew": {
@@ -403,7 +437,9 @@
       "next": "下次时间",
       "all": "查看记录",
       "another": "继续添加"
-    }
+    },
+    "month": "做项目的月份",
+    "dateUnknown": "不记得具体日期 (只记月份)"
   },
   "outcomes": {
     "metaTitle": "施术记录",

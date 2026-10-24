@@ -212,6 +212,8 @@ export interface TreatmentRecord {
   customerId: string;
   procedureId: ProcedureId;
   date: IsoDate;
+  /** "month" when the customer remembers only the month; date is then the 1st of that month. */
+  datePrecision?: "day" | "month";
   amount?: Amount;
   priceKrw?: Krw;
   clinicId?: string;
@@ -521,7 +523,68 @@ export function consentsFor(profile: CustomerProfile): ConsentEntry[] {
 // ---------------------------------------------------------------------------
 
 export const TREATMENT_RECORDS: TreatmentRecord[] = [
-  // Jisoo (34, Seoul): regular Rejuran and Botox
+  // Jisoo (34, Seoul): regular Rejuran and Botox, plus older sessions entered from memory
+  {
+    id: "rec_jisoo_h1",
+    customerId: "cus_jisoo",
+    procedureId: "rejuran_healer",
+    date: "2024-12-09",
+    amount: { value: 2, unit: "cc" },
+    priceKrw: 330000,
+    clinicName: "서울글로우의원",
+    source: "onboarding_history",
+    sessionNumber: 1,
+    nextDue: "2025-01-08",
+    status: "active",
+    sharedToPlatform: true,
+  },
+  {
+    id: "rec_jisoo_h2",
+    customerId: "cus_jisoo",
+    procedureId: "rejuran_healer",
+    date: "2025-01-01",
+    datePrecision: "month",
+    amount: { value: 2, unit: "cc" },
+    priceKrw: 330000,
+    clinicName: "서울글로우의원",
+    source: "onboarding_history",
+    sessionNumber: 2,
+    nextDue: "2025-01-31",
+    status: "active",
+    sharedToPlatform: true,
+  },
+  {
+    id: "rec_jisoo_h3",
+    customerId: "cus_jisoo",
+    procedureId: "thermage_flx",
+    date: "2025-11-08",
+    amount: { value: 600, unit: "shot" },
+    priceKrw: 1900000,
+    clinicId: "cln_dahye",
+    clinicName: "다혜피부과의원",
+    source: "manual",
+    rating: 4,
+    sessionNumber: 1,
+    nextDue: "2026-09-04",
+    status: "active",
+    sharedToPlatform: true,
+  },
+  {
+    id: "rec_jisoo_h4",
+    customerId: "cus_jisoo",
+    procedureId: "shrink_universe",
+    date: "2026-06-20",
+    amount: { value: 300, unit: "shot" },
+    priceKrw: 150000,
+    clinicId: "cln_dahye",
+    clinicName: "다혜피부과의원",
+    source: "manual",
+    rating: 3,
+    sessionNumber: 1,
+    nextDue: "2026-07-20",
+    status: "paused",
+    sharedToPlatform: true,
+  },
   {
     id: "rec_jisoo_01",
     customerId: "cus_jisoo",

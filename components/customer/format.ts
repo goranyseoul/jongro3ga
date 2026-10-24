@@ -30,6 +30,25 @@ export function formatDay(date: IsoDate, locale: Locale): string {
   }
 }
 
+/** "2026-11" as "2026年11月", "2026年11月", "Nov 2026", "2026년 11월". */
+export function formatMonth(month: string, locale: Locale): string {
+  const [y, m] = month.split("-").map(Number) as [number, number];
+  switch (locale) {
+    case "ja":
+    case "zh-CN":
+      return `${y}年${m}月`;
+    case "en":
+      return `${MONTH_EN[m - 1]} ${y}`;
+    case "ko":
+      return `${y}년 ${m}월`;
+  }
+}
+
+/** Short weekday names, Sunday first. */
+export function weekdayNames(locale: Locale): string[] {
+  return WEEKDAY[locale];
+}
+
 export function formatTime(dateTime: IsoDateTime): string {
   return dateTime.slice(11, 16);
 }
