@@ -21,12 +21,23 @@ import {
   type DateRange,
 } from "@/components/ui";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
+import { ClinicCarousel } from "@/components/customer/clinic-carousel";
 import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
 import { cn } from "@/lib/cn";
 import { DEMO_TODAY } from "@/lib/ui-data/customer";
+import {
+  CATEGORY_NAME,
+  CATEGORY_ORDER,
+  DIRECTORY,
+  clinicsForTopic,
+  findProcedure,
+  procedureLabel,
+  type DirectoryTopic,
+} from "@/lib/ui-data/directory";
+import { LandingHome } from "../landing-home";
 import { LOCALES, LOCALE_NAME } from "../locales";
 import { FaceParticles } from "../hero/face-particles";
 import { Splash } from "../hero/splash";
@@ -60,7 +71,8 @@ import {
   type StepId,
 } from "./mock";
 
-type Message = { id: string; from: "agent" | "user"; text: string };
+type Message = { id: string; from: "agent" | "user"; text: string; clinics?: { ids: string[]; focus: string[] } };
+type AgentLine = string | { text: string; clinics: { ids: string[]; focus: string[] } };
 
 const shortDate = (iso: string) => iso.slice(5).replace("-", "/");
 const tripRange = (d: Draft) =>
@@ -163,12 +175,14 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   }, [messages, typing, step, pickingEdit]);
 
   const message = (from: Message["from"], text: string): Message => ({ id: `m${nextId.current++}`, from, text });
+  const agentMessage = (line: AgentLine): Message =>
+    typeof line === "string" ? message("agent", line) : { ...message("agent", line.text), clinics: line.clinics };
 
-  const agentSays = (lines: string[], then?: () => void) => {
+  const agentSays = (lines: AgentLine[], then?: () => void) => {
     setTyping(true);
     timers.current.push(
       window.setTimeout(() => {
-        setMessages((prev) => [...prev, ...lines.map((line) => message("agent", line))]);
+        setMessages((prev) => [...prev, ...lines.map(agentMessage)]);
         setTyping(false);
         then?.();
       }, REPLY_DELAY_MS),
@@ -193,8 +207,41 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     agentSays(lines, () => setStep(target));
   };
 
-  // First message from the landing: keep it as firstIntent, then start onboarding at the locale step.
-  const start = (intent?: string) => {
+  // Reads a typed sentence as a directory topic: a procedure name first, then a treatment group, then an area.
+  const topicFromText = (text: string): DirectoryTopic | undefined => {
+    const procedure = findProcedure(text);
+    if (procedure) return { kind: "procedure", id: procedure.id };
+    const lower = text.toLowerCase();
+    const category = CATEGORY_ORDER.find((area) =>
+      Object.values(CATEGORY_NAME[area]).some((name) => name && lower.includes(name.toLowerCase())),
+    );
+    if (category) return { kind: "category", id: category };
+    const area = AREAS.find((a) => a !== "other" && lower.includes(c.area[a].toLowerCase()));
+    return area ? { kind: "area", id: area } : undefined;
+  };
+
+  // What the agent shows from the directory for a topic, before onboarding continues.
+  const directoryAnswer = (topic: DirectoryTopic): AgentLine => {
+    const clinics = clinicsForTopic(topic);
+    if (clinics.length === 0) return c.resultsNone;
+    const focus = topic.kind === "procedure" ? [topic.id] : topic.kind === "procedures" ? topic.ids : [];
+    const subject =
+      topic.kind === "procedure"
+        ? procedureLabel(topic.id, locale)
+        : topic.kind === "procedures"
+          ? topic.ids.map((id) => procedureLabel(id, locale)).join(" · ")
+          : topic.kind === "category"
+            ? (CATEGORY_NAME[topic.id][locale] ?? CATEGORY_NAME[topic.id].en ?? topic.id)
+            : topic.kind === "area"
+              ? c.area[topic.id]
+              : "";
+    const text = topic.kind === "all" ? c.resultsAll(clinics.length) : c.results(subject, clinics.length);
+    return { text, clinics: { ids: clinics.map((clinic) => clinic.id), focus } };
+  };
+
+  // First message from the landing: keep it as firstIntent, answer from the directory when the message names
+  // a procedure, group or area, then start onboarding at the locale step.
+  const start = (intent?: string, topic?: DirectoryTopic) => {
     setStarted(true);
     if (!intent) {
       agentSays([c.say.locale]);
@@ -202,7 +249,8 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     }
     setMessages([message("user", intent)]);
     setDraft({ ...EMPTY_DRAFT, firstIntent: intent });
-    agentSays([c.say.intentAck(intent), c.say.locale]);
+    const resolved = topic ?? topicFromText(intent);
+    agentSays(resolved ? [directoryAnswer(resolved), c.say.locale] : [c.say.intentAck(intent), c.say.locale]);
   };
 
   const nudge = (userText: string, line: string) => {
@@ -594,11 +642,11 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   // One screen for both phases: the sunrise backdrop and the face stay mounted, the hero copy turns into
   // the conversation in place, and the input stays where it was.
   const heroMain = (
-    <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-16">
-      <h1 className="sr-only">
-        {intro.wordmark} · {intro.title}
-      </h1>
-      <p className="sr-only">{intro.body}</p>
+    <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-12">
+      <div className="mb-sp-6 flex w-full max-w-2xl flex-col items-center gap-sp-2 text-center">
+        <h1 className="type-hero text-balance">{intro.title}</h1>
+        <p className="text-balance text-body text-muted">{intro.body}</p>
+      </div>
       <div
         className="flex w-full max-w-2xl flex-col gap-sp-6"
         onFocus={() => setEngaged(true)}
@@ -634,9 +682,18 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">
           <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
             {messages.map((m) => (
-              <ChatBubble key={m.id} from={m.from}>
-                {m.text}
-              </ChatBubble>
+              <div key={m.id} className="flex flex-col gap-sp-2">
+                <ChatBubble from={m.from}>{m.text}</ChatBubble>
+                {m.clinics ? (
+                  <ClinicCarousel
+                    clinics={m.clinics.ids.flatMap((id) => DIRECTORY.filter((clinic) => clinic.id === id))}
+                    focus={m.clinics.focus}
+                    locale={locale}
+                    areaName={(area) => c.area[area]}
+                    labels={c.clinicCard}
+                  />
+                ) : null}
+              </div>
             ))}
             {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
             {!typing ? widget() : null}
@@ -654,34 +711,37 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
           />
         </div>
       </div>
-      <aside className="hidden w-80 shrink-0 overflow-y-auto py-sp-4 lg:block">{checklist}</aside>
+      <aside className="hidden w-full max-w-xs shrink-0 overflow-y-auto py-sp-4 lg:block">{checklist}</aside>
     </main>
   );
 
   return (
     <div lang={locale} className={cn("flex flex-col", started ? "h-dvh" : "min-h-dvh")}>
       {started ? null : <Splash wordmark={intro.wordmark} />}
-      <section className={cn("theme-sunrise relative flex flex-col overflow-hidden", started ? "min-h-0 flex-1" : "min-h-dvh")}>
-        <FaceParticles className="absolute inset-0" shrink={engaged || started} />
-        <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
-          <span className="type-hero">{intro.wordmark}</span>
-          {started ? (
-            <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
-              <span className="tabular-nums">{c.progress(percent)}</span>
-            </Button>
-          ) : (
-            <Button
-              variant="secondary"
-              aria-expanded={signupOpen}
-              aria-haspopup="dialog"
-              onClick={() => setSignupOpen((open) => !open)}
-            >
-              {intro.signup.toggle}
-            </Button>
-          )}
-        </header>
-        {started ? chatMain : heroMain}
-      </section>
+      <div className={cn("theme-sunrise relative flex flex-col", started && "min-h-0 flex-1 overflow-hidden")}>
+        <section className={cn("relative flex flex-col overflow-hidden", started && "min-h-0 flex-1")}>
+          <FaceParticles className="absolute inset-0" shrink={engaged || started} />
+          <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+            <span className="type-hero">{intro.wordmark}</span>
+            {started ? (
+              <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
+                <span className="tabular-nums">{c.progress(percent)}</span>
+              </Button>
+            ) : (
+              <Button
+                variant="secondary"
+                aria-expanded={signupOpen}
+                aria-haspopup="dialog"
+                onClick={() => setSignupOpen((open) => !open)}
+              >
+                {intro.signup.toggle}
+              </Button>
+            )}
+          </header>
+          {started ? chatMain : heroMain}
+        </section>
+        {started ? null : <LandingHome locale={locale} onAsk={(text, topic) => start(text, topic)} />}
+      </div>
       {started ? null : footer}
       {/* dialogs sit outside the sunrise section so they keep the default dark tokens */}
       <AuthDialog

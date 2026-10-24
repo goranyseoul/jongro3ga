@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button, Card } from "@/components/ui";
+import { formatMonth, moneyText, weekdayNames } from "@/components/customer/format";
 import { useLabels } from "@/components/customer/use-customer";
+import type { Locale } from "@/lib/domain/common";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
 import { DEMO_TODAY, upcomingSessionNumber, type TreatmentRecord } from "@/lib/ui-data/customer";
@@ -29,7 +31,8 @@ function shiftMonth(month: string, delta: number): string {
 function calendarEvents(records: TreatmentRecord[], latest: TreatmentRecord[]): Map<string, CalendarEvent[]> {
   const byDate = new Map<string, CalendarEvent[]>();
   const add = (date: string, event: CalendarEvent) => byDate.set(date, [...(byDate.get(date) ?? []), event]);
-  for (const record of records) add(record.date, { id: `${record.id}-done`, kind: "done", record, session: record.sessionNumber });
+  // Records with only a month have no day to sit on; they still count in the month summary.
+  for (const record of records.filter((r) => r.datePrecision !== "month")) add(record.date, { id: `${record.id}-done`, kind: "done", record, session: record.sessionNumber });
   for (const record of latest) {
     if (record.status === "active" && record.nextDue) {
       add(record.nextDue, { id: `${record.id}-planned`, kind: "planned", record, session: upcomingSessionNumber(record) });
@@ -45,7 +48,7 @@ export function RecordsCalendar({
 }: {
   records: TreatmentRecord[];
   latest: TreatmentRecord[];
-  locale: string;
+  locale: Locale;
 }) {
   const t = useTranslations("records.calendar");
   const label = useLabels();
@@ -53,14 +56,10 @@ export function RecordsCalendar({
   const [selected, setSelected] = useState(DEMO_TODAY);
 
   const events = calendarEvents(records, latest);
-  const [y, m] = month.split("-").map(Number) as [number, number];
-  const monthTitle = new Intl.DateTimeFormat(locale, { year: "numeric", month: "long", timeZone: "UTC" }).format(
-    new Date(Date.UTC(y, m - 1, 1)),
-  );
-  // 2026-11-01 is a Sunday, so the next seven days give the weekday names in order.
-  const weekdays = Array.from({ length: 7 }, (_, i) =>
-    new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2026, 10, 1 + i))),
-  );
+  const monthTitle = formatMonth(month, locale);
+  const weekdays = weekdayNames(locale);
+  const monthRecords = records.filter((r) => r.date.startsWith(month));
+  const monthTotal = monthRecords.reduce((sum, r) => sum + (r.priceKrw ?? 0), 0);
   const selectedEvents = events.get(selected) ?? [];
 
   return (
@@ -128,6 +127,12 @@ export function RecordsCalendar({
             );
           })}
         </div>
+
+        <p className="text-label text-muted tabular-nums">
+          {monthRecords.length === 0
+            ? t("monthNone")
+            : t("monthTotal", { count: monthRecords.length, total: moneyText(monthTotal, locale) })}
+        </p>
 
         <div className="flex flex-wrap gap-sp-4 text-label text-muted">
           <span className="flex items-center gap-sp-2">

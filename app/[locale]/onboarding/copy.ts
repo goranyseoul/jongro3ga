@@ -1,3 +1,4 @@
+import type { ClinicCardLabels } from "@/components/customer/clinic-carousel";
 import type { Locale } from "@/lib/domain/common";
 import type { AgeBand, Area, Channel, Concern, ConsentType, NationalityOption, Residency, SlotKey } from "./mock";
 
@@ -55,6 +56,10 @@ export type OnboardingCopy = {
   summary: { title: string; create: string; edit: string };
   doneTitle: string;
   taskStatus: { pending: string; active: string; done: string; error: string };
+  results: (subject: string, n: number) => string;
+  resultsAll: (n: number) => string;
+  resultsNone: string;
+  clinicCard: ClinicCardLabels;
   goHome: string;
   slots: Record<SlotKey, string>;
   consents: Record<ConsentType, { title: string; description: string }>;
@@ -126,6 +131,19 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     summary: { title: "에이전트 요약", create: "만들기", edit: "수정하기" },
     doneTitle: "에이전트 활성화됨",
     taskStatus: { pending: "대기", active: "진행 중", done: "완료", error: "확인 필요" },
+    results: (s, n) => `${s} 조건에 맞는, 기준을 통과한 클리닉은 ${n}곳이에요. 카드를 옆으로 넘겨 보세요. 견적은 에이전트를 만든 뒤 대신 받아 드릴게요.`,
+    resultsAll: (n) => `기준을 통과한 클리닉은 모두 ${n}곳이에요. 카드를 옆으로 넘겨 보세요. 견적은 에이전트를 만든 뒤 대신 받아 드릴게요.`,
+    resultsNone: "아직 이 조건에 맞는 클리닉이 없어요. 에이전트를 만들면 조건을 넓혀 다시 찾아볼게요.",
+    clinicCard: {
+      standards: (k, n) => `기준 ${k}/${n} 확인`,
+      details: "기준 보기",
+      hide: "접기",
+      checked: "확인됨",
+      unchecked: "확인 전",
+      proxy: "PibooK 대행 응답",
+      direct: "병원 직접 응답",
+      demo: "가상 데이터예요.",
+    },
     goHome: "홈으로 가기",
     slots: {
       locale: "언어",
@@ -229,6 +247,19 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     summary: { title: "エージェントの内容", create: "作成する", edit: "修正する" },
     doneTitle: "エージェント有効",
     taskStatus: { pending: "待機", active: "進行中", done: "完了", error: "要確認" },
+    results: (s, n) => `${s}の条件に合う、基準を通過したクリニックは${n}院です。カードを横にスワイプしてご覧ください。見積もりは、エージェントを作ってから代わりに集めます。`,
+    resultsAll: (n) => `基準を通過したクリニックは全部で${n}院です。カードを横にスワイプしてご覧ください。見積もりは、エージェントを作ってから代わりに集めます。`,
+    resultsNone: "この条件に合うクリニックはまだありません。エージェントを作ったら、条件を広げて探し直します。",
+    clinicCard: {
+      standards: (k, n) => `基準 ${k}/${n} 確認済み`,
+      details: "基準を見る",
+      hide: "閉じる",
+      checked: "確認済み",
+      unchecked: "未確認",
+      proxy: "PibooKが代理で回答",
+      direct: "クリニックが直接回答",
+      demo: "架空のデータです。",
+    },
     goHome: "ホームへ",
     slots: {
       locale: "言語",
@@ -332,6 +363,19 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     summary: { title: "Agent summary", create: "Create", edit: "Edit" },
     doneTitle: "Agent active",
     taskStatus: { pending: "Pending", active: "In progress", done: "Done", error: "Needs attention" },
+    results: (s, n) => `${n} clinics that pass our standards match "${s}". Swipe through the cards. Once your agent is set up, I'll collect quotes for you.`,
+    resultsAll: (n) => `${n} clinics pass our standards. Swipe through the cards. Once your agent is set up, I'll collect quotes for you.`,
+    resultsNone: "No clinic matches this yet. Once your agent is set up, I'll widen the search.",
+    clinicCard: {
+      standards: (k, n) => `${k}/${n} standards checked`,
+      details: "See standards",
+      hide: "Hide",
+      checked: "Checked",
+      unchecked: "Not yet checked",
+      proxy: "PibooK answers for the clinic",
+      direct: "Answered by the clinic",
+      demo: "Fictional data.",
+    },
     goHome: "Go to home",
     slots: {
       locale: "Language",
@@ -441,6 +485,19 @@ export const COPY: Record<Locale, OnboardingCopy> = {
     summary: { title: "代理概要", create: "创建", edit: "修改" },
     doneTitle: "代理已启用",
     taskStatus: { pending: "待处理", active: "进行中", done: "已完成", error: "需处理" },
+    results: (s, n) => `符合「${s}」条件、通过标准的诊所共有 ${n} 家。左右滑动卡片查看。创建代理后,我会替您收集报价。`,
+    resultsAll: (n) => `通过标准的诊所共有 ${n} 家。左右滑动卡片查看。创建代理后,我会替您收集报价。`,
+    resultsNone: "暂时没有符合这个条件的诊所。创建代理后,我会放宽条件再找。",
+    clinicCard: {
+      standards: (k, n) => `已核查 ${k}/${n} 项标准`,
+      details: "查看标准",
+      hide: "收起",
+      checked: "已核查",
+      unchecked: "未核查",
+      proxy: "PibooK 代为回复",
+      direct: "诊所直接回复",
+      demo: "这是虚拟数据。",
+    },
     goHome: "进入首页",
     slots: {
       locale: "语言",
