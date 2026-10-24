@@ -128,7 +128,7 @@ export function DemoConsole() {
               공개 원장
             </Link>
             <Link href="/demo/wallet" className={buttonStyles({ variant: "secondary" })}>
-              브라우저 지갑
+              브라우저 보관함
             </Link>
             <Link href="/ops/clinics" className={buttonStyles({ variant: "secondary" })}>
               운영 콘솔 열기

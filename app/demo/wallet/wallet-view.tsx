@@ -178,11 +178,11 @@ export function WalletView() {
   return (
     <>
       <PageHeader
-        title="브라우저 지갑"
-        description="차트와 솔트는 이 브라우저의 localStorage에만 있어 밖으로 나가지 않고, 체인에 앵커된 적 없는 새 가명이라 첫 방문 오퍼만 증명할 수 있어요."
+        title="브라우저 보관함"
+        description="차트와 솔트는 이 브라우저의 localStorage에만 있어 밖으로 나가지 않고, 체인에 앵커된 적 없는 새 익명 ID라 첫 방문 오퍼만 증명할 수 있어요."
         action={
           <Button variant="secondary" onClick={reset} disabled={!wallet || busyOffer !== null}>
-            가명 새로 만들기
+            익명 ID 새로 만들기
           </Button>
         }
       />
@@ -195,10 +195,10 @@ export function WalletView() {
       ) : null}
 
       <Card className="flex flex-col gap-sp-4">
-        <CardHeader title="기기 지갑" description="이 브라우저에만 저장된 가명과 차트예요. 서버로 보내지 않아요." as="h2" />
+        <CardHeader title="이 기기의 보관함" description="이 브라우저에만 저장된 익명 ID와 차트예요. 서버로 보내지 않아요." as="h2" />
         {wallet ? (
           <dl className="grid grid-cols-1 gap-sp-4 sm:grid-cols-2">
-            <Field label="가명" value={shortHex(wallet.subjectId)} title={wallet.subjectId} />
+            <Field label="익명 ID" value={shortHex(wallet.subjectId)} title={wallet.subjectId} />
             <Field
               label="로컬 차트 해시"
               title={commitment ?? undefined}
@@ -218,7 +218,7 @@ export function WalletView() {
             <Field label="체인 상태" value="앵커된 적 없음 (빈 차트로 간주)" />
           </dl>
         ) : (
-          <p className="text-label text-muted">지갑을 여는 중</p>
+          <p className="text-label text-muted">보관함을 여는 중</p>
         )}
       </Card>
 
@@ -306,7 +306,7 @@ function OfferRow({ offer, eligible, run, canProve, busy, onProve, onVerify }: O
           <p className="flex items-baseline gap-sp-2">
             <span className="text-label text-muted">{offer.clinic} 검증</span>
             <StatusText tone={run.result.ok ? "success" : "danger"}>{run.result.ok ? "통과" : "실패"}</StatusText>
-            {run.result.unanchored ? <span className="text-caption text-subtle">앵커 안 된 가명</span> : null}
+            {run.result.unanchored ? <span className="text-caption text-subtle">앵커 안 된 익명 ID</span> : null}
           </p>
           <p className="text-caption text-muted">{run.result.reason}</p>
         </div>

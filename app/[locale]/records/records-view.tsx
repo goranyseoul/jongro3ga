@@ -510,7 +510,7 @@ function Provenance({ record }: { record: TreatmentRecord }) {
     const tx = shortHex(record.anchor.tx);
     return (
       <li>
-        {t("anchored", { version: record.anchor.version })} ·{" "}
+        {t("anchored")} ·{" "}
         <a
           href={txUrl(record.anchor.tx)}
           target="_blank"
