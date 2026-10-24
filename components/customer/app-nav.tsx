@@ -1,5 +1,6 @@
 "use client";
 
+import { FiSettings } from "react-icons/fi";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
@@ -36,5 +37,27 @@ export function AppNav({ items, label }: { items: AppNavItem[]; label: string })
         })}
       </ul>
     </nav>
+  );
+}
+
+// Settings sits apart from the tabs: a gear at the far right of the header on every screen size.
+export function SettingsLink({ href, label }: { href: string; label: string }) {
+  const pathname = usePathname();
+  const active = pathname === href || pathname.startsWith(`${href}/`);
+
+  return (
+    <Link
+      href={href}
+      aria-label={label}
+      title={label}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "inline-flex min-h-touch min-w-touch items-center justify-center rounded-md text-title transition-colors duration-press ease-out",
+        active ? "text-text" : "text-muted hover:text-text",
+        focusRing,
+      )}
+    >
+      <FiSettings aria-hidden />
+    </Link>
   );
 }
