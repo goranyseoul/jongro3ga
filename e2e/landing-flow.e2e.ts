@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { LANDING_COPY } from "../app/[locale]/landing-copy";
+import { COPY } from "../app/[locale]/onboarding/copy";
 import { LOCALES, LOCALE_NAME } from "../app/[locale]/locales";
 
 // What these checks guard: tapping something in the conversation must never throw the customer out of it,
@@ -89,6 +90,47 @@ test.describe("returning visit", () => {
       expect(problems).toEqual([]);
     });
   }
+
+  test("the current language is never a navigation, in the header or in the conversation", async ({ page }) => {
+    const problems = watch(page);
+    await page.goto("/ko");
+    await page.waitForLoadState("networkidle");
+    const navigations: string[] = [];
+    page.on("framenavigated", (frame) => frame === page.mainFrame() && navigations.push(frame.url()));
+
+    // the header shows the current language as text, so there is nothing to follow
+    const current = page.locator('header nav [aria-current="true"]');
+    await expect(current).toHaveText(LOCALE_NAME.ko);
+    expect(await current.evaluate((element) => element.tagName)).not.toBe("A");
+    await current.click();
+
+    // in the conversation the current language is an answer: the next question comes, the page stays
+    await page.getByRole("button", { name: ko.agentWindow.open }).click();
+    await agentWindow(page).getByRole("button", { name: LOCALE_NAME.ko }).click();
+    await expect(agentWindow(page).getByRole("button", { name: COPY.ko.agree, exact: true }).first()).toBeVisible();
+    expect(navigations).toEqual([]);
+    expect(problems).toEqual([]);
+  });
+
+  test("a language switch mid-conversation resumes the same onboarding session", async ({ page }) => {
+    const problems = watch(page);
+    const sessions: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().endsWith("/api/onboarding/customer")) sessions.push(JSON.parse(request.postData() ?? "{}").sessionId);
+    });
+    await page.goto("/ko");
+    const hero = page.locator('[data-tour="input"] textarea');
+    await hero.fill("리쥬란 알아보고 싶어요");
+    await hero.press("Enter");
+    await agentWindow(page).getByRole("button", { name: LOCALE_NAME.en }).click();
+
+    await expect(page).toHaveURL(/\/en$/);
+    const window = agentWindow(page, LANDING_COPY.en.agentWindow.title);
+    await expect(window.getByRole("button", { name: COPY.en.agree, exact: true }).first()).toBeVisible();
+    await expect(window.getByRole("log")).toContainText("리쥬란 알아보고 싶어요"); // the earlier lines came along
+    expect(new Set(sessions).size).toBe(1); // and the server kept the same conversation
+    expect(problems).toEqual([]);
+  });
 
   test("a topic card answers in the window and leaves the page where it is", async ({ page }) => {
     const problems = watch(page);
