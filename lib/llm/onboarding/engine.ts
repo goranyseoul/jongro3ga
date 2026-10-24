@@ -555,9 +555,12 @@ export async function runOnboardingTurn(request: OnboardingRequest, deps: TurnDe
   const finalState: OnboardingTurnState = { ...stateFor(session.draft, session.editing), finished, nextSlot: next };
   let text = sanitizeText(result.text);
   // Live output that diagnoses, recommends, or asks about health before the consent is replaced (08 section 6).
+  // Explaining what the consent cards cover is allowed while they are on screen.
+  const explainingConsent = widget?.slot === "consents";
   const unsafe =
     llmMode() === "live" &&
-    (findMedicalViolations(text).length > 0 || (!hasSensitiveConsent(session.draft) && mentionsSensitiveTopic(text)));
+    (findMedicalViolations(text).length > 0 ||
+      (!hasSensitiveConsent(session.draft) && !explainingConsent && mentionsSensitiveTopic(text)));
   if (!text || unsafe) {
     text = finished ? sanitizeText(resolveFixture(optionsFor(finalState)).text) : safeQuestion(finalState);
   }
