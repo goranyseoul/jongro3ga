@@ -373,10 +373,6 @@
       "session": "{n}회차",
       "shared": "익명 공유: 켬",
       "notShared": "익명 공유: 끔",
-      "anchored": "병원 확인 · 체인 기록 v{version}",
-      "clinicConfirmed": "병원 확인",
-      "selfReported": "직접 입력 · 혜택 증명에는 쓰이지 않아요",
-      "txLabel": "Base Sepolia에서 거래 보기 (새 창)",
       "fromBooking": "예약에서 자동 기록",
       "rating": "만족도 {n}/5",
       "search": "시술 검색",
@@ -389,6 +385,10 @@
       "pages": "페이지",
       "prevPage": "이전 페이지",
       "nextPage": "다음 페이지",
+      "anchored": "병원 확인 · 위변조 방지",
+      "clinicConfirmed": "병원 확인",
+      "selfReported": "직접 입력 · 혜택 증명에는 쓰이지 않아요",
+      "txLabel": "Base Sepolia에서 거래 보기 (새 창)",
       "preset": {
         "procedure": "시술",
         "area": "부위",
@@ -561,20 +561,19 @@
       "lead": "내 에이전트가 다른 에이전트에게 보여주는 정보예요."
     },
     "wallet": {
-      "title": "기록 지갑",
+      "title": "내 기록 보관함",
       "lead": "병원이 받는 것은 혜택 조건 충족 여부뿐이에요. 시술 날짜·병원·횟수는 이 기기에만 있어요.",
-      "subject": "가명",
-      "commitment": "온체인 차트 해시",
+      "subject": "익명 ID",
+      "commitment": "위변조 확인 코드",
       "none": "없음",
-      "version": "버전",
-      "anchored": "앵커된 기록 수",
+      "anchored": "병원 확인 기록",
       "anchoredValue": "{n}건",
       "network": "{network} 테스트넷 · 데모",
       "ledger": "공개 원장 보기"
     },
     "export": {
       "title": "데이터 내보내기",
-      "body": "프로필, 동의, 시술 기록, 기록 지갑을 JSON으로 저장해요.",
+      "body": "프로필, 동의, 시술 기록, 기록 보관함을 JSON으로 저장해요.",
       "button": "JSON 내보내기"
     },
     "remove": {

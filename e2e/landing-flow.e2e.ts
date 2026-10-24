@@ -138,10 +138,11 @@ test.describe("returning visit", () => {
     await page.goto("/en");
     await page.getByRole("link", { name: LANDING_COPY.en.signup.toggle }).click();
     await expect(page).toHaveURL(/\/en\/signup$/);
-    const email = page.getByRole("textbox").first();
-    await email.fill("visitor@example.com");
-    await email.press("Enter");
-    await expect(page).toHaveURL(/\/en$/);
+    await page.getByLabel(/email/i).first().fill(`visitor-${Date.now()}@example.com`);
+    await page.locator('input[type="password"]').fill("pibook-demo-pass");
+    await page.locator('input[type="password"]').press("Enter");
+    // the first sign-up also creates the local database
+    await expect(page).toHaveURL(/\/en$/, { timeout: 30_000 });
     await expect(agentWindow(page, LANDING_COPY.en.agentWindow.title)).toBeVisible();
     expect(problems).toEqual([]);
   });
@@ -155,10 +156,11 @@ test.describe("returning visit", () => {
     await expect(page.getByRole("button", { name: LANDING_COPY.en.startPlain })).toBeVisible();
 
     await page.goto("/en/signup");
-    const email = page.getByRole("textbox").first();
-    await email.fill("visitor@example.com");
-    await email.press("Enter");
-    await expect(page).toHaveURL(/\/en$/);
+    await page.getByLabel(/email/i).first().fill(`wordmark-${Date.now()}@example.com`);
+    await page.locator('input[type="password"]').fill("pibook-demo-pass");
+    await page.locator('input[type="password"]').press("Enter");
+    // the first sign-up also creates the local database
+    await expect(page).toHaveURL(/\/en$/, { timeout: 30_000 });
     await page.getByRole("link", { name: "PibooK" }).first().click();
     await expect(page).toHaveURL(/\/en\/home$/);
   });

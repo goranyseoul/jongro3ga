@@ -21,8 +21,23 @@ export type LandingCopy = {
     region: string;
     steps: { title: string; body: string }[];
   };
-  /** Link to the sign-up page. */
-  signup: { toggle: string };
+  signup: {
+    /** The sign-up link (to /signup). The rest is the log-in dialog that ?auth= opens on the landing. */
+    toggle: string;
+    title: string;
+    email: string;
+    submit: string;
+    demo: string;
+    close: string;
+    password: string;
+    loginTitle: string;
+    loginSubmit: string;
+    haveAccount: string;
+    loginLink: string;
+    noAccount: string;
+    signupLink: string;
+    demoNote: string;
+  };
   footer: {
     regLabel: string;
     regDemo: string;
@@ -60,7 +75,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "登録すると記録が残ります", body: "デモなので、登録しなくても会話を始められます。" },
       ],
     },
-    signup: { toggle: "会員登録" },
+    signup: { toggle: "会員登録", title: "会員登録", email: "メールアドレス", submit: "登録して始める", demo: "デモアカウントで試す", close: "閉じる", password: "パスワード", loginTitle: "ログイン", loginSubmit: "ログイン", haveAccount: "すでにアカウントをお持ちですか？", loginLink: "ログイン", noAccount: "アカウントをお持ちでないですか？", signupLink: "会員登録", demoNote: "デモでは実際のアカウントは作成されません。" },
     footer: {
       regLabel: "外国人患者誘致事業者 登録番号",
       regDemo: "デモ",
@@ -96,7 +111,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "注册后会保留记录", body: "这是演示，不注册也可以开始对话。" },
       ],
     },
-    signup: { toggle: "注册" },
+    signup: { toggle: "注册", title: "注册", email: "邮箱", submit: "注册并开始", demo: "使用演示账号", close: "关闭", password: "密码", loginTitle: "登录", loginSubmit: "登录", haveAccount: "已有账号？", loginLink: "登录", noAccount: "还没有账号？", signupLink: "注册", demoNote: "演示中不会创建真实账号。" },
     footer: {
       regLabel: "外国患者招揽业者 登记号",
       regDemo: "演示",
@@ -132,7 +147,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "Sign up to keep your records", body: "This is a demo, so you can start a conversation without an account." },
       ],
     },
-    signup: { toggle: "Sign up" },
+    signup: { toggle: "Sign up", title: "Sign up", email: "Email", submit: "Sign up and start", demo: "Try a demo account", close: "Close", password: "Password", loginTitle: "Log in", loginSubmit: "Log in", haveAccount: "Already have an account?", loginLink: "Log in", noAccount: "Don't have an account?", signupLink: "Sign up", demoNote: "No real account is created in the demo." },
     footer: {
       regLabel: "Foreign patient attraction agency registration no.",
       regDemo: "Demo",
@@ -168,7 +183,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "가입하면 기록이 남아요", body: "지금은 데모라 가입 없이도 대화를 시작할 수 있어요." },
       ],
     },
-    signup: { toggle: "회원가입" },
+    signup: { toggle: "회원가입", title: "회원가입", email: "이메일", submit: "가입하고 시작하기", demo: "데모 계정으로 해 보기", close: "닫기", password: "비밀번호", loginTitle: "로그인", loginSubmit: "로그인", haveAccount: "이미 계정이 있나요?", loginLink: "로그인", noAccount: "계정이 없나요?", signupLink: "회원가입", demoNote: "데모에서는 실제 계정을 만들지 않아요." },
     footer: {
       regLabel: "외국인환자 유치사업자 등록번호",
       regDemo: "데모",

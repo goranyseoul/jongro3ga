@@ -1,0 +1,542 @@
+[
+  {
+    "outcomeId": "out_burst_001",
+    "bookingId": "bkg_burst_001",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 412500,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 2,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.25,
+    "daysAgo": 1
+  },
+  {
+    "outcomeId": "out_burst_002",
+    "bookingId": "bkg_burst_002",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 414579,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2563,
+    "daysAgo": 2
+  },
+  {
+    "outcomeId": "out_burst_003",
+    "bookingId": "bkg_burst_003",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 416658,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "20-24"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2626,
+    "daysAgo": 4
+  },
+  {
+    "outcomeId": "out_burst_004",
+    "bookingId": "bkg_burst_004",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 418737,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2689,
+    "daysAgo": 5
+  },
+  {
+    "outcomeId": "out_burst_005",
+    "bookingId": "bkg_burst_005",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 420849,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 2,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2753,
+    "daysAgo": 7
+  },
+  {
+    "outcomeId": "out_burst_006",
+    "bookingId": "bkg_burst_006",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 422928,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2816,
+    "daysAgo": 8
+  },
+  {
+    "outcomeId": "out_burst_007",
+    "bookingId": "bkg_burst_007",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 425007,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "20-24"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2879,
+    "daysAgo": 10
+  },
+  {
+    "outcomeId": "out_burst_008",
+    "bookingId": "bkg_burst_008",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 427086,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.2942,
+    "daysAgo": 11
+  },
+  {
+    "outcomeId": "out_burst_009",
+    "bookingId": "bkg_burst_009",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 429165,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 2,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3005,
+    "daysAgo": 13
+  },
+  {
+    "outcomeId": "out_burst_010",
+    "bookingId": "bkg_burst_010",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 431244,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3068,
+    "daysAgo": 14
+  },
+  {
+    "outcomeId": "out_burst_011",
+    "bookingId": "bkg_burst_011",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 433356,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "20-24"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3132,
+    "daysAgo": 16
+  },
+  {
+    "outcomeId": "out_burst_012",
+    "bookingId": "bkg_burst_012",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 435435,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3195,
+    "daysAgo": 17
+  },
+  {
+    "outcomeId": "out_burst_013",
+    "bookingId": "bkg_burst_013",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 437514,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 2,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3258,
+    "daysAgo": 19
+  },
+  {
+    "outcomeId": "out_burst_014",
+    "bookingId": "bkg_burst_014",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 439593,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3321,
+    "daysAgo": 20
+  },
+  {
+    "outcomeId": "out_burst_015",
+    "bookingId": "bkg_burst_015",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 441672,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "20-24"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3384,
+    "daysAgo": 22
+  },
+  {
+    "outcomeId": "out_burst_016",
+    "bookingId": "bkg_burst_016",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 443751,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3447,
+    "daysAgo": 23
+  },
+  {
+    "outcomeId": "out_burst_017",
+    "bookingId": "bkg_burst_017",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 445863,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 2,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3511,
+    "daysAgo": 25
+  },
+  {
+    "outcomeId": "out_burst_018",
+    "bookingId": "bkg_burst_018",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 447942,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3574,
+    "daysAgo": 26
+  },
+  {
+    "outcomeId": "out_burst_019",
+    "bookingId": "bkg_burst_019",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 450021,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "20-24"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.3637,
+    "daysAgo": 28
+  },
+  {
+    "outcomeId": "out_burst_020",
+    "bookingId": "bkg_burst_020",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 452100,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than the quote at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.37,
+    "daysAgo": 29
+  }
+]

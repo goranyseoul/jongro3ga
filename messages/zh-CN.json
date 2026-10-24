@@ -373,10 +373,6 @@
       "session": "第{n}次",
       "shared": "匿名共享: 开",
       "notShared": "匿名共享: 关",
-      "anchored": "诊所确认 · 链上记录 v{version}",
-      "clinicConfirmed": "诊所确认",
-      "selfReported": "自行录入 · 不用于优惠证明",
-      "txLabel": "在 Base Sepolia 查看交易(新标签页)",
       "fromBooking": "由预约自动记录",
       "rating": "满意度 {n}/5",
       "search": "搜索项目",
@@ -389,6 +385,10 @@
       "pages": "页码",
       "prevPage": "上一页",
       "nextPage": "下一页",
+      "anchored": "诊所确认 · 防篡改",
+      "clinicConfirmed": "诊所确认",
+      "selfReported": "自行录入 · 不用于优惠证明",
+      "txLabel": "在 Base Sepolia 查看交易(新标签页)",
       "preset": {
         "procedure": "项目",
         "area": "部位",
@@ -561,20 +561,19 @@
       "lead": "这是您的代理向其他代理展示的信息。"
     },
     "wallet": {
-      "title": "记录钱包",
+      "title": "我的记录保管箱",
       "lead": "诊所只会知道您是否符合优惠条件。施术日期、诊所和次数只保存在这台设备上。",
-      "subject": "化名",
-      "commitment": "链上病历哈希",
+      "subject": "匿名 ID",
+      "commitment": "防篡改校验码",
       "none": "无",
-      "version": "版本",
-      "anchored": "已上链记录数",
+      "anchored": "诊所确认记录",
       "anchoredValue": "{n} 条",
       "network": "{network} 测试网 · 演示",
       "ledger": "查看公开账本"
     },
     "export": {
       "title": "导出数据",
-      "body": "以 JSON 保存个人资料、同意记录、施术记录和记录钱包。",
+      "body": "以 JSON 保存个人资料、同意记录、施术记录和记录保管箱。",
       "button": "导出 JSON"
     },
     "remove": {

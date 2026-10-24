@@ -20,8 +20,6 @@ export type DemoOutcome = {
 };
 
 export type DemoState = {
-  /** Set by the sign-up page (mock: no account backend). The wordmark then leads home instead of the landing. */
-  signedIn?: boolean;
   /** Nickname typed in onboarding; the seed profile name is used until then. */
   nickname?: string;
   requestStarted: boolean;

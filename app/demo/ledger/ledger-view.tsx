@@ -56,7 +56,7 @@ const columns: TableColumn<LedgerEvent>[] = [
   },
   {
     key: "subject",
-    header: "가명",
+    header: "익명 ID",
     cell: (event) => (
       <span className="tabular-nums" title={event.subjectId}>
         {shortHex(event.subjectId)}
@@ -65,7 +65,7 @@ const columns: TableColumn<LedgerEvent>[] = [
   },
   {
     key: "commitment",
-    header: "차트 해시",
+    header: "위변조 확인 코드",
     cell: (event) => (
       <span className="tabular-nums" title={event.commitment}>
         {shortHex(event.commitment)}
@@ -129,7 +129,7 @@ export function LedgerView() {
     <>
       <PageHeader
         title="공개 원장"
-        description="체인에 있는 것은 가명, 차트 해시, 버전, 날짜뿐이에요. 시술 종류, 병원, 이름은 없어요."
+        description="체인에 있는 것은 익명 ID, 위변조 확인 코드(차트 해시), 버전, 날짜뿐이에요. 시술 종류, 병원, 이름은 없어요."
         action={
           <Link href="/demo" className={buttonStyles({ variant: "secondary" })}>
             데모 컨트롤

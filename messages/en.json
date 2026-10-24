@@ -373,10 +373,6 @@
       "session": "Session {n}",
       "shared": "Anonymous sharing: on",
       "notShared": "Anonymous sharing: off",
-      "anchored": "Confirmed by clinic · on-chain record v{version}",
-      "clinicConfirmed": "Confirmed by clinic",
-      "selfReported": "Entered by you · not used for offer proofs",
-      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
       "fromBooking": "Recorded from your booking",
       "rating": "Satisfaction {n}/5",
       "search": "Search procedures",
@@ -389,6 +385,10 @@
       "pages": "Pages",
       "prevPage": "Previous page",
       "nextPage": "Next page",
+      "anchored": "Confirmed by clinic · tamper-proof",
+      "clinicConfirmed": "Confirmed by clinic",
+      "selfReported": "Entered by you · not used for offer proofs",
+      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
       "preset": {
         "procedure": "Procedure",
         "area": "Area",
@@ -561,20 +561,19 @@
       "lead": "This is what your agent shows to other agents."
     },
     "wallet": {
-      "title": "Record wallet",
+      "title": "My record vault",
       "lead": "Clinics only learn whether you meet an offer's conditions. Treatment dates, clinics and counts stay on this device.",
-      "subject": "Pseudonym",
-      "commitment": "On-chain chart hash",
+      "subject": "Anonymous ID",
+      "commitment": "Tamper-check code",
       "none": "None",
-      "version": "Version",
-      "anchored": "Anchored records",
+      "anchored": "Clinic-confirmed records",
       "anchoredValue": "{n, plural, one {# record} other {# records}}",
       "network": "{network} testnet · demo",
       "ledger": "View the public ledger"
     },
     "export": {
       "title": "Export your data",
-      "body": "Save your profile, consents, procedure records and record wallet as JSON.",
+      "body": "Save your profile, consents, procedure records and record vault as JSON.",
       "button": "Export JSON"
     },
     "remove": {

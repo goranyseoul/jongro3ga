@@ -24,11 +24,13 @@ import {
 } from "@/components/ui";
 import { AgentWindow } from "@/components/customer/agent-window";
 import { AgentOrb } from "@/components/customer/agent-orb";
+import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
+import { hasSession } from "@/components/auth/client";
 import { ClinicCarousel } from "@/components/customer/clinic-carousel";
 import { LocaleSwitcher } from "@/components/customer/locale-switcher";
 import { SpotlightTour } from "@/components/customer/spotlight-tour";
 import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
-import { updateDemoState, useDemoState } from "@/components/customer/demo-state";
+import { updateDemoState } from "@/components/customer/demo-state";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
@@ -150,7 +152,7 @@ export type OnboardingIntro = {
   suggestionsLabel: string;
   /** Accessible name of the language switch in the header. */
   languageLabel: string;
-  signup: LandingCopy["signup"];
+  signup: AuthCopy & { toggle: string; personas: string[] };
   agentWindow: LandingCopy["agentWindow"];
   tour: LandingCopy["tour"];
 };
@@ -168,7 +170,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const c = COPY[locale];
   const router = useRouter();
 
-  const signedIn = useDemoState().signedIn === true;
+  const [signedIn, setSignedIn] = useState(false);
   const [started, setStarted] = useState(false);
   const [engaged, setEngaged] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
@@ -198,6 +200,10 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+  // the wordmark leads home once there is a session
+  useEffect(() => {
+    void hasSession().then(setSignedIn);
+  }, []);
   useEffect(() => {
     const timer = window.setTimeout(() => setSplashOver(true), SPLASH_MS);
     return () => window.clearTimeout(timer);
@@ -896,6 +902,16 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         {full ? null : <LandingHome locale={locale} onAsk={ask} />}
       </div>
       {full ? null : footer}
+      {/* log-in only: proxy.ts sends signed-out visitors of app routes here with ?auth=login&next=, which
+          opens it by itself. Signing up is its own page (/signup). Sits outside the sunrise section. */}
+      <AuthDialog
+        open={false}
+        onClose={() => undefined}
+        brand={intro.wordmark}
+        copy={intro.signup}
+        personas={intro.signup.personas}
+        onDone={() => start()}
+      />
       {full ? null : (
         <AgentWindow
           open={windowOpen}

@@ -373,10 +373,6 @@
       "session": "{n}回目",
       "shared": "匿名共有: オン",
       "notShared": "匿名共有: オフ",
-      "anchored": "クリニック確認済み · チェーン記録 v{version}",
-      "clinicConfirmed": "クリニック確認済み",
-      "selfReported": "自分で入力 · 特典の証明には使われません",
-      "txLabel": "Base Sepoliaで取引を見る(新しいタブ)",
       "fromBooking": "予約から自動で記録",
       "rating": "満足度 {n}/5",
       "search": "施術を検索",
@@ -389,6 +385,10 @@
       "pages": "ページ",
       "prevPage": "前のページ",
       "nextPage": "次のページ",
+      "anchored": "クリニック確認済み · 改ざん防止",
+      "clinicConfirmed": "クリニック確認済み",
+      "selfReported": "自分で入力 · 特典の証明には使われません",
+      "txLabel": "Base Sepoliaで取引を見る(新しいタブ)",
       "preset": {
         "procedure": "施術",
         "area": "部位",
@@ -561,20 +561,19 @@
       "lead": "あなたのエージェントが、ほかのエージェントに見せる情報です。"
     },
     "wallet": {
-      "title": "記録ウォレット",
+      "title": "わたしの記録保管庫",
       "lead": "クリニックが受け取るのは、特典の条件を満たすかどうかだけです。施術日・クリニック・回数はこの端末の中にだけあります。",
-      "subject": "仮名",
-      "commitment": "オンチェーンのカルテハッシュ",
+      "subject": "匿名ID",
+      "commitment": "改ざん確認コード",
       "none": "なし",
-      "version": "バージョン",
-      "anchored": "チェーンに記録した件数",
+      "anchored": "クリニック確認済みの記録",
       "anchoredValue": "{n}件",
       "network": "{network} テストネット · デモ",
       "ledger": "公開台帳を見る"
     },
     "export": {
       "title": "データの書き出し",
-      "body": "プロフィール、同意、施術記録、記録ウォレットをJSONで保存します。",
+      "body": "プロフィール、同意、施術記録、記録保管庫をJSONで保存します。",
       "button": "JSONを書き出す"
     },
     "remove": {

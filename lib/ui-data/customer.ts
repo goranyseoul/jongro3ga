@@ -204,12 +204,12 @@ export function procedureName(id: string, locale: Locale): string {
 export function detectProcedure(text: string): Procedure | undefined {
   const needle = text.toLowerCase();
   const aliases: Record<ProcedureId, string[]> = {
-    rejuran_healer: ["rejuran", "リジュラン", "リヂュラン", "丽珠兰", "麗珠蘭", "리쥬란", "리주란"],
-    thermage_flx: ["thermage", "サーマージ", "热玛吉", "熱瑪吉", "써마지"],
+    rejuran_healer: ["rejuran_healer", "リジュラン", "リヂュラン", "丽珠兰", "麗珠蘭", "리쥬란", "리주란"],
+    thermage_flx: ["thermage_flx", "サーマージ", "热玛吉", "熱瑪吉", "써마지"],
     ulthera: ["ulthera", "ultherapy", "ウルセラ", "超声刀", "울쎄라"],
     botox_forehead: ["botox", "ボトックス", "肉毒", "보톡스"],
-    shrink_universe: ["shrink", "シュリンク", "슈링크"],
-    skin_booster_juvelook: ["juvelook", "ジュベルック", "쥬베룩"],
+    shrink_universe: ["shrink_universe", "シュリンク", "슈링크"],
+    skin_booster_juvelook: ["skin_booster_juvelook", "ジュベルック", "쥬베룩"],
   };
   return PROCEDURES.find((p) => aliases[p.id].some((alias) => needle.includes(alias.toLowerCase())));
 }

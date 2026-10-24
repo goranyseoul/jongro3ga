@@ -453,6 +453,7 @@ export function RecordsView() {
                           ) : null}
                           {record.priceKrw ? <li className="tabular-nums">{moneyText(record.priceKrw, locale)}</li> : null}
                           {record.rating ? <li>{t("history.rating", { n: record.rating })}</li> : null}
+                          {record.source === "booking" ? <li>{t("history.fromBooking")}</li> : null}
                           {record.note ? <li className="whitespace-pre-line text-text">{record.note}</li> : null}
                           <Provenance record={record} />
                           <li>{record.sharedToPlatform ? t("history.shared") : t("history.notShared")}</li>
@@ -509,7 +510,7 @@ function Provenance({ record }: { record: TreatmentRecord }) {
     const tx = shortHex(record.anchor.tx);
     return (
       <li>
-        {t("anchored", { version: record.anchor.version })} ·{" "}
+        {t("anchored")} ·{" "}
         <a
           href={txUrl(record.anchor.tx)}
           target="_blank"

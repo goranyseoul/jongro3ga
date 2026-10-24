@@ -104,7 +104,6 @@ export function DataView() {
               <WalletRow term={t("wallet.commitment")}>
                 {wallet.commitment ? <span title={wallet.commitment}>{shortHex(wallet.commitment)}</span> : t("wallet.none")}
               </WalletRow>
-              <WalletRow term={t("wallet.version")}>{wallet.version}</WalletRow>
               <WalletRow term={t("wallet.anchored")}>{t("wallet.anchoredValue", { n: wallet.anchoredRecords })}</WalletRow>
             </dl>
             <p className="text-caption text-subtle">{t("wallet.network", { network: ZK_CHAIN.name })}</p>

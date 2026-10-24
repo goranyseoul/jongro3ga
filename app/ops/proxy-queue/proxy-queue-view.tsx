@@ -2,60 +2,72 @@
 
 import { useState } from "react";
 import { Button, Money, Table, type TableColumn } from "@/components/ui";
-import { StatusText, Tabs, panelId, tabId, type StatusTone } from "@/components/ops";
+import { LoadState, StatusText, Tabs, panelId, tabId, useApi, type StatusTone } from "@/components/ops";
 import {
+  BOOKING_STATUS_LABEL,
   LOCALE_LABEL,
-  PROXY_BOOKINGS,
-  PROXY_STATE_LABEL,
-  OPS_NOW,
-  clinicName,
+  bookingSummary,
+  confirmProxyBooking,
+  errorText,
+  fetchProxyQueue,
   formatElapsed,
   formatMonthDayTime,
-  type ProxyBooking,
-  type ProxyBookingState,
+  rejectProxyBooking,
+  type BookingStatus,
+  type OpsBooking,
 } from "@/lib/ui-data/ops";
 
 type QueueTab = "waiting" | "done";
 
-const STATE_TONE: Record<ProxyBookingState, StatusTone> = {
-  waiting_clinic: "warning",
+const STATE_TONE: Record<BookingStatus, StatusTone> = {
+  pending_clinic: "warning",
   confirmed: "success",
-  rejected: "danger",
+  canceled: "danger",
+  no_show: "danger",
+  completed: "muted",
 };
 
 const ID_PREFIX = "proxy-queue";
+// New booking requests arrive from customer agents while the operator has the page open.
+const POLL_MS = 5000;
 
 export function ProxyQueueView() {
-  const [bookings, setBookings] = useState<ProxyBooking[]>(PROXY_BOOKINGS);
+  const { data, error, loading, reload } = useApi(fetchProxyQueue, POLL_MS);
   const [tab, setTab] = useState<QueueTab>("waiting");
   const [result, setResult] = useState<string | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
 
-  const waiting = bookings.filter((booking) => booking.state === "waiting_clinic");
-  const done = bookings.filter((booking) => booking.state !== "waiting_clinic");
+  const waiting = data?.waiting ?? [];
+  const done = data?.done ?? [];
+  const now = data?.now ?? "";
 
-  const resolve = (booking: ProxyBooking, state: "confirmed" | "rejected") => {
-    setBookings((current) =>
-      current.map((item) =>
-        item.id === booking.id
-          ? { ...item, state, resolvedAt: OPS_NOW, note: state === "rejected" ? "병원 거절" : undefined }
-          : item,
-      ),
-    );
-    setResult(
-      state === "confirmed"
-        ? `${clinicName(booking.clinicId)} 예약을 확정했어요. ${booking.guest.displayName}님의 에이전트에 확정 알림을 보냈어요.`
-        : `${clinicName(booking.clinicId)} 예약을 거절 처리했어요. ${booking.guest.displayName}님의 에이전트에 다른 병원 안내를 요청했어요.`,
-    );
+  const resolve = async (booking: OpsBooking, action: "confirm" | "reject") => {
+    setBusy(booking.bookingId);
+    setResult(null);
+    try {
+      if (action === "confirm") await confirmProxyBooking(booking.bookingId);
+      else await rejectProxyBooking(booking.bookingId);
+      setResult(
+        action === "confirm"
+          ? `${booking.clinicName} 예약을 확정했어요. ${booking.guest.displayName}님의 에이전트가 확정을 받아요.`
+          : `${booking.clinicName} 예약을 거절 처리했어요. ${booking.guest.displayName}님의 에이전트가 거절을 받아요.`,
+      );
+    } catch (failure) {
+      setResult(`처리하지 못했어요. ${errorText(failure)}`);
+    } finally {
+      setBusy(null);
+      await reload();
+    }
   };
 
-  const baseColumns: TableColumn<ProxyBooking>[] = [
+  const baseColumns: TableColumn<OpsBooking>[] = [
     {
       key: "clinic",
       header: "병원",
       card: "title",
       cell: (booking) => (
         <div className="flex flex-col gap-sp-1">
-          <span className="font-med">{clinicName(booking.clinicId)}</span>
+          <span className="font-med">{booking.clinicName}</span>
           <span className="text-caption font-reg text-subtle">대행 · 참고가</span>
         </div>
       ),
@@ -67,7 +79,8 @@ export function ProxyQueueView() {
         <div className="flex flex-col gap-sp-1 md:items-start">
           <span>{booking.guest.displayName}</span>
           <span className="text-caption text-subtle">
-            {booking.guest.agentId} · {LOCALE_LABEL[booking.guest.language]}
+            {booking.guest.agentId ? `${booking.guest.agentId} · ` : ""}
+            {LOCALE_LABEL[booking.guest.language] ?? booking.guest.language}
           </span>
         </div>
       ),
@@ -77,20 +90,25 @@ export function ProxyQueueView() {
       header: "시술",
       cell: (booking) => (
         <div className="flex flex-col gap-sp-1 md:items-start">
-          <span>
-            {booking.procedure} {booking.amountText}
-          </span>
-          <span className="text-caption text-muted">
-            <Money krw={booking.priceKrw} /> · VAT {booking.vatIncluded ? "포함" : "별도"}
-          </span>
+          <span>{bookingSummary(booking)}</span>
+          {booking.quote?.priceKrw !== undefined ? (
+            <span className="text-caption text-muted">
+              <Money krw={booking.quote.priceKrw} /> · VAT {booking.quote.vatIncluded ? "포함" : "별도"}
+            </span>
+          ) : null}
         </div>
       ),
     },
     { key: "slot", header: "희망 시간", cell: (booking) => formatMonthDayTime(booking.slot) },
-    { key: "requested", header: "접수", card: "caption", cell: (booking) => `접수 ${formatElapsed(booking.requestedAt)}` },
+    {
+      key: "requested",
+      header: "접수",
+      card: "caption",
+      cell: (booking) => (booking.requestedAt && now ? `접수 ${formatElapsed(booking.requestedAt, now)}` : "접수 시각 없음"),
+    },
   ];
 
-  const waitingColumns: TableColumn<ProxyBooking>[] = [
+  const waitingColumns: TableColumn<OpsBooking>[] = [
     ...baseColumns,
     {
       key: "actions",
@@ -98,8 +116,10 @@ export function ProxyQueueView() {
       card: "action",
       cell: (booking) => (
         <div className="flex flex-col gap-sp-2">
-          <Button onClick={() => resolve(booking, "confirmed")}>병원 확인 완료 → 확정</Button>
-          <Button variant="secondary" onClick={() => resolve(booking, "rejected")}>
+          <Button onClick={() => resolve(booking, "confirm")} disabled={busy !== null}>
+            병원 확인 완료 → 확정
+          </Button>
+          <Button variant="secondary" onClick={() => resolve(booking, "reject")} disabled={busy !== null}>
             병원 거절
           </Button>
         </div>
@@ -107,18 +127,15 @@ export function ProxyQueueView() {
     },
   ];
 
-  const doneColumns: TableColumn<ProxyBooking>[] = [
+  const doneColumns: TableColumn<OpsBooking>[] = [
     ...baseColumns,
     {
       key: "result",
       header: "처리 결과",
       cell: (booking) => (
         <div className="flex flex-col gap-sp-1 md:items-start">
-          <StatusText tone={STATE_TONE[booking.state]}>{PROXY_STATE_LABEL[booking.state]}</StatusText>
-          <span className="text-caption text-subtle">
-            {booking.resolvedAt ? formatMonthDayTime(booking.resolvedAt) : null}
-            {booking.note ? ` · ${booking.note}` : null}
-          </span>
+          <StatusText tone={STATE_TONE[booking.status]}>{BOOKING_STATUS_LABEL[booking.status]}</StatusText>
+          {booking.resolvedAt ? <span className="text-caption text-subtle">{formatMonthDayTime(booking.resolvedAt)}</span> : null}
         </div>
       ),
     },
@@ -137,6 +154,8 @@ export function ProxyQueueView() {
         ]}
       />
 
+      <LoadState what="대행 응답 큐" loading={loading && !data} error={error} onRetry={reload} />
+
       <p role="status" aria-live="polite" className={result ? "text-body text-muted" : "sr-only"}>
         {result}
       </p>
@@ -147,7 +166,7 @@ export function ProxyQueueView() {
             caption="병원 확인 대기 예약 요청"
             columns={waitingColumns}
             rows={waiting}
-            rowKey={(booking) => booking.id}
+            rowKey={(booking) => booking.bookingId}
             empty="대기 중인 요청이 없어요."
           />
         ) : (
@@ -155,7 +174,7 @@ export function ProxyQueueView() {
             caption="처리 완료 예약 요청"
             columns={doneColumns}
             rows={done}
-            rowKey={(booking) => booking.id}
+            rowKey={(booking) => booking.bookingId}
             empty="처리한 요청이 아직 없어요."
           />
         )}
