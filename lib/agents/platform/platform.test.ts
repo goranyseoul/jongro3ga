@@ -28,7 +28,7 @@ const yukiRequest: ProcedureRequestV1 = {
   schema: "pibu/procedure-request@1",
   requestId: "req_yuki01",
   customerAgentId: "cag_7f3k2",
-  procedureId: "rejuran",
+  procedureId: "rejuran_healer",
   amount: { value: 2, unit: "cc" },
   budgetKrw: { max: 450000 },
   areas: ["sinsa", "gangnam", "apgujeong"],
@@ -118,10 +118,10 @@ describe("platform.match_clinics over A2A", () => {
 
 describe("judge, booking, outcome", () => {
   const quotes = [
-    { quoteId: "qt_glow", clinicId: "cln_seoul_glow", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 340000, vatIncluded: true, includes: ["numbing_cream"] },
-    { quoteId: "qt_mint", clinicId: "cln_mint", procedureId: "rejuran", amount: { value: 1, unit: "cc" }, priceKrw: 99000, vatIncluded: true, includes: [] },
-    { quoteId: "qt_ara", clinicId: "cln_ara", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 300000, vatIncluded: false, includes: [] },
-    { quoteId: "qt_hanbit", clinicId: "cln_hanbit", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 420000, vatIncluded: true, includes: [] },
+    { quoteId: "qt_glow", clinicId: "cln_seoul_glow", procedureId: "rejuran_healer", amount: { value: 2, unit: "cc" }, priceKrw: 340000, vatIncluded: true, includes: ["numbing_cream"] },
+    { quoteId: "qt_mint", clinicId: "cln_mint", procedureId: "rejuran_healer", amount: { value: 1, unit: "cc" }, priceKrw: 99000, vatIncluded: true, includes: [] },
+    { quoteId: "qt_ara", clinicId: "cln_ara", procedureId: "rejuran_healer", amount: { value: 2, unit: "cc" }, priceKrw: 300000, vatIncluded: false, includes: [] },
+    { quoteId: "qt_hanbit", clinicId: "cln_hanbit", procedureId: "rejuran_healer", amount: { value: 2, unit: "cc" }, priceKrw: 420000, vatIncluded: true, includes: [] },
   ];
 
   async function judged() {
@@ -150,7 +150,7 @@ describe("judge, booking, outcome", () => {
     outcomeId: "out_3310",
     bookingId: "bkg_5521",
     clinicId: "cln_seoul_glow",
-    procedureId: "rejuran",
+    procedureId: "rejuran_healer",
     checkpoint: "D0",
     paidKrw: 340000,
     receivedAmount: { value: 2, unit: "cc" },

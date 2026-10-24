@@ -87,7 +87,7 @@
       {
         "id": "menu_seoul_glow_1",
         "clinicId": "cln_seoul_glow",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "product": "Rejuran Healer",
         "amount": {
           "value": 2,
@@ -104,7 +104,7 @@
       {
         "id": "menu_seoul_glow_2",
         "clinicId": "cln_seoul_glow",
-        "procedureId": "botox_wrinkle",
+        "procedureId": "botox_forehead",
         "product": "Botox (imported)",
         "amount": {
           "value": 50,
@@ -120,7 +120,7 @@
       {
         "id": "menu_seoul_glow_3",
         "clinicId": "cln_seoul_glow",
-        "procedureId": "thermage",
+        "procedureId": "thermage_flx",
         "product": "Thermage FLX",
         "amount": {
           "value": 300,
@@ -154,9 +154,9 @@
     "slotPolicy": {
       "clinicId": "cln_seoul_glow",
       "durationMinByProcedure": {
-        "rejuran": 40,
-        "botox_wrinkle": 20,
-        "thermage": 90,
+        "rejuran_healer": 40,
+        "botox_forehead": 20,
+        "thermage_flx": 90,
         "skin_booster": 40
       },
       "foreignSlotsPerDay": 4,
@@ -277,7 +277,7 @@
       {
         "id": "menu_mint_1",
         "clinicId": "cln_mint",
-        "procedureId": "botox_wrinkle",
+        "procedureId": "botox_forehead",
         "product": "Botox (domestic)",
         "amount": {
           "value": 50,
@@ -321,7 +321,7 @@
       {
         "id": "offer_mint_1",
         "clinicId": "cln_mint",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "title": "First visit 1cc event",
         "amount": {
           "value": 1,
@@ -337,8 +337,8 @@
     "slotPolicy": {
       "clinicId": "cln_mint",
       "durationMinByProcedure": {
-        "rejuran": 30,
-        "botox_wrinkle": 20,
+        "rejuran_healer": 30,
+        "botox_forehead": 20,
         "laser_toning": 30,
         "skin_booster": 40
       },
@@ -469,7 +469,7 @@
       {
         "id": "menu_ara_1",
         "clinicId": "cln_ara",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "product": "Rejuran Healer",
         "amount": {
           "value": 2,
@@ -499,7 +499,7 @@
       {
         "id": "menu_ara_3",
         "clinicId": "cln_ara",
-        "procedureId": "botox_wrinkle",
+        "procedureId": "botox_forehead",
         "product": "Botox (domestic)",
         "amount": {
           "value": 50,
@@ -515,9 +515,9 @@
     "slotPolicy": {
       "clinicId": "cln_ara",
       "durationMinByProcedure": {
-        "rejuran": 40,
+        "rejuran_healer": 40,
         "juvelook_volume": 40,
-        "botox_wrinkle": 20
+        "botox_forehead": 20
       },
       "foreignSlotsPerDay": 4,
       "autoConfirm": false,
@@ -646,7 +646,7 @@
       {
         "id": "menu_hanbit_1",
         "clinicId": "cln_hanbit",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "product": "Rejuran Healer",
         "amount": {
           "value": 2,
@@ -691,7 +691,7 @@
       {
         "id": "menu_hanbit_4",
         "clinicId": "cln_hanbit",
-        "procedureId": "thermage",
+        "procedureId": "thermage_flx",
         "product": "Thermage FLX",
         "amount": {
           "value": 300,
@@ -709,10 +709,10 @@
     "slotPolicy": {
       "clinicId": "cln_hanbit",
       "durationMinByProcedure": {
-        "rejuran": 40,
+        "rejuran_healer": 40,
         "skin_botox": 30,
         "aqua_peel": 30,
-        "thermage": 90
+        "thermage_flx": 90
       },
       "foreignSlotsPerDay": 4,
       "autoConfirm": false,
@@ -844,7 +844,7 @@
       {
         "id": "menu_dahye_1",
         "clinicId": "cln_dahye",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "product": "Rejuran Healer",
         "amount": {
           "value": 2,
@@ -906,7 +906,7 @@
     "slotPolicy": {
       "clinicId": "cln_dahye",
       "durationMinByProcedure": {
-        "rejuran": 40,
+        "rejuran_healer": 40,
         "ulthera": 60,
         "juvelook_volume": 40,
         "aqua_peel": 30

@@ -148,7 +148,17 @@ const SKILL_SUMMARY: Record<SkillId, I18nText> = {
     ko: "병원 응답 상태를 플랫폼에 알렸어요",
     ja: "クリニックの応答状況をプラットフォームに伝えました",
     en: "Reported a clinic response issue to the platform",
+  },  "platform.anchor_record": {
+    ko: "시술 기록을 체인에 남겼어요",
+    ja: "施術記録をチェーンに残しました",
+    en: "Anchored the treatment record on chain",
   },
+  "platform.submit_review": {
+    ko: "방문 증명과 함께 후기를 보냈어요",
+    ja: "来院の証明と一緒にレビューを送りました",
+    en: "Sent a review with a proof of visit",
+  },
+
   "clinic.offers": {
     ko: "병원의 이달 가격을 받아왔어요",
     ja: "クリニックの今月の価格を受け取りました",

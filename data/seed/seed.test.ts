@@ -46,7 +46,7 @@ describe("loadSeed", () => {
 
 describe("clinics.json (06 seed table)", () => {
   const byId = Object.fromEntries(seedClinics.map((c) => [c.id, c]));
-  const rejuran = (id: string) => byId[id].menu.filter((m) => m.procedureId === "rejuran");
+  const rejuran = (id: string) => byId[id].menu.filter((m) => m.procedureId === "rejuran_healer");
 
   it("has the five 01 clinics with ids, slugs and areas", () => {
     expect(seedClinics.map((c) => [c.id, c.slug, c.area])).toEqual([
@@ -73,7 +73,7 @@ describe("clinics.json (06 seed table)", () => {
       {
         id: "offer_mint_1",
         clinicId: "cln_mint",
-        procedureId: "rejuran",
+        procedureId: "rejuran_healer",
         title: "First visit 1cc event",
         amount: { value: 1, unit: "cc" },
         priceKrw: 99000,
@@ -122,7 +122,7 @@ describe("slots", () => {
     const glow = slots.filter((s) => s.clinicId === "cln_seoul_glow" && s.start.startsWith("2026-11-09"));
     expect(glow.map((s) => s.start.slice(11, 16))).toEqual(["10:00", "11:00", "14:00", "15:00"]);
     expect(slots.every((s) => IsoDateTimeSchema.safeParse(s.start).success && s.start > "2026-10-24")).toBe(true);
-    expect(glow[0].procedureIds).toContain("rejuran");
+    expect(glow[0].procedureIds).toContain("rejuran_healer");
   });
 });
 
@@ -154,14 +154,14 @@ describe("price-records.json (07 reference sample)", () => {
 
   for (const today of ["2026-10-24", "2026-11-12"]) {
     it(`gives n = 42 and the 07 quantiles at ${today}`, () => {
-      const s = buildSample(records, { procedureId: "rejuran", area: "gangnam", today });
+      const s = buildSample(records, { procedureId: "rejuran_healer", area: "gangnam", today });
       expect([s.n, s.p25, s.p50, s.p75, s.p90]).toEqual([42, 140000, 160000, 185000, 210000]);
       expect(s.typicalAmount).toMatchObject({ min: 2, max: 3 });
     });
   }
 
   it("verified rejuran gangnam_sinsa records in the window are exactly 42, dated 07-16..10-22", () => {
-    const gs = records.filter((r) => r.procedureId === "rejuran" && r.verified && r.source !== "public_offer" && ["gangnam", "sinsa", "apgujeong"].includes(r.area) && r.date >= "2026-07-16");
+    const gs = records.filter((r) => r.procedureId === "rejuran_healer" && r.verified && r.source !== "public_offer" && ["gangnam", "sinsa", "apgujeong"].includes(r.area) && r.date >= "2026-07-16");
     expect(gs).toHaveLength(42);
     expect(gs.every((r) => r.date <= "2026-10-22")).toBe(true);
   });

@@ -221,7 +221,7 @@
       {
         "id": "rec_lin_1",
         "customerId": "cus_lin",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "date": "2026-08-12",
         "amount": {
           "value": 2,
@@ -424,7 +424,7 @@
       {
         "id": "rec_jisoo_1",
         "customerId": "cus_jisoo",
-        "procedureId": "rejuran",
+        "procedureId": "rejuran_healer",
         "date": "2026-09-10",
         "amount": {
           "value": 2,
@@ -442,7 +442,7 @@
       {
         "id": "rec_jisoo_2",
         "customerId": "cus_jisoo",
-        "procedureId": "botox_wrinkle",
+        "procedureId": "botox_forehead",
         "date": "2026-09-28",
         "amount": {
           "value": 50,

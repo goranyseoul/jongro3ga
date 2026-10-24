@@ -25,14 +25,14 @@ export const VAT_RATE = 0.1;
  * master (lib/domain/procedure.ts) has none, so these demo values stand in (documented in BUILD-LOG).
  */
 export const FALLBACK_TYPICAL_AMOUNT: Record<string, { min: number; max: number }> = {
-  rejuran: { min: 2, max: 3 },
+  rejuran_healer: { min: 2, max: 3 },
   skin_booster: { min: 2, max: 3 },
   exosome: { min: 2, max: 5 },
-  botox_wrinkle: { min: 30, max: 50 },
-  thermage: { min: 300, max: 600 },
+  botox_forehead: { min: 30, max: 50 },
+  thermage_flx: { min: 300, max: 600 },
   ulthera: { min: 300, max: 600 },
-  shrink: { min: 300, max: 600 },
-  juvelook: { min: 1, max: 2 },
+  shrink_universe: { min: 300, max: 600 },
+  skin_booster_juvelook: { min: 1, max: 2 },
   juvelook_volume: { min: 1, max: 2 },
   sculptra: { min: 1, max: 2 },
   filler: { min: 1, max: 2 },

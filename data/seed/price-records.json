@@ -1,7 +1,7 @@
 [
   {
     "id": "pr_0001",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -19,7 +19,7 @@
   },
   {
     "id": "pr_0002",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -37,7 +37,7 @@
   },
   {
     "id": "pr_0003",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -55,7 +55,7 @@
   },
   {
     "id": "pr_0004",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -72,7 +72,7 @@
   },
   {
     "id": "pr_0005",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -90,7 +90,7 @@
   },
   {
     "id": "pr_0006",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -108,7 +108,7 @@
   },
   {
     "id": "pr_0007",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -126,7 +126,7 @@
   },
   {
     "id": "pr_0008",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -143,7 +143,7 @@
   },
   {
     "id": "pr_0009",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -161,7 +161,7 @@
   },
   {
     "id": "pr_0010",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -179,7 +179,7 @@
   },
   {
     "id": "pr_0011",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -197,7 +197,7 @@
   },
   {
     "id": "pr_0012",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -214,7 +214,7 @@
   },
   {
     "id": "pr_0013",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -232,7 +232,7 @@
   },
   {
     "id": "pr_0014",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -250,7 +250,7 @@
   },
   {
     "id": "pr_0015",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -268,7 +268,7 @@
   },
   {
     "id": "pr_0016",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -285,7 +285,7 @@
   },
   {
     "id": "pr_0017",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -303,7 +303,7 @@
   },
   {
     "id": "pr_0018",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -321,7 +321,7 @@
   },
   {
     "id": "pr_0019",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -339,7 +339,7 @@
   },
   {
     "id": "pr_0020",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -356,7 +356,7 @@
   },
   {
     "id": "pr_0021",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -374,7 +374,7 @@
   },
   {
     "id": "pr_0022",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -392,7 +392,7 @@
   },
   {
     "id": "pr_0023",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -410,7 +410,7 @@
   },
   {
     "id": "pr_0024",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -427,7 +427,7 @@
   },
   {
     "id": "pr_0025",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -445,7 +445,7 @@
   },
   {
     "id": "pr_0026",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -463,7 +463,7 @@
   },
   {
     "id": "pr_0027",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -481,7 +481,7 @@
   },
   {
     "id": "pr_0028",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -498,7 +498,7 @@
   },
   {
     "id": "pr_0029",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -516,7 +516,7 @@
   },
   {
     "id": "pr_0030",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -534,7 +534,7 @@
   },
   {
     "id": "pr_0031",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -552,7 +552,7 @@
   },
   {
     "id": "pr_0032",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -569,7 +569,7 @@
   },
   {
     "id": "pr_0033",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -587,7 +587,7 @@
   },
   {
     "id": "pr_0034",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -605,7 +605,7 @@
   },
   {
     "id": "pr_0035",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -623,7 +623,7 @@
   },
   {
     "id": "pr_0036",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -640,7 +640,7 @@
   },
   {
     "id": "pr_0037",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -658,7 +658,7 @@
   },
   {
     "id": "pr_0038",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -676,7 +676,7 @@
   },
   {
     "id": "pr_0039",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -694,7 +694,7 @@
   },
   {
     "id": "pr_0040",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -711,7 +711,7 @@
   },
   {
     "id": "pr_0041",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -729,7 +729,7 @@
   },
   {
     "id": "pr_0042",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -747,7 +747,7 @@
   },
   {
     "id": "pr_0043",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -763,7 +763,7 @@
   },
   {
     "id": "pr_0044",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -779,7 +779,7 @@
   },
   {
     "id": "pr_0045",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -795,7 +795,7 @@
   },
   {
     "id": "pr_0046",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -811,7 +811,7 @@
   },
   {
     "id": "pr_0047",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -827,7 +827,7 @@
   },
   {
     "id": "pr_0048",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "apgujeong",
     "amount": {
@@ -843,7 +843,7 @@
   },
   {
     "id": "pr_0049",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "sinsa",
     "amount": {
@@ -859,7 +859,7 @@
   },
   {
     "id": "pr_0050",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "gangnam",
     "amount": {
@@ -875,7 +875,7 @@
   },
   {
     "id": "pr_0051",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -892,7 +892,7 @@
   },
   {
     "id": "pr_0052",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -909,7 +909,7 @@
   },
   {
     "id": "pr_0053",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -926,7 +926,7 @@
   },
   {
     "id": "pr_0054",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -943,7 +943,7 @@
   },
   {
     "id": "pr_0055",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -960,7 +960,7 @@
   },
   {
     "id": "pr_0056",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -977,7 +977,7 @@
   },
   {
     "id": "pr_0057",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -994,7 +994,7 @@
   },
   {
     "id": "pr_0058",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1011,7 +1011,7 @@
   },
   {
     "id": "pr_0059",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1028,7 +1028,7 @@
   },
   {
     "id": "pr_0060",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1045,7 +1045,7 @@
   },
   {
     "id": "pr_0061",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1062,7 +1062,7 @@
   },
   {
     "id": "pr_0062",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1079,7 +1079,7 @@
   },
   {
     "id": "pr_0063",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1096,7 +1096,7 @@
   },
   {
     "id": "pr_0064",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "myeongdong",
     "amount": {
@@ -1113,7 +1113,7 @@
   },
   {
     "id": "pr_0065",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1130,7 +1130,7 @@
   },
   {
     "id": "pr_0066",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1147,7 +1147,7 @@
   },
   {
     "id": "pr_0067",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1164,7 +1164,7 @@
   },
   {
     "id": "pr_0068",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1181,7 +1181,7 @@
   },
   {
     "id": "pr_0069",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1198,7 +1198,7 @@
   },
   {
     "id": "pr_0070",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1215,7 +1215,7 @@
   },
   {
     "id": "pr_0071",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1232,7 +1232,7 @@
   },
   {
     "id": "pr_0072",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1249,7 +1249,7 @@
   },
   {
     "id": "pr_0073",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1266,7 +1266,7 @@
   },
   {
     "id": "pr_0074",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1283,7 +1283,7 @@
   },
   {
     "id": "pr_0075",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1300,7 +1300,7 @@
   },
   {
     "id": "pr_0076",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "product": "Rejuran Healer",
     "area": "hongdae",
     "amount": {
@@ -1317,7 +1317,7 @@
   },
   {
     "id": "pr_0077",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "gangnam",
     "amount": {
@@ -1334,7 +1334,7 @@
   },
   {
     "id": "pr_0078",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "sinsa",
     "amount": {
@@ -1351,7 +1351,7 @@
   },
   {
     "id": "pr_0079",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "apgujeong",
     "amount": {
@@ -1368,7 +1368,7 @@
   },
   {
     "id": "pr_0080",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "gangnam",
     "amount": {
@@ -1385,7 +1385,7 @@
   },
   {
     "id": "pr_0081",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "sinsa",
     "amount": {
@@ -1402,7 +1402,7 @@
   },
   {
     "id": "pr_0082",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "apgujeong",
     "amount": {
@@ -1419,7 +1419,7 @@
   },
   {
     "id": "pr_0083",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "gangnam",
     "amount": {
@@ -1436,7 +1436,7 @@
   },
   {
     "id": "pr_0084",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "sinsa",
     "amount": {
@@ -1453,7 +1453,7 @@
   },
   {
     "id": "pr_0085",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "apgujeong",
     "amount": {
@@ -1470,7 +1470,7 @@
   },
   {
     "id": "pr_0086",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "gangnam",
     "amount": {
@@ -1487,7 +1487,7 @@
   },
   {
     "id": "pr_0087",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "sinsa",
     "amount": {
@@ -1504,7 +1504,7 @@
   },
   {
     "id": "pr_0088",
-    "procedureId": "thermage",
+    "procedureId": "thermage_flx",
     "product": "Thermage FLX",
     "area": "apgujeong",
     "amount": {
@@ -1521,7 +1521,7 @@
   },
   {
     "id": "pr_0089",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "gangnam",
     "amount": {
@@ -1538,7 +1538,7 @@
   },
   {
     "id": "pr_0090",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "sinsa",
     "amount": {
@@ -1555,7 +1555,7 @@
   },
   {
     "id": "pr_0091",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "myeongdong",
     "amount": {
@@ -1572,7 +1572,7 @@
   },
   {
     "id": "pr_0092",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "hongdae",
     "amount": {
@@ -1589,7 +1589,7 @@
   },
   {
     "id": "pr_0093",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "gangnam",
     "amount": {
@@ -1606,7 +1606,7 @@
   },
   {
     "id": "pr_0094",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "sinsa",
     "amount": {
@@ -1623,7 +1623,7 @@
   },
   {
     "id": "pr_0095",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "myeongdong",
     "amount": {
@@ -1640,7 +1640,7 @@
   },
   {
     "id": "pr_0096",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "hongdae",
     "amount": {
@@ -1657,7 +1657,7 @@
   },
   {
     "id": "pr_0097",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "gangnam",
     "amount": {
@@ -1674,7 +1674,7 @@
   },
   {
     "id": "pr_0098",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "sinsa",
     "amount": {
@@ -1691,7 +1691,7 @@
   },
   {
     "id": "pr_0099",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "myeongdong",
     "amount": {
@@ -1708,7 +1708,7 @@
   },
   {
     "id": "pr_0100",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "hongdae",
     "amount": {
@@ -1725,7 +1725,7 @@
   },
   {
     "id": "pr_0101",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "gangnam",
     "amount": {
@@ -1742,7 +1742,7 @@
   },
   {
     "id": "pr_0102",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "sinsa",
     "amount": {
@@ -1759,7 +1759,7 @@
   },
   {
     "id": "pr_0103",
-    "procedureId": "botox_wrinkle",
+    "procedureId": "botox_forehead",
     "product": "Botox (domestic)",
     "area": "myeongdong",
     "amount": {

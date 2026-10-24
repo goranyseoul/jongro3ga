@@ -68,7 +68,7 @@ UNIT_PRICES.forEach((unit, i) => {
   const shared = i % 3 !== 0; // two thirds Korean women's shared records, one third foreign outcomes
   records.push({
     id: id(),
-    procedureId: "rejuran",
+    procedureId: "rejuran_healer",
     product: "Rejuran Healer",
     area: AREAS_GS[i % 3],
     amount: { value: amount, unit: "cc" },
@@ -97,7 +97,7 @@ const excluded = [
 excluded.forEach((r, i) => {
   records.push({
     id: id(),
-    procedureId: "rejuran",
+    procedureId: "rejuran_healer",
     product: "Rejuran Healer",
     area: AREAS_GS[i % 3],
     amount: { value: 2, unit: "cc" },
@@ -113,10 +113,10 @@ excluded.forEach((r, i) => {
 // Other regions and procedures, 10~20 each.
 const OTHER = [
   // myeongdong: p75 204,000 < 210,000 <= p90 211,800, so Hanbit 2cc 420,000 is "high" end to end too (07 table).
-  { procedureId: "rejuran", product: "Rejuran Healer", unit: "cc", areas: ["myeongdong"], amount: 2, base: 165000, step: 4000, n: 14 },
-  { procedureId: "rejuran", product: "Rejuran Healer", unit: "cc", areas: ["hongdae"], amount: 2, base: 150000, step: 3500, n: 12 },
-  { procedureId: "thermage", product: "Thermage FLX", unit: "shot", areas: ["gangnam", "sinsa", "apgujeong"], amount: 300, base: 4500, step: 150, n: 12 },
-  { procedureId: "botox_wrinkle", product: "Botox (domestic)", unit: "unit", areas: ["gangnam", "sinsa", "myeongdong", "hongdae"], amount: 50, base: 2400, step: 100, n: 15 },
+  { procedureId: "rejuran_healer", product: "Rejuran Healer", unit: "cc", areas: ["myeongdong"], amount: 2, base: 165000, step: 4000, n: 14 },
+  { procedureId: "rejuran_healer", product: "Rejuran Healer", unit: "cc", areas: ["hongdae"], amount: 2, base: 150000, step: 3500, n: 12 },
+  { procedureId: "thermage_flx", product: "Thermage FLX", unit: "shot", areas: ["gangnam", "sinsa", "apgujeong"], amount: 300, base: 4500, step: 150, n: 12 },
+  { procedureId: "botox_forehead", product: "Botox (domestic)", unit: "unit", areas: ["gangnam", "sinsa", "myeongdong", "hongdae"], amount: 50, base: 2400, step: 100, n: 15 },
   { procedureId: "juvelook_volume", product: "Juvelook Volume", unit: "vial", areas: ["apgujeong", "gangnam", "hongdae"], amount: 1, base: 380000, step: 12000, n: 10 },
   { procedureId: "ulthera", product: "Ulthera", unit: "shot", areas: ["hongdae", "gangnam"], amount: 300, base: 4000, step: 200, n: 11 },
 ];
@@ -144,7 +144,7 @@ for (const group of OTHER) {
 // Self check: the sample the platform will see.
 const sample = records.filter(
   (r) =>
-    r.procedureId === "rejuran" &&
+    r.procedureId === "rejuran_healer" &&
     r.verified &&
     r.source !== "public_offer" &&
     AREAS_GS.includes(r.area) &&
@@ -163,7 +163,7 @@ check(roundHalf(quantile(amounts, 0.75)) === 3, "amount p75");
 check(sample.every((r) => r.date >= "2026-07-16" && r.date <= "2026-10-22"), "dates out of range");
 
 const md = records
-  .filter((r) => r.procedureId === "rejuran" && r.area === "myeongdong" && r.verified && r.source !== "public_offer")
+  .filter((r) => r.procedureId === "rejuran_healer" && r.area === "myeongdong" && r.verified && r.source !== "public_offer")
   .map((r) => r.normalizedUnitKrw);
 check(quantile([...md].sort((a, b) => a - b), 0.75) < 210000 && 210000 <= quantile([...md].sort((a, b) => a - b), 0.9), "myeongdong band for Hanbit");
 

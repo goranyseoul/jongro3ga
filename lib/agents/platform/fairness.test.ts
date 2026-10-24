@@ -27,7 +27,7 @@ const SAMPLE: Omit<PriceSample, "records" | "outliers" | "region"> = {
 const quote = (quoteId: string, clinicId: string, value: number, priceKrw: number, vatIncluded: boolean): JudgeQuoteInput => ({
   quoteId,
   clinicId,
-  procedureId: "rejuran",
+  procedureId: "rejuran_healer",
   amount: { value, unit: "cc" },
   priceKrw,
   vatIncluded,
@@ -117,7 +117,7 @@ describe("reference sample from the seed", () => {
   const records = seedRecords as unknown as PriceRecord[];
   for (const today of ["2026-10-24", "2026-11-12"]) {
     it(`rejuran gangnam_sinsa at ${today}: n = 42 with the 07 quantiles and 2~3cc`, () => {
-      const s = buildSample(records, { procedureId: "rejuran", area: "sinsa", today });
+      const s = buildSample(records, { procedureId: "rejuran_healer", area: "sinsa", today });
       expect(s.region).toBe("gangnam_sinsa");
       expect(s.n).toBe(42);
       expect([s.p25, s.p50, s.p75, s.p90]).toEqual([140000, 160000, 185000, 210000]);
@@ -127,18 +127,18 @@ describe("reference sample from the seed", () => {
   }
 
   it("falls back to all of Seoul when the region has fewer than 5 records", () => {
-    const few = records.filter((r) => r.procedureId === "rejuran" && r.area !== "hongdae").concat(
-      records.filter((r) => r.procedureId === "rejuran" && r.area === "hongdae").slice(0, 3),
+    const few = records.filter((r) => r.procedureId === "rejuran_healer" && r.area !== "hongdae").concat(
+      records.filter((r) => r.procedureId === "rejuran_healer" && r.area === "hongdae").slice(0, 3),
     );
-    const s = buildSample(few, { procedureId: "rejuran", area: "hongdae", today: "2026-10-24" });
+    const s = buildSample(few, { procedureId: "rejuran_healer", area: "hongdae", today: "2026-10-24" });
     expect(s.region).toBe("seoul");
     expect(s.n).toBeGreaterThan(42);
   });
 
   it("drops outliers beyond 3 IQR", () => {
-    const base = records.filter((r) => r.procedureId === "rejuran" && ["sinsa", "gangnam", "apgujeong"].includes(r.area));
+    const base = records.filter((r) => r.procedureId === "rejuran_healer" && ["sinsa", "gangnam", "apgujeong"].includes(r.area));
     const outlier: PriceRecord = { ...base[0], id: "pr_outlier", normalizedUnitKrw: 900000, paidKrw: 1800000, date: "2026-10-01", verified: true, source: "shared_record" };
-    const s = buildSample([...base, outlier], { procedureId: "rejuran", area: "gangnam", today: "2026-10-24" });
+    const s = buildSample([...base, outlier], { procedureId: "rejuran_healer", area: "gangnam", today: "2026-10-24" });
     expect(s.outliers.map((r) => r.id)).toEqual(["pr_outlier"]);
     expect(s.n).toBe(42);
   });

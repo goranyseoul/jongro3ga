@@ -47,7 +47,7 @@ const yuki: ProcedureRequestV1 = {
   schema: "pibu/procedure-request@1",
   requestId: "req_yuki01",
   customerAgentId: "cag_7f3k2",
-  procedureId: "rejuran",
+  procedureId: "rejuran_healer",
   amount: { value: 2, unit: "cc" },
   budgetKrw: { max: 450000 },
   areas: ["sinsa", "gangnam", "apgujeong"],
@@ -194,7 +194,7 @@ describe("ordering, rules, budget", () => {
   });
 
   it("picks the menu item nearest the requested amount, larger on ties", () => {
-    const item = (value: number) => ({ procedureId: "rejuran", product: "x", amount: { value, unit: "cc" as const }, priceKrw: 1, vatIncluded: true });
+    const item = (value: number) => ({ procedureId: "rejuran_healer", product: "x", amount: { value, unit: "cc" as const }, priceKrw: 1, vatIncluded: true });
     expect(nearestItem([item(1), item(3)], 2)?.amount.value).toBe(3);
     expect(nearestItem([item(1), item(2), item(4)], 2)?.amount.value).toBe(2);
   });

@@ -55,6 +55,8 @@ export const ALLOWED_CALLERS: Record<SkillId, readonly AgentRole[]> = {
   "platform.report_booking": ["clinic"],
   "platform.submit_outcome": ["customer"],
   "platform.report_signal": ["customer"],
+  "platform.anchor_record": ["customer"],
+  "platform.submit_review": ["customer"],
   "clinic.offers": ["platform", "customer"],
   "clinic.quote": ["customer"],
   "clinic.availability": ["customer", "platform"],

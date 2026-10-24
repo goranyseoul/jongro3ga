@@ -240,7 +240,7 @@ describe("demo routes", () => {
   it("inject writes 20 Ara outcomes dated 1 to 29 days before the clock with mean gap exactly 0.31", async () => {
     await clockPOST(post("/api/demo/clock", { to: "2026-11-14T13:00:00+09:00" }));
     const result = await body(await injectPOST());
-    expect(result).toMatchObject({ injected: 20, meanGapPct: 31, source: "builtin" });
+    expect(result).toMatchObject({ injected: 20, meanGapPct: 31, source: "seed_template" });
     expect(Math.abs(result.meanGap - 0.31)).toBeLessThan(1e-9);
     const now = Date.parse("2026-11-14T13:00:00+09:00");
     const outcomes = await getStore().list<Outcome>("platform", PLATFORM_COLLECTIONS.outcomes);

@@ -25,7 +25,7 @@ const judgeData = {
   requestId: "req_01J9Z8",
   matchId: "mt_4401",
   quotes: [
-    { quoteId: "qt_1203", clinicId: "cln_seoul_glow", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 340000, vatIncluded: true, includes: [] },
+    { quoteId: "qt_1203", clinicId: "cln_seoul_glow", procedureId: "rejuran_healer", amount: { value: 2, unit: "cc" }, priceKrw: 340000, vatIncluded: true, includes: [] },
   ],
 };
 

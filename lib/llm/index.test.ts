@@ -21,7 +21,7 @@ describe("runClaude without an API key", () => {
     };
     const first = await runClaude(options);
     const second = await runClaude(options);
-    expect(first).toEqual({ text: "", toolCalls: [{ name: "draft_procedure_request", input: { procedureId: "rejuran" } }] });
+    expect(first).toEqual({ text: "", toolCalls: [{ name: "draft_procedure_request", input: { procedureId: "rejuran_healer" } }] });
     expect(second).toEqual(first);
   });
 

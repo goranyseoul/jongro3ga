@@ -11,20 +11,20 @@
       "combinations": [
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.38
         },
         {
           "procedureIds": [
-            "shrink"
+            "shrink_universe"
           ],
           "share": 0.27
         },
         {
           "procedureIds": [
-            "rejuran",
-            "shrink"
+            "rejuran_healer",
+            "shrink_universe"
           ],
           "share": 0.18
         },
@@ -44,20 +44,20 @@
       "combinations": [
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.41
         },
         {
           "procedureIds": [
-            "rejuran",
-            "shrink"
+            "rejuran_healer",
+            "shrink_universe"
           ],
           "share": 0.24
         },
         {
           "procedureIds": [
-            "shrink"
+            "shrink_universe"
           ],
           "share": 0.19
         },
@@ -77,20 +77,20 @@
       "combinations": [
         {
           "procedureIds": [
-            "rejuran",
-            "shrink"
+            "rejuran_healer",
+            "shrink_universe"
           ],
           "share": 0.33
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.29
         },
         {
           "procedureIds": [
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.21
         },
@@ -110,19 +110,19 @@
       "combinations": [
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.34
         },
         {
           "procedureIds": [
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.27
         },
         {
           "procedureIds": [
-            "rejuran",
+            "rejuran_healer",
             "skin_botox"
           ],
           "share": 0.21
@@ -149,14 +149,14 @@
         },
         {
           "procedureIds": [
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.31
         },
         {
           "procedureIds": [
             "ulthera",
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.19
         },
@@ -176,7 +176,7 @@
       "combinations": [
         {
           "procedureIds": [
-            "botox_wrinkle"
+            "botox_forehead"
           ],
           "share": 0.44
         },
@@ -188,7 +188,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.25
         }
@@ -208,7 +208,7 @@
         },
         {
           "procedureIds": [
-            "botox_wrinkle"
+            "botox_forehead"
           ],
           "share": 0.28
         },
@@ -220,7 +220,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.14
         }
@@ -252,7 +252,7 @@
         },
         {
           "procedureIds": [
-            "botox_wrinkle"
+            "botox_forehead"
           ],
           "share": 0.16
         }
@@ -284,7 +284,7 @@
         },
         {
           "procedureIds": [
-            "botox_wrinkle"
+            "botox_forehead"
           ],
           "share": 0.18
         }
@@ -311,7 +311,7 @@
         {
           "procedureIds": [
             "juvelook_volume",
-            "botox_wrinkle"
+            "botox_forehead"
           ],
           "share": 0.22
         },
@@ -402,7 +402,7 @@
         },
         {
           "procedureIds": [
-            "rejuran",
+            "rejuran_healer",
             "skin_botox"
           ],
           "share": 0.23
@@ -429,7 +429,7 @@
         },
         {
           "procedureIds": [
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.26
         },
@@ -455,7 +455,7 @@
       "combinations": [
         {
           "procedureIds": [
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.35
         },
@@ -519,7 +519,7 @@
         },
         {
           "procedureIds": [
-            "rejuran",
+            "rejuran_healer",
             "fraxel"
           ],
           "share": 0.31
@@ -546,7 +546,7 @@
         },
         {
           "procedureIds": [
-            "juvelook"
+            "skin_booster_juvelook"
           ],
           "share": 0.28
         }
@@ -566,7 +566,7 @@
         },
         {
           "procedureIds": [
-            "juvelook"
+            "skin_booster_juvelook"
           ],
           "share": 0.34
         },
@@ -592,7 +592,7 @@
         },
         {
           "procedureIds": [
-            "juvelook"
+            "skin_booster_juvelook"
           ],
           "share": 0.5
         }
@@ -664,7 +664,7 @@
         },
         {
           "procedureIds": [
-            "rejuran",
+            "rejuran_healer",
             "laser_toning"
           ],
           "share": 0.24
@@ -775,7 +775,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.23
         }
@@ -801,7 +801,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.22
         }
@@ -827,7 +827,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.2
         }
@@ -893,7 +893,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.3
         },
@@ -919,7 +919,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.34
         },
@@ -939,7 +939,7 @@
       "combinations": [
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.37
         },
@@ -971,7 +971,7 @@
         },
         {
           "procedureIds": [
-            "rejuran"
+            "rejuran_healer"
           ],
           "share": 0.35
         },
@@ -1003,7 +1003,7 @@
         },
         {
           "procedureIds": [
-            "shrink"
+            "shrink_universe"
           ],
           "share": 0.21
         }
@@ -1023,7 +1023,7 @@
         },
         {
           "procedureIds": [
-            "shrink"
+            "shrink_universe"
           ],
           "share": 0.26
         },
@@ -1049,7 +1049,7 @@
       "combinations": [
         {
           "procedureIds": [
-            "shrink"
+            "shrink_universe"
           ],
           "share": 0.31
         },
@@ -1099,7 +1099,7 @@
         },
         {
           "procedureIds": [
-            "shrink"
+            "shrink_universe"
           ],
           "share": 0.2
         }
@@ -1125,7 +1125,7 @@
         },
         {
           "procedureIds": [
-            "thermage"
+            "thermage_flx"
           ],
           "share": 0.3
         }
@@ -1373,7 +1373,7 @@
       },
       "dataStatus": "demo_assumption"
     },
-    "thermage": {
+    "thermage_flx": {
       "typicalAmount": {
         "min": 300,
         "max": 600,
@@ -1381,7 +1381,7 @@
       },
       "dataStatus": "demo_assumption"
     },
-    "shrink": {
+    "shrink_universe": {
       "typicalAmount": {
         "min": 300,
         "max": 600,
@@ -1413,7 +1413,7 @@
       },
       "dataStatus": "demo_assumption"
     },
-    "rejuran": {
+    "rejuran_healer": {
       "typicalAmount": {
         "min": 2,
         "max": 3,
@@ -1421,7 +1421,7 @@
       },
       "dataStatus": "demo_assumption"
     },
-    "juvelook": {
+    "skin_booster_juvelook": {
       "typicalAmount": {
         "min": 1,
         "max": 2,
@@ -1477,7 +1477,7 @@
       },
       "dataStatus": "demo_assumption"
     },
-    "botox_wrinkle": {
+    "botox_forehead": {
       "typicalAmount": {
         "min": 20,
         "max": 50,

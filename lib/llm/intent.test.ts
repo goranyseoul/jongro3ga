@@ -36,7 +36,7 @@ describe("intent: one utterance to a draft pibu/procedure-request@1", () => {
       schema: "pibu/procedure-request@1",
       requestId: "req_yuki01",
       customerAgentId: "cag_7f3k2",
-      procedureId: "rejuran",
+      procedureId: "rejuran_healer",
       amount: { value: 2, unit: "cc" },
       budgetKrw: { max: 450000 },
       areas: ["sinsa", "gangnam", "apgujeong"],
@@ -53,7 +53,7 @@ describe("intent: one utterance to a draft pibu/procedure-request@1", () => {
 
   it("reads the Korean spelling '리주란 받고 싶어' the same way", async () => {
     const result = await draftProcedureRequest({ utterance: "리주란 받고 싶어", profile: { ...YUKI, locale: "ko" }, typicalAmount, today: "2026-10-24" });
-    expect(result.draft.procedureId).toBe("rejuran");
+    expect(result.draft.procedureId).toBe("rejuran_healer");
     expect(result.draft.amount).toEqual({ value: 2, unit: "cc" });
     expect(result.request?.requestId).toMatch(/^req_[a-f0-9]{12}$/);
     expect(result.text).toContain("리쥬란 2cc");
@@ -87,12 +87,12 @@ describe("intent: one utterance to a draft pibu/procedure-request@1", () => {
     vi.mocked(llm.runClaude).mockResolvedValueOnce({ text: "", toolCalls: [{ name: "draft_procedure_request", input: { procedureId: "rejuran_healer" } }] });
     const result = await draftProcedureRequest({ utterance: "リジュラン受けたい", profile: YUKI, typicalAmount, today: "2026-10-24" });
     expect(result.source).toBe("fixture");
-    expect(result.draft.procedureId).toBe("rejuran");
+    expect(result.draft.procedureId).toBe("rejuran_healer");
   });
 
   it("has no medical advice wording in any summary line", async () => {
     for (const locale of ["ja", "ko", "en", "zh-CN"] as const) {
-      const result = await draftProcedureRequest({ utterance: "rejuran", profile: { ...YUKI, locale }, typicalAmount, today: "2026-10-24" });
+      const result = await draftProcedureRequest({ utterance: "rejuran_healer", profile: { ...YUKI, locale }, typicalAmount, today: "2026-10-24" });
       expect(findMedicalViolations(result.text)).toEqual([]);
     }
   });
@@ -105,9 +105,9 @@ describe("intent: one utterance to a draft pibu/procedure-request@1", () => {
 
   it("recognizes procedure names in four languages, the most specific first", () => {
     expect(findProcedureId("쥬베룩 볼륨 맞고 싶어")).toBe("juvelook_volume");
-    expect(findProcedureId("ジュベルック")).toBe("juvelook");
-    expect(findProcedureId("我想打丽珠兰")).toBe("rejuran");
-    expect(findProcedureId("Thermage once a year")).toBe("thermage");
+    expect(findProcedureId("ジュベルック")).toBe("skin_booster_juvelook");
+    expect(findProcedureId("我想打丽珠兰")).toBe("rejuran_healer");
+    expect(findProcedureId("Thermage once a year")).toBe("thermage_flx");
     expect(findProcedureId("multiple questions")).toBeUndefined();
   });
 });

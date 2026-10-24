@@ -14,22 +14,22 @@ describe("platform.recipe", () => {
     const recipe = buildRecipe(query(["elasticity"], "25-29"));
     expect(RecipeV1Schema.safeParse(recipe).success).toBe(true);
     expect(recipe.combinations).toHaveLength(3);
-    expect(recipe.combinations[0]).toEqual({ procedureIds: ["rejuran"], share: 0.41, sampleSize: 19 });
+    expect(recipe.combinations[0]).toEqual({ procedureIds: ["rejuran_healer"], share: 0.41, sampleSize: 19 });
     expect(recipe.combinations.map((c) => c.share)).toEqual([...recipe.combinations.map((c) => c.share)].sort((a, b) => b - a));
   });
 
   it("gives Rejuran the 2~3cc typical amount, the monthly series of three and the master's downtime", () => {
-    const recipe = buildRecipe(query(["elasticity"], "25-29", ["rejuran"]));
-    const rejuran = recipe.procedures.find((p) => p.procedureId === "rejuran")!;
+    const recipe = buildRecipe(query(["elasticity"], "25-29", ["rejuran_healer"]));
+    const rejuran = recipe.procedures.find((p) => p.procedureId === "rejuran_healer")!;
     expect(rejuran).toEqual({
-      procedureId: "rejuran",
+      procedureId: "rejuran_healer",
       typicalAmount: { min: 2, max: 3, unit: "cc" },
       cycle: { initial: { count: 3, intervalDays: 30 }, maintenanceIntervalDays: { min: 90, max: 120 } },
       downtimeDays: { min: 1, max: 3 },
       onsetDays: { min: 14, max: 28 },
     });
     // procedureIds filter: every combination includes the requested procedure
-    expect(recipe.combinations.every((c) => c.procedureIds.includes("rejuran"))).toBe(true);
+    expect(recipe.combinations.every((c) => c.procedureIds.includes("rejuran_healer"))).toBe(true);
   });
 
   it("puts Juvelook Volume first for smile lines in the late 20s and early 30s (DEMO.md scenario 1)", () => {
@@ -39,14 +39,14 @@ describe("platform.recipe", () => {
 
   it("shows Ulthera and Thermage for women over 40 with sagging (DEMO.md scenario 3)", () => {
     const top = buildRecipe(query(["elasticity"], "40+")).combinations.map((c) => c.procedureIds.join("+"));
-    expect(top).toEqual(["ulthera", "thermage", "ulthera+thermage"]);
+    expect(top).toEqual(["ulthera", "thermage_flx", "ulthera+thermage_flx"]);
   });
 
   it("merges concerns: shares are over all matched records and still sorted", () => {
     const recipe = buildRecipe(query(["elasticity", "dryness"], "25-29"));
-    expect(recipe.combinations[0]!.procedureIds).toEqual(["rejuran"]);
-    // rejuran: 0.41 * 46 + 0.30 * 33 = 28.76 of 79
-    expect(recipe.combinations[0]).toEqual({ procedureIds: ["rejuran"], share: 0.36, sampleSize: 29 });
+    expect(recipe.combinations[0]!.procedureIds).toEqual(["rejuran_healer"]);
+    // rejuran_healer: 0.41 * 46 + 0.30 * 33 = 28.76 of 79
+    expect(recipe.combinations[0]).toEqual({ procedureIds: ["rejuran_healer"], share: 0.36, sampleSize: 29 });
   });
 
   it("always carries the base disclaimer and the demo value note", () => {
@@ -80,7 +80,7 @@ describe("platform.recipe", () => {
   it("uses shared records for the typical amount once there are at least 10 (p25~p75, 0.5 steps)", () => {
     const records = Array.from({ length: 12 }, (_, i): PriceRecord => ({
       id: `pr_${i}`,
-      procedureId: "rejuran",
+      procedureId: "rejuran_healer",
       area: "gangnam",
       amount: { value: i < 6 ? 2 : 4, unit: "cc" },
       paidKrw: 300000,
@@ -89,12 +89,12 @@ describe("platform.recipe", () => {
       verified: true,
       date: "2026-10-01",
     }));
-    expect(typicalAmountFor("rejuran", records)).toEqual({ amount: { min: 2, max: 4, unit: "cc" }, fromRecords: true });
-    expect(typicalAmountFor("rejuran", records.slice(0, 9))).toEqual({ amount: { min: 2, max: 3, unit: "cc" }, fromRecords: false });
+    expect(typicalAmountFor("rejuran_healer", records)).toEqual({ amount: { min: 2, max: 4, unit: "cc" }, fromRecords: true });
+    expect(typicalAmountFor("rejuran_healer", records.slice(0, 9))).toEqual({ amount: { min: 2, max: 3, unit: "cc" }, fromRecords: false });
   });
 
   it("exposes the selection rate for the procedure filter and the concern ranking for the opener", () => {
-    expect(selectionRate("rejuran", "25-29")).toBeGreaterThan(selectionRate("ulthera", "25-29"));
+    expect(selectionRate("rejuran_healer", "25-29")).toBeGreaterThan(selectionRate("ulthera", "25-29"));
     expect(topConcerns("25-29").map((c) => c.label.ko)).toEqual([
       "팔자 주름이 파여 보임",
       "피부결이 거칠어짐",

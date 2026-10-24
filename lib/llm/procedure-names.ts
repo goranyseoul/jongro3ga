@@ -17,13 +17,13 @@ const n = (ko: string, ja: string, en: string, zh: string, aliases: string[] = [
 
 export const PROCEDURE_NAMES: Record<string, ProcedureNames> = {
   ulthera: n("울쎄라", "ウルセラ", "Ulthera", "超声刀", ["울쎄라", "울세라", "ulthera", "ultherapy", "ウルセラ", "超声刀"]),
-  thermage: n("써마지", "サーマージ", "Thermage", "热玛吉", ["서마지", "thermage", "サーマジ", "热玛吉"]),
-  shrink: n("슈링크", "シュリンク", "Shrink", "Shrink提升", ["shrink", "슈링크", "シュリンク"]),
+  thermage_flx: n("써마지", "サーマージ", "Thermage", "热玛吉", ["서마지", "thermage_flx", "サーマジ", "热玛吉"]),
+  shrink_universe: n("슈링크", "シュリンク", "Shrink", "Shrink提升", ["shrink_universe", "슈링크", "シュリンク"]),
   inmode: n("인모드", "インモード", "InMode", "InMode", ["inmode", "인모드", "インモード"]),
   oligio: n("올리지오", "オリジオ", "Oligio", "Oligio", ["oligio", "올리지오", "オリジオ"]),
   thread_lift: n("실리프팅", "糸リフト", "Thread lift", "线雕", ["실리프팅", "thread lift", "糸リフト", "スレッドリフト", "线雕", "埋线"]),
-  rejuran: n("리쥬란", "リジュラン", "Rejuran", "丽珠兰", ["리쥬란", "리주란", "아이리쥬란", "rejuran", "リジュラン", "丽珠兰", "婴儿针"]),
-  juvelook: n("쥬베룩", "ジュベルック", "Juvelook", "Juvelook", ["쥬베룩", "주베룩", "juvelook", "ジュベルック"]),
+  rejuran_healer: n("리쥬란", "リジュラン", "Rejuran", "丽珠兰", ["리쥬란", "리주란", "아이리쥬란", "rejuran_healer", "リジュラン", "丽珠兰", "婴儿针"]),
+  skin_booster_juvelook: n("쥬베룩", "ジュベルック", "Juvelook", "Juvelook", ["쥬베룩", "주베룩", "skin_booster_juvelook", "ジュベルック"]),
   juvelook_eye: n("쥬베룩 아이", "ジュベルックアイ", "Juvelook Eye", "Juvelook眼部", ["쥬베룩 아이", "쥬베룩아이", "juvelook eye", "ジュベルックアイ"]),
   juvelook_volume: n("쥬베룩 볼륨", "ジュベルックボリューム", "Juvelook Volume", "Juvelook Volume", [
     "쥬베룩 볼륨",
@@ -37,7 +37,7 @@ export const PROCEDURE_NAMES: Record<string, ProcedureNames> = {
   exosome: n("엑소좀", "エクソソーム", "Exosome", "外泌体", ["엑소좀", "exosome", "エクソソーム", "外泌体"]),
   filler: n("필러", "フィラー", "Filler", "玻尿酸填充", ["필러", "filler", "ヒアルロン酸", "フィラー", "玻尿酸", "填充"]),
   sculptra: n("스컬트라", "スカルプトラ", "Sculptra", "童颜针", ["스컬트라", "sculptra", "スカルプトラ", "童颜针"]),
-  botox_wrinkle: n("보톡스 (주름)", "ボトックス（しわ）", "Botox (wrinkles)", "肉毒素（除皱）", ["보톡스", "미간 보톡스", "botox", "ボトックス", "肉毒素", "除皱针"]),
+  botox_forehead: n("보톡스 (주름)", "ボトックス（しわ）", "Botox (wrinkles)", "肉毒素（除皱）", ["보톡스", "미간 보톡스", "botox", "ボトックス", "肉毒素", "除皱针"]),
   botox_square_jaw: n("사각턱 보톡스", "エラボトックス", "Square jaw botox", "瘦脸针", ["사각턱 보톡스", "턱 보톡스", "square jaw botox", "jaw botox", "エラボトックス", "瘦脸针"]),
   skin_botox: n("스킨보톡스", "スキンボトックス", "Skin botox", "微滴肉毒", ["스킨보톡스", "스킨 보톡스", "skin botox", "スキンボトックス", "微滴肉毒", "水光肉毒"]),
   contour_injection: n("윤곽주사", "輪郭注射", "Contouring injection", "溶脂针", ["윤곽주사", "contour injection", "輪郭注射", "溶脂针"]),

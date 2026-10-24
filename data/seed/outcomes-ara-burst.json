@@ -3,7 +3,7 @@
     "outcomeId": "out_burst_001",
     "bookingId": "bkg_burst_001",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 412500,
     "receivedAmount": {
@@ -30,7 +30,7 @@
     "outcomeId": "out_burst_002",
     "bookingId": "bkg_burst_002",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 414579,
     "receivedAmount": {
@@ -57,7 +57,7 @@
     "outcomeId": "out_burst_003",
     "bookingId": "bkg_burst_003",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 416658,
     "receivedAmount": {
@@ -84,7 +84,7 @@
     "outcomeId": "out_burst_004",
     "bookingId": "bkg_burst_004",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 418737,
     "receivedAmount": {
@@ -111,7 +111,7 @@
     "outcomeId": "out_burst_005",
     "bookingId": "bkg_burst_005",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 420849,
     "receivedAmount": {
@@ -138,7 +138,7 @@
     "outcomeId": "out_burst_006",
     "bookingId": "bkg_burst_006",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 422928,
     "receivedAmount": {
@@ -165,7 +165,7 @@
     "outcomeId": "out_burst_007",
     "bookingId": "bkg_burst_007",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 425007,
     "receivedAmount": {
@@ -192,7 +192,7 @@
     "outcomeId": "out_burst_008",
     "bookingId": "bkg_burst_008",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 427086,
     "receivedAmount": {
@@ -219,7 +219,7 @@
     "outcomeId": "out_burst_009",
     "bookingId": "bkg_burst_009",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 429165,
     "receivedAmount": {
@@ -246,7 +246,7 @@
     "outcomeId": "out_burst_010",
     "bookingId": "bkg_burst_010",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 431244,
     "receivedAmount": {
@@ -273,7 +273,7 @@
     "outcomeId": "out_burst_011",
     "bookingId": "bkg_burst_011",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 433356,
     "receivedAmount": {
@@ -300,7 +300,7 @@
     "outcomeId": "out_burst_012",
     "bookingId": "bkg_burst_012",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 435435,
     "receivedAmount": {
@@ -327,7 +327,7 @@
     "outcomeId": "out_burst_013",
     "bookingId": "bkg_burst_013",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 437514,
     "receivedAmount": {
@@ -354,7 +354,7 @@
     "outcomeId": "out_burst_014",
     "bookingId": "bkg_burst_014",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 439593,
     "receivedAmount": {
@@ -381,7 +381,7 @@
     "outcomeId": "out_burst_015",
     "bookingId": "bkg_burst_015",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 441672,
     "receivedAmount": {
@@ -408,7 +408,7 @@
     "outcomeId": "out_burst_016",
     "bookingId": "bkg_burst_016",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 443751,
     "receivedAmount": {
@@ -435,7 +435,7 @@
     "outcomeId": "out_burst_017",
     "bookingId": "bkg_burst_017",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 445863,
     "receivedAmount": {
@@ -462,7 +462,7 @@
     "outcomeId": "out_burst_018",
     "bookingId": "bkg_burst_018",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 447942,
     "receivedAmount": {
@@ -489,7 +489,7 @@
     "outcomeId": "out_burst_019",
     "bookingId": "bkg_burst_019",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 450021,
     "receivedAmount": {
@@ -516,7 +516,7 @@
     "outcomeId": "out_burst_020",
     "bookingId": "bkg_burst_020",
     "clinicId": "cln_ara",
-    "procedureId": "rejuran",
+    "procedureId": "rejuran_healer",
     "checkpoint": "D0",
     "paidKrw": 452100,
     "receivedAmount": {
