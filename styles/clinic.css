@@ -1,0 +1,105 @@
+/* Clinic console shell. Values come from app/globals.css tokens only.
+   1024px is the lg breakpoint from docs/spec/05-screens.md (media queries cannot read variables). */
+
+.clinic-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.clinic-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.clinic-brand {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.clinic-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-1);
+}
+
+.clinic-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch);
+  padding: 0 var(--sp-2);
+  border-radius: var(--r-md);
+  color: var(--text-muted);
+  font-size: var(--t-sm);
+  font-weight: var(--w-med);
+  text-align: center;
+  transition: background-color var(--dur-press) var(--ease-out), color var(--dur-press) var(--ease-out);
+}
+
+.clinic-nav-link:hover {
+  color: var(--text);
+  background: var(--bg-sunken);
+}
+
+.clinic-nav-link[aria-current="page"] {
+  color: var(--text);
+  background: var(--bg-sunken);
+}
+
+.clinic-nav-link:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.clinic-content {
+  width: 100%;
+  max-width: calc(var(--sp-16) * 18);
+  margin: 0 auto;
+  padding: var(--sp-6) var(--sp-4) var(--sp-12);
+}
+
+@media (min-width: 1024px) {
+  .clinic-shell {
+    grid-template-columns: calc(var(--sp-16) * 4) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .clinic-side {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    gap: var(--sp-6);
+    padding: var(--sp-6) var(--sp-4);
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+  }
+
+  .clinic-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-1);
+  }
+
+  .clinic-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .clinic-nav-link {
+    justify-content: flex-start;
+    padding: 0 var(--sp-3);
+    font-size: var(--t-body);
+    text-align: start;
+  }
+
+  .clinic-content {
+    padding: var(--sp-8) var(--sp-8) var(--sp-16);
+  }
+}
