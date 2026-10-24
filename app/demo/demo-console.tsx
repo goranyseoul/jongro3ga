@@ -20,6 +20,7 @@ import {
   readOutcomesInjected,
   writeOutcomesInjected,
   type DemoBooking,
+  type A2ALogEntry,
 } from "@/lib/ui-data/ops";
 import { confirmBooking, injectOutcomes, moveClock, resetSeed } from "./demo-api";
 import { DemoControls } from "./controls";
@@ -35,6 +36,26 @@ const REPLAY_STEP_MS = 700;
 
 const inlineLink = cn("text-text underline", focusRing);
 
+type ServerLogEntry = Omit<A2ALogEntry, "humanSummary" | "state" | "contextId" | "taskId" | "skillId"> & {
+  contextId?: string;
+  taskId?: string;
+  skillId?: string;
+  state?: string;
+  humanSummary: Partial<Record<"ko" | "ja" | "en" | "zh-CN", string>>;
+};
+
+/** A stored A2ALogEntry (lib/a2a/log.ts) as the row the ops log component renders. */
+function toUiLogEntry(entry: ServerLogEntry): A2ALogEntry {
+  return {
+    ...entry,
+    contextId: entry.contextId ?? "",
+    taskId: entry.taskId ?? "",
+    skillId: entry.skillId ?? "",
+    state: (entry.state ?? "TASK_STATE_FAILED") as A2ALogEntry["state"],
+    humanSummary: entry.humanSummary.ko ?? entry.humanSummary.en ?? "",
+  };
+}
+
 export function DemoConsole() {
   const [personaId, setPersonaId] = useState("yuki");
   // the left frame always shows a customer, so it keeps the last customer persona
@@ -47,6 +68,28 @@ export function DemoConsole() {
   const [bookings, setBookings] = useState<DemoBooking[]>(buildDemoBookings);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<ReactNode>(null);
+  // Real A2A calls from the server log (/api/demo/log). When there are any, they replace the scripted replay.
+  const [liveEntries, setLiveEntries] = useState<A2ALogEntry[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      try {
+        const response = await fetch("/api/demo/log", { cache: "no-store" });
+        if (!response.ok) return;
+        const body = (await response.json()) as { entries: ServerLogEntry[] };
+        if (alive) setLiveEntries(body.entries.map(toUiLogEntry));
+      } catch {
+        // keep the last good list
+      }
+    };
+    void load();
+    const timer = setInterval(load, 2000);
+    return () => {
+      alive = false;
+      clearInterval(timer);
+    };
+  }, []);
 
   // /ops/rules reads the same flag, so coming back to this page keeps the injected state
   useEffect(() => {
@@ -71,7 +114,7 @@ export function DemoConsole() {
   const yukiConfirmed = bookings.some((booking) => booking.id === YUKI_BOOKING_ID && booking.state === "confirmed");
   // calls after the booking wait for the demo clock to reach their day (timestamps carry +09:00, so the date slices compare)
   const after = yukiConfirmed ? YUKI_FLOW.slice(YUKI_BOOKING_STEP).filter((entry) => entry.at.slice(0, 10) <= clock.slice(0, 10)) : [];
-  const entries = [...YUKI_FLOW.slice(0, shown), ...after];
+  const entries = liveEntries.length > 0 ? liveEntries : [...YUKI_FLOW.slice(0, shown), ...after];
 
   const run = async (key: string, task: () => Promise<void>) => {
     setBusy(key);
