@@ -48,7 +48,7 @@ function outcome(partial: Partial<Outcome> & { clinicId: string; at: string }): 
     id,
     outcomeId: id,
     bookingId: `bkg_t${seq}`,
-    procedureId: "rejuran",
+    procedureId: "rejuran_healer",
     checkpoint: "D0",
     paidKrw: 330_000,
     receivedAmount: { value: 2, unit: "cc" },

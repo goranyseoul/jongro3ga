@@ -54,7 +54,7 @@ describe("signals", () => {
   it("price distribution keeps verified non public records of the last 120 days, per area group and for all of Seoul", () => {
     const record = (i: number, area: PriceRecord["area"], unit: number, extra: Partial<PriceRecord> = {}): PriceRecord => ({
       id: `pr_${i}`,
-      procedureId: "rejuran",
+      procedureId: "rejuran_healer",
       area,
       amount: { value: 2, unit: "cc" },
       paidKrw: unit * 2,

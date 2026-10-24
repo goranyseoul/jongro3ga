@@ -18,7 +18,7 @@ export const ARA_BURST = {
   gapMax: 0.37,
   /** Ara's Rejuran 2cc quote, 300,000 VAT excluded, normalized to VAT included. */
   quotedKrw: 330_000,
-  procedureId: "rejuran",
+  procedureId: "rejuran_healer",
   idPrefix: "out_ara_b",
 } as const;
 
