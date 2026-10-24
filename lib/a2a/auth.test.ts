@@ -80,6 +80,16 @@ describe("agent token", () => {
       .setExpirationTime(Date.parse(T0) / 1000 + 60)
       .sign(new TextEncoder().encode("test-secret-test-secret-test-sec"));
     expect(await verifyAgentToken(`Bearer ${adminToken}`)).toBeNull();
+
+    // A2A_TOKEN_SECRET is the shared secret: a token signed elsewhere with it is accepted.
+    const external = await new SignJWT({ role: "clinic" })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuer(ISSUER)
+      .setSubject("cln_mint")
+      .setIssuedAt(Date.parse(T0) / 1000)
+      .setExpirationTime(Date.parse(T0) / 1000 + 60)
+      .sign(new TextEncoder().encode("test-secret-test-secret-test-sec"));
+    expect(await verifyAgentToken(`Bearer ${external}`)).toEqual({ agentId: "cln_mint", role: "clinic" });
   });
 
   it("expires after 7 days of demo clock", async () => {
