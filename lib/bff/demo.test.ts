@@ -153,3 +153,18 @@ describe("demo controls", () => {
     expect(shortlist.appliedRuleIds).toContain(ara.id);
   }, 30_000);
 });
+
+describe("demo scenario driver", () => {
+  it("runs Yuki over A2A: three quotes with the 07 verdicts, then a booking waiting at Seoul Glow", async () => {
+    const { runYukiScenario } = await import("./demo-scenario");
+    const result = await runYukiScenario();
+    expect(result.quotes.map((q) => q.clinicId).sort()).toEqual(["cln_ara", "cln_mint", "cln_seoul_glow"]);
+    const labels = Object.fromEntries(
+      (result.verdicts as { quoteId: string; label: string }[]).map((v) => [result.quotes.find((q) => q.quoteId === v.quoteId)!.clinicId, v.label]),
+    );
+    expect(labels).toEqual({ cln_mint: "underdosed", cln_seoul_glow: "fair", cln_ara: "fair" });
+    expect(result.booking?.state).toBe("TASK_STATE_WORKING");
+    const confirmed = await (await confirmRoute.POST(post({}))).json();
+    expect(confirmed.clinicId).toBe("cln_seoul_glow");
+  }, 60_000);
+});

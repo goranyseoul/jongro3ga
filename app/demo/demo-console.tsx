@@ -22,7 +22,7 @@ import {
   type DemoBooking,
   type A2ALogEntry,
 } from "@/lib/ui-data/ops";
-import { confirmBooking, injectOutcomes, moveClock, resetSeed } from "./demo-api";
+import { confirmBooking, injectOutcomes, moveClock, resetSeed, runScenario } from "./demo-api";
 import { DemoControls } from "./controls";
 import { LiveLog } from "./live-log";
 import { SidePanel, type SideMode } from "./side-panel";
@@ -250,7 +250,17 @@ export function DemoConsole() {
           />
         </section>
 
-        <LiveLog entries={entries} shown={shown} steps={YUKI_BOOKING_STEP} playing={playing} onPlay={() => setPlaying(true)} />
+        <LiveLog entries={entries} shown={shown} steps={YUKI_BOOKING_STEP} playing={playing} onPlay={() =>
+            run("play", async () => {
+              try {
+                const result = await runScenario();
+                setMessage(`Yuki 요청을 실제 에이전트로 보냈어요: 견적 ${result.quotes.length}건, 서울글로우 11/14 11:00 예약이 병원 확인을 기다려요. [예약 확정]을 눌러 보세요.`);
+              } catch (error) {
+                setMessage(`실제 호출에 실패해 녹화된 흐름을 재생해요: ${error instanceof Error ? error.message : String(error)}`);
+                setPlaying(true);
+              }
+            })
+          } />
 
         <SidePanel
           mode={sideMode}

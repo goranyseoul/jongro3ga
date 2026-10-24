@@ -37,3 +37,8 @@ export async function moveClock(to: string): Promise<{ now: string }> {
 export async function confirmBooking(booking: DemoBooking): Promise<{ confirmedBy: "pibu_operator" | "clinic_staff" }> {
   return call("/api/demo/confirm-booking", { bookingId: booking.id });
 }
+
+/** POST /api/demo/run-scenario: Yuki's request over real A2A calls (recipe, match, three quotes, judge, booking). */
+export async function runScenario(): Promise<{ requestId: string; quotes: unknown[]; steps: { step: string; state: string }[] }> {
+  return call("/api/demo/run-scenario");
+}
