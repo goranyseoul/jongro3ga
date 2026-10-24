@@ -121,6 +121,7 @@ describe("judge, booking, outcome", () => {
     { quoteId: "qt_glow", clinicId: "cln_seoul_glow", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 340000, vatIncluded: true, includes: ["numbing_cream"] },
     { quoteId: "qt_mint", clinicId: "cln_mint", procedureId: "rejuran", amount: { value: 1, unit: "cc" }, priceKrw: 99000, vatIncluded: true, includes: [] },
     { quoteId: "qt_ara", clinicId: "cln_ara", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 300000, vatIncluded: false, includes: [] },
+    { quoteId: "qt_hanbit", clinicId: "cln_hanbit", procedureId: "rejuran", amount: { value: 2, unit: "cc" }, priceKrw: 420000, vatIncluded: true, includes: [] },
   ];
 
   async function judged() {
@@ -171,11 +172,12 @@ describe("judge, booking, outcome", () => {
       ["qt_glow", "fair"],
       ["qt_mint", "underdosed"],
       ["qt_ara", "fair"],
+      ["qt_hanbit", "high"],
     ]);
     expect(list.verdicts[2].clinicFlags).toEqual([{ code: "paid_more_than_quoted", avgGapPct: 15 }, { code: "indicative_price" }]);
     expect(list.verdicts[1].typicalAmount).toEqual({ min: 2, max: 3, unit: "cc" });
     const stored = await platformStore.judgedQuotes();
-    expect(stored.map((j) => j.quoteId).sort()).toEqual(["qt_ara", "qt_glow", "qt_mint"]);
+    expect(stored.map((j) => j.quoteId).sort()).toEqual(["qt_ara", "qt_glow", "qt_hanbit", "qt_mint"]);
     expect(stored.every((j) => j.matchId === shortlist.matchId)).toBe(true);
   });
 

@@ -112,7 +112,8 @@ excluded.forEach((r, i) => {
 
 // Other regions and procedures, 10~20 each.
 const OTHER = [
-  { procedureId: "rejuran", product: "Rejuran Healer", unit: "cc", areas: ["myeongdong"], amount: 2, base: 175000, step: 4000, n: 14 },
+  // myeongdong: p75 204,000 < 210,000 <= p90 211,800, so Hanbit 2cc 420,000 is "high" end to end too (07 table).
+  { procedureId: "rejuran", product: "Rejuran Healer", unit: "cc", areas: ["myeongdong"], amount: 2, base: 165000, step: 4000, n: 14 },
   { procedureId: "rejuran", product: "Rejuran Healer", unit: "cc", areas: ["hongdae"], amount: 2, base: 150000, step: 3500, n: 12 },
   { procedureId: "thermage", product: "Thermage FLX", unit: "shot", areas: ["gangnam", "sinsa", "apgujeong"], amount: 300, base: 4500, step: 150, n: 12 },
   { procedureId: "botox_wrinkle", product: "Botox (domestic)", unit: "unit", areas: ["gangnam", "sinsa", "myeongdong", "hongdae"], amount: 50, base: 2400, step: 100, n: 15 },
@@ -160,6 +161,11 @@ check(quantile(units, 0.9) === 210000, `p90 ${quantile(units, 0.9)}`);
 check(roundHalf(quantile(amounts, 0.25)) === 2, "amount p25");
 check(roundHalf(quantile(amounts, 0.75)) === 3, "amount p75");
 check(sample.every((r) => r.date >= "2026-07-16" && r.date <= "2026-10-22"), "dates out of range");
+
+const md = records
+  .filter((r) => r.procedureId === "rejuran" && r.area === "myeongdong" && r.verified && r.source !== "public_offer")
+  .map((r) => r.normalizedUnitKrw);
+check(quantile([...md].sort((a, b) => a - b), 0.75) < 210000 && 210000 <= quantile([...md].sort((a, b) => a - b), 0.9), "myeongdong band for Hanbit");
 
 const text = `${JSON.stringify(records, null, 2)}\n`;
 if (process.argv.includes("--check")) {
