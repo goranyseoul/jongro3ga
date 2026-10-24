@@ -86,7 +86,7 @@ export const INBOX_TASKS: InboxTask[] = [
     product: "Rejuran Healer",
     amount: { value: 2, unit: "cc" },
     priceKrw: 340000,
-    slot: "2026-11-15T11:00:00+09:00",
+    slot: "2026-11-14T11:00:00+09:00",
     safetyFlags: [],
     contact: { channel: "LINE", handle: "yuki_demo" },
   },
