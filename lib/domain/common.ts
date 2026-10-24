@@ -3,7 +3,8 @@ export type Locale = "ja" | "zh-CN" | "en" | "ko";
 export type Nationality = "JP" | "CN" | "US" | "KR" | (string & {});
 export type AgeBand = "20-24" | "25-29" | "30-34" | "35-39" | "40+";
 export type Area = "gangnam" | "sinsa" | "apgujeong" | "myeongdong" | "hongdae" | "other";
-export type Unit = "cc" | "shot" | "unit" | "line" | "session";
+/** "vial" is not in 06-data-model.md yet: the procedure table sells Juvelook and Sculptra by the vial. */
+export type Unit = "cc" | "shot" | "unit" | "line" | "session" | "vial";
 export type Concern =
   | "elasticity"
   | "fine_lines"
