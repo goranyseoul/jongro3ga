@@ -21,6 +21,7 @@ import {
   type DateRange,
 } from "@/components/ui";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
+import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
@@ -551,13 +552,41 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     }
   };
 
+  // Checklist of the onboarding slots: answered or passed steps are done, the open one is active, and a
+  // declined required consent shows as an error.
+  const currentIndex = STEP_ORDER.indexOf(step);
+  const declinedRequired = BLOCKING_CONSENTS.some((type) => draft.consents[type] === false);
+  const taskSteps: TaskStep[] = [
+    ...(draft.firstIntent
+      ? [{ id: "firstIntent", label: c.slots.firstIntent, value: draft.firstIntent, status: "done" as const }]
+      : []),
+    ...STEP_ORDER.filter((s) => STEP_SLOT[s] && isStepApplicable(s, draft)).map((s): TaskStep => {
+      const answer = slotValue(s, draft, c, locale);
+      const agreed = CONSENTS.filter((type) => draft.consents[type]).length;
+      const passed = STEP_ORDER.indexOf(s) < currentIndex;
+      // the language answer is pre-filled from the page language, so it only counts once the step was reached
+      const answered = answer !== undefined && (s !== "languages" || passed);
+      let status: TaskStep["status"] = s === step ? "active" : answered || passed ? "done" : "pending";
+      if (s === "consent" && declinedRequired) status = "error";
+      return {
+        id: s,
+        label: c.slots[STEP_SLOT[s] ?? "nickname"],
+        value: s === "consent" ? (agreed > 0 ? `${agreed}/${CONSENTS.length}` : undefined) : s === "languages" && !passed && s !== step ? undefined : answer,
+        status,
+      };
+    }),
+  ];
+
+  const checklist = (
+    <Card className="flex flex-col gap-sp-3">
+      <CardHeader title={done ? c.doneTitle : c.previewTitle} description={c.progress(percent)} />
+      <TaskSteps steps={taskSteps} label={c.previewTitle} statusLabels={c.taskStatus} />
+    </Card>
+  );
+
   const preview = (
     <div className="flex flex-col gap-sp-4">
-      <Card className="flex flex-col gap-sp-4">
-        <CardHeader title={done ? c.doneTitle : c.previewTitle} description={c.progress(percent)} />
-        <p className="text-label text-subtle">{c.previewCaption}</p>
-        <SlotList draft={draft} copy={c} locale={locale} />
-      </Card>
+      {checklist}
       <AgentCardView card={card} labels={c.agentCard} />
     </div>
   );
@@ -599,30 +628,33 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   );
 
   const chatMain = (
-    <main className="relative flex min-h-0 flex-1 flex-col items-center px-sp-4">
-      <h1 className="sr-only">{c.title}</h1>
-      <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">
-        <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
-          {messages.map((m) => (
-            <ChatBubble key={m.id} from={m.from}>
-              {m.text}
-            </ChatBubble>
-          ))}
-          {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
-          {!typing ? widget() : null}
-          <div ref={endRef} />
+    <main className="relative flex min-h-0 flex-1 px-sp-4 lg:gap-sp-8 lg:px-sp-6">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col items-center">
+        <h1 className="sr-only">{c.title}</h1>
+        <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">
+          <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
+            {messages.map((m) => (
+              <ChatBubble key={m.id} from={m.from}>
+                {m.text}
+              </ChatBubble>
+            ))}
+            {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
+            {!typing ? widget() : null}
+            <div ref={endRef} />
+          </div>
+        </div>
+        <div className="w-full max-w-2xl pb-sp-6 pt-sp-2">
+          <ChatInput
+            onSend={handleText}
+            label={c.inputLabel}
+            sendLabel={c.send}
+            placeholder={c.placeholder}
+            disabled={typing || done}
+            hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+          />
         </div>
       </div>
-      <div className="w-full max-w-2xl pb-sp-6 pt-sp-2">
-        <ChatInput
-          onSend={handleText}
-          label={c.inputLabel}
-          sendLabel={c.send}
-          placeholder={c.placeholder}
-          disabled={typing || done}
-          hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-        />
-      </div>
+      <aside className="hidden w-80 shrink-0 overflow-y-auto py-sp-4 lg:block">{checklist}</aside>
     </main>
   );
 
@@ -671,53 +703,56 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   );
 }
 
+// What the customer answered for a step, or undefined while it is open.
+function slotValue(step: StepId, draft: Draft, c: OnboardingCopy, locale: Locale): ReactNode {
+  switch (step) {
+    case "locale":
+      return draft.locale ? LOCALE_NAME[draft.locale] : undefined;
+    case "consent": {
+      const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
+      return agreed.length > 0 ? agreed.join(" · ") : undefined;
+    }
+    case "nickname":
+      return draft.nickname;
+    case "nationality":
+      return draft.nationality ? c.nationality[draft.nationality] : undefined;
+    case "residency":
+      return draft.residency ? c.residency[draft.residency] : undefined;
+    case "ageBand":
+      return draft.ageBand ? c.ageBand[draft.ageBand] : undefined;
+    case "trip":
+      return draft.trip.arrival && draft.trip.departure ? `${draft.trip.arrival} ~ ${draft.trip.departure}` : undefined;
+    case "stayArea":
+      return draft.trip.stayArea ? c.area[draft.trip.stayArea] : undefined;
+    case "concerns":
+      return draft.concerns.length > 0 ? draft.concerns.map((v) => c.concern[v]).join(" · ") : undefined;
+    case "history":
+      return draft.history;
+    case "pregnant":
+      return draft.pregnant === undefined ? undefined : draft.pregnant ? c.yes : c.no;
+    case "budget": {
+      if (!draft.budget) return undefined;
+      const { currency, amount } = draft.budget;
+      const krw = Math.round(amount * FX_RATES[currency]);
+      const reference = currency === "KRW" ? undefined : { currency: currency as ReferenceCurrency, amount };
+      return <Money krw={krw} reference={reference} locale={locale} />;
+    }
+    case "downtime":
+      return draft.downtime === undefined ? undefined : c.days(draft.downtime);
+    case "languages":
+      return draft.languages.length > 0 ? draft.languages.map((v) => LOCALE_NAME[v]).join(" · ") : undefined;
+    case "channel":
+      return draft.channel ? c.channel[draft.channel] : undefined;
+    case "handle":
+      return draft.handle;
+    default:
+      return undefined;
+  }
+}
+
 // Live slot rows for the agent preview and the summary card. Empty values show a middle dot.
 function SlotList({ draft, copy: c, locale }: { draft: Draft; copy: OnboardingCopy; locale: Locale }) {
-  const value = (step: StepId) => {
-    switch (step) {
-      case "locale":
-        return draft.locale ? LOCALE_NAME[draft.locale] : undefined;
-      case "consent": {
-        const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
-        return agreed.length > 0 ? agreed.join(" · ") : undefined;
-      }
-      case "nickname":
-        return draft.nickname;
-      case "nationality":
-        return draft.nationality ? c.nationality[draft.nationality] : undefined;
-      case "residency":
-        return draft.residency ? c.residency[draft.residency] : undefined;
-      case "ageBand":
-        return draft.ageBand ? c.ageBand[draft.ageBand] : undefined;
-      case "trip":
-        return draft.trip.arrival && draft.trip.departure ? `${draft.trip.arrival} ~ ${draft.trip.departure}` : undefined;
-      case "stayArea":
-        return draft.trip.stayArea ? c.area[draft.trip.stayArea] : undefined;
-      case "concerns":
-        return draft.concerns.length > 0 ? draft.concerns.map((v) => c.concern[v]).join(" · ") : undefined;
-      case "history":
-        return draft.history;
-      case "pregnant":
-        return draft.pregnant === undefined ? undefined : draft.pregnant ? c.yes : c.no;
-      case "budget": {
-        if (!draft.budget) return undefined;
-        const { currency, amount } = draft.budget;
-        const krw = Math.round(amount * FX_RATES[currency]);
-        const reference = currency === "KRW" ? undefined : { currency: currency as ReferenceCurrency, amount };
-        return <Money krw={krw} reference={reference} locale={locale} />;
-      }
-      case "downtime":
-        return draft.downtime === undefined ? undefined : c.days(draft.downtime);
-      case "languages":
-        return draft.languages.length > 0 ? draft.languages.map((v) => LOCALE_NAME[v]).join(" · ") : undefined;
-      case "channel":
-        return draft.channel ? c.channel[draft.channel] : undefined;
-      case "handle":
-        return draft.handle;
-      default:
-        return undefined;
-    }
-  };
+  const value = (step: StepId) => slotValue(step, draft, c, locale);
 
   const rows = STEP_ORDER.filter((step) => STEP_SLOT[step] && isStepApplicable(step, draft));
 

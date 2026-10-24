@@ -62,3 +62,32 @@
     gap: var(--sp-3);
   }
 }
+
+/* Task steps (onboarding checklist): spinner of the active step and the check that draws itself */
+@keyframes cu-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes cu-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.cu-task-spinner {
+  animation: cu-spin 900ms linear infinite;
+}
+.cu-task-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: cu-draw var(--dur-dropdown) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cu-task-spinner,
+  .cu-task-check path {
+    animation: none;
+  }
+}
