@@ -12,6 +12,7 @@ import {
   Chip,
   ChipGroup,
   ConsentCard,
+  Input,
   Money,
   Sheet,
   WidgetCurrency,
@@ -24,6 +25,8 @@ import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
 import { cn } from "@/lib/cn";
 import { LOCALES, LOCALE_NAME, wordBreak } from "../locales";
+import { FaceParticles } from "../hero/face-particles";
+import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
 import {
   AGE_BANDS,
@@ -122,6 +125,15 @@ export type OnboardingIntro = {
   suggestions: string[];
   startPlain: string;
   suggestionsLabel: string;
+  signup: {
+    toggle: string;
+    title: string;
+    email: string;
+    submit: string;
+    demo: string;
+    personas: string[];
+    close: string;
+  };
 };
 
 export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intro: OnboardingIntro; footer: ReactNode }) {
@@ -129,6 +141,8 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const router = useRouter();
 
   const [started, setStarted] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
+  const [email, setEmail] = useState("");
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [step, setStep] = useState<StepId>("locale");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -546,14 +560,24 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     const kw = wordBreak(locale);
     return (
       <div lang={locale} className="flex min-h-dvh flex-col">
-        <header className="border-b border-border-soft px-sp-4 py-sp-2 md:px-sp-6">
-          <span className="inline-flex min-h-touch items-center text-title font-semi">Pibu</span>
+        <Splash wordmark={intro.wordmark} />
+        <section className="theme-sunrise flex min-h-dvh flex-col">
+        <header className="flex justify-end px-sp-4 py-sp-2 md:px-sp-6">
+          <Button
+            variant="secondary"
+            aria-expanded={signupOpen}
+            aria-haspopup="dialog"
+            onClick={() => setSignupOpen((open) => !open)}
+          >
+            {intro.signup.toggle}
+          </Button>
         </header>
-        <main className="flex flex-1 flex-col items-center justify-center px-sp-4 py-sp-12">
+        <main className="flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12">
           <div className="flex w-full max-w-2xl flex-col gap-sp-6">
+            <FaceParticles />
             <div className="flex flex-col items-center gap-sp-3 text-center">
-              <h1 className="text-h1 font-semi md:text-display">{intro.wordmark}</h1>
-              <p className={cn(kw, "text-title font-med md:text-h2")}>{intro.title}</p>
+              <h1 className="type-wordmark">{intro.wordmark}</h1>
+              <p className={cn(kw, "type-hero")}>{intro.title}</p>
               <p className={cn(kw, "text-body text-muted")}>{intro.body}</p>
             </div>
             <ChatInput
@@ -575,7 +599,47 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
             </Button>
           </div>
         </main>
+        </section>
         {footer}
+        <Sheet open={signupOpen} onClose={() => setSignupOpen(false)} title={intro.signup.title} closeLabel={intro.signup.close}>
+          {/* mock: no account backend yet, signing up simply starts the conversation */}
+          <form
+            className="flex flex-col gap-sp-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSignupOpen(false);
+              start();
+            }}
+          >
+            <Input
+              label={intro.signup.email}
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <Button type="submit" fullWidth>
+              {intro.signup.submit}
+            </Button>
+          </form>
+          <div className="mt-sp-6 flex flex-col gap-sp-2">
+            <p className="text-label text-muted">{intro.signup.demo}</p>
+            <div className="flex flex-wrap gap-sp-2">
+              {intro.signup.personas.map((persona) => (
+                <Chip
+                  key={persona}
+                  onClick={() => {
+                    setSignupOpen(false);
+                    start();
+                  }}
+                >
+                  {persona}
+                </Chip>
+              ))}
+            </div>
+          </div>
+        </Sheet>
       </div>
     );
   }

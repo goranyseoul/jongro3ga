@@ -9,6 +9,7 @@ export type LandingCopy = {
   suggestionsLabel: string;
   suggestions: string[];
   startPlain: string;
+  signup: { toggle: string; title: string; email: string; submit: string; demo: string; close: string };
   footer: {
     regLabel: string;
     regDemo: string;
@@ -22,12 +23,17 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
   ja: {
     start: "はじめる",
     hero: {
-      title: "あなたの代わりに、エージェントが韓国のクリニックと話します",
-      body: "受けたいことをそのまま書いてください。韓国の女性が実際に支払った記録をもとに、見積もりの価格と量を確かめます。",
+      title: "相談から予約、施術の記録まで。あなたのエージェントがずっと一緒です",
+      body: "やりたいことをそのまま書いてください。エージェントが相談にのり、クリニックのエージェントと直接やりとりして日程に合う見積もりを集めます。施術の記録はあなたの手元に残り、次の来韓をもっと良くします。",
     },
     suggestionsLabel: "入力例",
-    suggestions: ["リジュランを受けたい", "肌のハリが気になる", "2泊3日で受けられる施術を知りたい"],
+    suggestions: [
+      "11月13日から15日まで韓国に行くけど、サーマクールを受けたい",
+      "来月ソウルに3泊。ダウンタイムが短い施術で毛穴をケアしたい",
+      "前回のリジュランから4か月たった。次はいつがいい？",
+    ],
     startPlain: "まずエージェントを作る",
+    signup: { toggle: "会員登録", title: "会員登録", email: "メールアドレス", submit: "登録して始める", demo: "デモアカウントで試す", close: "閉じる" },
     footer: {
       regLabel: "外国人患者誘致事業者 登録番号",
       regDemo: "デモ",
@@ -39,12 +45,17 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
   "zh-CN": {
     start: "开始",
     hero: {
-      title: "由代理替你和韩国诊所沟通",
-      body: "直接写下你想做的。我们以韩国女性的实际支付记录为依据，确认报价的价格和用量是否合理。",
+      title: "从咨询、预约到项目记录，你的代理全程陪伴",
+      body: "直接写下你的想法。代理会和你沟通，直接与诊所代理对接，收集符合行程的报价。项目记录由你保管，让下一次来韩更顺利。",
     },
     suggestionsLabel: "示例",
-    suggestions: ["想做丽珠兰", "在意皮肤紧致", "想了解三天行程能做的项目"],
+    suggestions: [
+      "我11月13日到15日去韩国，想做热玛吉",
+      "下个月在首尔住3晚，想改善毛孔，恢复期要短",
+      "上次做丽珠兰已经4个月了，下次什么时候合适？",
+    ],
     startPlain: "先创建代理",
+    signup: { toggle: "注册", title: "注册", email: "邮箱", submit: "注册并开始", demo: "使用演示账号", close: "关闭" },
     footer: {
       regLabel: "外国患者招揽业者 登记号",
       regDemo: "演示",
@@ -56,12 +67,17 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
   en: {
     start: "Get started",
     hero: {
-      title: "Your agent talks to Korean clinics for you",
-      body: "Just write what you want. We check quoted prices and doses against what Korean women actually paid.",
+      title: "From the first question to your next visit, one agent with you",
+      body: "Just write what you want. Your agent talks it through, asks clinic agents for quotes that fit your trip, and keeps your treatment records with you so every next visit gets better.",
     },
     suggestionsLabel: "Examples",
-    suggestions: ["I want Rejuran", "My skin is losing firmness", "What fits a 3-day trip?"],
+    suggestions: [
+      "I'm in Korea from Nov 13 to 15 and want Thermage",
+      "3 nights in Seoul next month. Pores, with short downtime",
+      "It's been 4 months since my last Rejuran. When is the next one?",
+    ],
     startPlain: "Just create my agent",
+    signup: { toggle: "Sign up", title: "Sign up", email: "Email", submit: "Sign up and start", demo: "Try a demo account", close: "Close" },
     footer: {
       regLabel: "Foreign patient attraction agency registration no.",
       regDemo: "Demo",
@@ -73,12 +89,17 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
   ko: {
     start: "시작하기",
     hero: {
-      title: "내 시술 기록, 다음 회차까지 챙겨 드려요",
-      body: "말하듯 적어 주세요. 시술마다 다른 주기를 계산해 다음 회차를 알려 드려요.",
+      title: "상담부터 시술 기록, 다음 방문까지 에이전트가 함께해요",
+      body: "말하듯 적어 주세요. 에이전트가 상담하고, 받은 시술을 기록해 두고, 다음 회차와 다음 경험을 더 낫게 만들어요.",
     },
     suggestionsLabel: "예시",
-    suggestions: ["리쥬란 맞은 거 기록하고 싶어", "다음 시술 날짜 알려 줘", "써마지 받은 지 1년 됐나?"],
+    suggestions: [
+      "11월 13일부터 15일까지 한국 가는데, 써마지 맞고 싶어",
+      "지난주에 리쥬란 2cc 맞았어. 기록해 줘",
+      "써마지 받은 지 1년 됐는데 다음은 언제가 좋아?",
+    ],
     startPlain: "그냥 시작하기",
+    signup: { toggle: "회원가입", title: "회원가입", email: "이메일", submit: "가입하고 시작하기", demo: "데모 계정으로 해 보기", close: "닫기" },
     footer: {
       regLabel: "외국인환자 유치사업자 등록번호",
       regDemo: "데모",
