@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FiMinus, FiPlus, FiSearch } from "react-icons/fi";
+import { FiAlertCircle, FiMinus, FiPlus, FiSearch } from "react-icons/fi";
 import { Button, buttonStyles, Card, Input, Timeline } from "@/components/ui";
 import { formatMonth, formatRange, moneyText } from "@/components/customer/format";
 import { updateDemoState } from "@/components/customer/demo-state";
@@ -33,6 +33,7 @@ import {
 
 const STATUSES: RecordStatus[] = ["active", "paused", "stopped"];
 const PLAN_COUNT = 4;
+const ALERT_COUNT = 2;
 const PAGE_SIZE = 10;
 const FIND_DAYS = 30;
 
@@ -73,6 +74,13 @@ export function RecordsView() {
   const [page, setPage] = useState(0);
 
   const latest = latestPerProcedure(records);
+  // Urgent alerts by the page title: active procedures past their recommended interval, most overdue first.
+  const alerts = latest
+    .map((record) => ({ record, point: carePoint(record, DEMO_TODAY) }))
+    .flatMap(({ record, point }) =>
+      point && (point.kind === "late" || point.kind === "courseLate") ? [{ record, kind: point.kind, late: point.late }] : [],
+    )
+    .sort((a, b) => b.late - a.late);
   const summaries = procedureSummaries(records);
   const history = [...records].sort((a, b) => b.date.localeCompare(a.date) || b.sessionNumber - a.sessionNumber);
 
@@ -163,7 +171,28 @@ export function RecordsView() {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-sp-3">
-        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <div className="flex flex-wrap items-center gap-sp-3">
+          <h1 className="text-h2 font-semi">{t("title")}</h1>
+          {alerts.length > 0 ? (
+            <ul aria-label={t("alerts.label")} className="flex flex-wrap items-center gap-sp-2">
+              {alerts.slice(0, ALERT_COUNT).map(({ record, kind, late }) => (
+                <li key={record.id}>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById("rec-plan")?.scrollIntoView({ behavior: "smooth" })}
+                    className={cn(smallChip, "border-warning bg-elev text-warning hover:bg-sunken", focusRing)}
+                  >
+                    <FiAlertCircle aria-hidden />
+                    {t(`alerts.${kind}`, { procedure: label.procedure(record.procedureId), late })}
+                  </button>
+                </li>
+              ))}
+              {alerts.length > ALERT_COUNT ? (
+                <li className="text-label font-med text-warning">{t("alerts.more", { n: alerts.length - ALERT_COUNT })}</li>
+              ) : null}
+            </ul>
+          ) : null}
+        </div>
         <Link href="/records/new" className={buttonStyles()}>
           {t("add")}
         </Link>
@@ -284,7 +313,10 @@ export function RecordsView() {
                           ))}
                         </div>
                         {record.status === "active" ? (
-                          <Link href={findHref(record.procedureId)} className={cn(smallChip, "ms-auto", chipState(false), focusRing)}>
+                          <Link
+                            href={findHref(record.procedureId)}
+                            className={cn(smallChip, "ms-auto border-danger bg-elev text-danger hover:bg-sunken", focusRing)}
+                          >
                             <FiSearch aria-hidden />
                             {t("plan.findClinic")}
                           </Link>

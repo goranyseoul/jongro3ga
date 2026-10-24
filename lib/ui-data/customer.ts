@@ -584,7 +584,7 @@ export const TREATMENT_RECORDS: TreatmentRecord[] = [
     rating: 3,
     sessionNumber: 1,
     nextDue: "2026-07-20",
-    status: "paused",
+    status: "active",
     sharedToPlatform: true,
   },
   {

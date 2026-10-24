@@ -427,6 +427,12 @@
       "total": "총 {amount}",
       "prev": "이전 시술",
       "next": "다음 시술"
+    },
+    "alerts": {
+      "label": "중요 알림",
+      "late": "{procedure} 권장 주기보다 {late}일 지났어요",
+      "courseLate": "{procedure} 권장 간격보다 {late}일 늦었어요",
+      "more": "외 {n}건"
     }
   },
   "recordsNew": {

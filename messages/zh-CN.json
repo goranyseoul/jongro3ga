@@ -427,6 +427,12 @@
       "total": "共 {amount}",
       "prev": "上一个",
       "next": "下一个"
+    },
+    "alerts": {
+      "label": "重要提醒",
+      "late": "{procedure} 已超过建议周期{late}天",
+      "courseLate": "{procedure} 比建议间隔晚了{late}天",
+      "more": "另有{n}项"
     }
   },
   "recordsNew": {

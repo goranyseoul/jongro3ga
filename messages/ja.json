@@ -427,6 +427,12 @@
       "total": "合計 {amount}",
       "prev": "前へ",
       "next": "次へ"
+    },
+    "alerts": {
+      "label": "重要なお知らせ",
+      "late": "{procedure} 推奨周期を{late}日過ぎています",
+      "courseLate": "{procedure} 推奨間隔より{late}日遅れています",
+      "more": "ほか{n}件"
     }
   },
   "recordsNew": {

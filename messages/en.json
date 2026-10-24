@@ -427,6 +427,12 @@
       "total": "Total {amount}",
       "prev": "Previous",
       "next": "Next"
+    },
+    "alerts": {
+      "label": "Important alerts",
+      "late": "{procedure}: {late} days past the recommended cycle",
+      "courseLate": "{procedure}: {late} days past the recommended interval",
+      "more": "+{n} more"
     }
   },
   "recordsNew": {
