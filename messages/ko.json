@@ -373,7 +373,17 @@
       "summary": "{first}부터 {count}회 · 총 {total}",
       "pages": "페이지",
       "prevPage": "이전 페이지",
-      "nextPage": "다음 페이지"
+      "nextPage": "다음 페이지",
+      "preset": {
+        "procedure": "시술",
+        "area": "부위",
+        "clinic": "병원"
+      },
+      "area": {
+        "forehead": "이마",
+        "full_face": "얼굴 전체",
+        "jawline": "턱선"
+      }
     },
     "calendar": {
       "title": "달력",
@@ -393,7 +403,9 @@
       "title": "내 관리 계획",
       "lead": "기록을 시술별 권장 주기와 비교해서 다음에 할 일을 알려줘요.",
       "showAll": "관리 카드 모두 보기 ({n})",
-      "showLess": "접기"
+      "showLess": "접기",
+      "findClinic": "병원 찾기",
+      "findIntent": "{procedure} 이벤트가 있는 병원 찾아줘 ({range})"
     },
     "cycle": {
       "course": "권장: {interval}일 간격 {count}회, 이후 {every}",

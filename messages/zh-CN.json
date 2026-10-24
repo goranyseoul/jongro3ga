@@ -373,7 +373,17 @@
       "summary": "自{first}起{count}次 · 共 {total}",
       "pages": "页码",
       "prevPage": "上一页",
-      "nextPage": "下一页"
+      "nextPage": "下一页",
+      "preset": {
+        "procedure": "项目",
+        "area": "部位",
+        "clinic": "诊所"
+      },
+      "area": {
+        "forehead": "额头",
+        "full_face": "全脸",
+        "jawline": "下颌线"
+      }
     },
     "calendar": {
       "title": "日历",
@@ -393,7 +403,9 @@
       "title": "我的护理计划",
       "lead": "将记录与各项目的建议周期对比，告诉你下一步该做什么。",
       "showAll": "查看全部护理卡片 ({n})",
-      "showLess": "收起"
+      "showLess": "收起",
+      "findClinic": "查找诊所",
+      "findIntent": "帮我找有{procedure}活动的诊所 ({range})"
     },
     "cycle": {
       "course": "建议: 每隔{interval}天做{count}次，之后{every}",

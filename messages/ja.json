@@ -373,7 +373,17 @@
       "summary": "{first}から{count}回 · 合計 {total}",
       "pages": "ページ",
       "prevPage": "前のページ",
-      "nextPage": "次のページ"
+      "nextPage": "次のページ",
+      "preset": {
+        "procedure": "施術",
+        "area": "部位",
+        "clinic": "クリニック"
+      },
+      "area": {
+        "forehead": "額",
+        "full_face": "顔全体",
+        "jawline": "フェイスライン"
+      }
     },
     "calendar": {
       "title": "カレンダー",
@@ -393,7 +403,9 @@
       "title": "私のケアプラン",
       "lead": "記録を施術ごとの推奨周期と比べて、次にすることをお知らせします。",
       "showAll": "ケアカードをすべて表示 ({n})",
-      "showLess": "閉じる"
+      "showLess": "閉じる",
+      "findClinic": "クリニックを探す",
+      "findIntent": "{procedure}のイベントがあるクリニックを探して ({range})"
     },
     "cycle": {
       "course": "推奨: {interval}日間隔で{count}回、その後は{every}",

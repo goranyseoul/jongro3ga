@@ -373,7 +373,17 @@
       "summary": "Since {first}: {count} sessions · total {total}",
       "pages": "Pages",
       "prevPage": "Previous page",
-      "nextPage": "Next page"
+      "nextPage": "Next page",
+      "preset": {
+        "procedure": "Procedure",
+        "area": "Area",
+        "clinic": "Clinic"
+      },
+      "area": {
+        "forehead": "Forehead",
+        "full_face": "Full face",
+        "jawline": "Jawline"
+      }
     },
     "calendar": {
       "title": "Calendar",
@@ -393,7 +403,9 @@
       "title": "My care plan",
       "lead": "Your records compared with each procedure's recommended cycle, so you know what to do next.",
       "showAll": "Show all care cards ({n})",
-      "showLess": "Show less"
+      "showLess": "Show less",
+      "findClinic": "Find clinics",
+      "findIntent": "Find clinics with a {procedure} event ({range})"
     },
     "cycle": {
       "course": "Recommended: {count} sessions {interval} days apart, then {every}",
