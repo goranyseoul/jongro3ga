@@ -15,63 +15,75 @@ import {
   buttonStyles,
   type CurrencyAmount,
 } from "@/components/ui";
+import { api, useApi } from "@/components/customer/api";
+import { ApiStatus } from "@/components/customer/api-state";
 import { AMOUNT_STEPS } from "@/components/customer/condition";
 import { formatDay, moneyText } from "@/components/customer/format";
-import { updateDemoState } from "@/components/customer/demo-state";
-import { useCustomer, useLabels } from "@/components/customer/use-customer";
+import { useLabels, useMe } from "@/components/customer/use-customer";
+import type { BookingView } from "@/lib/agents/customer/bff";
+import type { OutcomeResult } from "@/lib/agents/customer/orchestrator";
+import type { TreatmentRecord } from "@/lib/domain/customer";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
-import {
-  BOOKING_ID,
-  D0_ANCHOR,
-  DEFAULT_BOOKING_CHOICE,
-  FX_RATES,
-  OUTCOME_DEFAULTS,
-  QUOTES,
-  addDays,
-  buildBooking,
-  computeNextDue,
-  consentsFor,
-  getProcedure,
-  nextSessionNumber,
-  referenceFor,
-  upcomingSessionNumber,
-  walletFor,
-  type ProductVerified,
-  type TreatmentRecord,
-} from "@/lib/ui-data/customer";
+import { FX_RATES, addDays, referenceFor, type ProductVerified, type Unit } from "@/lib/ui-data/customer";
 
 const RATES = { KRW: 1, ...FX_RATES };
 const CURRENCIES = ["KRW", "JPY", "CNY", "USD"] as const;
 const VERIFIED: ProductVerified[] = ["vial_shown", "packaging_shown", "explained_verbally", "not_checked"];
+const DOWNTIME_STEPS = [0, 1, 2, 3, 5, 7];
 
-export function OutcomeForm() {
+export type OutcomeFormProps = {
+  bookingId: string;
+  /** Inbox item of a D7/D30 check-in; without it the screen records D0. */
+  checkinId?: string;
+  checkpoint?: "D7" | "D30";
+};
+
+export function OutcomeForm({ bookingId, checkinId, checkpoint }: OutcomeFormProps) {
+  const t = useTranslations("outcomes");
+  const { data: view, error, loading, reload } = useApi<BookingView>(`/api/customer/bookings/${bookingId}`);
+
+  if (!view) {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <ApiStatus error={error} loading={loading} onRetry={reload} />
+      </>
+    );
+  }
+  if (checkinId && checkpoint) return <CheckinForm view={view} checkinId={checkinId} checkpoint={checkpoint} />;
+  return <D0Form view={view} />;
+}
+
+function D0Form({ view }: { view: BookingView }) {
   const t = useTranslations("outcomes");
   const common = useTranslations("common");
   const label = useLabels();
-  const { locale, profile, demo, records } = useCustomer();
-
-  const choice = demo.booking ?? { ...DEFAULT_BOOKING_CHOICE, status: "pending_clinic" as const };
-  const booking = buildBooking({ quoteId: choice.quoteId, slot: choice.slot, status: choice.status });
-  const quote = QUOTES.find((q) => q.quoteId === booking.quoteId) ?? QUOTES[0]!;
-  const procedure = getProcedure(quote.procedureId);
+  const { locale } = useMe();
+  const { booking, quote } = view;
   const day = booking.slot.slice(0, 10);
+  const unit = (quote?.amount.unit ?? "cc") as Unit;
 
-  const [paid, setPaid] = useState<CurrencyAmount>({ currency: "KRW", amount: OUTCOME_DEFAULTS.paidKrw });
-  const [received, setReceived] = useState<number>(OUTCOME_DEFAULTS.receivedAmount.value);
-  const [verified, setVerified] = useState<ProductVerified>(OUTCOME_DEFAULTS.productVerified);
-  const [satisfaction, setSatisfaction] = useState<number>(OUTCOME_DEFAULTS.satisfaction);
-  const [pain, setPain] = useState<number>(OUTCOME_DEFAULTS.painScore);
+  const [paid, setPaid] = useState<CurrencyAmount>({ currency: "KRW", amount: booking.priceKrw });
+  const [received, setReceived] = useState<number>(quote?.amount.value ?? AMOUNT_STEPS[unit][0] ?? 1);
+  const [verified, setVerified] = useState<ProductVerified>("vial_shown");
+  const [satisfaction, setSatisfaction] = useState<number>(5);
+  const [pain, setPain] = useState<number>(3);
+  const [wouldReturn, setWouldReturn] = useState<"yes" | "no" | null>(null);
   const [comment, setComment] = useState("");
-  const [savedRecord, setSavedRecord] = useState<TreatmentRecord | null>(null);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [saved, setSaved] = useState<{ record: TreatmentRecord; sent: boolean } | null>(null);
 
-  if (choice.status === "pending_clinic" && !demo.outcome) {
+  const already = view.outcome?.outcome;
+
+  if (booking.status === "requested" || booking.status === "pending_clinic" || booking.status === "canceled") {
     return (
       <>
         <h1 className="text-h2 font-semi">{t("title")}</h1>
         <Card className="flex flex-col gap-sp-3">
           <CardHeader title={t("wait.title")} description={t("wait.body")} as="h2" />
-          <Link href={`/bookings/${BOOKING_ID}`} className={cn(buttonStyles({ variant: "secondary" }), "self-start")}>
+          <Link href={`/bookings/${booking.id}`} className={cn(buttonStyles({ variant: "secondary" }), "self-start")}>
             {t("wait.open")}
           </Link>
         </Card>
@@ -80,50 +92,32 @@ export function OutcomeForm() {
   }
 
   const paidKrw = paid.amount === null ? null : Math.round(paid.amount * RATES[paid.currency]);
-  const difference = paidKrw === null ? null : paidKrw - quote.priceKrw;
+  const difference = paidKrw === null ? null : paidKrw - booking.priceKrw;
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (paidKrw === null || !procedure) return;
-    const previous = records
-      .filter((r) => r.procedureId === procedure.id && r.date <= day)
-      .sort((a, b) => b.date.localeCompare(a.date))[0];
-    const sessionNumber = nextSessionNumber(previous, procedure, day);
-    const shares = consentsFor(profile).some((c) => c.type === "shareAnonymizedRecords" && c.granted);
-    const id = `rec_${profile.id}_${booking.bookingId}`;
-    // The clinic-confirmed visit is appended to the chart on the chain (platform.anchor_record with the D0 outcome)
-    const wallet = walletFor(profile.id, records.filter((r) => r.id !== id));
-    const record: TreatmentRecord = {
-      id,
-      customerId: profile.id,
-      procedureId: procedure.id,
-      date: day,
-      amount: { value: received, unit: procedure.unit },
-      priceKrw: paidKrw,
-      clinicId: booking.clinicId,
-      source: "booking",
-      rating: satisfaction as TreatmentRecord["rating"],
-      note: comment.trim() || undefined,
-      sessionNumber,
-      nextDue: computeNextDue(procedure, day, sessionNumber),
-      status: "active",
-      sharedToPlatform: shares,
-      anchor: wallet ? { subjectId: wallet.subjectId, version: wallet.version + 1, tx: D0_ANCHOR.tx } : undefined,
-    };
-    updateDemoState((state) => ({
-      ...state,
-      addedRecords: [...state.addedRecords.filter((r) => r.id !== record.id), record],
-      outcome: {
-        paidKrw,
-        receivedValue: received,
-        productVerified: verified,
-        satisfaction,
-        painScore: pain,
-        comment: comment.trim(),
-        submittedAt: "2026-11-14T13:10:00+09:00",
-      },
-    }));
-    setSavedRecord(record);
+    if (paidKrw === null || wouldReturn === null) return;
+    setSending(true);
+    setFailed(false);
+    try {
+      const result = await api<OutcomeResult>(`/api/customer/bookings/${booking.id}/outcome`, {
+        method: "POST",
+        json: {
+          paidKrw,
+          receivedAmount: { value: received, unit },
+          productVerified: verified,
+          satisfaction,
+          painScore: pain,
+          wouldReturn: wouldReturn === "yes",
+          ...(comment.trim() ? { comment: comment.trim() } : {}),
+        },
+      });
+      setSaved({ record: result.record, sent: result.sent });
+    } catch {
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   const scale = (value: number, onChange: (n: number) => void, name: string) => (
@@ -136,19 +130,17 @@ export function OutcomeForm() {
     </div>
   );
 
-  if (savedRecord || demo.outcome) {
-    const record = savedRecord ?? records.find((r) => r.id === `rec_${profile.id}_${booking.bookingId}`);
+  if (saved || (already && booking.status === "completed")) {
+    const record = saved?.record;
     return (
       <>
         <h1 className="text-h2 font-semi">{t("saved.title")}</h1>
         <Card className="flex flex-col gap-sp-2">
-          <p className="text-body text-muted">{t("saved.body")}</p>
+          <p className="text-body text-muted">{saved && !saved.sent ? t("saved.local") : t("saved.body")}</p>
           {record?.nextDue ? (
             <>
               <p className="text-label text-muted">{t("saved.next")}</p>
-              <p className="text-title font-semi tabular-nums">
-                {common("session", { n: upcomingSessionNumber(record), date: record.nextDue })}
-              </p>
+              <p className="text-title font-semi tabular-nums">{common("session", { n: record.sessionNumber + 1, date: record.nextDue })}</p>
             </>
           ) : null}
         </Card>
@@ -169,17 +161,17 @@ export function OutcomeForm() {
 
       <Card className="flex flex-col gap-sp-2">
         <dl className="flex flex-col gap-sp-2">
-          <Fact term={t("summary.clinic")}>{label.clinic(booking.clinicId)}</Fact>
+          <Fact term={t("summary.clinic")}>{label.clinic(view.clinic.id, view.clinic.name)}</Fact>
           <Fact term={t("summary.when")}>
             <span className="tabular-nums">{formatDay(day, locale)}</span>
           </Fact>
           <Fact term={t("summary.quoted")}>
-            <Money krw={quote.priceKrw} reference={referenceFor(quote.priceKrw, locale)} locale={locale} />
+            <Money krw={booking.priceKrw} reference={referenceFor(booking.priceKrw, locale)} locale={locale} />
           </Fact>
         </dl>
       </Card>
 
-      <form onSubmit={submit} className="flex flex-col gap-sp-6">
+      <form onSubmit={(event) => void submit(event)} className="flex flex-col gap-sp-6">
         <div className="flex flex-col gap-sp-2">
           <WidgetCurrency
             value={paid}
@@ -192,30 +184,21 @@ export function OutcomeForm() {
           />
           {difference !== null ? (
             <p className="text-caption text-subtle tabular-nums">
-              {difference === 0
-                ? t("gap.same")
-                : t(difference > 0 ? "gap.higher" : "gap.lower", { amount: moneyText(Math.abs(difference), locale) })}
+              {difference === 0 ? t("gap.same") : t(difference > 0 ? "gap.higher" : "gap.lower", { amount: moneyText(Math.abs(difference), locale) })}
             </p>
           ) : null}
         </div>
 
-        {procedure ? (
-          <WidgetSlider
-            label={t("fields.received")}
-            steps={AMOUNT_STEPS[procedure.unit].map((n) => ({ value: n, label: label.amount({ value: n, unit: procedure.unit }) }))}
-            value={received}
-            onChange={setReceived}
-          />
-        ) : null}
+        <WidgetSlider
+          label={t("fields.received")}
+          steps={AMOUNT_STEPS[unit].map((n) => ({ value: n, label: label.amount({ value: n, unit }) }))}
+          value={received}
+          onChange={setReceived}
+        />
 
         <fieldset className="flex flex-col gap-sp-2">
           <legend className="mb-sp-2 text-label font-med text-muted">{t("fields.verified")}</legend>
-          <ChipGroup
-            label={t("fields.verified")}
-            options={VERIFIED.map((value) => ({ value, label: t(`verified.${value}`) }))}
-            value={verified}
-            onChange={setVerified}
-          />
+          <ChipGroup label={t("fields.verified")} options={VERIFIED.map((value) => ({ value, label: t(`verified.${value}`) }))} value={verified} onChange={setVerified} />
         </fieldset>
 
         <div className="flex flex-col gap-sp-2">
@@ -236,10 +219,24 @@ export function OutcomeForm() {
           </span>
         </div>
 
+        <fieldset className="flex flex-col gap-sp-2">
+          <legend className="mb-sp-2 text-label font-med text-muted">{t("fields.wouldReturn")}</legend>
+          <ChipGroup
+            label={t("fields.wouldReturn")}
+            options={[
+              { value: "yes" as const, label: t("wouldReturn.yes") },
+              { value: "no" as const, label: t("wouldReturn.no") },
+            ]}
+            value={wouldReturn}
+            onChange={setWouldReturn}
+          />
+        </fieldset>
+
         <Input label={t("fields.comment")} value={comment} maxLength={140} onChange={(event) => setComment(event.target.value)} />
 
         <p className="text-caption text-subtle">{t("share")}</p>
-        <Button type="submit" size="lg" fullWidth disabled={paidKrw === null}>
+        {failed ? <p className="text-label text-muted">{t("error")}</p> : null}
+        <Button type="submit" size="lg" fullWidth disabled={paidKrw === null || wouldReturn === null || sending}>
           {t("submit")}
         </Button>
       </form>
@@ -249,7 +246,92 @@ export function OutcomeForm() {
   );
 }
 
-// D7 and D30 check-ins are P1 (05-screens.md): the screen only tells the customer what will be asked and when.
+// D7 / D30 check-in from the inbox: actual downtime, satisfaction and whether the customer would return.
+function CheckinForm({ view, checkinId, checkpoint }: { view: BookingView; checkinId: string; checkpoint: "D7" | "D30" }) {
+  const t = useTranslations("outcomes");
+  const label = useLabels();
+  const [satisfaction, setSatisfaction] = useState(4);
+  const [downtime, setDowntime] = useState(1);
+  const [wouldReturn, setWouldReturn] = useState<"yes" | "no" | null>(null);
+  const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (wouldReturn === null) return;
+    setState("sending");
+    try {
+      await api(`/api/customer/notifications/${checkinId}/answer`, {
+        method: "POST",
+        json: { satisfaction, downtimeDaysActual: downtime, wouldReturn: wouldReturn === "yes" },
+      });
+      setState("done");
+    } catch {
+      setState("error");
+    }
+  };
+
+  if (state === "done") {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("saved.title")}</h1>
+        <Card className="flex flex-col gap-sp-2">
+          <p className="text-body text-muted">{t("checkin.done")}</p>
+        </Card>
+        <Link href="/home" className={buttonStyles({ size: "lg" })}>
+          {t("checkin.home")}
+        </Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <header className="flex flex-col gap-sp-2">
+        <h1 className="text-h2 font-semi">{t(checkpoint === "D7" ? "later.d7" : "later.d30")}</h1>
+        <p className="text-body text-muted">
+          {label.clinic(view.clinic.id, view.clinic.name)} · {label.procedure(view.booking.procedureId)}
+        </p>
+      </header>
+      <form onSubmit={(event) => void submit(event)} className="flex flex-col gap-sp-6">
+        <WidgetSlider
+          label={t("checkin.downtime")}
+          steps={DOWNTIME_STEPS.map((n) => ({ value: n, label: t("checkin.days", { n }) }))}
+          value={downtime}
+          onChange={setDowntime}
+        />
+        <div className="flex flex-col gap-sp-2">
+          <span className="text-label font-med text-muted">{t("fields.satisfaction")}</span>
+          <div role="group" aria-label={t("fields.satisfaction")} className="flex flex-wrap gap-sp-2">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <Chip key={n} selected={satisfaction === n} className="min-w-touch" onClick={() => setSatisfaction(n)}>
+                {n}
+              </Chip>
+            ))}
+          </div>
+        </div>
+        <fieldset className="flex flex-col gap-sp-2">
+          <legend className="mb-sp-2 text-label font-med text-muted">{t("fields.wouldReturn")}</legend>
+          <ChipGroup
+            label={t("fields.wouldReturn")}
+            options={[
+              { value: "yes" as const, label: t("wouldReturn.yes") },
+              { value: "no" as const, label: t("wouldReturn.no") },
+            ]}
+            value={wouldReturn}
+            onChange={setWouldReturn}
+          />
+        </fieldset>
+        <p className="text-caption text-subtle">{t("share")}</p>
+        {state === "error" ? <p className="text-label text-muted">{t("error")}</p> : null}
+        <Button type="submit" size="lg" fullWidth disabled={wouldReturn === null || state === "sending"}>
+          {t("submit")}
+        </Button>
+      </form>
+    </>
+  );
+}
+
+// D7 and D30 check-ins arrive in the in-app inbox (no external messaging).
 function LaterCheckins({ day }: { day: string }) {
   const t = useTranslations("outcomes");
   return (

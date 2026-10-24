@@ -3,49 +3,57 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button, Card, Chip, ChipGroup, Input, WidgetCurrency, WidgetSlider, buttonStyles, type CurrencyAmount } from "@/components/ui";
+import { api, useApi } from "@/components/customer/api";
+import { ApiStatus } from "@/components/customer/api-state";
 import { AMOUNT_STEPS } from "@/components/customer/condition";
-import { updateDemoState } from "@/components/customer/demo-state";
-import { useCustomer, useLabels } from "@/components/customer/use-customer";
+import { granted } from "@/lib/agents/customer/consent-view";
+import { useLabels, useMe } from "@/components/customer/use-customer";
+import type { I18nText } from "@/lib/domain/common";
+import type { TreatmentRecord } from "@/lib/domain/customer";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { fieldBase, focusRing } from "@/lib/ui";
 import { LOCALES } from "../../locales";
-import {
-  CLINICS,
-  DEMO_TODAY,
-  FX_RATES,
-  PROCEDURES,
-  clinicName,
-  computeNextDue,
-  consentsFor,
-  getProcedure,
-  nextSessionNumber,
-  upcomingSessionNumber,
-  type TreatmentRecord,
-} from "@/lib/ui-data/customer";
+import { FX_RATES, PROCEDURES, getProcedure } from "@/lib/ui-data/customer";
 
 const RATES = { KRW: 1, ...FX_RATES };
 const CURRENCIES = ["KRW", "JPY", "CNY", "USD"] as const;
+
+type ClinicOption = { id: string; name: I18nText; area: string };
 
 export function NewRecordForm() {
   const t = useTranslations("recordsNew");
   const common = useTranslations("common");
   const label = useLabels();
-  const { locale, profile, records } = useCustomer();
+  const { data: me, error, loading, reload, locale } = useMe();
+  const { data: clinics } = useApi<{ clinics: ClinicOption[] }>("/api/customer/clinics");
 
   const [procedureId, setProcedureId] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
   const [clinicText, setClinicText] = useState("");
   const [price, setPrice] = useState<CurrencyAmount>({ currency: "KRW", amount: null });
-  const [date, setDate] = useState(DEMO_TODAY);
+  const [date, setDate] = useState<string | null>(null);
   // "I only remember the month": the record keeps the 1st of that month with datePrecision "month".
   const [monthOnly, setMonthOnly] = useState(false);
   const [rating, setRating] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [saved, setSaved] = useState<TreatmentRecord | null>(null);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
+  if (!me) {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <ApiStatus error={error} loading={loading} onRetry={reload} />
+      </>
+    );
+  }
+
+  const today = me.today;
+  const day = date ?? today;
   const procedure = procedureId ? getProcedure(procedureId) : undefined;
-  const shares = consentsFor(profile).some((c) => c.type === "shareAnonymizedRecords" && c.granted);
+  const shares = granted(me.consents, "shareAnonymizedRecords");
 
   const choose = (id: string) => {
     const next = getProcedure(id);
@@ -53,36 +61,35 @@ export function NewRecordForm() {
     setAmount(next ? next.typicalAmount.min : null);
   };
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!procedure || !date) return;
-    const previous = records
-      .filter((r) => r.procedureId === procedure.id && r.date <= date)
-      .sort((a, b) => b.date.localeCompare(a.date))[0];
-    const sessionNumber = nextSessionNumber(previous, procedure, date);
+    if (!procedure || !day) return;
     // a typed name that matches a registry clinic (in any language) is stored by id
     const typed = clinicText.trim();
-    const clinic = CLINICS.find((c) => LOCALES.some((l) => c.name[l] === typed));
-    const record: TreatmentRecord = {
-      id: `rec_${profile.id}_new_${records.length + 1}`,
-      customerId: profile.id,
-      procedureId: procedure.id,
-      date,
-      datePrecision: monthOnly ? "month" : undefined,
-      amount: amount === null ? undefined : { value: amount, unit: procedure.unit },
-      priceKrw: price.amount === null ? undefined : Math.round(price.amount * RATES[price.currency]),
-      clinicId: clinic?.id,
-      clinicName: typed || undefined,
-      source: "manual",
-      rating: rating ? (Number(rating) as TreatmentRecord["rating"]) : undefined,
-      note: note.trim() || undefined,
-      sessionNumber,
-      nextDue: computeNextDue(procedure, date, sessionNumber),
-      status: "active",
-      sharedToPlatform: shares,
-    };
-    updateDemoState((state) => ({ ...state, addedRecords: [...state.addedRecords, record] }));
-    setSaved(record);
+    const clinic = clinics?.clinics.find((c) => LOCALES.some((l) => c.name[l] === typed));
+    setSending(true);
+    setFailed(false);
+    try {
+      const { record } = await api<{ record: TreatmentRecord }>("/api/customer/records", {
+        method: "POST",
+        json: {
+          procedureId: procedure.id,
+          date: day,
+          ...(monthOnly ? { datePrecision: "month" } : {}),
+          ...(amount === null ? {} : { amount: { value: amount, unit: procedure.unit } }),
+          ...(price.amount === null ? {} : { priceKrw: Math.round(price.amount * RATES[price.currency]) }),
+          ...(clinic ? { clinicId: clinic.id } : {}),
+          ...(typed ? { clinicName: typed } : {}),
+          ...(rating ? { rating: Number(rating) } : {}),
+          ...(note.trim() ? { note: note.trim() } : {}),
+        },
+      });
+      setSaved(record);
+    } catch {
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   if (saved) {
@@ -93,7 +100,7 @@ export function NewRecordForm() {
           <p className="text-title font-semi">{label.procedure(saved.procedureId)}</p>
           <p className="text-label text-muted">{t("saved.next")}</p>
           <p className="text-body tabular-nums">
-            {common("session", { n: upcomingSessionNumber(saved), date: saved.nextDue ?? "" })}
+            {saved.nextDue ? common("session", { n: saved.sessionNumber + 1, date: saved.nextDue }) : t("saved.noNext")}
           </p>
         </Card>
         <div className="flex flex-col gap-sp-2 sm:flex-row">
@@ -120,9 +127,7 @@ export function NewRecordForm() {
     );
   }
 
-  const range = procedure
-    ? `${procedure.typicalAmount.min}~${label.amount({ value: procedure.typicalAmount.max, unit: procedure.unit })}`
-    : "";
+  const range = procedure ? `${procedure.typicalAmount.min}~${label.amount({ value: procedure.typicalAmount.max, unit: procedure.unit })}` : "";
 
   return (
     <>
@@ -131,15 +136,10 @@ export function NewRecordForm() {
         <p className="text-body text-muted">{t("lead")}</p>
       </header>
 
-      <form onSubmit={submit} className="flex flex-col gap-sp-6">
+      <form onSubmit={(event) => void submit(event)} className="flex flex-col gap-sp-6">
         <fieldset className="flex flex-col gap-sp-2">
           <legend className="mb-sp-2 text-label font-med text-muted">{t("procedure")}</legend>
-          <ChipGroup
-            label={t("procedure")}
-            options={PROCEDURES.map((p) => ({ value: p.id, label: label.procedure(p.id) }))}
-            value={procedureId}
-            onChange={choose}
-          />
+          <ChipGroup label={t("procedure")} options={PROCEDURES.map((p) => ({ value: p.id, label: label.procedure(p.id) }))} value={procedureId} onChange={choose} />
         </fieldset>
 
         {procedure && amount !== null ? (
@@ -164,8 +164,8 @@ export function NewRecordForm() {
             hint={t("clinicHint")}
           />
           <datalist id="clinic-suggestions">
-            {CLINICS.map((clinic) => (
-              <option key={clinic.id} value={clinicName(clinic.id, locale)} />
+            {(clinics?.clinics ?? []).map((clinic) => (
+              <option key={clinic.id} value={clinic.name[locale] ?? clinic.name.en ?? clinic.id} />
             ))}
           </datalist>
         </div>
@@ -185,19 +185,19 @@ export function NewRecordForm() {
             <Input
               type="month"
               label={t("month")}
-              value={date.slice(0, 7)}
-              max={DEMO_TODAY.slice(0, 7)}
+              value={day.slice(0, 7)}
+              max={today.slice(0, 7)}
               onChange={(event) => setDate(event.target.value ? `${event.target.value}-01` : "")}
             />
           ) : (
-            <Input type="date" label={t("date")} value={date} max={DEMO_TODAY} onChange={(event) => setDate(event.target.value)} />
+            <Input type="date" label={t("date")} value={day} max={today} onChange={(event) => setDate(event.target.value)} />
           )}
           <Chip
             selected={monthOnly}
             className="self-start"
             onClick={() => {
               setMonthOnly(!monthOnly);
-              if (!monthOnly && date) setDate(`${date.slice(0, 7)}-01`);
+              if (!monthOnly && day) setDate(`${day.slice(0, 7)}-01`);
             }}
           >
             {t("dateUnknown")}
@@ -239,7 +239,8 @@ export function NewRecordForm() {
         </section>
 
         <p className="text-caption text-subtle">{shares ? t("shareOn") : t("shareOff")}</p>
-        <Button type="submit" size="lg" fullWidth disabled={!procedure || !date}>
+        {failed ? <p className="text-label text-muted">{t("error")}</p> : null}
+        <Button type="submit" size="lg" fullWidth disabled={!procedure || !day || sending}>
           {t("submit")}
         </Button>
       </form>

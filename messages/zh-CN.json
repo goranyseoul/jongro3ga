@@ -30,14 +30,16 @@
       "shot": "发",
       "unit": "单位",
       "line": "条",
-      "session": "次"
+      "session": "次",
+      "vial": "瓶"
     },
     "unit": {
       "cc": "{value}cc",
       "shot": "{value}发",
       "unit": "{value}单位",
       "line": "{value}条",
-      "session": "{value}次"
+      "session": "{value}次",
+      "vial": "{value}瓶"
     },
     "area": {
       "gangnam": "江南",
@@ -54,6 +56,30 @@
       "canceled": "已取消",
       "no_show": "未到诊",
       "completed": "已施术"
+    },
+    "api": {
+      "loading": "加载中",
+      "signedOutTitle": "请登录",
+      "signedOutBody": "代理只为您的账户工作。",
+      "signIn": "登录",
+      "onboardingTitle": "先来设置您的代理",
+      "onboardingBody": "通过简短对话填写个人资料和同意事项。",
+      "onboarding": "开始对话",
+      "notFoundTitle": "找不到该内容",
+      "home": "返回首页",
+      "errorTitle": "出现问题",
+      "errorBody": "请稍后再试。",
+      "retry": "重试"
+    },
+    "taskState": {
+      "TASK_STATE_SUBMITTED": "已发送请求",
+      "TASK_STATE_WORKING": "诊所正在确认",
+      "TASK_STATE_INPUT_REQUIRED": "需要更多信息",
+      "TASK_STATE_COMPLETED": "已完成",
+      "TASK_STATE_REJECTED": "无法接受此请求",
+      "TASK_STATE_FAILED": "出现问题",
+      "TASK_STATE_CANCELED": "已取消",
+      "TASK_STATE_AUTH_REQUIRED": "正在重新连接"
     }
   },
   "landing": {
@@ -142,6 +168,10 @@
       "overdue": "已过预定日期",
       "all": "查看全部记录",
       "add": "3秒记录"
+    },
+    "inbox": {
+      "title": "通知",
+      "answer": "去记录"
     }
   },
   "chat": {
@@ -155,7 +185,9 @@
       "greeting": "您好,我是 PibooK 的专属代理。请告诉我您想做的项目。",
       "askProcedure": "您想咨询哪个项目?可以从下方选择,也可以直接输入。",
       "summary": "好的,是{procedure}。我已整理好条件,想修改的项目点一下即可。",
-      "updated": "已把条件更新为{procedure}。"
+      "updated": "已把条件更新为{procedure}。",
+      "error": "暂时无法整理条件。请再试一次。",
+      "findError": "无法开始查找。请再试一次。"
     },
     "locked": {
       "title": "关于诊所介绍与预约",
@@ -209,7 +241,8 @@
     },
     "progress": {
       "title": "代理的进展",
-      "raw": "查看 A2A JSON"
+      "raw": "查看 A2A JSON",
+      "empty": "尚未发送任何请求。"
     },
     "reference": {
       "title": "市场支付记录",
@@ -267,7 +300,8 @@
     "warn": {
       "label": "注意",
       "paidMore": "有实际支付高于报价的记录(最近90天平均 +{pct}%)",
-      "downtime": "离境前恢复期可能尚未结束"
+      "downtime": "离境前恢复期可能尚未结束",
+      "underdosed": "剂量低于常见的 {range}"
     },
     "validUntil": "报价有效期至 {date}",
     "book": "预约这家诊所",
@@ -294,6 +328,27 @@
       "doctor": "诊断及能否施术由诊所医生判断。",
       "send": "发送预约请求",
       "back": "返回"
+    },
+    "errors": {
+      "consent": "预约需要同意向诊所共享联系方式。可在我的数据中开启。",
+      "book": "无法发送预约请求。请再试一次。",
+      "retry": "无法重新查找。请稍后再试。"
+    },
+    "indicativeNote": "参考价格,最终价格由诊所确认",
+    "noVerdict": "平台尚未判定此报价",
+    "failure": {
+      "not_eligible_foreign_patient": "诊所匹配和预约仅向短期停留的外国籍用户开放。",
+      "platform_unavailable": "无法连接平台。请稍后再试。",
+      "no_candidates": "没有符合条件的诊所。请尝试更改地区或日期。",
+      "no_quotes": "没有诊所及时回复。请稍后再试。",
+      "consent_required": "发送条件需要您的同意。可在我的数据中查看。"
+    },
+    "retry": "重新查找",
+    "draftNote": "返回条件卡",
+    "noAnswer": {
+      "response_timeout": "{clinic}未在20秒内回复",
+      "rejection": "{clinic}无法接受此次请求",
+      "error": "未能收到{clinic}的回复"
     }
   },
   "bookings": {
@@ -303,7 +358,8 @@
       "pending_clinic_clinic": "诊所正在确认预约。确认后会显示在这里。",
       "pending_clinic_proxy": "PibooK 正在通过电话或消息向诊所确认。确认后会显示在这里。",
       "confirmed": "预约已确认。",
-      "completed": "已收到您的施术记录。"
+      "completed": "已收到您的施术记录。",
+      "canceled": "诊所无法接受此预约。您可以选择其他报价。"
     },
     "info": {
       "title": "预约内容",
@@ -347,7 +403,14 @@
       "record": "记录施术当天",
       "recordNote": "施术后可以记录实际支付金额和用量。",
       "viewRecords": "查看记录",
-      "requests": "返回报价"
+      "requests": "返回报价",
+      "simulateUnavailable": "演示确认暂时不可用。"
+    },
+    "input": {
+      "title": "诊所需要更多信息",
+      "body": "仅发送您在此填写的内容给该诊所。",
+      "submit": "发送给诊所",
+      "error": "发送失败。请再试一次。"
     }
   },
   "records": {
@@ -365,7 +428,8 @@
         "paused": "休息",
         "stopped": "不再做"
       },
-      "empty": "添加记录后,下次时间会显示在这里。"
+      "empty": "添加记录后,下次时间会显示在这里。",
+      "noNext": "暂无下次安排"
     },
     "history": {
       "title": "历史",
@@ -474,13 +538,15 @@
       "title": "已记录",
       "next": "下次时间",
       "all": "查看记录",
-      "another": "继续添加"
+      "another": "继续添加",
+      "noNext": "此项目没有下次安排"
     },
     "month": "做项目的月份",
     "dateUnknown": "不记得具体日期 (只记月份)",
     "note": "备注",
     "notePlaceholder": "感受、副作用、下次想调整的地方等，随意填写。",
-    "noteHint": "只有你能看到这条备注。"
+    "noteHint": "只有你能看到这条备注。",
+    "error": "无法保存记录。请再试一次。"
   },
   "outcomes": {
     "metaTitle": "施术记录",
@@ -504,7 +570,8 @@
       "verified": "药剂确认方式",
       "satisfaction": "满意度",
       "pain": "疼痛程度",
-      "comment": "一句话(选填)"
+      "comment": "一句话(选填)",
+      "wouldReturn": "还会再去这家诊所吗?"
     },
     "verified": {
       "vial_shown": "看到了药剂瓶",
@@ -529,7 +596,8 @@
       "title": "已提交记录",
       "body": "谢谢。下次时间已加入您的记录。",
       "next": "下次时间",
-      "records": "查看记录"
+      "records": "查看记录",
+      "local": "已保存到记录。由于匿名共享已关闭,未进行共享。"
     },
     "later": {
       "title": "之后的回访",
@@ -537,6 +605,17 @@
       "d7": "7天后",
       "d30": "30天后",
       "questions": "实际恢复期 · 效果感受 · 是否愿意再做"
+    },
+    "wouldReturn": {
+      "yes": "会",
+      "no": "不会"
+    },
+    "error": "发送失败。请再试一次。",
+    "checkin": {
+      "done": "谢谢。已记录您的回答。",
+      "home": "返回首页",
+      "downtime": "实际恢复用了几天?",
+      "days": "{n}天"
     }
   },
   "settings": {
@@ -554,7 +633,8 @@
       "shareWithClinic": {
         "title": "向诊所共享信息",
         "description": "仅在发送预约时,才会把安全信息和联系方式交给诊所。"
-      }
+      },
+      "error": "无法更改同意。请再试一次。"
     },
     "agent": {
       "title": "我的代理卡",
@@ -574,7 +654,8 @@
     "export": {
       "title": "导出数据",
       "body": "以 JSON 保存个人资料、同意记录、施术记录和记录保管箱。",
-      "button": "导出 JSON"
+      "button": "导出 JSON",
+      "error": "导出失败。请再试一次。"
     },
     "remove": {
       "title": "全部删除",
@@ -584,7 +665,8 @@
       "confirmBody": "删除后,代理也会停用。此操作无法恢复。",
       "confirm": "删除",
       "done": "已删除。在本演示中,已清除保存在此浏览器中的操作内容。",
-      "top": "返回首页"
+      "top": "返回首页",
+      "error": "删除失败。请再试一次。"
     }
   },
   "legal": {
