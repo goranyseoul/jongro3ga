@@ -30,3 +30,13 @@
     overflow-y: auto;
   }
 }
+
+/* Native select popups ignore the page background, so give them the popover tokens. */
+.ops-select {
+  color-scheme: dark;
+}
+
+.ops-select option {
+  background: var(--popover);
+  color: var(--text);
+}

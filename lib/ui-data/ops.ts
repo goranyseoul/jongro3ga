@@ -423,3 +423,622 @@ export function writeOutcomesInjected(injected: boolean): void {
     // storage blocked: the demo falls back to "not injected"
   }
 }
+
+// ---- A2A log (A2ALogEntry, 06-data-model.md, wire format from 03-a2a-protocol.md) ----
+
+export type TaskState =
+  | "TASK_STATE_COMPLETED"
+  | "TASK_STATE_WORKING"
+  | "TASK_STATE_REJECTED"
+  | "TASK_STATE_FAILED"
+  | "TASK_STATE_INPUT_REQUIRED";
+
+export const TASK_STATE_LABEL: Record<TaskState, string> = {
+  TASK_STATE_COMPLETED: "완료",
+  TASK_STATE_WORKING: "진행 중",
+  TASK_STATE_REJECTED: "거절",
+  TASK_STATE_FAILED: "실패",
+  TASK_STATE_INPUT_REQUIRED: "추가 정보 필요",
+};
+
+export const TASK_STATE_TONE: Record<TaskState, "success" | "warning" | "danger" | "muted"> = {
+  TASK_STATE_COMPLETED: "success",
+  TASK_STATE_WORKING: "muted",
+  TASK_STATE_REJECTED: "danger",
+  TASK_STATE_FAILED: "danger",
+  TASK_STATE_INPUT_REQUIRED: "warning",
+};
+
+export const AGENT_ROLE_LABEL: Record<AgentRole, string> = {
+  customer: "고객",
+  platform: "플랫폼",
+  clinic: "병원",
+};
+
+export type A2AAgent = { agentId: string; role: AgentRole };
+export type A2AEndpoint = A2AAgent & { url: string };
+
+export type A2ALogEntry = {
+  id: string;
+  at: string;
+  /** The customer requestId: groups every call made for one request. */
+  contextId: string;
+  taskId: string;
+  from: A2AAgent;
+  to: A2AEndpoint;
+  method: "SendMessage" | "GetTask" | "CancelTask";
+  skillId: string;
+  /** Full JSON-RPC request. Sensitive fields are stored as "[masked]" (06-data-model.md). */
+  request: unknown;
+  response?: unknown;
+  state: TaskState;
+  latencyMs?: number;
+  /** One human readable line (ko), the same text the customer sees in the progress timeline. */
+  humanSummary: string;
+};
+
+export function agentLabel(agent: A2AAgent): string {
+  const role = AGENT_ROLE_LABEL[agent.role];
+  return agent.role === "clinic" ? `${role} ${clinicName(agent.agentId)}` : agent.role === "platform" ? role : `${role} ${agent.agentId}`;
+}
+
+const MASKED = "[masked]";
+
+const platformEndpoint: A2AEndpoint = { agentId: "agt_platform", role: "platform", url: "https://pibu.app/a2a/platform" };
+const clinicEndpoint = (agentId: string, slug: string): A2AEndpoint => ({
+  agentId,
+  role: "clinic",
+  url: `https://pibu.app/a2a/clinics/${slug}`,
+});
+const seoulGlow = clinicEndpoint("cln_seoul_glow", "seoul-glow");
+const mint = clinicEndpoint("cln_mint", "mint");
+const hanbit = clinicEndpoint("cln_hanbit", "hanbit");
+const ara = clinicEndpoint("cln_ara", "ara");
+const dahye = clinicEndpoint("cln_dahye", "dahye");
+const customer = (agentId: string): A2AAgent => ({ agentId, role: "customer" });
+
+type CallInput = {
+  n: number;
+  at: string;
+  contextId: string;
+  from: A2AAgent;
+  to: A2AEndpoint;
+  skillId: string;
+  text: string;
+  data: Record<string, unknown>;
+  state: TaskState;
+  latencyMs: number;
+  summary: string;
+  artifact?: { name: string; data: Record<string, unknown> };
+  error?: { code: number; message: string };
+};
+
+// Builds the JSON-RPC pair the way lib/a2a/client.ts would log it.
+function call(input: CallInput): A2ALogEntry {
+  const rpcId = `rpc_${String(input.n).padStart(4, "0")}`;
+  const taskId = `tsk_${String(input.n).padStart(4, "0")}`;
+  const request = {
+    jsonrpc: "2.0",
+    id: rpcId,
+    method: "SendMessage",
+    params: {
+      message: {
+        messageId: `msg_${rpcId}`,
+        contextId: input.contextId,
+        role: "ROLE_USER",
+        parts: [{ text: input.text }, { data: input.data, mediaType: "application/json" }],
+        metadata: { skillId: input.skillId },
+      },
+    },
+  };
+  const response = input.error
+    ? { jsonrpc: "2.0", id: rpcId, error: input.error }
+    : {
+        jsonrpc: "2.0",
+        id: rpcId,
+        result: {
+          task: {
+            id: taskId,
+            contextId: input.contextId,
+            status: { state: input.state, timestamp: input.at },
+            artifacts: input.artifact
+              ? [{ artifactId: `art_${taskId}`, name: input.artifact.name, parts: [{ data: input.artifact.data, mediaType: "application/json" }] }]
+              : [],
+          },
+        },
+      };
+  return {
+    id: `log_${String(input.n).padStart(3, "0")}`,
+    at: input.at,
+    contextId: input.contextId,
+    taskId,
+    from: input.from,
+    to: input.to,
+    method: "SendMessage",
+    skillId: input.skillId,
+    request,
+    response,
+    state: input.state,
+    latencyMs: input.latencyMs,
+    humanSummary: input.summary,
+  };
+}
+
+const rejuranRequest = (requestId: string, agentId: string, nationality: string, languages: Locale[], areas: Area[], budgetKrw?: number) => ({
+  schema: "pibu/procedure-request@1",
+  requestId,
+  customerAgentId: agentId,
+  procedureId: "rejuran_healer",
+  amount: { value: 2, unit: "cc" },
+  languages,
+  areas,
+  ...(budgetKrw ? { budgetKrw: { max: budgetKrw } } : {}),
+  dateWindow: { from: "2026-11-13", to: "2026-11-15" },
+  visitorProfile: { nationality, firstKProcedure: true },
+});
+
+const quoteData = (
+  requestId: string,
+  quoteId: string,
+  clinicId: string,
+  cc: number,
+  priceKrw: number,
+  vatIncluded: boolean,
+  mode: OperationMode,
+  languages: Locale[],
+  slots: string[],
+) => ({
+  schema: "pibu/quote@1",
+  quoteId,
+  requestId,
+  clinicId,
+  procedureId: "rejuran_healer",
+  product: "Rejuran Healer",
+  amount: { value: cc, unit: "cc" },
+  priceKrw,
+  vatIncluded,
+  includes: ["numbing_cream", "soothing_mask"],
+  excludes: [],
+  slots,
+  languages,
+  indicative: mode === "proxy",
+  validUntil: "2026-11-20",
+  operationMode: mode,
+});
+
+const REFERRAL = { referralToken: "eyJhbGciOiJFUzI1NiJ9.example.signature" };
+
+const YUKI = "cag_7f3k2";
+const YUKI_REQ = "req_01J9Z8";
+const YUKI_REQUEST = rejuranRequest(YUKI_REQ, YUKI, "JP", ["ja"], ["sinsa", "gangnam", "apgujeong"], 450_000);
+
+export const A2A_LOG: A2ALogEntry[] = [
+  // Yuki (JP): recipe, match, three quotes, judge, then a booking at Seoul Glow (direct clinic).
+  call({
+    n: 1,
+    at: "2026-11-12T09:55:01+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: platformEndpoint,
+    skillId: "platform.recipe",
+    text: "Recipe query: ageBand 25-29, concerns elasticity and fine lines.",
+    data: { schema: "pibu/recipe-query@1", ageBand: "25-29", concerns: ["elasticity", "fine_lines"], candidates: ["rejuran_healer"] },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 412,
+    summary: "한국 여성 기록에서 많이 받은 시술 조합을 확인했어요",
+    artifact: {
+      name: "recipe",
+      data: {
+        schema: "pibu/recipe@1",
+        procedures: [{ procedureId: "rejuran_healer", share: 0.46, typicalAmount: { min: 2, max: 3, unit: "cc" }, cycleDays: 30 }],
+        disclaimer: "데모용 값",
+      },
+    },
+  }),
+  call({
+    n: 2,
+    at: "2026-11-12T09:55:02+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: platformEndpoint,
+    skillId: "platform.match_clinics",
+    text: "Match clinics for Rejuran Healer 2cc, Japanese support, Sinsa area.",
+    data: YUKI_REQUEST,
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 380,
+    summary: "조건에 맞는 병원 3곳을 찾았어요",
+    artifact: {
+      name: "clinic-shortlist",
+      data: {
+        schema: "pibu/clinic-shortlist@1",
+        requestId: YUKI_REQ,
+        matchId: "mt_4401",
+        appliedRuleIds: [],
+        clinics: [
+          { clinicId: "cln_seoul_glow", score: 0.78, reasons: ["일본어 상주 응대", "숙소와 같은 지역"] },
+          { clinicId: "cln_mint", score: 0.66, reasons: ["일본어 통역 응대", "예산 안"] },
+          { clinicId: "cln_ara", score: 0.61, reasons: ["일본어 통역 응대"] },
+        ],
+      },
+    },
+  }),
+  call({
+    n: 3,
+    at: "2026-11-12T09:55:03+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: seoulGlow,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer 2cc, 11-13~11-15, Japanese support.",
+    data: { ...YUKI_REQUEST, ...REFERRAL },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 640,
+    summary: "서울글로우의원이 견적을 보냈어요",
+    artifact: {
+      name: "quote",
+      data: quoteData(YUKI_REQ, "qt_1203", "cln_seoul_glow", 2, 340_000, true, "clinic", ["ja"], ["2026-11-14T11:00:00+09:00"]),
+    },
+  }),
+  call({
+    n: 4,
+    at: "2026-11-12T09:55:03+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: mint,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer 2cc, 11-13~11-15, Japanese support.",
+    data: { ...YUKI_REQUEST, ...REFERRAL },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 910,
+    summary: "민트피부과의원이 참고가 견적을 보냈어요",
+    artifact: {
+      name: "quote",
+      data: quoteData(YUKI_REQ, "qt_1204", "cln_mint", 1, 99_000, true, "proxy", ["ja"], ["2026-11-13T11:00:00+09:00"]),
+    },
+  }),
+  call({
+    n: 5,
+    at: "2026-11-12T09:55:04+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: ara,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer 2cc, 11-13~11-15, Japanese support.",
+    data: { ...YUKI_REQUEST, ...REFERRAL },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 1020,
+    summary: "아라의원이 참고가 견적을 보냈어요",
+    artifact: {
+      name: "quote",
+      data: quoteData(YUKI_REQ, "qt_1205", "cln_ara", 2, 300_000, false, "proxy", ["ja"], ["2026-11-14T15:00:00+09:00"]),
+    },
+  }),
+  call({
+    n: 6,
+    at: "2026-11-12T09:55:05+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: platformEndpoint,
+    skillId: "platform.judge_quote",
+    text: "Judge 3 quotes for Rejuran Healer.",
+    data: { schema: "pibu/judge-request@1", requestId: YUKI_REQ, quoteIds: ["qt_1203", "qt_1204", "qt_1205"] },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 230,
+    summary: "견적 3건의 가격과 용량을 판정했어요",
+    artifact: {
+      name: "fairness-verdict-list",
+      data: {
+        schema: "pibu/fairness-verdict-list@1",
+        verdicts: [
+          { quoteId: "qt_1204", label: "underdosed", priceBand: "low", doseFlag: "below_typical", confidence: "high", n: 42, clinicFlags: [{ code: "indicative_price" }] },
+          { quoteId: "qt_1203", label: "fair", priceBand: "mid", doseFlag: "within", confidence: "high", n: 42, clinicFlags: [] },
+          {
+            quoteId: "qt_1205",
+            label: "fair",
+            priceBand: "mid",
+            doseFlag: "within",
+            confidence: "high",
+            n: 42,
+            clinicFlags: [{ code: "paid_more_than_quoted", avgGapPct: 15 }, { code: "indicative_price" }],
+          },
+        ],
+      },
+    },
+  }),
+  call({
+    n: 7,
+    at: "2026-11-12T09:57:11+09:00",
+    contextId: YUKI_REQ,
+    from: customer(YUKI),
+    to: seoulGlow,
+    skillId: "clinic.book",
+    text: "Booking request for Rejuran Healer 2cc on 2026-11-14 11:00.",
+    data: {
+      schema: "pibu/booking-request@1",
+      requestId: YUKI_REQ,
+      quoteId: "qt_1203",
+      slot: "2026-11-14T11:00:00+09:00",
+      guest: { displayName: "Yuki T.", contactChannel: "line", contactHandle: MASKED, language: "ja" },
+      safetyInfo: MASKED,
+      passportName: MASKED,
+      ...REFERRAL,
+    },
+    state: "TASK_STATE_WORKING",
+    latencyMs: 180,
+    summary: "서울글로우의원에 예약을 요청했어요. 병원 확인을 기다려요",
+  }),
+  call({
+    n: 8,
+    at: "2026-11-12T09:58:40+09:00",
+    contextId: YUKI_REQ,
+    from: { agentId: "cln_seoul_glow", role: "clinic" },
+    to: platformEndpoint,
+    skillId: "platform.report_booking",
+    text: "Booking confirmed by clinic staff.",
+    data: {
+      schema: "pibu/booking@1",
+      bookingId: "bk_0088",
+      clinicId: "cln_seoul_glow",
+      status: "confirmed",
+      slot: "2026-11-14T11:00:00+09:00",
+      priceKrw: 340_000,
+      confirmedBy: "clinic_staff",
+      referralTokenJti: "jti_c41b",
+    },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 150,
+    summary: "서울글로우의원이 예약 확정을 플랫폼에 보고했어요",
+  }),
+
+  // Aoi (JP): booking at Ara, a proxy clinic, confirmed by the operator (queue item pq_203).
+  call({
+    n: 9,
+    at: "2026-11-11T16:38:02+09:00",
+    contextId: "req_01J9Y2",
+    from: customer("cag_6c3v8"),
+    to: platformEndpoint,
+    skillId: "platform.match_clinics",
+    text: "Match clinics for Rejuran Healer 2cc, Japanese support.",
+    data: rejuranRequest("req_01J9Y2", "cag_6c3v8", "JP", ["ja"], ["apgujeong", "gangnam", "sinsa"]),
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 402,
+    summary: "조건에 맞는 병원 3곳을 찾았어요",
+    artifact: {
+      name: "clinic-shortlist",
+      data: {
+        schema: "pibu/clinic-shortlist@1",
+        requestId: "req_01J9Y2",
+        matchId: "mt_4398",
+        appliedRuleIds: [],
+        clinics: [
+          { clinicId: "cln_seoul_glow", score: 0.76 },
+          { clinicId: "cln_ara", score: 0.64 },
+          { clinicId: "cln_mint", score: 0.63 },
+        ],
+      },
+    },
+  }),
+  call({
+    n: 10,
+    at: "2026-11-11T16:38:05+09:00",
+    contextId: "req_01J9Y2",
+    from: customer("cag_6c3v8"),
+    to: ara,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer 2cc, Japanese support.",
+    data: { ...rejuranRequest("req_01J9Y2", "cag_6c3v8", "JP", ["ja"], ["apgujeong"]), ...REFERRAL },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 980,
+    summary: "아라의원이 참고가 견적을 보냈어요",
+    artifact: { name: "quote", data: quoteData("req_01J9Y2", "qt_1190", "cln_ara", 2, 300_000, false, "proxy", ["ja"], ["2026-11-14T15:00:00+09:00"]) },
+  }),
+  call({
+    n: 11,
+    at: "2026-11-11T16:40:12+09:00",
+    contextId: "req_01J9Y2",
+    from: customer("cag_6c3v8"),
+    to: ara,
+    skillId: "clinic.book",
+    text: "Booking request for Rejuran Healer 2cc on 2026-11-14 15:00.",
+    data: {
+      schema: "pibu/booking-request@1",
+      requestId: "req_01J9Y2",
+      quoteId: "qt_1190",
+      slot: "2026-11-14T15:00:00+09:00",
+      guest: { displayName: "Aoi H.", contactChannel: "line", contactHandle: MASKED, language: "ja" },
+      safetyInfo: MASKED,
+      passportName: MASKED,
+      ...REFERRAL,
+    },
+    state: "TASK_STATE_WORKING",
+    latencyMs: 170,
+    summary: "아라의원에 예약을 요청했어요. 병원 확인을 기다려요",
+  }),
+  call({
+    n: 12,
+    at: "2026-11-11T17:21:05+09:00",
+    contextId: "req_01J9Y2",
+    from: { agentId: "cln_ara", role: "clinic" },
+    to: platformEndpoint,
+    skillId: "platform.report_booking",
+    text: "Booking confirmed by Pibu operator after the clinic confirmed by phone.",
+    data: {
+      schema: "pibu/booking@1",
+      bookingId: "bk_0087",
+      clinicId: "cln_ara",
+      status: "confirmed",
+      slot: "2026-11-14T15:00:00+09:00",
+      priceKrw: 300_000,
+      confirmedBy: "pibu_operator",
+      referralTokenJti: "jti_b207",
+    },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 140,
+    summary: "아라의원 예약이 운영자 확인으로 확정됐어요",
+  }),
+
+  // Emily (US): only Dahye speaks English, and its quote times out.
+  call({
+    n: 13,
+    at: "2026-11-11T20:15:03+09:00",
+    contextId: "req_01J9X7",
+    from: customer("cag_5t1q4"),
+    to: platformEndpoint,
+    skillId: "platform.match_clinics",
+    text: "Match clinics for Rejuran Healer 2cc, English support.",
+    data: rejuranRequest("req_01J9X7", "cag_5t1q4", "US", ["en"], ["hongdae"]),
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 365,
+    summary: "조건에 맞는 병원 1곳을 찾았어요",
+    artifact: {
+      name: "clinic-shortlist",
+      data: {
+        schema: "pibu/clinic-shortlist@1",
+        requestId: "req_01J9X7",
+        matchId: "mt_4395",
+        appliedRuleIds: [],
+        clinics: [{ clinicId: "cln_dahye", score: 0.71 }],
+      },
+    },
+  }),
+  call({
+    n: 14,
+    at: "2026-11-11T20:15:04+09:00",
+    contextId: "req_01J9X7",
+    from: customer("cag_5t1q4"),
+    to: dahye,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer 2cc, English support.",
+    data: { ...rejuranRequest("req_01J9X7", "cag_5t1q4", "US", ["en"], ["hongdae"]), ...REFERRAL },
+    state: "TASK_STATE_FAILED",
+    latencyMs: 20_000,
+    summary: "다혜피부과의원이 20초 안에 답하지 않았어요",
+    error: { code: -32001, message: "Timeout after 20000ms" },
+  }),
+  call({
+    n: 15,
+    at: "2026-11-11T20:15:25+09:00",
+    contextId: "req_01J9X7",
+    from: customer("cag_5t1q4"),
+    to: platformEndpoint,
+    skillId: "platform.report_signal",
+    text: "Clinic did not answer in time.",
+    data: { schema: "pibu/signal-report@1", clinicId: "cln_dahye", kind: "response_timeout", taskId: "tsk_0014" },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 88,
+    summary: "응답 시간 초과를 플랫폼에 알렸어요",
+  }),
+
+  // Jisoo (KR resident): matching is not offered to Korean residents.
+  call({
+    n: 16,
+    at: "2026-11-11T09:12:30+09:00",
+    contextId: "req_01J9X1",
+    from: customer("cag_8w6n3"),
+    to: platformEndpoint,
+    skillId: "platform.match_clinics",
+    text: "Match clinics for Rejuran Healer 2cc.",
+    data: rejuranRequest("req_01J9X1", "cag_8w6n3", "KR", ["ko"], ["gangnam"]),
+    state: "TASK_STATE_REJECTED",
+    latencyMs: 95,
+    summary: "한국 거주 고객은 병원 매칭 대상이 아니에요",
+    error: { code: -32010, message: "Matching is not available for Korean nationals and residents." },
+  }),
+
+  // Lin (CN) and Mika (JP): booking requests that wait in the proxy queue (pq_201, pq_202).
+  call({
+    n: 17,
+    at: "2026-11-12T09:40:02+09:00",
+    contextId: "req_01J9Z1",
+    from: customer("cag_2m8x9"),
+    to: platformEndpoint,
+    skillId: "platform.match_clinics",
+    text: "Match clinics for Rejuran Healer 2cc, Chinese support.",
+    data: rejuranRequest("req_01J9Z1", "cag_2m8x9", "CN", ["zh-CN"], ["myeongdong"]),
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 391,
+    summary: "조건에 맞는 병원 1곳을 찾았어요",
+    artifact: {
+      name: "clinic-shortlist",
+      data: {
+        schema: "pibu/clinic-shortlist@1",
+        requestId: "req_01J9Z1",
+        matchId: "mt_4399",
+        appliedRuleIds: ["rule_001"],
+        clinics: [{ clinicId: "cln_hanbit", score: 0.69 }],
+      },
+    },
+  }),
+  call({
+    n: 18,
+    at: "2026-11-12T09:40:04+09:00",
+    contextId: "req_01J9Z1",
+    from: customer("cag_2m8x9"),
+    to: hanbit,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer 2cc, Chinese support.",
+    data: { ...rejuranRequest("req_01J9Z1", "cag_2m8x9", "CN", ["zh-CN"], ["myeongdong"]), ...REFERRAL },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 870,
+    summary: "한빛의원이 참고가 견적을 보냈어요",
+    artifact: { name: "quote", data: quoteData("req_01J9Z1", "qt_1201", "cln_hanbit", 2, 420_000, true, "proxy", ["zh-CN"], ["2026-11-16T14:00:00+09:00"]) },
+  }),
+  call({
+    n: 19,
+    at: "2026-11-12T09:41:10+09:00",
+    contextId: "req_01J9Z1",
+    from: customer("cag_2m8x9"),
+    to: hanbit,
+    skillId: "clinic.book",
+    text: "Booking request for Rejuran Healer 2cc on 2026-11-16 14:00.",
+    data: {
+      schema: "pibu/booking-request@1",
+      requestId: "req_01J9Z1",
+      quoteId: "qt_1201",
+      slot: "2026-11-16T14:00:00+09:00",
+      guest: { displayName: "Lin W.", contactChannel: "wechat", contactHandle: MASKED, language: "zh-CN" },
+      safetyInfo: MASKED,
+      passportName: MASKED,
+      ...REFERRAL,
+    },
+    state: "TASK_STATE_WORKING",
+    latencyMs: 160,
+    summary: "한빛의원에 예약을 요청했어요. 병원 확인을 기다려요",
+  }),
+  call({
+    n: 20,
+    at: "2026-11-12T09:51:30+09:00",
+    contextId: "req_01J9Z5",
+    from: customer("cag_4d8p7"),
+    to: mint,
+    skillId: "clinic.quote",
+    text: "Quote request for Rejuran Healer, Japanese support.",
+    data: { ...rejuranRequest("req_01J9Z5", "cag_4d8p7", "JP", ["ja"], ["gangnam"]), ...REFERRAL },
+    state: "TASK_STATE_COMPLETED",
+    latencyMs: 940,
+    summary: "민트피부과의원이 참고가 견적을 보냈어요",
+    artifact: { name: "quote", data: quoteData("req_01J9Z5", "qt_1199", "cln_mint", 1, 99_000, true, "proxy", ["ja"], ["2026-11-13T11:00:00+09:00"]) },
+  }),
+  call({
+    n: 21,
+    at: "2026-11-12T09:52:08+09:00",
+    contextId: "req_01J9Z5",
+    from: customer("cag_4d8p7"),
+    to: mint,
+    skillId: "clinic.book",
+    text: "Booking request for Rejuran Healer 1cc on 2026-11-13 11:00.",
+    data: {
+      schema: "pibu/booking-request@1",
+      requestId: "req_01J9Z5",
+      quoteId: "qt_1199",
+      slot: "2026-11-13T11:00:00+09:00",
+      guest: { displayName: "Mika S.", contactChannel: "line", contactHandle: MASKED, language: "ja" },
+      safetyInfo: MASKED,
+      passportName: MASKED,
+      ...REFERRAL,
+    },
+    state: "TASK_STATE_WORKING",
+    latencyMs: 175,
+    summary: "민트피부과의원에 예약을 요청했어요. 병원 확인을 기다려요",
+  }),
+].sort((a, b) => a.at.localeCompare(b.at));
