@@ -14,7 +14,8 @@
     "check:boundaries": "node scripts/check-boundaries.mjs",
     "check:tokens": "node scripts/check-tokens.mjs",
     "lint:tokens": "node scripts/check-tokens.mjs",
-    "gate": "npm run lint && npm run typecheck && npm test && npm run check:boundaries && npm run check:tokens && npm run build"
+    "gate": "npm run lint && npm run typecheck && npm test && npm run check:boundaries && npm run check:tokens && npm run build",
+    "llm:smoke": "node --env-file=.env scripts/llm-smoke.mjs"
   },
   "dependencies": {
     "@a2a-js/sdk": "1.3.0",
