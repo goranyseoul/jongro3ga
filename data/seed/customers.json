@@ -219,21 +219,29 @@
     ],
     "records": [
       {
-        "id": "rec_lin_1",
+        "id": "rec_lin_01",
         "customerId": "cus_lin",
         "procedureId": "rejuran_healer",
-        "date": "2026-08-12",
+        "date": "2026-10-31",
         "amount": {
           "value": 2,
           "unit": "cc"
         },
-        "priceKrw": 380000,
+        "priceKrw": 420000,
+        "clinicName": "Hanbit Clinic",
         "clinicId": "cln_hanbit",
-        "source": "onboarding_history",
+        "source": "booking",
+        "rating": 4,
         "sessionNumber": 1,
-        "nextDue": "2026-09-11",
+        "nextDue": "2026-11-30",
         "status": "active",
-        "sharedToPlatform": false
+        "sharedToPlatform": false,
+        "anchor": {
+          "subjectId": "0xfdb6e679db657053cd5086ccd1efeee43dcc26eeaf3c8e53c39381d5774cb878",
+          "version": 1,
+          "tx": "0x170839896bcee7d8e491cf34b840056b1ec6f972ca7c9b5b46a11d8fc98d02b1",
+          "recordHash": "0x0cfeb9a92de8e9adc6977d60a4d48db60a27ac4317f26a41972e51b3e6969357"
+        }
       }
     ]
   },
@@ -422,38 +430,225 @@
     ],
     "records": [
       {
-        "id": "rec_jisoo_1",
+        "id": "rec_jisoo_h1",
         "customerId": "cus_jisoo",
         "procedureId": "rejuran_healer",
-        "date": "2026-09-10",
+        "date": "2024-12-09",
         "amount": {
           "value": 2,
           "unit": "cc"
         },
-        "priceKrw": 320000,
-        "clinicName": "Demo clinic (unlisted)",
-        "source": "manual",
-        "rating": 4,
+        "priceKrw": 330000,
+        "clinicId": "cln_seoul_glow",
+        "clinicName": "서울글로우의원",
+        "source": "onboarding_history",
         "sessionNumber": 1,
-        "nextDue": "2026-10-10",
+        "nextDue": "2025-01-08",
         "status": "active",
         "sharedToPlatform": true
       },
       {
-        "id": "rec_jisoo_2",
+        "id": "rec_jisoo_h2",
+        "customerId": "cus_jisoo",
+        "procedureId": "rejuran_healer",
+        "date": "2025-01-01",
+        "datePrecision": "month",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 330000,
+        "clinicId": "cln_seoul_glow",
+        "clinicName": "서울글로우의원",
+        "source": "onboarding_history",
+        "sessionNumber": 2,
+        "nextDue": "2025-01-31",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_h3",
+        "customerId": "cus_jisoo",
+        "procedureId": "thermage_flx",
+        "date": "2025-11-08",
+        "amount": {
+          "value": 600,
+          "unit": "shot"
+        },
+        "priceKrw": 1900000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "rating": 4,
+        "sessionNumber": 1,
+        "nextDue": "2026-09-04",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_h4",
+        "customerId": "cus_jisoo",
+        "procedureId": "shrink_universe",
+        "date": "2026-06-20",
+        "amount": {
+          "value": 300,
+          "unit": "shot"
+        },
+        "priceKrw": 150000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "rating": 3,
+        "sessionNumber": 1,
+        "nextDue": "2026-07-20",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_b1",
         "customerId": "cus_jisoo",
         "procedureId": "botox_forehead",
-        "date": "2026-09-28",
+        "date": "2025-04-12",
         "amount": {
           "value": 50,
           "unit": "unit"
         },
-        "priceKrw": 110000,
-        "clinicName": "Demo clinic (unlisted)",
+        "priceKrw": 90000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "sessionNumber": 1,
+        "nextDue": "2025-07-11",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_b2",
+        "customerId": "cus_jisoo",
+        "procedureId": "botox_forehead",
+        "date": "2025-08-09",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 90000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "sessionNumber": 2,
+        "nextDue": "2025-11-07",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_b3",
+        "customerId": "cus_jisoo",
+        "procedureId": "botox_forehead",
+        "date": "2025-12-06",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 90000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "sessionNumber": 3,
+        "nextDue": "2026-03-06",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_b4",
+        "customerId": "cus_jisoo",
+        "procedureId": "botox_forehead",
+        "date": "2026-04-04",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 90000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "sessionNumber": 4,
+        "nextDue": "2026-07-03",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_j1",
+        "customerId": "cus_jisoo",
+        "procedureId": "skin_booster_juvelook",
+        "date": "2026-02-14",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 400000,
+        "clinicId": "cln_seoul_glow",
+        "clinicName": "서울글로우의원",
+        "source": "manual",
+        "rating": 3,
+        "sessionNumber": 1,
+        "nextDue": "2026-03-16",
+        "status": "stopped",
+        "stopReason": "expensive",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_01",
+        "customerId": "cus_jisoo",
+        "procedureId": "rejuran_healer",
+        "date": "2026-09-14",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 350000,
+        "clinicId": "cln_seoul_glow",
+        "clinicName": "서울글로우의원",
         "source": "manual",
         "rating": 5,
         "sessionNumber": 1,
-        "nextDue": "2026-12-27",
+        "nextDue": "2026-10-14",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_02",
+        "customerId": "cus_jisoo",
+        "procedureId": "rejuran_healer",
+        "date": "2026-10-14",
+        "amount": {
+          "value": 2,
+          "unit": "cc"
+        },
+        "priceKrw": 350000,
+        "clinicId": "cln_seoul_glow",
+        "clinicName": "서울글로우의원",
+        "source": "manual",
+        "rating": 4,
+        "sessionNumber": 2,
+        "nextDue": "2026-11-13",
+        "status": "active",
+        "sharedToPlatform": true
+      },
+      {
+        "id": "rec_jisoo_03",
+        "customerId": "cus_jisoo",
+        "procedureId": "botox_forehead",
+        "date": "2026-08-05",
+        "amount": {
+          "value": 50,
+          "unit": "unit"
+        },
+        "priceKrw": 90000,
+        "clinicId": "cln_dahye",
+        "clinicName": "다혜피부과의원",
+        "source": "manual",
+        "sessionNumber": 5,
+        "nextDue": "2026-11-03",
         "status": "active",
         "sharedToPlatform": true
       }

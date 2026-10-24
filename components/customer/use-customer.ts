@@ -1,39 +1,24 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import type { Locale } from "@/lib/domain/common";
-import {
-  clinicName,
-  getCustomer,
-  procedureName,
-  recordsFor,
-  type Amount,
-  type Area,
-  type CustomerProfile,
-  type TreatmentRecord,
-} from "@/lib/ui-data/customer";
-import { useDemoState, type DemoState } from "./demo-state";
+import type { HomeView, MeView } from "@/lib/agents/customer/bff";
+import type { Amount, Area, I18nText, Locale } from "@/lib/domain/common";
+import { clinicName, procedureName } from "@/lib/ui-data/customer";
+import { useApi, type ApiState } from "./api";
+import { useDemoState } from "./demo-state";
 
-/** Seed records plus what this browser added, with the customer's continue / pause / stop choices applied. */
-export function mergeRecords(customerId: string, demo: DemoState): TreatmentRecord[] {
-  return [...recordsFor(customerId), ...demo.addedRecords.filter((r) => r.customerId === customerId)].map((r) => {
-    const status = demo.recordStatus[r.id];
-    return status ? { ...r, status } : r;
-  });
-}
-
-/** The demo customer behind the current URL locale, plus the browser-side demo state. */
-export function useCustomer(): { locale: Locale; profile: CustomerProfile; demo: DemoState; records: TreatmentRecord[]; name: string } {
+/** The signed-in customer (or the demo customer) as the customer agent knows it, from GET /api/customer/home. */
+export function useHome(options: { pollMs?: number } = {}): ApiState<HomeView> & { locale: Locale; name: string } {
   const locale = useLocale() as Locale;
   const demo = useDemoState();
-  const profile = getCustomer(locale);
-  return {
-    locale,
-    profile,
-    demo,
-    records: mergeRecords(profile.id, demo),
-    name: demo.nickname ?? profile.nickname,
-  };
+  const state = useApi<HomeView>("/api/customer/home", options);
+  return { ...state, locale, name: state.data?.me.profile.nickname ?? demo.nickname ?? "" };
+}
+
+/** Profile, eligibility, Agent Card and consents, from GET /api/customer/me. */
+export function useMe(): ApiState<MeView> & { locale: Locale } {
+  const locale = useLocale() as Locale;
+  return { ...useApi<MeView>("/api/customer/me"), locale };
 }
 
 /** Localized labels for amounts, areas, procedures and clinics. */
@@ -42,8 +27,9 @@ export function useLabels() {
   const locale = useLocale() as Locale;
   return {
     amount: (amount: Amount) => t(`unit.${amount.unit}`, { value: amount.value }),
-    area: (area: Area) => t(`area.${area}`),
+    area: (area: Area | string) => t(`area.${area as Area}`),
     procedure: (id: string) => procedureName(id, locale),
-    clinic: (id: string) => clinicName(id, locale),
+    /** Clinic name from a server view when given, else the public directory. */
+    clinic: (id: string, name?: I18nText) => name?.[locale] ?? name?.en ?? clinicName(id, locale),
   };
 }
