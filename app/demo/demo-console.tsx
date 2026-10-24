@@ -167,6 +167,9 @@ export function DemoConsole() {
             <Link href="/demo/ledger" className={buttonStyles({ variant: "secondary" })}>
               공개 원장
             </Link>
+            <Link href="/demo/wallet" className={buttonStyles({ variant: "secondary" })}>
+              브라우저 지갑
+            </Link>
             <Link href="/ops/clinics" className={buttonStyles({ variant: "secondary" })}>
               운영 콘솔 열기
             </Link>
