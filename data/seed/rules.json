@@ -1,0 +1,32 @@
+[
+  {
+    "id": "rule_001",
+    "version": 1,
+    "status": "active",
+    "when": { "nationalities": ["CN"] },
+    "then": { "kind": "require_language", "languages": ["zh-CN"] },
+    "reason": "중국 고객 요청은 중국어 응대가 되는 병원으로 연결한다 (언어 선호 규칙).",
+    "evidence": { "outcomeIds": [], "signalIds": [], "summary": "운영자 초기 규칙 (데모 시드)" },
+    "source": "operator",
+    "proposedBy": "ops_demo",
+    "approvedBy": "ops_demo",
+    "createdAt": "2026-10-01T10:00:00+09:00",
+    "activatedAt": "2026-10-01T10:00:00+09:00",
+    "appliedCount": 0
+  },
+  {
+    "id": "rule_002",
+    "version": 1,
+    "status": "active",
+    "when": { "procedureIds": ["ulthera"] },
+    "then": { "kind": "demote_clinic", "clinicIds": ["cln_dahye"], "delta": 0.1 },
+    "reason": "울쎄라 장비 점검 일정으로 예약 확정이 늦어질 수 있어 추천 순위를 잠시 낮춘다.",
+    "evidence": { "outcomeIds": [], "signalIds": [], "summary": "운영자 초기 규칙 (데모 시드)" },
+    "source": "operator",
+    "proposedBy": "ops_demo",
+    "approvedBy": "ops_demo",
+    "createdAt": "2026-10-15T10:00:00+09:00",
+    "activatedAt": "2026-10-15T10:00:00+09:00",
+    "appliedCount": 0
+  }
+]

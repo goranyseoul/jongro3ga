@@ -1,0 +1,5 @@
+[
+  { "id": "JPY", "krwPerUnit": 9.2, "asOf": "2026-11-01" },
+  { "id": "CNY", "krwPerUnit": 192, "asOf": "2026-11-01" },
+  { "id": "USD", "krwPerUnit": 1380, "asOf": "2026-11-01" }
+]

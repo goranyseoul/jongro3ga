@@ -1,0 +1,29 @@
+[
+  { "id": "krp_2024_pores_1", "ageBand": "20-24", "concerns": ["pores"], "procedureIds": ["aqua_peel"], "share": 0.38, "sampleSize": 64, "dataStatus": "demo_assumption" },
+  { "id": "krp_2024_pores_2", "ageBand": "20-24", "concerns": ["pores"], "procedureIds": ["laser_toning"], "share": 0.27, "sampleSize": 64, "dataStatus": "demo_assumption" },
+  { "id": "krp_2024_pores_3", "ageBand": "20-24", "concerns": ["pores"], "procedureIds": ["aqua_peel", "laser_toning"], "share": 0.15, "sampleSize": 64, "dataStatus": "demo_assumption" },
+  { "id": "krp_2024_acne_1", "ageBand": "20-24", "concerns": ["acne_scars"], "procedureIds": ["potenza_secret"], "share": 0.34, "sampleSize": 41, "dataStatus": "demo_assumption" },
+  { "id": "krp_2024_acne_2", "ageBand": "20-24", "concerns": ["acne_scars"], "procedureIds": ["fraxel"], "share": 0.29, "sampleSize": 41, "dataStatus": "demo_assumption" },
+
+  { "id": "krp_2529_elast_1", "ageBand": "25-29", "concerns": ["elasticity"], "procedureIds": ["rejuran_healer"], "share": 0.41, "sampleSize": 87, "dataStatus": "demo_assumption" },
+  { "id": "krp_2529_elast_2", "ageBand": "25-29", "concerns": ["elasticity"], "procedureIds": ["rejuran_healer", "shrink_universe"], "share": 0.22, "sampleSize": 87, "dataStatus": "demo_assumption" },
+  { "id": "krp_2529_elast_3", "ageBand": "25-29", "concerns": ["elasticity"], "procedureIds": ["skin_booster_juvelook"], "share": 0.14, "sampleSize": 87, "dataStatus": "demo_assumption" },
+  { "id": "krp_2529_lines_1", "ageBand": "25-29", "concerns": ["fine_lines"], "procedureIds": ["botox_forehead"], "share": 0.36, "sampleSize": 52, "dataStatus": "demo_assumption" },
+  { "id": "krp_2529_lines_2", "ageBand": "25-29", "concerns": ["fine_lines"], "procedureIds": ["rejuran_healer"], "share": 0.28, "sampleSize": 52, "dataStatus": "demo_assumption" },
+  { "id": "krp_2529_pig_1", "ageBand": "25-29", "concerns": ["pigmentation"], "procedureIds": ["pico_toning"], "share": 0.39, "sampleSize": 38, "dataStatus": "demo_assumption" },
+  { "id": "krp_2529_pig_2", "ageBand": "25-29", "concerns": ["pigmentation"], "procedureIds": ["laser_toning"], "share": 0.31, "sampleSize": 38, "dataStatus": "demo_assumption" },
+
+  { "id": "krp_3034_elast_1", "ageBand": "30-34", "concerns": ["elasticity"], "procedureIds": ["rejuran_healer", "shrink_universe"], "share": 0.33, "sampleSize": 96, "dataStatus": "demo_assumption" },
+  { "id": "krp_3034_elast_2", "ageBand": "30-34", "concerns": ["elasticity"], "procedureIds": ["rejuran_healer"], "share": 0.27, "sampleSize": 96, "dataStatus": "demo_assumption" },
+  { "id": "krp_3034_elast_3", "ageBand": "30-34", "concerns": ["elasticity"], "procedureIds": ["thermage_flx"], "share": 0.16, "sampleSize": 96, "dataStatus": "demo_assumption" },
+  { "id": "krp_3034_lines_1", "ageBand": "30-34", "concerns": ["fine_lines"], "procedureIds": ["botox_forehead", "rejuran_healer"], "share": 0.35, "sampleSize": 58, "dataStatus": "demo_assumption" },
+  { "id": "krp_3034_lines_2", "ageBand": "30-34", "concerns": ["fine_lines"], "procedureIds": ["botox_forehead"], "share": 0.3, "sampleSize": 58, "dataStatus": "demo_assumption" },
+
+  { "id": "krp_3539_elast_1", "ageBand": "35-39", "concerns": ["elasticity"], "procedureIds": ["thermage_flx"], "share": 0.31, "sampleSize": 49, "dataStatus": "demo_assumption" },
+  { "id": "krp_3539_elast_2", "ageBand": "35-39", "concerns": ["elasticity"], "procedureIds": ["ulthera"], "share": 0.26, "sampleSize": 49, "dataStatus": "demo_assumption" },
+  { "id": "krp_3539_contour_1", "ageBand": "35-39", "concerns": ["contour"], "procedureIds": ["shrink_universe"], "share": 0.37, "sampleSize": 27, "dataStatus": "demo_assumption" },
+
+  { "id": "krp_40p_elast_1", "ageBand": "40+", "concerns": ["elasticity"], "procedureIds": ["ulthera", "thermage_flx"], "share": 0.29, "sampleSize": 33, "dataStatus": "demo_assumption" },
+  { "id": "krp_40p_elast_2", "ageBand": "40+", "concerns": ["elasticity"], "procedureIds": ["ulthera"], "share": 0.27, "sampleSize": 33, "dataStatus": "demo_assumption" },
+  { "id": "krp_40p_lines_1", "ageBand": "40+", "concerns": ["fine_lines"], "procedureIds": ["botox_forehead"], "share": 0.4, "sampleSize": 8, "dataStatus": "demo_assumption" }
+]
