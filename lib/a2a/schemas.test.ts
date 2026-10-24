@@ -213,10 +213,10 @@ describe("field rules", () => {
     ).toBe(false);
   });
 
-  it("caps a shortlist at five candidates and a verdict list label set", () => {
+  it("caps a shortlist at three candidates and a verdict list label set", () => {
     const shortlist = fixture("pibu/clinic-shortlist@1") as { candidates: unknown[] };
     const candidate = shortlist.candidates[0];
-    shortlist.candidates = [candidate, candidate, candidate, candidate, candidate];
+    shortlist.candidates = [candidate, candidate, candidate];
     expect(PIBU_SCHEMAS["pibu/clinic-shortlist@1"].safeParse(shortlist).success).toBe(true);
     shortlist.candidates.push(candidate);
     expect(PIBU_SCHEMAS["pibu/clinic-shortlist@1"].safeParse(shortlist).success).toBe(false);
