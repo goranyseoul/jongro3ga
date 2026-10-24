@@ -89,4 +89,5 @@
 | A3 | 랜딩 문구 `demoNote`("실제 계정은 만들지 않음", `landing-copy.ts`)가 이제 틀림 | 모달은 내 문구(`components/auth/copy.ts`)를 쓴다. `landing-copy.ts`의 `demoNote`는 남는 값이라 소유 트랙이 지워도 됨 |
 | A4 | 저장값 | JSON 왕복이라 `undefined` 값 키는 저장되지 않는다(메모리 저장소는 남김). 필터 결과는 같다. Date 객체 대신 ISO 문자열을 쓴다(스펙 타입이 이미 그렇다) |
 | A5 | Better Auth 시간 | 세션 만료는 실제 시간(Date.now). 데모 고정 시계(`lib/clock.ts`)는 도메인 데이터에만 쓴다. `CustomerAccount.createdAt`은 `clock.nowIso()` |
+| A7 | 로그아웃 뒤 열린 앱 화면 | 로그아웃한 화면이 그대로 열려 있으면 Next 링크 프리페치가 proxy 리다이렉트를 받아 콘솔에 404 리소스 오류가 남는다(실측). 로그아웃 버튼은 `signOutAndLeave(locale)`(`components/auth/client.ts`)로 전체 페이지 이동을 해야 한다. **CUSTOMER 트랙: 설정 화면 로그아웃에 이 함수를 쓴다** |
 | A6 | 검증 범위 | Neon 경로는 타입·코드만 확인했고 실제 Neon DB로는 돌려보지 못했다(연결 문자열 없음). Vercel 서버리스에서 PGlite wasm 파일 추적도 미확인: 배포는 `DATABASE_URL` 설정을 권장 |

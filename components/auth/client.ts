@@ -39,6 +39,15 @@ export function signOut(): Promise<AuthResult> {
   return post("/sign-out", {});
 }
 
+/**
+ * Signs out and leaves the signed-in app with a full page load. Use this for sign-out buttons: a
+ * signed-out page that stays open keeps prefetching app routes, which proxy.ts now redirects.
+ */
+export async function signOutAndLeave(locale: string): Promise<void> {
+  await signOut();
+  window.location.assign(`/${locale}`);
+}
+
 /** DEMO_MODE only: signs in as a demo persona ("Yuki", "lin", "operator", ...) without a password. */
 export function demoSignIn(persona: string): Promise<AuthResult> {
   return post("/demo/sign-in", { persona });
