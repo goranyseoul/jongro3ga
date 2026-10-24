@@ -1,17 +1,17 @@
 import type { A2ALogEntry, AgentRole, I18nText } from "../domain";
 import type { Store } from "../store/types";
-import { maskSensitive, type MaskOptions } from "./mask";
+import { compactProofs, maskSensitive, type MaskOptions } from "./mask";
 
 // A2A call log in the shared namespace (06-data-model.md "A2ALogEntry"). Only lib/a2a touches it.
 const NAMESPACE = "shared";
 const COLLECTION = "a2a_log";
 
-/** Stores one call. Request and response are masked first; storing an existing id replaces it. */
+/** Stores one call. Request and response are masked first and long proofs compacted; storing an existing id replaces it. */
 export async function recordA2ALog(store: Store, entry: A2ALogEntry, mask?: MaskOptions): Promise<A2ALogEntry> {
   const stored: A2ALogEntry = {
     ...entry,
-    request: maskSensitive(entry.request, mask),
-    ...(entry.response === undefined ? {} : { response: maskSensitive(entry.response, mask) }),
+    request: compactProofs(maskSensitive(entry.request, mask)),
+    ...(entry.response === undefined ? {} : { response: compactProofs(maskSensitive(entry.response, mask)) }),
   };
   await store.put(NAMESPACE, COLLECTION, stored);
   return stored;

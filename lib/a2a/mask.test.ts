@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { wireFixtures } from "./__fixtures__/wire";
-import { MASK, maskSensitive } from "./mask";
+import { MASK, compactProofs, maskSensitive } from "./mask";
 import { buildSendMessageRequest } from "./wire";
 
 const data = (name: string) => structuredClone(wireFixtures.find((f) => f.name === name)!.data);
@@ -87,5 +87,26 @@ describe("maskSensitive", () => {
     const masked = maskSensitive(payload);
     expect(JSON.stringify(masked)).not.toContain('"X"');
     expect(({} as Record<string, unknown>).passportName).toBeUndefined();
+  });
+});
+
+describe("compactProofs", () => {
+  const bundle = () => ({
+    offerProof: { proofs: [{ proof: "0x" + "ab".repeat(14000), publicInputs: ["1", "2"] }, { proof: "0x1234" }] },
+    other: { note: "0x" + "cd".repeat(14000) },
+  });
+
+  it("replaces a long proof with its size and leaves short strings and other keys alone", () => {
+    const original = bundle();
+    const out = compactProofs(original);
+    expect(out.offerProof.proofs[0]).toEqual({ proof: "[proof 14.0KB]", publicInputs: ["1", "2"] });
+    expect(out.offerProof.proofs[1]!.proof).toBe("0x1234");
+    expect(out.other.note).toBe(original.other.note);
+    expect(original.offerProof.proofs[0]!.proof.length).toBeGreaterThan(256);
+  });
+
+  it("is idempotent", () => {
+    const once = compactProofs(bundle());
+    expect(compactProofs(once)).toEqual(once);
   });
 });

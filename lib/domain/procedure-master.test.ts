@@ -15,15 +15,15 @@ describe("procedure master seed", () => {
   });
 
   it("looks procedures up by id", () => {
-    expect(getProcedure("rejuran")?.name.ko).toBe("리쥬란");
+    expect(getProcedure("rejuran_healer")?.name.ko).toBe("리쥬란");
     expect(getProcedure("nope")).toBeUndefined();
   });
 
   it("keeps the scenario facts: Rejuran series, once a year lifting, Juvelook Volume avoids the under eye", () => {
-    const rejuran = getProcedure("rejuran")!;
+    const rejuran = getProcedure("rejuran_healer")!;
     expect(rejuran.cycle).toEqual({ initial: { count: 3, intervalDays: 30 }, maintenanceIntervalDays: { min: 90, max: 120 } });
     expect(rejuran.name).toMatchObject({ ja: "リジュラン", "zh-CN": "丽珠兰" });
-    for (const id of ["ulthera", "thermage"]) {
+    for (const id of ["ulthera", "thermage_flx"]) {
       expect(getProcedure(id)!.cycle.maintenanceIntervalDays).toEqual({ min: 300, max: 400 });
     }
     const volume = getProcedure("juvelook_volume")!;

@@ -4,8 +4,10 @@ import { filterProcedures } from "./procedure-filter";
 import { stayExtensionNotice } from "./procedure-filter-copy";
 
 const LOCALES: Locale[] = ["ko", "ja", "en", "zh-CN"];
-const overlap = { code: "downtime_may_overlap_departure", latestEnd: "2026-11-13", departure: "2026-11-10", daysOver: 3, suggestion: "check_stay_extension" } as const;
-const cannotFinish = { code: "downtime_after_departure", earliestEnd: "2026-11-10", departure: "2026-11-09", extendDays: 2, suggestion: "check_stay_extension" } as const;
+// Yuki's spec 10 stay (11/13 to 11/15) with a 2~5 day downtime. overlap: 11/13 + 5 = 11/18, 3 days past 11/15.
+// cannotFinish: leaving on the arrival day, 11/13 + 2 = 11/15, 2 days past 11/13.
+const overlap = { code: "downtime_may_overlap_departure", latestEnd: "2026-11-18", departure: "2026-11-15", daysOver: 3, suggestion: "check_stay_extension" } as const;
+const cannotFinish = { code: "downtime_after_departure", earliestEnd: "2026-11-15", departure: "2026-11-13", extendDays: 2, suggestion: "check_stay_extension" } as const;
 
 // built from code points so this file carries no banned characters itself
 const DASHES = new RegExp(`[${String.fromCodePoint(0x2013)}${String.fromCodePoint(0x2014)}]`);
@@ -61,13 +63,13 @@ describe("stay extension notice", () => {
 
   it("works end to end on a real filter result", () => {
     const result = filterProcedures(
-      { areas: ["volume"], parts: ["nasolabial"], trip: { arrival: "2026-11-08", departure: "2026-11-10" } },
+      { areas: ["volume"], parts: ["nasolabial"], trip: { arrival: "2026-11-13", departure: "2026-11-15" } },
       {},
     );
     const notices = result.ranked.flatMap((card) => card.warnings.map((w) => stayExtensionNotice(w, "ko")).filter(Boolean));
     expect(notices).toHaveLength(3);
     expect(notices[0]).toContain("3일");
-    const tooShort = filterProcedures({ areas: ["volume"], trip: { arrival: "2026-11-08", departure: "2026-11-08" } }, {});
+    const tooShort = filterProcedures({ areas: ["volume"], trip: { arrival: "2026-11-13", departure: "2026-11-13" } }, {});
     expect(tooShort.excluded.flatMap((e) => e.reasons.map((r) => stayExtensionNotice(r, "ko")))[0]).toContain("2일");
   });
 });

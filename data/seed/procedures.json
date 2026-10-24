@@ -47,7 +47,7 @@
     }
   },
   {
-    "id": "thermage",
+    "id": "thermage_flx",
     "name": {
       "ko": "써마지",
       "en": "Thermage"
@@ -95,7 +95,7 @@
     }
   },
   {
-    "id": "shrink",
+    "id": "shrink_universe",
     "name": {
       "ko": "슈링크",
       "en": "Shrink"
@@ -286,7 +286,7 @@
     }
   },
   {
-    "id": "rejuran",
+    "id": "rejuran_healer",
     "name": {
       "ko": "리쥬란",
       "en": "Rejuran",
@@ -340,7 +340,7 @@
     }
   },
   {
-    "id": "juvelook",
+    "id": "skin_booster_juvelook",
     "name": {
       "ko": "쥬베룩",
       "en": "Juvelook"
@@ -749,7 +749,7 @@
     }
   },
   {
-    "id": "botox_wrinkle",
+    "id": "botox_forehead",
     "name": {
       "ko": "보톡스 (주름)",
       "en": "Botox (wrinkles)"

@@ -76,13 +76,19 @@ lib/
   domain/                        # 06-data-model.md 타입
   store/     types.ts  memory.ts  seed.ts
   llm/       client.ts  prompts/  tools/
+  zk/        codes.ts  clauses.ts  client.ts  types.ts   # ZK 확장 공용 라이브러리 (아래 모듈 경계)
   i18n/
 data/seed/                       # 06-data-model.md 시드 파일
 messages/                        # next-intl
 tests/                           # vitest
 e2e/                             # playwright 데모 시나리오
 scripts/check-boundaries.mjs     # 모듈 경계 검사
+glowpass/                        # ZK 확장: 데모 서버 (지갑, 오퍼 매칭·증명·검증, relayer, 후기 집계, 공개 원장 화면). 데모 맥에서 실행
+zk/                              # ZK 확장: Noir 회로 (eligibility, append)와 회로 코드 표 codes.json
+chain/                           # ZK 확장: RecordRegistry 컨트랙트 (Base Sepolia), relayer 키(chain/.env), 지갑 파일(git 제외)
 ```
+
+`lib/zk/` 파일 역할: `codes.ts`는 id와 회로 코드 변환(`zk/codes.json` 기준), `clauses.ts`는 `clauseHolds`(기기 안 오퍼 매칭), `client.ts`는 `ZK_SERVER_URL` fetch 래퍼, `types.ts`는 `ZkClause`와 증명 번들 타입.
 
 `next.config.ts`의 `rewrites`: `/.well-known/agent-card.json` → `/a2a/platform/agent-card.json`.
 
@@ -96,6 +102,7 @@ scripts/check-boundaries.mjs     # 모듈 경계 검사
 | `lib/agents/customer/**` | `lib/agents/platform/**`, `lib/agents/clinic/**` |
 | `lib/agents/clinic/**` | `lib/agents/customer/**`, `lib/agents/platform/**` |
 | `app/[locale]/**`, `app/api/customer/**` | `lib/agents/platform/**`, `lib/agents/clinic/**` |
+| `lib/zk/**` | `lib/agents/**` 전부 (ZK 확장). `lib/zk`는 세 에이전트 모듈이 모두 import할 수 있는 **공용 라이브러리**이고, 에이전트 모듈을 import하지 않는다 |
 
 저장소 접근도 같은 규칙: 각 모듈은 `store.get("customer", ...)`처럼 자기 네임스페이스 문자열만 쓴다. `check-boundaries.mjs`가 `store\.(get|list|put|remove)\("(platform|clinic|customer)"` 패턴을 모듈 위치와 대조한다.
 
@@ -202,13 +209,19 @@ COMMISSION_RATE=
 VAT_REFUND_ENABLED=false
 DEMO_MODE=true
 DEMO_NOW=2026-11-12T10:00:00+09:00
+ZK_SERVER_URL=http://localhost:4000
+ZK_CHAIN_ID=84532
+ZK_REGISTRY_ADDRESS=
 ```
+
+ZK 확장: relayer 키는 `chain/.env`의 `DEPLOYER_PRIVATE_KEY`에만 둔다. Next 앱의 환경 변수에는 절대 넣지 않는다.
 
 `REFERRAL_*_JWK`가 비어 있으면 부팅 시 ES256 키쌍을 생성해 메모리에 둔다 (데모 전용, 재시작하면 기존 추천 토큰 무효).
 
 ## 배포
 
 - 데모: 로컬 `npm run build && npm start` (단일 프로세스, 메모리 저장소 유지). 발표 화면은 이 방식으로 띄운다.
+- ZK 확장: `glowpass/` 서버는 데모 맥에서 Next 앱 옆에서 함께 돈다 (`ZK_SERVER_URL`). 차트 원본(`chain/wallets/`)이 그 맥에만 있어서 다른 서버에서는 증명이 실패한다. 로드맵: 브라우저 지갑(localStorage + bb.js WASM 증명)으로 서버 지갑을 없앤다 (10 T18).
 - Vercel: README대로 배포 가능하지만 서버리스 인스턴스 간 메모리가 공유되지 않아 태스크 폴링이 다른 인스턴스로 가면 깨진다. Vercel에서 시연하려면 P1의 Postgres 저장소(태스크 저장소 포함)가 먼저 필요하다.
 
 ## 스크립트 (`package.json`)

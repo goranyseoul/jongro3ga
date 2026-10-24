@@ -248,6 +248,14 @@
       "regular": "原价 {price}",
       "conditions": "条件: {text}"
     },
+    "offer": {
+      "verified": "已证明符合条件",
+      "note": "未发送施术记录,只证明了符合条件"
+    },
+    "stats": {
+      "visits": "PibooK 用户到访 {visits, number} 人",
+      "reviews": "验证评价 {reviews} 条,评分 {avg}"
+    },
     "perUnit": "每{unit} {price}",
     "typical": "常见用量为{range}",
     "includes": {
@@ -277,6 +285,9 @@
       "safety": "安全信息",
       "safetyValue": "怀孕或哺乳: {pregnant} / 过敏: {allergies}",
       "contact": "联系方式",
+      "history": "施术记录",
+      "historyValue": "不共享(只证明是否符合优惠条件)",
+      "historyValuePlain": "不共享",
       "yes": "是",
       "no": "否",
       "none": "无",
@@ -373,7 +384,11 @@
       "summary": "自{first}起{count}次 · 共 {total}",
       "pages": "页码",
       "prevPage": "上一页",
-      "nextPage": "下一页"
+      "nextPage": "下一页",
+      "anchored": "诊所确认 · 链上记录 v{version}",
+      "clinicConfirmed": "诊所确认",
+      "selfReported": "自行录入 · 不用于优惠证明",
+      "txLabel": "在 Base Sepolia 查看交易(新标签页)"
     },
     "calendar": {
       "title": "日历",
@@ -524,9 +539,21 @@
       "title": "我的代理卡",
       "lead": "这是您的代理向其他代理展示的信息。"
     },
+    "wallet": {
+      "title": "记录钱包",
+      "lead": "诊所只会知道您是否符合优惠条件。施术日期、诊所和次数只保存在这台设备上。",
+      "subject": "化名",
+      "commitment": "链上病历哈希",
+      "none": "无",
+      "version": "版本",
+      "anchored": "已上链记录数",
+      "anchoredValue": "{n} 条",
+      "network": "{network} 测试网 · 演示",
+      "ledger": "查看公开账本"
+    },
     "export": {
       "title": "导出数据",
-      "body": "以 JSON 保存个人资料、同意记录和施术记录。",
+      "body": "以 JSON 保存个人资料、同意记录、施术记录和记录钱包。",
       "button": "导出 JSON"
     },
     "remove": {

@@ -16,6 +16,8 @@ import {
   DEMO_TODAY,
   detectProcedure,
   getProcedure,
+  shortHex,
+  txUrl,
   upcomingSessionNumber,
   type RecordStatus,
   type TreatmentRecord,
@@ -323,6 +325,7 @@ export function RecordsView() {
                           {record.priceKrw ? <li className="tabular-nums">{moneyText(record.priceKrw, locale)}</li> : null}
                           {record.rating ? <li>{t("history.rating", { n: record.rating })}</li> : null}
                           {record.source === "booking" ? <li>{t("history.fromBooking")}</li> : null}
+                          <Provenance record={record} />
                           <li>{record.sharedToPlatform ? t("history.shared") : t("history.notShared")}</li>
                         </ul>
                       ),
@@ -368,4 +371,30 @@ export function RecordsView() {
       </section>
     </>
   );
+}
+
+/**
+ * Where a record comes from, as plain text: a clinic-confirmed record (with its chain version once anchored)
+ * can back an offer proof, a self-reported one cannot.
+ */
+function Provenance({ record }: { record: TreatmentRecord }) {
+  const t = useTranslations("records.history");
+  if (record.source === "booking" && record.anchor) {
+    const tx = shortHex(record.anchor.tx);
+    return (
+      <li>
+        {t("anchored", { version: record.anchor.version })} ·{" "}
+        <a
+          href={txUrl(record.anchor.tx)}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`tx ${tx}, ${t("txLabel")}`}
+          className={cn("tabular-nums underline hover:text-text", focusRing)}
+        >
+          tx {tx}
+        </a>
+      </li>
+    );
+  }
+  return <li>{record.source === "booking" ? t("clinicConfirmed") : t("selfReported")}</li>;
 }
