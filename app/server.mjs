@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { CLINICS, clinicById, agentCard } from './clinics.mjs';
-import { walletView, recordVisit, submitPatientReview, deployment, PERSONAS } from './wallet.mjs';
+import { walletView, recordVisit, submitPatientReview, deployment, PERSONAS, matchOffersLocally, proveOffer, verifyOfferBundle } from './wallet.mjs';
 import { seedReviewBoard } from './reviews-seed.mjs';
 
 const chainEnv = new URL('../chain/.env', import.meta.url);
@@ -68,6 +68,26 @@ const server = createServer(async (req, res) => {
       const persona = url.searchParams.get('persona') ?? 'yuki';
       return json(res, 200, { personas: Object.values(PERSONAS), wallet: await walletView(persona), clinics: CLINICS.map((c) => agentCard(c, baseUrl)), ranking: ranking(), deployment });
     }
+    // ----- ZK layer HTTP API for external agents (see docs/INTEGRATION.md) -----
+    m = path.match(/^\/api\/wallet\/(\w+)$/);
+    if (m && req.method === 'GET') return json(res, 200, await walletView(m[1]));
+    if (path === '/api/zk/match-offers' && req.method === 'POST') {
+      const { persona } = await readBody(req);
+      const offers = CLINICS.flatMap((c) => c.offers.map((o) => ({ ...o, clinicId: c.id })));
+      const results = await matchOffersLocally(persona, offers);
+      return json(res, 200, offers.map((o, i) => ({ clinicId: o.clinicId, offerId: o.id, title: o.title, eligible: results[i].eligible })));
+    }
+    if (path === '/api/zk/prove-offer' && req.method === 'POST') {
+      const { persona, offerId } = await readBody(req);
+      return json(res, 200, await proveOffer(persona, offerId));
+    }
+    if (path === '/api/zk/verify-offer' && req.method === 'POST') {
+      const { clinicId, bundle } = await readBody(req);
+      const r = await verifyOfferBundle(clinicId, bundle);
+      emit({ type: 'verify', clinicId, offerId: bundle.offerId, ok: r.ok, reason: r.reason, commitment: r.commitment, today: r.today });
+      return json(res, 200, r);
+    }
+    if (path === '/api/ranking') return json(res, 200, ranking());
     if (path === '/api/chat' && req.method === 'POST') {
       const { persona, text } = await readBody(req);
       activePersona = persona;

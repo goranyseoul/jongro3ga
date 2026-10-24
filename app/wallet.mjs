@@ -55,7 +55,7 @@ export async function walletView(persona) {
   return {
     profile: PERSONAS[persona],
     today,
-    records: w.records.map((r) => ({ procedure: r.procedure, name: PROCEDURE_NAMES[PROCEDURES[r.procedure]], clinic: r.clinicId ? clinicById(r.clinicId)?.name : 'Seeded history', daysAgo: today - r.day, tx: r.tx })),
+    records: w.records.map((r) => ({ procedure: r.procedure, name: PROCEDURE_NAMES[PROCEDURES[r.procedure]], clinic: r.clinicId ? clinicById(r.clinicId)?.name : 'Another clinic (non-partner)', daysAgo: today - r.day, tx: r.tx })),
     onchain: { subjectId: w.subjectId, commitment: onchain, version: Number(version), inSync: BigInt(onchain) !== 0n || w.records.length === 0 },
     pendingReviews: (w.tickets ?? []).filter((t) => !t.reviewed).map(({ clinicId, procedure }) => ({ clinicId, procedure })),
   };

@@ -1,5 +1,5 @@
 // Appends one clinic-issued record for a demo persona on Base Sepolia (deployer = platform relayer).
-// Usage: node --env-file=.env seed.mjs <persona> <PROCEDURE>   e.g. seed.mjs yuki REJURAN
+// Usage: node --env-file=.env seed.mjs <persona> <PROCEDURE> [clinicId]   e.g. seed.mjs yuki REJURAN glow
 //        node --env-file=.env seed.mjs <persona>               (status only)
 // Persona wallets (private chart + salt) live in wallets/<persona>.json, which is gitignored.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -8,7 +8,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { baseSepolia } from 'viem/chains';
 import { createProver, emptyChart, loadChart, saveChart, PROCEDURES } from './records.mjs';
 
-const [persona, procName] = process.argv.slice(2);
+const [persona, procName, clinicId] = process.argv.slice(2);
 if (!persona) throw new Error('usage: seed.mjs <persona> [PROCEDURE]');
 const dep = JSON.parse(readFileSync('deployments/base-sepolia.json'));
 const Registry = JSON.parse(readFileSync('build/RecordRegistry.json'));
@@ -37,7 +37,7 @@ if (procName) {
   const rcpt = await pub.waitForTransactionReceipt({ hash });
   if (rcpt.status !== 'success') throw new Error(`append reverted: ${hash}`);
   w.chart = a.next;
-  w.records.push({ procedure: procName, day: today, recordNonce: a.recordNonce.toString(), tx: hash });
+  w.records.push({ procedure: procName, day: today, clinicId, recordNonce: a.recordNonce.toString(), tx: hash });
   save();
   console.log(`appended ${procName} for ${persona} on day ${today}: https://sepolia.basescan.org/tx/${hash}`);
 }
