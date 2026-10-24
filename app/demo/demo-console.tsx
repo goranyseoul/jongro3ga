@@ -77,7 +77,7 @@ export function DemoConsole() {
       setPersonaId("yuki");
       setCustomerId("yuki");
       const total = Object.values(result.loaded).reduce((sum, n) => sum + n, 0);
-      setMessage(`저장소를 시드 상태로 되돌렸어요 (${total}건). 로그와 대기 예약이 비었고 시계는 ${formatMonthDayTime(result.now)}이에요.`);
+      setMessage(`저장소를 비우고 시드 ${total}건을 다시 불러왔어요. 시계는 ${formatMonthDayTime(result.now)}이에요.`);
     });
 
   const inject = () =>

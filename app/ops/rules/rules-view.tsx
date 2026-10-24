@@ -208,11 +208,17 @@ export function RulesView() {
         run.suspendedClinicIds.length > 0
           ? ` 긴급: ${run.suspendedClinicIds.map((id) => run.clinics[id] ?? id).join(", ")} 상태를 정지로 바꿨어요.`
           : "";
-      if (run.proposed.length === 0) {
+      if (run.proposed.length === 0 && run.candidates.length > 0) {
+        const unknown = run.dropped.filter((d) => d.source === "trigger" && d.reason === "unknown_clinic").length;
+        setResult(
+          `트리거 후보 ${run.candidates.length}건을 찾았지만 새로 제안한 규칙은 없어요.${
+            run.skipped.length > 0 ? ` ${run.skipped.length}건은 이미 제안했거나 활성 상태예요.` : ""
+          }${unknown > 0 ? ` ${unknown}건은 병원 레지스트리에 없는 병원이라 버렸어요. 시드가 불러와졌는지 확인해 주세요.` : ""}`,
+        );
+      } else if (run.proposed.length === 0) {
         setResult(
           <>
-            지금은 제안할 규칙이 없어요. 최근 {run.windowDays}일 결과가 기준(예: 표본 5건 이상, 견적 대비 실결제 평균 +20% 초과)에 못 미치거나 이미
-            제안·활성 상태예요.{dropped} 데모에서 결과 20건을 주입한 뒤 다시 실행해 보세요.{" "}
+            지금은 제안할 규칙이 없어요. 최근 {run.windowDays}일 결과가 기준(예: 표본 5건 이상, 견적 대비 실결제 평균 +20% 초과)에 못 미쳐요.{dropped} 데모에서 결과 20건을 주입한 뒤 다시 실행해 보세요.{" "}
             <Link href="/demo" className={cn("text-text underline", focusRing)}>
               데모 컨트롤 열기
             </Link>
