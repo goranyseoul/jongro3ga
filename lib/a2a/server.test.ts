@@ -56,7 +56,16 @@ describe("agent cards", () => {
       }
       expect(card.supportedInterfaces[0]).toEqual({ url: `${BASE}/a2a/platform/rpc`, protocolBinding: "JSONRPC", protocolVersion: "1.0" });
       expect(card.skills.map((s: { id: string }) => s.id).sort()).toEqual(
-        ["platform.judge_quote", "platform.match_clinics", "platform.recipe", "platform.report_booking", "platform.report_signal", "platform.submit_outcome"],
+        [
+          "platform.anchor_record",
+          "platform.judge_quote",
+          "platform.match_clinics",
+          "platform.recipe",
+          "platform.report_booking",
+          "platform.report_signal",
+          "platform.submit_outcome",
+          "platform.submit_review",
+        ],
       );
     }
   });
