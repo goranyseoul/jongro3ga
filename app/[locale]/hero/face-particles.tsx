@@ -27,7 +27,7 @@ class ParticlesBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 }
 
-/** Hero visual: a woman's face made of particles. Reduced motion shows the face still. */
+/** Hero visual: a woman's head in profile made of particles. Reduced motion shows it still. */
 export function FaceParticles() {
   const [supported, setSupported] = useState(false);
   const [still, setStill] = useState(false);
@@ -42,7 +42,7 @@ export function FaceParticles() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none mx-auto aspect-square w-2/3 max-w-xs md:max-w-sm">
+    <div aria-hidden="true" className="pointer-events-none mx-auto aspect-square w-full max-w-md md:max-w-xl">
       {supported ? (
         <ParticlesBoundary>
           <FaceParticlesScene still={still} />

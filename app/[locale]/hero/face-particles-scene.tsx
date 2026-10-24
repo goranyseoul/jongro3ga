@@ -1,14 +1,15 @@
 "use client";
 
 // FBO curl-noise particles from the IRONACT design system (primitives/code/hero/fbo-particles-scene.tsx,
-// PA landing). Kept: the simulation shader, cursor push and morph timing idea. Changed: the morph target
-// is a procedural 3D face (./face-target), the head sways instead of spinning, the colour comes from the
-// --particle token, and the cursor is measured against this canvas instead of the window.
+// PA landing). Kept: the simulation shader and cursor push. Changed: the target is a procedural 3D head in
+// profile (./profile-target) that forms once and stays (owner: never fall back to the cloud), the head
+// sways a little instead of spinning, the colour comes from the --particle token, and the cursor is
+// measured against this canvas instead of the window.
 
 import { Canvas, createPortal, extend, useFrame, type ThreeElement } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { buildFaceTarget } from "./face-target";
+import { buildProfileTarget } from "./profile-target";
 
 const simulationVertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -169,7 +170,7 @@ class SimulationMaterial extends THREE.ShaderMaterial {
     super({
       uniforms: {
         positions: { value: floatTexture(randomCloud(size), size) },
-        uTargetPositions: { value: floatTexture(buildFaceTarget(size * size), size) },
+        uTargetPositions: { value: floatTexture(buildProfileTarget(size * size), size) },
         uFrequency: { value: 0.25 },
         uTime: { value: 0 },
         uMorph: { value: 0 },
@@ -202,16 +203,10 @@ function readTokenColor(el: HTMLElement, token: string): THREE.Color {
   return new THREE.Color().setRGB(r / 255, g / 255, b / 255, THREE.SRGBColorSpace);
 }
 
-// One cycle: cloud, the face forms, holds, dissolves, cloud again.
-const PERIOD = 14;
+// The cloud gathers into the head once, then the head stays.
 function morphAt(t: number): number {
-  const c = t % PERIOD;
-  const ramp = (x: number) => x * x * (3 - 2 * x);
-  if (c < 1.0) return 0;
-  if (c < 2.4) return ramp((c - 1.0) / 1.4);
-  if (c < 11.6) return 1;
-  if (c < 12.8) return ramp(1 - (c - 11.6) / 1.2);
-  return 0;
+  const x = Math.min(1, Math.max(0, (t - 0.4) / 1.6));
+  return x * x * (3 - 2 * x);
 }
 
 function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x: number; y: number } } }) {
@@ -252,7 +247,7 @@ function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x
     () => ({
       uPositions: { value: null as THREE.Texture | null },
       uColor: { value: new THREE.Color(1, 1, 1) },
-      uPointSize: { value: 2.4 },
+      uPointSize: { value: 2.2 },
     }),
     [],
   );
@@ -265,7 +260,7 @@ function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x
     const render = (points.current.material as THREE.ShaderMaterial).uniforms;
     if (!colorRead.current) {
       render.uColor.value = readTokenColor(gl.domElement, "--particle");
-      render.uPointSize.value = 2.4 * Math.min(gl.getPixelRatio(), 1.5);
+      render.uPointSize.value = 2.2 * Math.min(gl.getPixelRatio(), 1.5);
       colorRead.current = true;
     }
     gl.setRenderTarget(target);
@@ -278,7 +273,7 @@ function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x
     const u = simulation.current.uniforms;
     u.uTime.value = t;
     u.uMorph.value = still ? 1 : morphAt(t);
-    u.uYaw.value = still ? 0 : Math.sin(t * 0.3) * 0.42;
+    u.uYaw.value = still ? 0 : Math.sin(t * 0.25) * 0.16; // small sway keeps the profile line readable
     // world units visible at the face plane: camera z 4, fov 50 gives a half height near 1.86
     u.uMouse.value.set(mouse.current.x * 1.86, mouse.current.y * 1.86);
   });
@@ -295,7 +290,8 @@ function FaceParticles({ still, mouse }: { still: boolean; mouse: { current: { x
         </mesh>,
         scene,
       )}
-      <points ref={points} position={[0, 0.12, 0]}>
+      {/* the head spans X -1.32..1.05 and Y -1.35..1.15; centre it */}
+      <points ref={points} position={[0.13, 0.1, 0]}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[lookup, 3]} />
         </bufferGeometry>
