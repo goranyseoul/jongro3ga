@@ -71,6 +71,8 @@ export interface TreatmentRecord {
   receiptImage?: string;
   rating?: 1 | 2 | 3 | 4 | 5;
   note?: string;
+  /** Set once the visit is anchored on-chain (pibu/record-anchor@1). */
+  anchor?: { subjectId: string; version: number; tx: string; recordHash: string };
   /** Consecutive session of the same procedure, starting at 1. */
   sessionNumber: number;
   nextDue?: IsoDate;

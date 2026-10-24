@@ -39,18 +39,21 @@ import {
   normalizedTotal,
   referenceFor,
   type ClinicProfile,
+  type ClinicShortlistV1,
   type FairnessVerdictV1,
   type IsoDateTime,
   type QuoteV1,
 } from "@/lib/ui-data/customer";
 
-type Row = { quote: QuoteV1; verdict: FairnessVerdictV1; clinic: ClinicProfile; score: number };
+type Candidate = ClinicShortlistV1["candidates"][number];
+type Row = { quote: QuoteV1; verdict: FairnessVerdictV1; clinic: ClinicProfile; score: number; candidate?: Candidate };
 type Sort = "match" | "unit" | "total";
 
 const ROWS: Row[] = QUOTES.flatMap((quote) => {
   const verdict = VERDICTS.find((v) => v.quoteId === quote.quoteId);
   const clinic = getClinic(quote.clinicId);
-  return verdict && clinic ? [{ quote, verdict, clinic, score: candidateScore(quote.clinicId) }] : [];
+  const candidate = SHORTLIST.candidates.find((c) => c.clinicId === quote.clinicId);
+  return verdict && clinic ? [{ quote, verdict, clinic, score: candidateScore(quote.clinicId), candidate }] : [];
 });
 
 const SORTERS: Record<Sort, (a: Row, b: Row) => number> = {
@@ -98,17 +101,27 @@ export function RequestView() {
     return items;
   };
 
+  // Facts only (verified visits, review count and average), never review text or a ranking (07 ZK 확장)
+  const visitStats = (visits: number, reviews: Candidate["reviewStats"]) => {
+    const parts = [t("stats.visits", { visits })];
+    if (reviews) parts.push(t("stats.reviews", { reviews: reviews.n, avg: reviews.avgRating.toFixed(1) }));
+    return parts.join(" · ");
+  };
+
   const columns: TableColumn<Row>[] = [
     {
       key: "clinic",
       header: t("columns.clinic"),
       card: "title",
-      cell: ({ clinic, quote }) => (
+      cell: ({ clinic, quote, candidate }) => (
         <div className="flex flex-col gap-sp-1">
           <span className="font-semi">{label.clinic(clinic.id)}</span>
           <span className="text-label font-reg text-muted">{label.area(clinic.area)}</span>
           <span className="text-label font-reg text-muted">{quote.languages.map((l) => LOCALE_NAME[l]).join(" · ")}</span>
           <span className="text-caption font-reg text-subtle">{t(`mode.${quote.operationMode}`)}</span>
+          {candidate?.verifiedVisits !== undefined ? (
+            <span className="text-caption font-reg text-subtle tabular-nums">{visitStats(candidate.verifiedVisits, candidate.reviewStats)}</span>
+          ) : null}
         </div>
       ),
     },
@@ -132,6 +145,12 @@ export function RequestView() {
                   {quote.event.validFrom}~{quote.event.validUntil}
                 </span>
                 <span>{t("event.conditions", { text: copy?.conditions[locale] ?? quote.event.conditions })}</span>
+                {quote.offerApplied?.verified ? (
+                  <>
+                    <span className="text-label font-semi text-success">{t("offer.verified")}</span>
+                    <span>{t("offer.note")}</span>
+                  </>
+                ) : null}
               </div>
             ) : null}
             <span className="text-caption text-subtle tabular-nums">{t("validUntil", { date: quote.validUntil })}</span>
@@ -340,6 +359,9 @@ export function RequestView() {
                 </Fact>
                 <Fact term={t("sheet.contact")}>
                   {profile.contact.channel} · {profile.contact.handle}
+                </Fact>
+                <Fact term={t("sheet.history")}>
+                  {confirming.quote.offerApplied?.verified ? t("sheet.historyValue") : t("sheet.historyValuePlain")}
                 </Fact>
               </dl>
             </section>

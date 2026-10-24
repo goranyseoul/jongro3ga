@@ -115,15 +115,22 @@ export async function proveOffer(persona, offerId) {
   const offer = offerById(offerId);
   if (!offer) throw new Error(`unknown offer ${offerId}`);
   const w = loadWallet(persona);
-  const commitment = await commitmentOf(w.subjectId);
+  const onchain = await commitmentOf(w.subjectId);
   const today = await chainToday();
   const p = await prover();
+  // A pseudonym that was never anchored has no on-chain commitment (0). Its chart is empty by definition,
+  // so the proof is made against the local empty-chart commitment and the verifier applies the
+  // "unanchored = empty chart" rule (see verifyOfferBundle). Clauses that need a record still fail here.
+  const unanchored = BigInt(onchain) === 0n;
+  if (unanchored && w.records.length) throw new Error('wallet has records but the chain has no commitment: re-anchor (reset) this persona');
+  const commitment = unanchored ? toHex(BigInt(await p.commitmentOf(w.chart)), { size: 32 }) : onchain;
   const t = Date.now();
   const proofs = await p.proveOffer(w.chart, commitment, today, offer.clauses);
   return {
     subjectId: w.subjectId,
     offerId,
     today,
+    unanchored,
     provingMs: Date.now() - t,
     proofs: proofs.map((x) => ({ proof: toHex(x.proof), publicInputs: x.publicInputs })),
   };
@@ -138,11 +145,18 @@ export async function verifyOfferBundle(clinicId, bundle) {
   // demo clock ticks every minute: accept a proof made for today or yesterday
   if (bundle.today !== chainNow && bundle.today !== chainNow - 1) return { ok: false, reason: '증명 날짜가 오래됨' };
   const commitment = await commitmentOf(bundle.subjectId);
-  if (BigInt(commitment) === 0n) return { ok: false, reason: '온체인 기록이 없는 가명' };
+  const conditions = offer.clauses.map(describeClause);
+  if (BigInt(commitment) === 0n) {
+    // Never anchored: the chain says this pseudonym has no records, so the chart is empty by definition.
+    // Only clauses an empty chart satisfies (first visit, "0 records") can hold; nothing to compare a proof to.
+    const empty = emptyChart();
+    const ok = offer.clauses.every((c) => clauseHolds(empty, bundle.today, c));
+    return { ok, unanchored: true, reason: ok ? '온체인 기록이 없는 가명: 빈 차트로 간주, 첫 방문 조건 자명' : '온체인 기록이 없는 가명: 기록이 필요한 조건은 충족 불가', commitment, today: bundle.today, conditions };
+  }
   const p = await prover();
   const proofs = bundle.proofs.map((x) => ({ proof: hexToBytes(x.proof), publicInputs: x.publicInputs }));
   const ok = await p.verifyOffer(proofs, commitment, bundle.today, offer.clauses);
-  return { ok, reason: ok ? '모든 조건이 온체인 해시 기준으로 증명됨' : '증명 검증 실패', commitment, today: bundle.today, conditions: offer.clauses.map(describeClause) };
+  return { ok, reason: ok ? '모든 조건이 온체인 해시 기준으로 증명됨' : '증명 검증 실패', commitment, today: bundle.today, conditions };
 }
 
 // ---------- platform relayer: record a clinic-confirmed visit ----------

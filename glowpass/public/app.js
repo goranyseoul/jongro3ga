@@ -71,11 +71,11 @@ function renderRanking() {
   const s = state.stats;
   const top = Object.entries(s.verifiedUsersByProcedure).filter(([, n]) => n).sort((a, b) => b[1] - a[1]);
   $('#rank').innerHTML = `<div class="statgrid">${top.map(([p, n]) => `<div class="stat"><b>${n.toLocaleString()}</b><span>${esc(procName(p))}</span></div>`).join('')}</div>
-    <p class="explain">"피북 사용자 N명 받음" = 병원이 시술을 확인해 발급한 방문 티켓 수. 후기는 티켓 보유자만 익명으로, 시술당 1회 (Semaphore). 플랫폼도 후기를 고칠 수 없고, 공개 피드 없이 집계만 비교 화면에 들어갑니다.</p>` +
+    <p class="explain">"피북 사용자 N명 받음" = 병원이 시술을 확인해 발급한 방문 티켓 수. 후기는 티켓 보유자만 익명으로, 시술당 1회 (Semaphore). 플랫폼도 후기를 고칠 수 없고, 후기 원문과 집계(n, 평점)는 로그인 고객과 비교 화면에 공개됩니다 (익명 집합 3명 이상).</p>` +
     s.clinics.map((c, i) => `<div class="rank-card"><div class="head"><span class="pos">${i + 1}</span>
       <div><div class="nm">${esc(c.clinic)}</div><div class="muted">${esc(c.area)} · ${c.languages.join('/')}</div></div>
       <div class="stats"><b>${c.verifiedVisits.toLocaleString()}</b> 검증 방문<br>${c.avgRating ? `★ ${c.avgRating}` : '—'} · 검증 후기 ${c.reviewCount}건</div></div>
-      ${Object.entries(c.reviewStats).filter(([, v]) => v.n).map(([p, v]) => `<div class="review"><div class="meta">✓ ${esc(procName(p))} · 검증 후기 ${v.n}건 · 평점 ${v.avgRating}${v.pending ? ` · 공개 대기 ${v.pending}` : ''}</div><span class="muted">후기 원문은 공개 피드에 싣지 않습니다 (08). 로그인 고객의 1:1 상담 요약에서만 씁니다.</span></div>`).join('')}</div>`).join('');
+      ${c.reviews.slice(0, 2).map((v) => `<div class="review"><div class="meta">✓ 검증된 방문자 · ${esc(v.procedure)} · ${'★'.repeat(v.rating)}</div>${esc(v.text)}</div>`).join('')}</div>`).join('');
 }
 
 // ---------------- scenes (docs/spec demo scenario + ZK extension) ----------------
@@ -96,7 +96,7 @@ const SCENES = [
   },
   {
     n: '③', persona: 'cus_lin', title: '"피북 사용자 N명 받음"과 검증 후기',
-    desc: '방문 수 = 병원이 확인해 발급한 방문 티켓 수. 후기는 티켓 보유자만 익명으로 1회 (Semaphore). 공개 피드는 없고 집계(n, 평점)만 비교 화면에 들어간다 (08 규제).',
+    desc: '방문 수 = 병원이 확인해 발급한 방문 티켓 수. 후기는 티켓 보유자만 익명으로 1회 (Semaphore). 후기 원문과 집계(n, 평점)는 로그인 고객·비교 화면에 공개된다 (익명 집합 3명 이상, 08).',
     actions: [['검증 방문 · 후기 집계 보기', 'scene3a'], ['익명 후기 남기기 → 한 번 더 시도', 'scene3b']],
   },
   {

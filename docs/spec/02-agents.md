@@ -20,13 +20,15 @@
 | 기능 | 설명 | 우선순위 |
 | --- | --- | --- |
 | 온보딩 | 채팅으로 프로필 구축 ([04-onboarding-chat.md](04-onboarding-chat.md)) | P0 |
-| 요청 정리 | 한마디("리주란 받고 싶어")를 `pibu/procedure-request@1`로 정리. 빠진 필수 슬롯만 되묻는다. 기본값 규칙: 용량을 말하지 않으면 `platform.recipe`의 통상 용량 **최솟값**(`typicalAmount.min`), 지역은 숙소 지역이 속한 **지역 그룹 전체** (예: 신사 → 신사·강남·압구정, [07-platform-intelligence.md](07-platform-intelligence.md) 지역 그룹), 예산은 `prefs.budgetKrw`, 날짜는 체류 기간, 언어는 `prefs.languagesNeeded` | P0 |
+| 요청 정리 | 한마디("리주란 받고 싶어")를 `pibu/procedure-request@1`로 정리. 빠진 필수 슬롯만 되묻는다. 기본값 규칙: 용량을 말하지 않으면 `platform.recipe`의 통상 용량 **최솟값**(`typicalAmount.min`), 지역은 숙소 지역이 속한 **지역 그룹 전체** (위치 정보, 필터 아님. 예: 신사 → 신사·강남·압구정, [07-platform-intelligence.md](07-platform-intelligence.md) 지역 그룹), 예산은 `prefs.budgetKrw`, 날짜는 체류 기간, 언어는 `prefs.languagesNeeded` | P0 |
 | 대화 대행 | 플랫폼에 매칭 요청 → 후보 병원들에 병렬 견적 요청 → 플랫폼에 판정 요청 → 결과를 고객 언어로 요약. 병원이 20초 안에 답하지 않거나 거절하면 `platform.report_signal`로 알린다 | P0 |
 | 예약 대행 | 고객이 고른 견적으로 병원에 예약 요청. 병원이 추가 정보를 요구하면(`TASK_STATE_INPUT_REQUIRED`) 프로필에서 동의된 값으로 답하거나 고객에게 묻는다 | P0 |
 | 내 시술 기록 | 예약으로 받은 시술은 자동 기록, 그 외는 3초 수동 기록. 다음 회차 계산 (주기 규칙은 `data/seed/procedures.json`) | P0 |
 | 결과 기록 | D0(실결제·실용량) P0, D7·D30 체크인 P1. 고객이 확인하면 플랫폼 `platform.submit_outcome`으로 전송 | P0 / P1 |
 | 동의 관리 | 어떤 필드를 누구에게 보낼 수 있는지 동의 원장(consent ledger)으로 관리. 보내기 전 항상 원장을 확인 | P0 |
 | 데이터 이식 | 내 프로필·기록·대화 JSON 내보내기, 전체 삭제 | P1 |
+| 기록 지갑과 오퍼 증명 (ZK 확장) | 지갑이 비공개 차트(시술 이력)를 보관한다. 병원 오퍼의 `event.zkClauses`를 **기기 안에서** 매칭하고, 해당되는 오퍼만 증명을 만들어 `clinic.quote` 메시지에 붙인다. 이력 원본은 어떤 메시지에도 보내지 않는다 ([INTEGRATION.md](../INTEGRATION.md)) | P0 |
+| 후기 제출 (ZK 확장) | 시술 완료 후 받은 Semaphore 방문 티켓으로 후기를 익명 제출한다. 방문 1회 = 후기 1회 | P0 |
 
 ### 판단하지 않는 것
 
@@ -55,17 +57,21 @@
 | 규칙 엔진 | 연결 규칙 평가, 버전 관리, 매칭마다 적용 규칙 기록 ([07-platform-intelligence.md](07-platform-intelligence.md)) | P0 |
 | 규칙 제안 | 결과 신호를 모아 Claude가 규칙 후보와 근거를 제안 → 운영자 승인 | P1 (데모에선 버튼으로 실행) |
 | 유치 실적 원장 | 추천 토큰으로 귀속된 예약·결제 기록 (법정 실적 보고용) | P0 |
+| 기록 앵커 relayer (ZK 확장) | 고객 지갑이 만든 append 증명을 가스를 내며 체인에 대신 제출한다. 예약이 호출 고객의 것이고 완료 상태인지, 기록 해시가 맞는지 확인한 뒤에만 보낸다 | P0 |
+| 검증 방문·후기 집계 (ZK 확장) | 앵커된 방문마다 후기 티켓 1장을 발급하고, 후기를 집계(`n`, 평균 평점)한다. 원문과 집계는 로그인 고객 화면과 비교 화면에 공개한다 ([07-platform-intelligence.md](07-platform-intelligence.md)) | P0 |
 
 ### A2A 스킬 (플랫폼 에이전트가 받는 요청)
 
 | 스킬 id | 호출자 | 입력 | 출력 | 우선순위 |
 | --- | --- | --- | --- | --- |
 | `platform.recipe` | 고객 | `pibu/recipe-query@1` (고민, 나이대, 시술 후보) | `pibu/recipe@1` (한국 여성 선택 조합, 통상 용량, 주기, 다운타임, 효과 시기) | P0 |
-| `platform.match_clinics` | 고객 | `pibu/procedure-request@1` | `pibu/clinic-shortlist@1` (후보 병원 최대 5곳, 이유, 추천 토큰, 가격 기준 분포). 한국인·국내 거주 외국인은 `TASK_STATE_REJECTED` | P0 |
+| `platform.match_clinics` | 고객 | `pibu/procedure-request@1` | `pibu/clinic-shortlist@1` (후보 병원 최대 3곳, 이유, 추천 토큰, 가격 기준 분포). 한국인·국내 거주 외국인은 `TASK_STATE_REJECTED` | P0 |
 | `platform.judge_quote` | 고객 | `pibu/judge-request@1` (견적 1~N개) | `pibu/fairness-verdict-list@1` (견적별 `pibu/fairness-verdict@1`) | P0 |
 | `platform.report_booking` | 병원 | `pibu/booking@1` (추천 토큰 포함) | 접수 확인 text | P0 |
 | `platform.submit_outcome` | 고객 | `pibu/outcome@1` | 접수 확인 + 반영 여부 text | P0 |
 | `platform.report_signal` | 고객 | `pibu/signal-report@1` (병원 응답 시간초과, 거절) | 접수 확인 text | P0 |
+| `platform.anchor_record` | 고객 | `pibu/record-anchor@1` (시술 완료 후 기록 앵커) | text (`anchored <tx>` 또는 거부 사유) | P0 |
+| `platform.submit_review` | 고객 | `pibu/review@1` (ZK 방문 증명 포함 후기) | text (접수와 집계 n, 또는 거부 사유) | P0 |
 
 ## 3. 병원 에이전트
 
@@ -83,6 +89,7 @@
 | 예약 확정 | 운영자 대행 응답 큐에서 병원 확인 후 확정 | 병원 요청함에서 확정 (자동 확정 옵션) | P0 |
 | 추천 토큰 검증 | 플랫폼 공개키로 서명 검증, 만료·병원 id 확인 | 동일 | P0 |
 | 예약 보고 | 확정 시 플랫폼 `platform.report_booking` 호출 | 동일 | P0 |
+| 오퍼 증명 검증 (ZK 확장) | `clinic.quote`의 `metadata.offerProof`를 검증해 맞으면 이벤트가를 적용, 아니면 정가 견적. 차트를 요구하지 않는다 | 동일 | P0 |
 
 ### A2A 스킬 (병원 에이전트가 받는 요청)
 
@@ -103,4 +110,5 @@
 | 안전 정보 (임신, 알레르기 등) | 보유 | 받지 않음 | 예약 요청 시 동의하면 전달 |
 | 견적 | 받음 | 판정 요청 시 받음 | 생성 |
 | 실결제·만족도 | 보유 | 결과 제출 시 받음 | 개별 값은 모름, 집계(n ≥ 5)만 |
+| 시술 이력 (날짜·횟수·병원) | 보유 (지갑) | 가명 → 차트 해시만 | 오퍼 조건 충족 여부만 |
 | 연결 규칙 | 모름 (매칭 이유만 받음) | 보유 | 모름 |

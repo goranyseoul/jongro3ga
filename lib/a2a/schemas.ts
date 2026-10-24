@@ -47,6 +47,22 @@ const TypicalAmountSchema = obj({ min: z.number().positive(), max: z.number().po
 
 const dateRangeOrdered = (value: { from: string; to: string }) => value.from <= value.to;
 
+/**
+ * One condition of a record based offer (docs/INTEGRATION.md section 3): the number of records of `type`
+ * at `clinicId`, dated minDays..maxDays before today, must lie in minCount..maxCount.
+ */
+export const ZkClauseSchema = obj({
+  type: ProcedureIdSchema.optional(),
+  clinicId: ClinicIdSchema.optional(),
+  minDays: CountSchema.optional(),
+  maxDays: CountSchema.optional(),
+  minCount: CountSchema.optional(),
+  maxCount: CountSchema.optional(),
+})
+  .refine((c) => c.minCount !== undefined || c.maxCount !== undefined, "minCount or maxCount is required")
+  .refine((c) => c.minDays === undefined || c.maxDays === undefined || c.minDays <= c.maxDays, "minDays must not exceed maxDays")
+  .refine((c) => c.minCount === undefined || c.maxCount === undefined || c.minCount <= c.maxCount, "minCount must not exceed maxCount");
+
 /** Promotion terms. Medical Act enforcement decree art. 23 needs all five fields, so none is optional. */
 export const EventSchema = obj({
   title: z.string().min(1),
@@ -54,6 +70,8 @@ export const EventSchema = obj({
   validFrom: IsoDateSchema,
   validUntil: IsoDateSchema,
   conditions: z.string().min(1),
+  /** Present only for an event that applies by proof alone (pibu/offer-proof@1). `conditions` stays required. */
+  zkClauses: z.array(ZkClauseSchema).min(1).optional(),
 });
 
 // ---- procedure request ----
@@ -124,9 +142,11 @@ export const ClinicShortlistV1Schema = obj({
         score: z.number().min(0).max(1),
         reasons: z.array(z.string().min(1)),
         referralToken: z.string().min(1),
+        verifiedVisits: CountSchema.optional(),
+        reviewStats: obj({ n: CountSchema, avgRating: z.number().min(1).max(5) }).optional(),
       }),
     )
-    .max(5),
+    .max(3),
 });
 
 // ---- quote, judge ----
@@ -144,6 +164,8 @@ export const QuoteV1Schema = obj({
   includes: z.array(z.string()),
   excludes: z.array(z.string()),
   event: EventSchema.optional(),
+  /** Only when the clinic verified an offer proof and applied the event price. */
+  offerApplied: obj({ offerId: prefixedId("ofr"), verified: z.literal(true) }).optional(),
   slots: z.array(IsoDateTimeSchema),
   languages: z.array(LocaleSchema),
   indicative: z.boolean(),
@@ -360,7 +382,61 @@ export const AvailabilityV1Schema = obj({
   indicative: z.boolean(),
 });
 
+// ---- zk: offer proof, record anchor, review ----
+
+const Hex32Schema = z.string().regex(/^0x[0-9a-fA-F]{64}$/, "expected 0x followed by 64 hex digits");
+const HexSchema = z.string().regex(/^0x[0-9a-fA-F]+$/, "expected a 0x hex string");
+const DecimalSchema = z.string().regex(/^[0-9]+$/, "expected a decimal string");
+
+/** Customer to clinic, carried in `clinic.quote` message metadata.offerProof. */
+export const OfferProofV1Schema = obj({
+  schema: z.literal("pibu/offer-proof@1"),
+  offerId: prefixedId("ofr"),
+  clinicId: ClinicIdSchema,
+  subjectId: Hex32Schema,
+  chainId: z.number().int().positive(),
+  registry: z.string().regex(/^0x[0-9a-fA-F]{40}$/, "expected 0x followed by 40 hex digits"),
+  today: CountSchema,
+  proofs: z.array(obj({ proof: HexSchema, publicInputs: z.array(z.string()).min(1) })).min(1),
+});
+
+/** Customer to platform (platform.anchor_record). */
+export const RecordAnchorV1Schema = obj({
+  schema: z.literal("pibu/record-anchor@1"),
+  bookingId: BookingIdSchema,
+  clinicId: ClinicIdSchema,
+  procedureId: ProcedureIdSchema,
+  subjectId: Hex32Schema,
+  record: obj({ day: CountSchema, recordNonce: DecimalSchema, ticketCommitment: DecimalSchema }),
+  oldCommitment: HexSchema,
+  newCommitment: HexSchema,
+  recordHash: HexSchema,
+  proof: HexSchema,
+});
+
+/** Customer to platform (platform.submit_review): a Semaphore v4 proof of a verified visit. */
+export const ReviewV1Schema = obj({
+  schema: z.literal("pibu/review@1"),
+  clinicId: ClinicIdSchema,
+  procedureId: ProcedureIdSchema,
+  rating: z.number().int().min(1).max(5),
+  text: z.string().max(300).optional(),
+  visitProof: obj({
+    merkleTreeDepth: z.number().int().positive(),
+    merkleTreeRoot: z.string(),
+    nullifier: z.string(),
+    message: z.string(),
+    scope: z.string(),
+    points: z.array(z.string()).length(8),
+  }),
+});
+
 // ---- inferred types ----
+
+export type ZkClause = z.infer<typeof ZkClauseSchema>;
+export type OfferProofV1 = z.infer<typeof OfferProofV1Schema>;
+export type RecordAnchorV1 = z.infer<typeof RecordAnchorV1Schema>;
+export type ReviewV1 = z.infer<typeof ReviewV1Schema>;
 
 export type ProcedureRequestV1 = z.infer<typeof ProcedureRequestV1Schema>;
 export type ClinicShortlistV1 = z.infer<typeof ClinicShortlistV1Schema>;
@@ -406,6 +482,9 @@ export const PIBU_SCHEMAS = {
   "pibu/offers@1": OffersV1Schema,
   "pibu/availability-query@1": AvailabilityQueryV1Schema,
   "pibu/availability@1": AvailabilityV1Schema,
+  "pibu/offer-proof@1": OfferProofV1Schema,
+  "pibu/record-anchor@1": RecordAnchorV1Schema,
+  "pibu/review@1": ReviewV1Schema,
 } as const;
 
 export type PibuSchemaName = keyof typeof PIBU_SCHEMAS;
@@ -427,6 +506,8 @@ export const SKILL_ROUTES = {
   },
   "platform.report_booking": { input: "pibu/booking@1", output: "text", schema: BookingV1Schema },
   "platform.submit_outcome": { input: "pibu/outcome@1", output: "text", schema: OutcomeV1Schema },
+  "platform.anchor_record": { input: "pibu/record-anchor@1", output: "text", schema: RecordAnchorV1Schema },
+  "platform.submit_review": { input: "pibu/review@1", output: "text", schema: ReviewV1Schema },
   "platform.report_signal": { input: "pibu/signal-report@1", output: "text", schema: SignalReportV1Schema },
   "clinic.offers": { input: "pibu/offers-query@1", output: "pibu/offers@1", schema: OffersQueryV1Schema },
   "clinic.quote": { input: "pibu/procedure-request@1", output: "pibu/quote@1", schema: ProcedureRequestForClinicSchema },

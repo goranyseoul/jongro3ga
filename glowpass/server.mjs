@@ -33,9 +33,9 @@ function stats() {
   const s = board.stats();
   const clinics = Object.entries(CLINICS).map(([clinicId, c]) => {
     const x = s.find((y) => y.clinicId === clinicId) ?? { verifiedVisits: 0, procedures: {} };
-    // 08-compliance: no public review feed. Only aggregates leave this server (n, average); the text
-    // stays in the board for the logged-in 1:1 summary path (platform.submit_review consumer).
-    const reviews = Object.entries(x.procedures).flatMap(([procedureId, p]) => p.reviews.map((r) => ({ rating: r.rating, procedureId })));
+    // 08-compliance (owner decision 2026-10-24): review texts and aggregates are public to logged-in
+    // customers and the compare screen. The board already withholds groups under MIN_ANON_SET.
+    const reviews = Object.entries(x.procedures).flatMap(([procedureId, p]) => p.reviews.map((r) => ({ ...r, procedureId, procedure: PROCEDURES[procedureId].ko })));
     const reviewStats = Object.fromEntries(Object.entries(x.procedures).map(([p, v]) => [p, { n: v.reviews.length, avgRating: v.avgRating === null ? null : +v.avgRating.toFixed(1), pending: v.pendingReviews }]));
     return {
       clinicId, clinic: c.ko, area: c.area, languages: c.languages,

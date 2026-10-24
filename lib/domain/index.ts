@@ -4,3 +4,4 @@ export * from "./customer";
 export * from "./platform";
 export * from "./procedure";
 export * from "./shared";
+export * from "./zk";
