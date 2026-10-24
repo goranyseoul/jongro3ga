@@ -1,0 +1,7 @@
+{
+  "base": "KRW",
+  "asOf": "2026-10-24",
+  "status": "demo_assumption",
+  "note": "Fixed reference rates for showing approximate prices in the visitor's currency. Not live data.",
+  "krwPerUnit": { "JPY": 9.2, "CNY": 190, "USD": 1380 }
+}

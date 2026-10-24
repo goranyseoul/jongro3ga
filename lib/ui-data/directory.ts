@@ -3,8 +3,8 @@
 // flow keep their ids so a recommendation can lead into the quote screens.
 
 import type { Locale } from "@/lib/domain/common";
-import { procedureMaster } from "@/lib/domain/procedure-master";
-import type { Procedure } from "@/lib/domain/procedure";
+import { procedureMaster } from "../domain/procedure-master";
+import type { Procedure } from "../domain/procedure";
 import type { Area, I18nText } from "./customer";
 
 export type ProcedureArea = Procedure["areas"][number];
@@ -39,13 +39,13 @@ export const CATEGORY_NAME: Record<ProcedureArea, I18nText> = {
 // The master carries ko and en; the other two languages are display names only.
 const PROCEDURE_NAME_EXTRA: Record<string, { ja: string; "zh-CN": string }> = {
   ulthera: { ja: "ウルセラ", "zh-CN": "超声刀" },
-  thermage: { ja: "サーマージ", "zh-CN": "热玛吉" },
-  shrink: { ja: "シュリンク", "zh-CN": "Shrink 提拉" },
+  thermage_flx: { ja: "サーマージ", "zh-CN": "热玛吉" },
+  shrink_universe: { ja: "シュリンク", "zh-CN": "Shrink 提拉" },
   inmode: { ja: "インモード", "zh-CN": "InMode" },
   oligio: { ja: "オリジオ", "zh-CN": "Oligio" },
   thread_lift: { ja: "糸リフト", "zh-CN": "线雕提拉" },
-  rejuran: { ja: "リジュラン", "zh-CN": "丽珠兰" },
-  juvelook: { ja: "ジュベルック", "zh-CN": "Juvelook" },
+  rejuran_healer: { ja: "リジュラン", "zh-CN": "丽珠兰" },
+  skin_booster_juvelook: { ja: "ジュベルック", "zh-CN": "Juvelook" },
   juvelook_eye: { ja: "ジュベルック アイ", "zh-CN": "Juvelook 眼周" },
   juvelook_volume: { ja: "ジュベルック ボリューム", "zh-CN": "Juvelook 填充" },
   skin_booster: { ja: "水光注射", "zh-CN": "水光针" },
@@ -53,7 +53,7 @@ const PROCEDURE_NAME_EXTRA: Record<string, { ja: string; "zh-CN": string }> = {
   exosome: { ja: "エクソソーム", "zh-CN": "外泌体" },
   filler: { ja: "フィラー", "zh-CN": "玻尿酸填充" },
   sculptra: { ja: "スカルプトラ", "zh-CN": "童颜针" },
-  botox_wrinkle: { ja: "ボトックス(しわ)", "zh-CN": "肉毒素(除皱)" },
+  botox_forehead: { ja: "ボトックス(しわ)", "zh-CN": "肉毒素(除皱)" },
   botox_square_jaw: { ja: "エラボトックス", "zh-CN": "瘦脸针" },
   skin_botox: { ja: "スキンボトックス", "zh-CN": "皮肤肉毒素" },
   contour_injection: { ja: "輪郭注射", "zh-CN": "轮廓针" },
@@ -177,7 +177,7 @@ export const DIRECTORY: DirectoryClinic[] = [
     area: "sinsa",
     languages: ["ja", "en"],
     operationMode: "clinic",
-    procedures: ["rejuran", "skin_booster", "ulthera", "thermage", "botox_wrinkle", "pico_toning"],
+    procedures: ["rejuran_healer", "skin_booster", "ulthera", "thermage_flx", "botox_forehead", "pico_toning"],
     passes: ALL,
   },
   {
@@ -186,7 +186,7 @@ export const DIRECTORY: DirectoryClinic[] = [
     area: "gangnam",
     languages: ["ja", "en"],
     operationMode: "proxy",
-    procedures: ["rejuran", "laser_toning", "shrink", "skin_botox", "aqua_peel"],
+    procedures: ["rejuran_healer", "laser_toning", "shrink_universe", "skin_botox", "aqua_peel"],
     passes: without("priceAsQuoted", "namedDoctor"),
   },
   {
@@ -195,7 +195,7 @@ export const DIRECTORY: DirectoryClinic[] = [
     area: "apgujeong",
     languages: ["ja"],
     operationMode: "proxy",
-    procedures: ["rejuran", "thermage", "filler", "juvelook"],
+    procedures: ["rejuran_healer", "thermage_flx", "filler", "skin_booster_juvelook"],
     passes: without("priceAsQuoted"),
   },
   {
@@ -204,7 +204,7 @@ export const DIRECTORY: DirectoryClinic[] = [
     area: "myeongdong",
     languages: ["zh-CN", "ja"],
     operationMode: "proxy",
-    procedures: ["rejuran", "laser_toning", "pico_toning", "ipl", "botox_square_jaw"],
+    procedures: ["rejuran_healer", "laser_toning", "pico_toning", "ipl", "botox_square_jaw"],
     passes: without("dermatologist"),
   },
   {
@@ -213,26 +213,26 @@ export const DIRECTORY: DirectoryClinic[] = [
     area: "hongdae",
     languages: ["en"],
     operationMode: "clinic",
-    procedures: ["rejuran", "ulthera", "potenza_secret", "fraxel", "vbeam"],
+    procedures: ["rejuran_healer", "ulthera", "potenza_secret", "fraxel", "vbeam"],
     passes: ALL,
   },
-  { id: "cln_lumen", name: { ko: "루멘의원", en: "Lumen Clinic" }, area: "sinsa", languages: ["en", "ja"], operationMode: "clinic", procedures: ["thermage", "ulthera", "oligio", "skin_booster"], passes: ALL },
-  { id: "cln_haneul", name: { ko: "하늘피부과의원", en: "Haneul Dermatology" }, area: "apgujeong", languages: ["zh-CN", "en"], operationMode: "proxy", procedures: ["inmode", "shrink", "botox_square_jaw", "contour_injection"], passes: without("aftercare") },
-  { id: "cln_dalbit", name: { ko: "달빛의원", en: "Dalbit Clinic" }, area: "gangnam", languages: ["ja"], operationMode: "proxy", procedures: ["skin_booster", "rejuran", "exosome", "lituo"], passes: without("namedDoctor") },
+  { id: "cln_lumen", name: { ko: "루멘의원", en: "Lumen Clinic" }, area: "sinsa", languages: ["en", "ja"], operationMode: "clinic", procedures: ["thermage_flx", "ulthera", "oligio", "skin_booster"], passes: ALL },
+  { id: "cln_haneul", name: { ko: "하늘피부과의원", en: "Haneul Dermatology" }, area: "apgujeong", languages: ["zh-CN", "en"], operationMode: "proxy", procedures: ["inmode", "shrink_universe", "botox_square_jaw", "contour_injection"], passes: without("aftercare") },
+  { id: "cln_dalbit", name: { ko: "달빛의원", en: "Dalbit Clinic" }, area: "gangnam", languages: ["ja"], operationMode: "proxy", procedures: ["skin_booster", "rejuran_healer", "exosome", "lituo"], passes: without("namedDoctor") },
   { id: "cln_soo", name: { ko: "수피부과의원", en: "Soo Dermatology" }, area: "sinsa", languages: ["en"], operationMode: "clinic", procedures: ["pico_toning", "laser_toning", "ipl", "vbeam"], passes: ALL },
   { id: "cln_yeon", name: { ko: "연의원", en: "Yeon Clinic" }, area: "apgujeong", languages: ["ja", "zh-CN"], operationMode: "clinic", procedures: ["filler", "sculptra", "juvelook_volume", "thread_lift"], passes: without("priceAsQuoted") },
   { id: "cln_bom", name: { ko: "봄피부과의원", en: "Bom Dermatology" }, area: "myeongdong", languages: ["zh-CN", "ja", "en"], operationMode: "proxy", procedures: ["aqua_peel", "skin_booster", "laser_toning", "skin_botox"], passes: without("dermatologist", "aftercare") },
-  { id: "cln_seum", name: { ko: "세움의원", en: "Seum Clinic" }, area: "gangnam", languages: ["en"], operationMode: "clinic", procedures: ["potenza_secret", "fraxel", "rejuran", "exosome"], passes: ALL },
-  { id: "cln_ohn", name: { ko: "온피부과의원", en: "Ohn Dermatology" }, area: "sinsa", languages: ["ja"], operationMode: "clinic", procedures: ["juvelook", "juvelook_eye", "rejuran", "skin_booster"], passes: ALL },
-  { id: "cln_garam", name: { ko: "가람의원", en: "Garam Clinic" }, area: "hongdae", languages: ["en", "zh-CN"], operationMode: "proxy", procedures: ["shrink", "inmode", "botox_wrinkle", "laser_toning"], passes: without("namedDoctor", "priceAsQuoted") },
-  { id: "cln_noeul", name: { ko: "노을피부과의원", en: "Noeul Dermatology" }, area: "apgujeong", languages: ["ja", "en"], operationMode: "clinic", procedures: ["ulthera", "thermage", "thread_lift", "oligio"], passes: ALL },
+  { id: "cln_seum", name: { ko: "세움의원", en: "Seum Clinic" }, area: "gangnam", languages: ["en"], operationMode: "clinic", procedures: ["potenza_secret", "fraxel", "rejuran_healer", "exosome"], passes: ALL },
+  { id: "cln_ohn", name: { ko: "온피부과의원", en: "Ohn Dermatology" }, area: "sinsa", languages: ["ja"], operationMode: "clinic", procedures: ["skin_booster_juvelook", "juvelook_eye", "rejuran_healer", "skin_booster"], passes: ALL },
+  { id: "cln_garam", name: { ko: "가람의원", en: "Garam Clinic" }, area: "hongdae", languages: ["en", "zh-CN"], operationMode: "proxy", procedures: ["shrink_universe", "inmode", "botox_forehead", "laser_toning"], passes: without("namedDoctor", "priceAsQuoted") },
+  { id: "cln_noeul", name: { ko: "노을피부과의원", en: "Noeul Dermatology" }, area: "apgujeong", languages: ["ja", "en"], operationMode: "clinic", procedures: ["ulthera", "thermage_flx", "thread_lift", "oligio"], passes: ALL },
   { id: "cln_dain", name: { ko: "다인의원", en: "Dain Clinic" }, area: "gangnam", languages: ["zh-CN"], operationMode: "proxy", procedures: ["contour_injection", "botox_square_jaw", "filler", "skin_botox"], passes: without("aftercare") },
   { id: "cln_sol", name: { ko: "솔피부과의원", en: "Sol Dermatology" }, area: "myeongdong", languages: ["zh-CN", "en"], operationMode: "clinic", procedures: ["vbeam", "ipl", "agnes", "aqua_peel"], passes: ALL },
   { id: "cln_mirae", name: { ko: "미래의원", en: "Mirae Clinic" }, area: "sinsa", languages: ["en", "ja"], operationMode: "clinic", procedures: ["agnes", "potenza_secret", "fraxel", "lituo"], passes: without("languageSupport") },
   { id: "cln_haon", name: { ko: "하온피부과의원", en: "Haon Dermatology" }, area: "hongdae", languages: ["en"], operationMode: "proxy", procedures: ["laser_toning", "pico_toning", "skin_booster"], passes: without("namedDoctor") },
-  { id: "cln_raon", name: { ko: "라온의원", en: "Raon Clinic" }, area: "apgujeong", languages: ["ja", "zh-CN", "en"], operationMode: "clinic", procedures: ["exosome", "rejuran", "skin_booster", "juvelook"], passes: ALL },
-  { id: "cln_binna", name: { ko: "빛나피부과의원", en: "Binna Dermatology" }, area: "gangnam", languages: ["ja"], operationMode: "proxy", procedures: ["thermage", "shrink", "inmode"], passes: without("dermatologist") },
-  { id: "cln_dasom", name: { ko: "다솜의원", en: "Dasom Clinic" }, area: "myeongdong", languages: ["zh-CN"], operationMode: "clinic", procedures: ["botox_wrinkle", "skin_botox", "filler", "sculptra"], passes: ALL },
+  { id: "cln_raon", name: { ko: "라온의원", en: "Raon Clinic" }, area: "apgujeong", languages: ["ja", "zh-CN", "en"], operationMode: "clinic", procedures: ["exosome", "rejuran_healer", "skin_booster", "skin_booster_juvelook"], passes: ALL },
+  { id: "cln_binna", name: { ko: "빛나피부과의원", en: "Binna Dermatology" }, area: "gangnam", languages: ["ja"], operationMode: "proxy", procedures: ["thermage_flx", "shrink_universe", "inmode"], passes: without("dermatologist") },
+  { id: "cln_dasom", name: { ko: "다솜의원", en: "Dasom Clinic" }, area: "myeongdong", languages: ["zh-CN"], operationMode: "clinic", procedures: ["botox_forehead", "skin_botox", "filler", "sculptra"], passes: ALL },
   { id: "cln_eun", name: { ko: "은피부과의원", en: "Eun Dermatology" }, area: "sinsa", languages: ["en", "zh-CN"], operationMode: "clinic", procedures: ["fraxel", "potenza_secret", "agnes", "vbeam"], passes: ALL },
   { id: "cln_jinju", name: { ko: "진주의원", en: "Jinju Clinic" }, area: "apgujeong", languages: ["ja", "en"], operationMode: "proxy", procedures: ["juvelook_eye", "juvelook_volume", "lituo", "skin_booster"], passes: without("priceAsQuoted") },
 ];

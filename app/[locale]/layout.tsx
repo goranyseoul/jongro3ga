@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { AgentProvider } from "@/components/customer/agent-context";
+import { AgentDock } from "@/components/customer/agent-dock";
 import "@/styles/customer.css";
 
 export function generateStaticParams() {
@@ -25,9 +27,12 @@ export default async function LocaleLayout({
   // carries its own language on a wrapper element.
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <div className="cu-root" lang={locale}>
-        {children}
-      </div>
+      <AgentProvider>
+        <div className="cu-root" lang={locale}>
+          {children}
+          <AgentDock />
+        </div>
+      </AgentProvider>
     </NextIntlClientProvider>
   );
 }

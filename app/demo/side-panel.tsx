@@ -1,45 +1,42 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui";
 import { StatusText, Tabs, panelId, tabId, type StatusTone } from "@/components/ops";
-import {
-  DEMO_BOOKING_STATE_LABEL,
-  clinicName,
-  formatMonthDayTime,
-  type DemoBooking,
-  type DemoBookingState,
-} from "@/lib/ui-data/ops";
+import { cn } from "@/lib/cn";
+import { focusRing } from "@/lib/ui";
+import { BOOKING_STATUS_LABEL, bookingSummary, formatMonthDayTime, type BookingStatus, type OpsBooking } from "@/lib/ui-data/ops";
 
 export type SideMode = "clinic" | "ops";
 
 export type SidePanelProps = {
   mode: SideMode;
   onMode: (mode: SideMode) => void;
-  /** Bookings that are already visible in the replay. */
-  bookings: DemoBooking[];
+  bookings: OpsBooking[];
   busy: string | null;
-  onConfirm: (booking: DemoBooking) => void;
-  onReject: (booking: DemoBooking) => void;
-  onPropose: (booking: DemoBooking) => void;
+  onConfirm: (booking: OpsBooking) => void;
+  /** Proxy bookings only: the operator records the clinic's refusal. */
+  onReject: (booking: OpsBooking) => void;
 };
 
-const STATE_TONE: Record<DemoBookingState, StatusTone> = {
-  pending: "warning",
+const STATE_TONE: Record<BookingStatus, StatusTone> = {
+  pending_clinic: "warning",
   confirmed: "success",
-  rejected: "danger",
-  proposed: "muted",
+  canceled: "danger",
+  no_show: "danger",
+  completed: "muted",
 };
 
 const ID_PREFIX = "demo-side";
 const EMPTY: Record<SideMode, string> = {
-  clinic: "받은 요청이 없어요. 로그를 재생하면 Yuki의 예약 요청이 도착해요.",
+  clinic: "직접 운영 병원이 받은 예약 요청이 없어요.",
   ops: "대행 병원의 예약 요청이 없어요.",
 };
 
-// Right column: what the clinic account sees (inbox of a direct clinic) or what the operator sees
-// (queue of proxy clinics), switched by the tabs or by the persona.
-export function SidePanel({ mode, onMode, bookings, busy, onConfirm, onReject, onPropose }: SidePanelProps) {
-  const items = bookings.filter((booking) => booking.mode === (mode === "clinic" ? "clinic" : "proxy"));
+// Right column: what the clinic account sees (bookings of direct clinics) or what the operator sees
+// (queue of proxy clinics), switched by the tabs or by the persona. Both read the clinic agent's bookings.
+export function SidePanel({ mode, onMode, bookings, busy, onConfirm, onReject }: SidePanelProps) {
+  const items = bookings.filter((booking) => booking.operationMode === (mode === "clinic" ? "clinic" : "proxy"));
 
   return (
     <section aria-label="병원 요청함과 운영 큐" className="ops-demo-panel rounded-card border border-border-soft bg-elev">
@@ -59,28 +56,25 @@ export function SidePanel({ mode, onMode, bookings, busy, onConfirm, onReject, o
         ) : (
           <ul>
             {items.map((booking) => (
-              <li key={booking.id} className="flex flex-col gap-sp-3 border-b border-border-soft py-sp-3 last:border-b-0">
+              <li key={booking.bookingId} className="flex flex-col gap-sp-3 border-b border-border-soft py-sp-3 last:border-b-0">
                 <div className="flex flex-col gap-sp-1">
                   <span className="text-body font-med">
-                    {booking.guestName} · {booking.summary}
+                    {booking.guest.displayName} · {bookingSummary(booking)}
                   </span>
                   <span className="text-label text-muted tabular-nums">
-                    {mode === "ops" ? `${clinicName(booking.clinicId)} · ` : `${clinicName(booking.clinicId)} 계정 · `}
+                    {mode === "ops" ? `${booking.clinicName} · ` : `${booking.clinicName} 계정 · `}
                     {formatMonthDayTime(booking.slot)} 예약 요청
                   </span>
                 </div>
-                {booking.state === "pending" ? (
+                {booking.status === "pending_clinic" ? (
                   mode === "clinic" ? (
-                    <div className="flex flex-wrap gap-sp-2">
+                    <div className="flex flex-wrap items-center gap-sp-2">
                       <Button onClick={() => onConfirm(booking)} disabled={busy !== null}>
                         확정
                       </Button>
-                      <Button variant="secondary" onClick={() => onPropose(booking)} disabled={busy !== null}>
-                        시간 제안
-                      </Button>
-                      <Button variant="secondary" onClick={() => onReject(booking)} disabled={busy !== null}>
-                        거절
-                      </Button>
+                      <Link href="/clinic/inbox" className={cn("text-label text-muted underline", focusRing)}>
+                        시간 제안·거절은 병원 요청함에서
+                      </Link>
                     </div>
                   ) : (
                     <div className="flex flex-wrap gap-sp-2">
@@ -93,7 +87,7 @@ export function SidePanel({ mode, onMode, bookings, busy, onConfirm, onReject, o
                     </div>
                   )
                 ) : (
-                  <StatusText tone={STATE_TONE[booking.state]}>{DEMO_BOOKING_STATE_LABEL[booking.state]}</StatusText>
+                  <StatusText tone={STATE_TONE[booking.status]}>{BOOKING_STATUS_LABEL[booking.status]}</StatusText>
                 )}
               </li>
             ))}
