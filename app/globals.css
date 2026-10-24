@@ -182,6 +182,7 @@
   );
   --particle: oklch(1 0 0);
   --enter-offset: 12px;
+  --enter-scale: 0.9;
   --stagger-step: 70ms;
   --dur-splash: 1500ms;
 }
@@ -235,6 +236,10 @@
     animation: splash-letter var(--dur-modal) var(--ease-out) forwards;
     animation-delay: calc(var(--i) * var(--stagger-step));
   }
+  .splash-letter-accent {
+    animation-name: splash-letter-accent;
+    transform-origin: 50% 100%;
+  }
 }
 
 @keyframes splash-letter {
@@ -247,6 +252,24 @@
     opacity: 1;
     transform: none;
     filter: none;
+  }
+}
+
+@keyframes splash-letter-accent {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--enter-offset)) scale(var(--enter-scale));
+    filter: blur(6px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(0) scale(1.08);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 

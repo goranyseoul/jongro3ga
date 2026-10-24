@@ -6,7 +6,7 @@ import { OnboardingChat } from "./onboarding/onboarding-chat";
 import { SiteFooter } from "./site-chrome";
 
 // Brand wordmark, owner decision 2026-10-24 (records that move with the customer).
-const WORDMARK = "Pibuk";
+const WORDMARK = "PibooK";
 // demo accounts from 05-screens.md (/[locale]/signup)
 const DEMO_PERSONAS = ["Yuki", "Lin", "Emily", "지수"];
 

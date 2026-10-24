@@ -56,10 +56,10 @@ const columns: TableColumn<QuoteRow>[] = [
 const verdicts: VerdictLabel[] = ["fair", "good_deal", "high", "very_high", "underdosed", "insufficient_data"];
 
 const agentCard: AgentCard = {
-  name: "Pibuk Customer Agent",
+  name: "PibooK Customer Agent",
   description: "Collects a customer's conditions and asks clinics for quotes on their behalf.",
   version: "0.1.0",
-  provider: { organization: "Pibuk" },
+  provider: { organization: "PibooK" },
   supportedInterfaces: [
     { url: "https://pibu.example/a2a/customer/cag_7f3k2/rpc", protocolBinding: "JSONRPC", protocolVersion: "1.0" },
   ],

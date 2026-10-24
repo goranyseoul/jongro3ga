@@ -18,11 +18,11 @@ const COPY: Record<Locale, RightsCopy> = {
   en: {
     title: "Foreign patient rights",
     notice:
-      "Demo draft. This page has not been reviewed by legal counsel, and Pibuk is not yet a registered foreign patient attraction agency.",
+      "Demo draft. This page has not been reviewed by legal counsel, and PibooK is not yet a registered foreign patient attraction agency.",
     sections: [
       {
-        title: "What Pibuk does",
-        body: "Pibuk runs a personal agent for you. It records your conditions, requests quotes from clinics, compares quoted prices and doses with recorded paid prices, and forwards your booking requests. Pibuk is not a medical provider and does not diagnose or recommend treatment.",
+        title: "What PibooK does",
+        body: "PibooK runs a personal agent for you. It records your conditions, requests quotes from clinics, compares quoted prices and doses with recorded paid prices, and forwards your booking requests. PibooK is not a medical provider and does not diagnose or recommend treatment.",
       },
       {
         title: "Terms",
@@ -30,7 +30,7 @@ const COPY: Record<Locale, RightsCopy> = {
       },
       {
         title: "Disputes",
-        body: "Contact Pibuk first so we can relay the issue to the clinic. Disputes about medical treatment can be brought to the Korea Medical Dispute Mediation and Arbitration Agency.",
+        body: "Contact PibooK first so we can relay the issue to the clinic. Disputes about medical treatment can be brought to the Korea Medical Dispute Mediation and Arbitration Agency.",
       },
       {
         title: "Personal information",
@@ -41,11 +41,11 @@ const COPY: Record<Locale, RightsCopy> = {
   },
   ja: {
     title: "外国人患者の権利保護について",
-    notice: "デモ用の草案です。法律の専門家による確認前で、Pibukはまだ外国人患者誘致事業者として登録されていません。",
+    notice: "デモ用の草案です。法律の専門家による確認前で、PibooKはまだ外国人患者誘致事業者として登録されていません。",
     sections: [
       {
-        title: "Pibukが行うこと",
-        body: "Pibukはあなた専用のエージェントを運用します。条件を記録し、クリニックに見積もりを依頼し、見積もりの価格と量を実際の支払い記録と比べ、予約の依頼を伝えます。Pibukは医療機関ではなく、診断や施術の推奨は行いません。",
+        title: "PibooKが行うこと",
+        body: "PibooKはあなた専用のエージェントを運用します。条件を記録し、クリニックに見積もりを依頼し、見積もりの価格と量を実際の支払い記録と比べ、予約の依頼を伝えます。PibooKは医療機関ではなく、診断や施術の推奨は行いません。",
       },
       {
         title: "条件",
@@ -53,7 +53,7 @@ const COPY: Record<Locale, RightsCopy> = {
       },
       {
         title: "紛争の解決",
-        body: "まずPibukにご連絡ください。クリニックへお伝えします。診療に関する紛争は、韓国医療紛争調停仲裁院に申し立てることができます。",
+        body: "まずPibooKにご連絡ください。クリニックへお伝えします。診療に関する紛争は、韓国医療紛争調停仲裁院に申し立てることができます。",
       },
       {
         title: "個人情報",
@@ -64,11 +64,11 @@ const COPY: Record<Locale, RightsCopy> = {
   },
   "zh-CN": {
     title: "外国患者权益保护说明",
-    notice: "演示草案。本页面尚未经过法律专业人士审核，Pibuk 尚未登记为外国患者招揽业者。",
+    notice: "演示草案。本页面尚未经过法律专业人士审核，PibooK 尚未登记为外国患者招揽业者。",
     sections: [
       {
-        title: "Pibuk 提供的服务",
-        body: "Pibuk 为你运行专属代理：记录你的条件，向诊所询价，将报价的价格和用量与实际支付记录比较，并转达你的预约请求。Pibuk 不是医疗机构，不做诊断，也不推荐项目。",
+        title: "PibooK 提供的服务",
+        body: "PibooK 为你运行专属代理：记录你的条件，向诊所询价，将报价的价格和用量与实际支付记录比较，并转达你的预约请求。PibooK 不是医疗机构，不做诊断，也不推荐项目。",
       },
       {
         title: "条件",
@@ -76,7 +76,7 @@ const COPY: Record<Locale, RightsCopy> = {
       },
       {
         title: "纠纷解决",
-        body: "请先联系 Pibuk，我们会转达给诊所。与诊疗相关的纠纷可以向韩国医疗纠纷调解仲裁院申请。",
+        body: "请先联系 PibooK，我们会转达给诊所。与诊疗相关的纠纷可以向韩国医疗纠纷调解仲裁院申请。",
       },
       {
         title: "个人信息",
@@ -87,11 +87,11 @@ const COPY: Record<Locale, RightsCopy> = {
   },
   ko: {
     title: "외국인환자 권익 보호 안내",
-    notice: "데모용 초안이에요. 법률 검토 전이며, Pibuk은 아직 외국인환자 유치사업자로 등록되지 않았어요.",
+    notice: "데모용 초안이에요. 법률 검토 전이며, PibooK은 아직 외국인환자 유치사업자로 등록되지 않았어요.",
     sections: [
       {
-        title: "Pibuk이 하는 일",
-        body: "Pibuk은 고객 전용 에이전트를 운영해요. 조건을 기록하고, 병원에 견적을 요청하고, 견적의 가격과 용량을 실제 결제 기록과 비교하고, 예약 요청을 전달해요. Pibuk은 의료기관이 아니며 진단하거나 시술을 권하지 않아요.",
+        title: "PibooK이 하는 일",
+        body: "PibooK은 고객 전용 에이전트를 운영해요. 조건을 기록하고, 병원에 견적을 요청하고, 견적의 가격과 용량을 실제 결제 기록과 비교하고, 예약 요청을 전달해요. PibooK은 의료기관이 아니며 진단하거나 시술을 권하지 않아요.",
       },
       {
         title: "이용 조건",
@@ -99,7 +99,7 @@ const COPY: Record<Locale, RightsCopy> = {
       },
       {
         title: "분쟁 해결",
-        body: "먼저 Pibuk에 알려 주시면 병원에 전달해요. 진료에 관한 분쟁은 한국의료분쟁조정중재원에 신청할 수 있어요.",
+        body: "먼저 PibooK에 알려 주시면 병원에 전달해요. 진료에 관한 분쟁은 한국의료분쟁조정중재원에 신청할 수 있어요.",
       },
       {
         title: "개인정보",
@@ -116,7 +116,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: `${isLocale(locale) ? COPY[locale].title : COPY.en.title} · Pibuk` };
+  return { title: `${isLocale(locale) ? COPY[locale].title : COPY.en.title} · PibooK` };
 }
 
 function RightsBlock({ copy, lang }: { copy: RightsCopy; lang: Locale }) {
