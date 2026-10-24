@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
+import { AgentOrb } from "./agent-orb";
 
 export type AgentWindowLabels = { open: string; title: string; expand: string; close: string };
 
@@ -130,7 +131,7 @@ export function AgentWindow({
           }
         }}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 flex-col overflow-hidden rounded-t-3xl border border-border bg-popover text-text shadow-pop sm:inset-x-auto sm:bottom-sp-4 sm:right-sp-4 sm:w-full sm:max-w-md sm:rounded-3xl",
+          "theme-light agent-surface fixed inset-x-0 bottom-0 z-50 flex-col overflow-hidden rounded-t-3xl border border-border bg-popover text-text shadow-pop sm:inset-x-auto sm:bottom-sp-4 sm:right-sp-4 sm:w-full sm:max-w-md sm:rounded-3xl",
           "outline-none",
           open ? "flex animate-sheet-in" : "hidden",
         )}
@@ -138,7 +139,10 @@ export function AgentWindow({
         style={{ height: "min(calc(var(--sp-16) * 10), calc(100dvh - var(--sp-8)))" }}
       >
         <header className="flex items-center justify-between gap-sp-2 border-b border-border-soft py-sp-1 pe-sp-2 ps-sp-4">
-          <h2 className="min-w-0 truncate text-title font-semi">{labels.title}</h2>
+          <div className="flex min-w-0 items-center gap-sp-2">
+            <AgentOrb />
+            <h2 className="min-w-0 truncate text-title font-semi">{labels.title}</h2>
+          </div>
           <div className="flex shrink-0 items-center gap-sp-1">
             {headerExtra}
             <button type="button" aria-label={labels.expand} onClick={onExpand} className={cn(iconButton, focusRing)}>

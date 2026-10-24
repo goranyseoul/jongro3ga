@@ -7,9 +7,6 @@ import { SiteFooter } from "./site-chrome";
 
 // Brand wordmark, owner decision 2026-10-24 (records that move with the customer).
 const WORDMARK = "PibooK";
-// demo accounts from 05-screens.md (/[locale]/signup)
-const DEMO_PERSONAS = ["Yuki", "Lin", "Emily", "지수"];
-
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
@@ -39,7 +36,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         suggestionsLabel: c.suggestionsLabel,
         languageLabel: c.footer.languages,
         startPlain: c.startPlain,
-        signup: { ...c.signup, personas: DEMO_PERSONAS },
+        signup: c.signup,
         agentWindow: c.agentWindow,
         tour: c.tour,
       }}

@@ -202,6 +202,23 @@
   color: var(--text);
 }
 
+/* Light surface for the agent window over the landing. Same token names, light values; the brand stays. */
+.theme-light {
+  --bg: oklch(0.985 0.004 310);
+  --bg-elev: oklch(1 0 0);
+  --bg-sunken: oklch(0.955 0.008 310);
+  --popover: oklch(0.985 0.004 310);
+  --border: oklch(0.22 0.04 310 / 12%);
+  --border-soft: oklch(0.22 0.04 310 / 8%);
+  --input: oklch(0.22 0.04 310 / 16%);
+  --text: oklch(0.22 0.04 310);
+  --text-muted: oklch(0.42 0.03 310);
+  --text-subtle: oklch(0.52 0.03 310);
+  --sh-card: 0 1px 2px rgb(60 30 80 / 8%), 0 4px 12px rgb(60 30 80 / 6%);
+  --sh-pop: 0 24px 64px rgb(60 30 80 / 22%);
+  color: var(--text);
+}
+
 @layer components {
   .type-wordmark {
     font-family: var(--font-display);
@@ -283,5 +300,115 @@
 @media (prefers-reduced-motion: reduce) {
   .splash {
     display: none;
+  }
+}
+
+/* the agent's particle orb (components/customer/agent-orb.tsx) turns slowly */
+.agent-orb-spin {
+  animation: agent-orb-spin 12s linear infinite;
+  transform-origin: center;
+}
+@keyframes agent-orb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-orb-spin {
+    animation: none;
+  }
+}
+
+/* Expanding the agent window: the window and the full-screen chat share this name, so the browser morphs
+   one into the other; the full layout's side panel then rises in. */
+.agent-surface {
+  view-transition-name: agent-surface;
+}
+::view-transition-group(agent-surface) {
+  animation-duration: var(--dur-modal);
+  animation-timing-function: var(--ease-drawer);
+}
+::view-transition-old(agent-surface),
+::view-transition-new(agent-surface) {
+  height: 100%;
+  object-fit: cover;
+}
+.agent-surface > aside {
+  animation: agent-surface-settle var(--dur-modal) var(--ease-out) var(--dur-dropdown) both;
+}
+@keyframes agent-surface-settle {
+  from {
+    opacity: 0;
+    transform: translateY(var(--enter-offset));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-surface > aside {
+    animation: none;
+  }
+}
+
+/* Neon ring around the chat bar (after the CJ GEO assistant window, .gev-neon): a thin ring of the sunrise
+   colours turning slowly, with a soft glow outside. Drawn by ::before and ::after and masked to the edge,
+   so the bar's own surface is unchanged. Faint at rest, full while the bar has focus; reduced motion holds it. */
+:root {
+  --neon-1: rgb(245 120 2);
+  --neon-2: rgb(238 174 202);
+  --neon-3: rgb(148 201 233);
+  --neon-4: rgb(202 179 214);
+}
+@property --chat-neon-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.chat-neon {
+  isolation: isolate;
+}
+.chat-neon::before,
+.chat-neon::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(from var(--chat-neon-angle), var(--neon-1), var(--neon-2), var(--neon-3), var(--neon-4), var(--neon-1));
+  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(black 0 0) content-box exclude, linear-gradient(black 0 0);
+  animation: chat-neon-spin 6s linear infinite;
+  opacity: 0.45;
+  transition: opacity var(--dur-dropdown) var(--ease-out);
+}
+.chat-neon::before {
+  z-index: 1;
+  padding: 2px;
+}
+.chat-neon::after {
+  z-index: -1;
+  inset: -12px;
+  padding: 12px;
+  filter: blur(8px);
+  opacity: 0.25;
+}
+.chat-neon:focus-within::before {
+  opacity: 1;
+}
+.chat-neon:focus-within::after {
+  opacity: 0.7;
+}
+.chat-neon-off::before,
+.chat-neon-off::after {
+  opacity: 0;
+}
+@keyframes chat-neon-spin {
+  to {
+    --chat-neon-angle: 360deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-neon::before,
+  .chat-neon::after {
+    animation: none;
   }
 }

@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button, Input } from "@/components/ui";
-import { resetDemoState } from "@/components/customer/demo-state";
+import { resetDemoState, updateDemoState } from "@/components/customer/demo-state";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
@@ -24,7 +24,9 @@ export function SignupForm() {
       return;
     }
     resetDemoState();
-    router.push("/onboarding");
+    updateDemoState((state) => ({ ...state, signedIn: true }));
+    // mock: no account backend yet, so a new account goes straight to creating its agent
+    router.push("/?start=1");
   };
 
   return (
@@ -64,7 +66,8 @@ export function SignupForm() {
                 type="button"
                 onClick={() => {
                   resetDemoState();
-                  router.push(account.start === "onboarding" ? "/onboarding" : "/home", { locale: account.locale });
+                  updateDemoState((state) => ({ ...state, signedIn: true }));
+                  router.push(account.start === "onboarding" ? "/?start=1" : "/home", { locale: account.locale });
                 }}
                 className={cn(
                   "flex min-h-touch w-full flex-col gap-sp-1 rounded-card border border-border-soft bg-elev p-sp-4 text-start shadow-card transition-colors duration-press ease-out hover:bg-sunken",
