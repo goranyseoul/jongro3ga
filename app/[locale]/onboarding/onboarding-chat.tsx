@@ -12,7 +12,6 @@ import {
   Chip,
   ChipGroup,
   ConsentCard,
-  Input,
   Money,
   Sheet,
   WidgetCurrency,
@@ -21,6 +20,7 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
@@ -127,15 +127,7 @@ export type OnboardingIntro = {
   suggestions: string[];
   startPlain: string;
   suggestionsLabel: string;
-  signup: {
-    toggle: string;
-    title: string;
-    email: string;
-    submit: string;
-    demo: string;
-    personas: string[];
-    close: string;
-  };
+  signup: AuthCopy & { toggle: string; personas: string[] };
 };
 
 export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intro: OnboardingIntro; footer: ReactNode }) {
@@ -144,7 +136,6 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
 
   const [started, setStarted] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
-  const [email, setEmail] = useState("");
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [step, setStep] = useState<StepId>("locale");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -615,45 +606,18 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         </main>
         </section>
         {footer}
-        <Sheet open={signupOpen} onClose={() => setSignupOpen(false)} title={intro.signup.title} closeLabel={intro.signup.close}>
-          {/* mock: no account backend yet, signing up simply starts the conversation */}
-          <form
-            className="flex flex-col gap-sp-4"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSignupOpen(false);
-              start();
-            }}
-          >
-            <Input
-              label={intro.signup.email}
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <Button type="submit" fullWidth>
-              {intro.signup.submit}
-            </Button>
-          </form>
-          <div className="mt-sp-6 flex flex-col gap-sp-2">
-            <p className="text-label text-muted">{intro.signup.demo}</p>
-            <div className="flex flex-wrap gap-sp-2">
-              {intro.signup.personas.map((persona) => (
-                <Chip
-                  key={persona}
-                  onClick={() => {
-                    setSignupOpen(false);
-                    start();
-                  }}
-                >
-                  {persona}
-                </Chip>
-              ))}
-            </div>
-          </div>
-        </Sheet>
+        <AuthDialog
+          open={signupOpen}
+          onClose={() => setSignupOpen(false)}
+          brand={intro.wordmark}
+          copy={intro.signup}
+          personas={intro.signup.personas}
+          // mock: no account backend yet, signing up or in simply starts the conversation
+          onDone={() => {
+            setSignupOpen(false);
+            start();
+          }}
+        />
       </div>
     );
   }

@@ -9,7 +9,24 @@ export type LandingCopy = {
   suggestionsLabel: string;
   suggestions: string[];
   startPlain: string;
-  signup: { toggle: string; title: string; email: string; submit: string; demo: string; close: string };
+  signup: {
+    toggle: string;
+    title: string;
+    email: string;
+    submit: string;
+    demo: string;
+    close: string;
+    password: string;
+    loginTitle: string;
+    loginSubmit: string;
+    googleSignup: string;
+    googleLogin: string;
+    haveAccount: string;
+    loginLink: string;
+    noAccount: string;
+    signupLink: string;
+    demoNote: string;
+  };
   footer: {
     regLabel: string;
     regDemo: string;
@@ -33,7 +50,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
       "前回のリジュランから4か月たった。次はいつがいい？",
     ],
     startPlain: "まずエージェントを作る",
-    signup: { toggle: "会員登録", title: "会員登録", email: "メールアドレス", submit: "登録して始める", demo: "デモアカウントで試す", close: "閉じる" },
+    signup: { toggle: "会員登録", title: "会員登録", email: "メールアドレス", submit: "登録して始める", demo: "デモアカウントで試す", close: "閉じる", password: "パスワード", loginTitle: "ログイン", loginSubmit: "ログイン", googleSignup: "Googleで登録", googleLogin: "Googleでログイン", haveAccount: "すでにアカウントをお持ちですか？", loginLink: "ログイン", noAccount: "アカウントをお持ちでないですか？", signupLink: "会員登録", demoNote: "デモでは実際のアカウントは作成されません。" },
     footer: {
       regLabel: "外国人患者誘致事業者 登録番号",
       regDemo: "デモ",
@@ -55,7 +72,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
       "上次做丽珠兰已经4个月了，下次什么时候合适？",
     ],
     startPlain: "先创建代理",
-    signup: { toggle: "注册", title: "注册", email: "邮箱", submit: "注册并开始", demo: "使用演示账号", close: "关闭" },
+    signup: { toggle: "注册", title: "注册", email: "邮箱", submit: "注册并开始", demo: "使用演示账号", close: "关闭", password: "密码", loginTitle: "登录", loginSubmit: "登录", googleSignup: "使用 Google 注册", googleLogin: "使用 Google 登录", haveAccount: "已有账号？", loginLink: "登录", noAccount: "还没有账号？", signupLink: "注册", demoNote: "演示中不会创建真实账号。" },
     footer: {
       regLabel: "外国患者招揽业者 登记号",
       regDemo: "演示",
@@ -77,7 +94,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
       "It's been 4 months since my last Rejuran. When is the next one?",
     ],
     startPlain: "Just create my agent",
-    signup: { toggle: "Sign up", title: "Sign up", email: "Email", submit: "Sign up and start", demo: "Try a demo account", close: "Close" },
+    signup: { toggle: "Sign up", title: "Sign up", email: "Email", submit: "Sign up and start", demo: "Try a demo account", close: "Close", password: "Password", loginTitle: "Log in", loginSubmit: "Log in", googleSignup: "Sign up with Google", googleLogin: "Log in with Google", haveAccount: "Already have an account?", loginLink: "Log in", noAccount: "Don't have an account?", signupLink: "Sign up", demoNote: "No real account is created in the demo." },
     footer: {
       regLabel: "Foreign patient attraction agency registration no.",
       regDemo: "Demo",
@@ -99,7 +116,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
       "써마지 받은 지 1년 됐는데 다음은 언제가 좋아?",
     ],
     startPlain: "그냥 시작하기",
-    signup: { toggle: "회원가입", title: "회원가입", email: "이메일", submit: "가입하고 시작하기", demo: "데모 계정으로 해 보기", close: "닫기" },
+    signup: { toggle: "회원가입", title: "회원가입", email: "이메일", submit: "가입하고 시작하기", demo: "데모 계정으로 해 보기", close: "닫기", password: "비밀번호", loginTitle: "로그인", loginSubmit: "로그인", googleSignup: "Google로 가입", googleLogin: "Google로 로그인", haveAccount: "이미 계정이 있나요?", loginLink: "로그인", noAccount: "계정이 없나요?", signupLink: "회원가입", demoNote: "데모에서는 실제 계정을 만들지 않아요." },
     footer: {
       regLabel: "외국인환자 유치사업자 등록번호",
       regDemo: "데모",
