@@ -10,6 +10,8 @@
 | 2 | T00 | 템플릿이 `next/font/google`(빌드 시 네트워크 필요)을 쓴다 | 제거하고 시스템 폰트 스택 토큰을 쓴다 (T01) |
 | 3 | T00 | `vitest@5.0.5`의 peer가 `@types/node@^22 \|\| >=24`라 템플릿의 `@types/node@^20`과 충돌한다 | `@types/node@^22`로 올린다 (Node 22 런타임과 일치) |
 | 4 | T00 | `vitest run`은 테스트 파일이 없으면 기본으로 exit 1이다. `npm run gate`의 `npm test`는 T00에서 통과해야 한다 | `vitest.config.mts`에 `passWithNoTests: true` |
+| 5 | T01 | 스펙은 Turbopack 캐시를 언급하지 않는다. 템플릿 기본(`@tailwindcss/turbopack` 로더 + 파일시스템 캐시)에서 `app/globals.css`를 고쳐도 빌드 CSS가 옛 내용으로 재사용됐다 (T00 상태 CSS가 `/demo/ui`에 나감, e2e에서 body 배경이 투명으로 측정되어 발견) | `next.config.ts`의 `experimental.turbopackFileSystemCacheForBuild`, `...ForDev`를 `false`로 둔다. `.next`를 옮긴 뒤 재빌드하면 새 CSS가 나왔고, 캐시를 끈 뒤에는 CSS 수정이 즉시 반영됐다 |
+| 6 | T01 | 05-screens.md의 토큰 이름 `--text-muted` 등은 Tailwind v4의 `--text-*`(글자 크기) 네임스페이스와 접두사가 겹친다 | `:root` 변수는 스펙 이름 그대로 두고, Tailwind 매핑 이름은 `text-text`(색), `text-muted`, `text-subtle`, `text-body`(크기)로 구분한다. 기본 팔레트·글자 크기·radius·그림자 네임스페이스는 `@theme`에서 `initial`로 비워 토큰만 남긴다 |
 
 ## 작업 메모
 

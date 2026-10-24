@@ -1,1 +1,167 @@
 @import "tailwindcss";
+
+/*
+  Design tokens (docs/spec/05-screens.md UI rules).
+  IRONACT design system vocabulary, defined locally (no @ironact packages).
+  Light theme, neutral core, one brand color. This file is the only place hex values may appear.
+*/
+:root {
+  /* surfaces */
+  --bg: #fafafa;
+  --bg-elev: #ffffff;
+  --bg-sunken: #f2f2f3;
+  /* lines */
+  --border: #e2e2e5;
+  --border-soft: #eeeeef;
+  /* text */
+  --text: #17171a;
+  --text-muted: #55555c;
+  --text-subtle: #70707a;
+  /* emphasis (brand is a single layer on top of the neutral core) */
+  --brand: #2f45c8;
+  --brand-fg: #ffffff;
+  --highlight: #8a8a93;
+  /* semantic colors, flat only (text use, no tinted surfaces) */
+  --success: #17703d;
+  --warning: #a35200;
+  --danger: #b3261e;
+  --info: #3a3a42;
+  /* overlays and focus */
+  --scrim: rgba(23, 23, 26, 0.45);
+  --ring: var(--brand);
+
+  /* type scale */
+  --font: -apple-system, "Segoe UI", system-ui, "Hiragino Sans", "Noto Sans JP", "Noto Sans SC", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-mono-stack: ui-monospace, "SF Mono", Menlo, monospace;
+  --t-display: 2.25rem;
+  --t-h1: 1.875rem;
+  --t-h2: 1.5rem;
+  --t-title: 1rem;
+  --t-body: 0.875rem;
+  --t-sm: 0.75rem;
+  --t-xs: 0.6875rem;
+  --w-reg: 400;
+  --w-med: 500;
+  --w-semi: 600;
+  --lh-tight: 1.1;
+  --lh-snug: 1.3;
+  --lh-normal: 1.5;
+
+  /* spacing, 4px grid */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --touch: 2.75rem; /* minimum touch target, 44px */
+
+  /* radius */
+  --radius: 0.625rem;
+  --r-sm: calc(var(--radius) * 0.6);
+  --r-md: calc(var(--radius) * 0.8);
+  --r-card: var(--radius);
+  --r-xl: calc(var(--radius) * 1.4);
+  --r-pill: 999px;
+
+  /* shadow */
+  --sh-card: 0 1px 2px rgba(23, 23, 26, 0.06), 0 1px 1px rgba(23, 23, 26, 0.04);
+  --sh-pop: 0 8px 24px rgba(23, 23, 26, 0.14);
+}
+
+/* Reset the Tailwind default palette, type scale, radius and shadow so that only tokens exist. */
+@theme {
+  --color-*: initial;
+  --text-*: initial;
+  --font-weight-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --breakpoint-*: initial;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+/* Map token variables to Tailwind names: bg-bg, bg-elev, text-muted, p-sp-4, rounded-card ... */
+@theme inline {
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-sunken: var(--bg-sunken);
+  --color-line: var(--border);
+  --color-line-soft: var(--border-soft);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-fg);
+  --color-highlight: var(--highlight);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-scrim: var(--scrim);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font);
+  --font-code: var(--font-mono-stack);
+
+  --text-display: var(--t-display);
+  --text-display--line-height: var(--lh-tight);
+  --text-h1: var(--t-h1);
+  --text-h1--line-height: var(--lh-tight);
+  --text-h2: var(--t-h2);
+  --text-h2--line-height: var(--lh-snug);
+  --text-title: var(--t-title);
+  --text-title--line-height: var(--lh-snug);
+  --text-body: var(--t-body);
+  --text-body--line-height: var(--lh-normal);
+  --text-sm: var(--t-sm);
+  --text-sm--line-height: var(--lh-normal);
+  --text-xs: var(--t-xs);
+  --text-xs--line-height: var(--lh-normal);
+
+  --font-weight-reg: var(--w-reg);
+  --font-weight-med: var(--w-med);
+  --font-weight-semi: var(--w-semi);
+
+  --spacing-sp-1: var(--sp-1);
+  --spacing-sp-2: var(--sp-2);
+  --spacing-sp-3: var(--sp-3);
+  --spacing-sp-4: var(--sp-4);
+  --spacing-sp-5: var(--sp-5);
+  --spacing-sp-6: var(--sp-6);
+  --spacing-sp-8: var(--sp-8);
+  --spacing-sp-12: var(--sp-12);
+  --spacing-sp-16: var(--sp-16);
+  --spacing-touch: var(--touch);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-card: var(--r-card);
+  --radius-xl: var(--r-xl);
+  --radius-pill: var(--r-pill);
+
+  --shadow-card: var(--sh-card);
+  --shadow-pop: var(--sh-pop);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--t-body);
+  line-height: var(--lh-normal);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
