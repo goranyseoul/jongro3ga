@@ -77,7 +77,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "エージェントのウィンドウ", body: "ここでエージェントと話します。いつでも閉じて、また開けます。" },
       ],
     },
-    signup: { toggle: "会員登録", title: "会員登録", email: "メールアドレス", submit: "登録して始める", demo: "デモアカウントで試す", close: "閉じる", password: "パスワード", loginTitle: "ログイン", loginSubmit: "ログイン", googleSignup: "Googleで登録", googleLogin: "Googleでログイン", haveAccount: "すでにアカウントをお持ちですか？", loginLink: "ログイン", noAccount: "アカウントをお持ちでないですか？", signupLink: "会員登録", demoNote: "デモでは実際のアカウントは作成されません。" },
+    signup: { toggle: "会員登録", title: "会員登録", email: "メールアドレス", submit: "登録して始める", demo: "デモアカウントで試す", close: "閉じる", password: "パスワード", loginTitle: "ログイン", loginSubmit: "ログイン", googleSignup: "Googleで登録", googleLogin: "Googleでログイン", haveAccount: "すでにアカウントをお持ちですか？", loginLink: "ログイン", noAccount: "アカウントをお持ちでないですか？", signupLink: "会員登録", demoNote: "デモアカウントはパスワードなしですぐにログインします。" },
     footer: {
       regLabel: "外国人患者誘致事業者 登録番号",
       regDemo: "デモ",
@@ -114,7 +114,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "代理窗口", body: "在这里和代理对话。随时可以关闭再打开。" },
       ],
     },
-    signup: { toggle: "注册", title: "注册", email: "邮箱", submit: "注册并开始", demo: "使用演示账号", close: "关闭", password: "密码", loginTitle: "登录", loginSubmit: "登录", googleSignup: "使用 Google 注册", googleLogin: "使用 Google 登录", haveAccount: "已有账号？", loginLink: "登录", noAccount: "还没有账号？", signupLink: "注册", demoNote: "演示中不会创建真实账号。" },
+    signup: { toggle: "注册", title: "注册", email: "邮箱", submit: "注册并开始", demo: "使用演示账号", close: "关闭", password: "密码", loginTitle: "登录", loginSubmit: "登录", googleSignup: "使用 Google 注册", googleLogin: "使用 Google 登录", haveAccount: "已有账号？", loginLink: "登录", noAccount: "还没有账号？", signupLink: "注册", demoNote: "演示账号无需密码，直接登录。" },
     footer: {
       regLabel: "外国患者招揽业者 登记号",
       regDemo: "演示",
@@ -151,7 +151,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "Your agent window", body: "Talk to your agent here. Close it and reopen it any time." },
       ],
     },
-    signup: { toggle: "Sign up", title: "Sign up", email: "Email", submit: "Sign up and start", demo: "Try a demo account", close: "Close", password: "Password", loginTitle: "Log in", loginSubmit: "Log in", googleSignup: "Sign up with Google", googleLogin: "Log in with Google", haveAccount: "Already have an account?", loginLink: "Log in", noAccount: "Don't have an account?", signupLink: "Sign up", demoNote: "No real account is created in the demo." },
+    signup: { toggle: "Sign up", title: "Sign up", email: "Email", submit: "Sign up and start", demo: "Try a demo account", close: "Close", password: "Password", loginTitle: "Log in", loginSubmit: "Log in", googleSignup: "Sign up with Google", googleLogin: "Log in with Google", haveAccount: "Already have an account?", loginLink: "Log in", noAccount: "Don't have an account?", signupLink: "Sign up", demoNote: "Demo accounts sign in right away, no password needed." },
     footer: {
       regLabel: "Foreign patient attraction agency registration no.",
       regDemo: "Demo",
@@ -188,7 +188,7 @@ export const LANDING_COPY: Record<Locale, LandingCopy> = {
         { title: "에이전트 창", body: "여기서 에이전트와 대화해요. 언제든 닫고 다시 열 수 있어요." },
       ],
     },
-    signup: { toggle: "회원가입", title: "회원가입", email: "이메일", submit: "가입하고 시작하기", demo: "데모 계정으로 해 보기", close: "닫기", password: "비밀번호", loginTitle: "로그인", loginSubmit: "로그인", googleSignup: "Google로 가입", googleLogin: "Google로 로그인", haveAccount: "이미 계정이 있나요?", loginLink: "로그인", noAccount: "계정이 없나요?", signupLink: "회원가입", demoNote: "데모에서는 실제 계정을 만들지 않아요." },
+    signup: { toggle: "회원가입", title: "회원가입", email: "이메일", submit: "가입하고 시작하기", demo: "데모 계정으로 해 보기", close: "닫기", password: "비밀번호", loginTitle: "로그인", loginSubmit: "로그인", googleSignup: "Google로 가입", googleLogin: "Google로 로그인", haveAccount: "이미 계정이 있나요?", loginLink: "로그인", noAccount: "계정이 없나요?", signupLink: "회원가입", demoNote: "데모 계정은 비밀번호 없이 바로 로그인돼요." },
     footer: {
       regLabel: "외국인환자 유치사업자 등록번호",
       regDemo: "데모",
