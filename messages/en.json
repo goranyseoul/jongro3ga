@@ -391,7 +391,9 @@
     },
     "plan": {
       "title": "My care plan",
-      "lead": "Your records compared with each procedure's recommended cycle, so you know what to do next."
+      "lead": "Your records compared with each procedure's recommended cycle, so you know what to do next.",
+      "showAll": "Show all care cards ({n})",
+      "showLess": "Show less"
     },
     "cycle": {
       "course": "Recommended: {count} sessions {interval} days apart, then {every}",
@@ -411,8 +413,6 @@
       "count": "{n} sessions",
       "last": "Last {date}",
       "total": "Total {amount}",
-      "more": "Show more ({n})",
-      "less": "Show less",
       "prev": "Previous",
       "next": "Next"
     }

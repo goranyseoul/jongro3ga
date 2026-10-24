@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { FiMinus, FiPlus } from "react-icons/fi";
 import { Button, buttonStyles, Card, ChipGroup, Input, Timeline } from "@/components/ui";
 import { formatMonth, moneyText } from "@/components/customer/format";
 import { updateDemoState } from "@/components/customer/demo-state";
@@ -25,11 +26,14 @@ const PLAN_COUNT = 4;
 const PAGE_SIZE = 10;
 const ALL = "all";
 
-/** The newest record of each procedure; its nextDue is the date the customer is waiting for. */
+/** The newest record of each procedure, active ones first, then by the date the customer is waiting for. */
 function latestPerProcedure(records: TreatmentRecord[]): TreatmentRecord[] {
   const latest = new Map<string, TreatmentRecord>();
   for (const record of [...records].sort((a, b) => a.date.localeCompare(b.date))) latest.set(record.procedureId, record);
-  return [...latest.values()].sort((a, b) => (a.nextDue ?? "9999").localeCompare(b.nextDue ?? "9999"));
+  return [...latest.values()].sort(
+    (a, b) =>
+      STATUSES.indexOf(a.status) - STATUSES.indexOf(b.status) || (a.nextDue ?? "9999").localeCompare(b.nextDue ?? "9999"),
+  );
 }
 
 export function RecordsView() {
@@ -166,11 +170,25 @@ export function RecordsView() {
       ) : null}
 
       <section aria-labelledby="rec-plan" className="flex flex-col gap-sp-3">
-        <div className="flex flex-col gap-sp-1">
-          <h2 id="rec-plan" className="text-title font-semi">
-            {t("plan.title")}
-          </h2>
-          <p className="text-label text-muted">{t("plan.lead")}</p>
+        <div className="flex items-start justify-between gap-sp-2">
+          <div className="flex flex-col gap-sp-1">
+            <h2 id="rec-plan" className="text-title font-semi">
+              {t("plan.title")}
+            </h2>
+            <p className="text-label text-muted">{t("plan.lead")}</p>
+          </div>
+          {latest.length > PLAN_COUNT ? (
+            <Button
+              variant="ghost"
+              className="shrink-0 text-title"
+              aria-label={showAllPlan ? t("plan.showLess") : t("plan.showAll", { n: latest.length })}
+              title={showAllPlan ? t("plan.showLess") : t("plan.showAll", { n: latest.length })}
+              aria-expanded={showAllPlan}
+              onClick={() => setShowAllPlan(!showAllPlan)}
+            >
+              {showAllPlan ? <FiMinus aria-hidden /> : <FiPlus aria-hidden />}
+            </Button>
+          ) : null}
         </div>
         {latest.length === 0 ? (
           <p className="text-body text-muted">{t("next.empty")}</p>
@@ -217,11 +235,6 @@ export function RecordsView() {
             })}
           </ul>
         )}
-        {latest.length > PLAN_COUNT ? (
-          <Button variant="ghost" className="self-start" onClick={() => setShowAllPlan(!showAllPlan)}>
-            {showAllPlan ? t("top.less") : t("top.more", { n: latest.length - PLAN_COUNT })}
-          </Button>
-        ) : null}
       </section>
 
       <RecordsCalendar records={records} latest={latest} locale={locale} />

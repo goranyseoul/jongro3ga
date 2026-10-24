@@ -391,7 +391,9 @@
     },
     "plan": {
       "title": "내 관리 계획",
-      "lead": "기록을 시술별 권장 주기와 비교해서 다음에 할 일을 알려줘요."
+      "lead": "기록을 시술별 권장 주기와 비교해서 다음에 할 일을 알려줘요.",
+      "showAll": "관리 카드 모두 보기 ({n})",
+      "showLess": "접기"
     },
     "cycle": {
       "course": "권장: {interval}일 간격 {count}회, 이후 {every}",
@@ -411,8 +413,6 @@
       "count": "{n}회",
       "last": "마지막 {date}",
       "total": "총 {amount}",
-      "more": "더보기 ({n})",
-      "less": "접기",
       "prev": "이전 시술",
       "next": "다음 시술"
     }

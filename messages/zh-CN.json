@@ -391,7 +391,9 @@
     },
     "plan": {
       "title": "我的护理计划",
-      "lead": "将记录与各项目的建议周期对比，告诉你下一步该做什么。"
+      "lead": "将记录与各项目的建议周期对比，告诉你下一步该做什么。",
+      "showAll": "查看全部护理卡片 ({n})",
+      "showLess": "收起"
     },
     "cycle": {
       "course": "建议: 每隔{interval}天做{count}次，之后{every}",
@@ -411,8 +413,6 @@
       "count": "{n}次",
       "last": "上次 {date}",
       "total": "共 {amount}",
-      "more": "查看更多 ({n})",
-      "less": "收起",
       "prev": "上一个",
       "next": "下一个"
     }
