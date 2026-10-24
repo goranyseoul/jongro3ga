@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, ChipGroup, Input, Money, Table, type TableColumn } from "@/components/ui";
-import { INBOX_TASKS, LANGUAGE_TEXT, type InboxTask } from "@/lib/ui-data/clinic";
+import { LANGUAGE_TEXT, clinicApi, type BookingDecision, type InboxTask } from "@/lib/ui-data/clinic";
 import { DecisionSheet, type Decision, type DecisionMode, type DecisionResult } from "./decision-sheet";
 import { formatAmount, formatSlot } from "./format";
 import { KIND_TEXT, StateText } from "./task-state";
 
 type Filter = "all" | "action" | "booking" | "quote";
 
-// How long a confirmation can be taken back before the notice settles.
-const UNDO_MS = 8000;
+// New requests from customer agents show up without a reload.
+const POLL_MS = 5000;
 
 const needsAction = (task: InboxTask) =>
   task.kind === "booking" && (task.state === "TASK_STATE_WORKING" || task.state === "TASK_STATE_INPUT_REQUIRED");
@@ -27,21 +27,29 @@ function byPriority(a: InboxTask, b: InboxTask): number {
   return rank(a) - rank(b) || Date.parse(b.receivedAt) - Date.parse(a.receivedAt);
 }
 
-export function InboxBoard() {
-  const [tasks, setTasks] = useState<InboxTask[]>(INBOX_TASKS);
+export function InboxBoard({ initialTasks }: { initialTasks: InboxTask[] }) {
+  const [tasks, setTasks] = useState<InboxTask[]>(initialTasks);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [decision, setDecision] = useState<Decision | null>(null);
   const [notice, setNotice] = useState("");
-  // Snapshot of the tasks the last confirmation changed, so it can be restored.
-  const [undo, setUndo] = useState<InboxTask[] | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const refresh = useCallback(async () => {
+    try {
+      setTasks((await clinicApi.inbox()).tasks);
+    } catch {
+      // Keep the last list; the next poll tries again.
+    }
+  }, []);
 
   useEffect(() => {
-    if (!undo) return;
-    const timer = setTimeout(() => setUndo(null), UNDO_MS);
-    return () => clearTimeout(timer);
-  }, [undo]);
+    const timer = setInterval(() => {
+      if (!busy) void refresh();
+    }, POLL_MS);
+    return () => clearInterval(timer);
+  }, [busy, refresh]);
 
   const counts = useMemo(
     () => ({
@@ -76,58 +84,41 @@ export function InboxBoard() {
   const selectableVisible = visible.filter(bulkSelectable);
   const allSelected = selectableVisible.length > 0 && selectableVisible.every((task) => selected.includes(task.id));
 
-  const patch = (ids: string[], change: Partial<InboxTask>, message: string, undoable = false) => {
-    setUndo(undoable ? tasks.filter((task) => ids.includes(task.id)) : null);
-    setTasks((current) => current.map((task) => (ids.includes(task.id) ? { ...task, ...change } : task)));
-    setSelected((current) => current.filter((id) => !ids.includes(id)));
-    setNotice(message);
-  };
-
-  const confirmOne = (task: InboxTask) =>
-    patch(
-      [task.id],
-      { state: "TASK_STATE_COMPLETED", outcome: "병원 직원이 확정" },
-      `${task.from} 예약을 확정했어요`,
-      true,
-    );
-
-  const confirmSelected = () =>
-    patch(
-      selected,
-      { state: "TASK_STATE_COMPLETED", outcome: "병원 직원이 확정 (일괄)" },
-      `예약 ${selected.length}건을 확정했어요`,
-      true,
-    );
-
-  const undoLast = () => {
-    if (!undo) return;
-    const restore = new Map(undo.map((task) => [task.id, task]));
-    setTasks((current) => current.map((task) => restore.get(task.id) ?? task));
-    setUndo(null);
-    setNotice(`예약 ${restore.size}건을 확정 전으로 되돌렸어요`);
-  };
-
-  const apply = (task: InboxTask, result: DecisionResult) => {
-    if (result.mode === "propose") {
-      patch(
-        [task.id],
-        { state: "TASK_STATE_INPUT_REQUIRED", requestedFields: undefined, outcome: `${formatSlot(result.slot)} 제안, 고객 응답 대기` },
-        `${task.from}에게 ${formatSlot(result.slot)}을 제안했어요`,
-      );
-    } else if (result.mode === "reject") {
-      patch(
-        [task.id],
-        { state: "TASK_STATE_REJECTED", outcome: `거절: ${result.reason}${result.memo ? ` · ${result.memo}` : ""}` },
-        `${task.from} 예약을 거절했어요`,
-      );
-    } else {
-      patch(
-        [task.id],
-        { state: "TASK_STATE_INPUT_REQUIRED", requestedFields: result.fields, outcome: undefined },
-        `${task.from}에게 추가 정보를 요청했어요`,
-      );
+  // Every decision goes to the clinic agent (app/api/clinic/bookings/[id]), which answers the customer agent's task.
+  const decide = async (targets: InboxTask[], change: BookingDecision, message: string) => {
+    setBusy(true);
+    let latest: InboxTask[] | null = null;
+    const failed: string[] = [];
+    for (const task of targets) {
+      try {
+        latest = (await clinicApi.decide(task.id, change)).tasks;
+      } catch (error) {
+        failed.push(`${task.from}: ${(error as Error).message}`);
+      }
     }
+    if (latest) setTasks(latest);
+    else await refresh();
+    setSelected((current) => current.filter((id) => !targets.some((task) => task.id === id)));
+    setNotice(failed.length > 0 ? `처리하지 못했어요 (${failed.join(", ")})` : message);
+    setBusy(false);
+  };
+
+  const confirmOne = (task: InboxTask) => decide([task], { action: "confirm" }, `${task.from} 예약을 확정했어요`);
+
+  const confirmSelected = () => {
+    const targets = tasks.filter((task) => selected.includes(task.id));
+    return decide(targets, { action: "confirm" }, `예약 ${targets.length}건을 확정했어요`);
+  };
+
+  const apply = async (task: InboxTask, result: DecisionResult) => {
     setDecision(null);
+    if (result.mode === "propose") {
+      await decide([task], { action: "propose", slot: result.slot }, `${task.from}에게 ${formatSlot(result.slot)}을 제안했어요`);
+    } else if (result.mode === "reject") {
+      await decide([task], { action: "reject", reason: result.reason, memo: result.memo }, `${task.from} 예약을 거절했어요`);
+    } else {
+      await decide([task], { action: "ask", fields: result.fields }, `${task.from}에게 추가 정보를 요청했어요`);
+    }
   };
 
   const toggle = (id: string) =>
@@ -194,7 +185,7 @@ export function InboxBoard() {
           <span className="text-body">
             {task.product} {formatAmount(task.amount)}
           </span>
-          <Money krw={task.priceKrw} className="text-label" />
+          {task.priceKrw !== undefined ? <Money krw={task.priceKrw} className="text-label" /> : <span className="text-label text-muted">·</span>}
         </div>
       ),
     },
@@ -217,7 +208,7 @@ export function InboxBoard() {
       key: "actions",
       header: "처리",
       card: "action",
-      cell: (task) => <TaskActions task={task} onConfirm={confirmOne} onOpen={open} />,
+      cell: (task) => <TaskActions task={task} disabled={busy} onConfirm={confirmOne} onOpen={open} />,
     },
   ];
 
@@ -271,11 +262,6 @@ export function InboxBoard() {
         className="flex min-h-sp-5 flex-wrap items-center gap-sp-3 text-label text-muted"
       >
         <span>{notice}</span>
-        {undo ? (
-          <Button variant="ghost" onClick={undoLast}>
-            되돌리기
-          </Button>
-        ) : null}
       </div>
 
       <Table
@@ -297,7 +283,7 @@ export function InboxBoard() {
             <Button variant="ghost" onClick={() => setSelected([])}>
               선택 해제
             </Button>
-            <Button variant="primary" onClick={confirmSelected}>
+            <Button variant="primary" disabled={busy} onClick={confirmSelected}>
               일괄 확정
             </Button>
           </div>
@@ -319,6 +305,9 @@ function TaskStatus({ task }: { task: InboxTask }) {
         <span className="text-caption text-subtle">{task.respondedInSec}초 만에 답했어요</span>
       ) : null}
       {task.outcome ? <span className="text-caption text-muted">{task.outcome}</span> : null}
+      {task.proposedSlot ? (
+        <span className="text-caption text-muted">{formatSlot(task.proposedSlot)} 제안, 고객 응답 대기</span>
+      ) : null}
       {task.requestedFields?.length ? (
         <span className="text-caption text-muted">요청한 정보: {task.requestedFields.join(", ")}</span>
       ) : null}
@@ -339,10 +328,12 @@ function TaskStatus({ task }: { task: InboxTask }) {
 
 function TaskActions({
   task,
+  disabled,
   onConfirm,
   onOpen,
 }: {
   task: InboxTask;
+  disabled: boolean;
   onConfirm: (task: InboxTask) => void;
   onOpen: (task: InboxTask, mode: DecisionMode) => void;
 }) {
@@ -352,19 +343,19 @@ function TaskActions({
 
   return (
     <div className="flex flex-wrap gap-sp-2">
-      <Button variant="primary" onClick={() => onConfirm(task)}>
+      <Button variant="primary" disabled={disabled} onClick={() => onConfirm(task)}>
         확정
       </Button>
       {waitingGuest ? null : (
-        <Button variant="secondary" onClick={() => onOpen(task, "propose")}>
+        <Button variant="secondary" disabled={disabled} onClick={() => onOpen(task, "propose")}>
           시간 제안
         </Button>
       )}
-      <Button variant="secondary" onClick={() => onOpen(task, "reject")}>
+      <Button variant="secondary" disabled={disabled} onClick={() => onOpen(task, "reject")}>
         거절
       </Button>
       {waitingGuest ? null : (
-        <Button variant="ghost" onClick={() => onOpen(task, "ask")}>
+        <Button variant="ghost" disabled={disabled} onClick={() => onOpen(task, "ask")}>
           추가 정보 요청
         </Button>
       )}

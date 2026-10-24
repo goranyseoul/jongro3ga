@@ -577,7 +577,7 @@ STEP 3  내 조건                             다운타임 허용 · 통증 · 
 | 필드 | 값 |
 | --- | --- |
 | `areas` | lifting · texture_renewal · volume · wrinkles · contouring · pigment_tone · pores_oil · acne_scars · redness · hydration_glow |
-| `body_parts` | full_face · forehead · glabella · eyes · under_eye · cheeks · nasolabial · mouth · jawline · square_jaw · lips · neck |
+| `body_parts` | full_face · forehead · glabella · temple · eyes · under_eye · cheeks · deep_cheek · nasolabial · mouth · marionette · lips · chin · jawline · square_jaw · double_chin · neck (부위 프리셋은 A-4) |
 | `recommended_parts` | 특히 잘 맞는 부위 (예: 쥬베룩 볼륨 → nasolabial) |
 | `avoid_parts` | 금지 부위 + 이유 (예: 쥬베룩 볼륨 → under_eye, "결절 위험") → 필터에서 제외, 상담실장이 이유 설명 |
 | `method` | injection · laser · rf · hifu · rf_microneedle · thread · peel_care |
@@ -586,3 +586,54 @@ STEP 3  내 조건                             다운타임 허용 · 통증 · 
 | `price_krw` | 대략 가격 범위 + 기준 (용량·이벤트가) |
 | `cycle_source` | founder(기획자 경험) · general(일반값) · medical(의료진 검수) |
 | `verified` | 의료진 검수 완료 여부 |
+
+### A-4. 부위 프리셋 (얼굴 부위 → 할만한 시술)
+
+> 기록 탭의 "부위" 프리셋과 상담 실장의 "어디가 고민이세요?" 질문에 쓰는 목록이다. 연결 시술은 A-2 표에 있는 시술만 쓴다. **어떤 시술이 맞는지는 의사가 판단한다.** 화면에서는 "이 부위에 많이 받는 시술"로만 보여주고 권유 문구로 쓰지 않는다 (08-compliance.md 6절). 전부 일반 참고값이며 출시 전 의료진 검수로 확정한다. ★ = 기획자 경험, [확인] = 검수 필요.
+
+#### 윗얼굴
+
+| 프리셋 | `body_parts` | English | 이런 고민 | 많이 받는 시술 | 주의·금지 |
+| --- | --- | --- | --- | --- | --- |
+| 이마 | `forehead` | Forehead | 가로 주름, 꺼진 이마 | 보톡스 (주름) · 필러 (꺼짐) · 스컬트라 (꺼짐) | |
+| 미간 | `glabella` | Between brows | 미간 세로 주름 | 보톡스 (주름) | |
+| 관자놀이 | `temple` | Temples | 꺼진 관자 | 필러 · 스컬트라 | |
+| 눈가 | `eyes` | Around the eyes | 눈꼬리 주름, 눈가 잔주름 | 보톡스 (주름) · 쥬베룩 아이 · 리쥬란 | |
+| 눈밑 | `under_eye` | Under the eyes | 얇은 피부, 꺼짐, 잔주름 | 리쥬란 · 쥬베룩 아이 [확인] | ★ 쥬베룩 볼륨 금지 (결절 위험) |
+
+#### 중간 얼굴
+
+| 프리셋 | `body_parts` | English | 이런 고민 | 많이 받는 시술 | 주의·금지 |
+| --- | --- | --- | --- | --- | --- |
+| 앞볼·광대 | `cheeks` | Cheeks | 꺼진 앞볼, 볼륨 부족 | 필러 · 스컬트라 · 쥬베룩 볼륨 | |
+| 심부볼 | `deep_cheek` | Deep cheek fat | 입가 옆 볼이 불룩하거나 처짐 | 슈링크 · 인모드 · 윤곽주사 [확인] | 볼륨 시술(필러)은 처짐을 키울 수 있어 의사 판단 [확인] |
+| 팔자 | `nasolabial` | Nasolabial folds | 코 옆에서 입가로 내려오는 주름 | ★ 쥬베룩 볼륨 (추천) · 필러 · 실리프팅 · 울쎄라 · 써마지 (처짐이 원인일 때) | |
+| 코 옆·입가 | `mouth` | Around the mouth | 입가 잔주름, 입꼬리 처짐 | 보톡스 (주름) [확인] · 필러 | |
+
+#### 아래 얼굴
+
+| 프리셋 | `body_parts` | English | 이런 고민 | 많이 받는 시술 | 주의·금지 |
+| --- | --- | --- | --- | --- | --- |
+| 마리오네트 | `marionette` | Marionette lines | 입꼬리에서 턱으로 내려오는 주름, 처짐 | 필러 · 실리프팅 · 울쎄라 · 슈링크 | |
+| 입술 | `lips` | Lips | 얇은 입술, 볼륨 부족 | 필러 | |
+| 턱끝 | `chin` | Chin | 짧거나 들어간 턱끝 | 필러 | |
+| 턱선 | `jawline` | Jawline | 턱선 무너짐, 처짐 | 울쎄라 · 써마지 · 슈링크 · 인모드 · 올리지오 · 실리프팅 | |
+| 사각턱 | `square_jaw` | Square jaw | 각진 턱, 발달한 저작근 | 사각턱 보톡스 | |
+| 이중턱 | `double_chin` | Double chin | 턱 밑 지방, 처짐 | 윤곽주사 · 슈링크 · 인모드 | |
+
+#### 목·얼굴 전체
+
+| 프리셋 | `body_parts` | English | 이런 고민 | 많이 받는 시술 | 주의·금지 |
+| --- | --- | --- | --- | --- | --- |
+| 목 | `neck` | Neck | 목 주름, 처짐 | 울쎄라 · 써마지 · 스킨부스터 [확인] | |
+| 얼굴 전체 (피부결·재생) | `full_face` | Full face | 거친 결, 잔주름, 탄력 | 리쥬란 · 쥬베룩 · 리투오 · 스킨부스터 · 엑소좀 | |
+| 얼굴 전체 (톤·색소) | `full_face` | Full face | 기미, 잡티, 칙칙함 | 레이저토닝 · 피코토닝 · IPL | |
+| 얼굴 전체 (모공·흉터) | `full_face` | Full face | 넓은 모공, 패인 흉터, 여드름 | 프락셀 · 포텐자·시크릿 · 아그네스 · 스킨보톡스 | |
+| 얼굴 전체 (홍조·수분) | `full_face` | Full face | 홍조, 건조, 광채 없음 | 브이빔 · 스킨부스터 (물광) · 아쿠아필 | |
+
+#### 쓰는 규칙
+
+- 시술 데이터(A-3)의 `body_parts`, `recommended_parts`, `avoid_parts`가 정본이다. 이 표는 그 값을 부위 기준으로 뒤집어 본 것이며, 둘이 다르면 A-3을 고친다.
+- 기록 탭 프리셋은 이 목록 전체가 아니라 **그 고객이 받은 기록에 나온 부위만** 많이 받은 순으로 최대 5개 보여준다.
+- `avoid_parts`에 걸린 시술은 그 부위 필터 결과에서 빼고, 상담 실장이 이유를 설명한다 (예: 눈밑 + 쥬베룩 볼륨).
+- 앱 코드 현재 상태: 기록 데이터에는 아직 부위 필드가 없어 시술별 기본 부위(`forehead`, `full_face`, `jawline` 3개)만 쓴다 (`app/[locale]/records/care-plan.ts`). 기록 입력에 부위 선택을 추가하면 이 목록으로 바꾼다.

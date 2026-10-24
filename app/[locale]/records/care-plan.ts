@@ -71,3 +71,40 @@ export function monthGroups(records: TreatmentRecord[]): MonthGroup[] {
     .sort(([a], [b]) => b.localeCompare(a))
     .map(([month, list]) => ({ month, records: list, totalKrw: list.reduce((sum, r) => sum + (r.priceKrw ?? 0), 0) }));
 }
+
+// Treated area per procedure, for the history presets. Records carry no area yet, so this is the
+// demo default for each procedure (a record-level field can override it later).
+export type BodyArea = "forehead" | "full_face" | "jawline";
+
+const PROCEDURE_AREA: Record<ProcedureId, BodyArea> = {
+  rejuran_healer: "full_face",
+  thermage_flx: "full_face",
+  ulthera: "jawline",
+  botox_forehead: "forehead",
+  shrink_universe: "jawline",
+  skin_booster_juvelook: "full_face",
+};
+
+export function recordArea(record: TreatmentRecord): BodyArea {
+  return PROCEDURE_AREA[record.procedureId];
+}
+
+/** Clinic key of a record: the registry id, or the typed name for clinics outside the registry. */
+export function recordClinic(record: TreatmentRecord): string | undefined {
+  return record.clinicId ?? (record.clinicName ? `name:${record.clinicName}` : undefined);
+}
+
+/** The values the customer used most (up to `limit`), most frequent first, then most recent. */
+export function topValues(records: TreatmentRecord[], key: (r: TreatmentRecord) => string | undefined, limit = 5): string[] {
+  const stats = new Map<string, { count: number; last: string }>();
+  for (const record of records) {
+    const value = key(record);
+    if (!value) continue;
+    const prev = stats.get(value);
+    stats.set(value, { count: (prev?.count ?? 0) + 1, last: prev && prev.last > record.date ? prev.last : record.date });
+  }
+  return [...stats.entries()]
+    .sort(([, a], [, b]) => b.count - a.count || b.last.localeCompare(a.last))
+    .slice(0, limit)
+    .map(([value]) => value);
+}

@@ -373,10 +373,6 @@
       "session": "第{n}次",
       "shared": "匿名共享: 开",
       "notShared": "匿名共享: 关",
-      "anchored": "诊所确认 · 链上记录 v{version}",
-      "clinicConfirmed": "诊所确认",
-      "selfReported": "自行录入 · 不用于优惠证明",
-      "txLabel": "在 Base Sepolia 查看交易(新标签页)",
       "fromBooking": "由预约自动记录",
       "rating": "满意度 {n}/5",
       "search": "搜索项目",
@@ -388,7 +384,21 @@
       "summary": "自{first}起{count}次 · 共 {total}",
       "pages": "页码",
       "prevPage": "上一页",
-      "nextPage": "下一页"
+      "nextPage": "下一页",
+      "anchored": "诊所确认 · 链上记录 v{version}",
+      "clinicConfirmed": "诊所确认",
+      "selfReported": "自行录入 · 不用于优惠证明",
+      "txLabel": "在 Base Sepolia 查看交易(新标签页)",
+      "preset": {
+        "procedure": "项目",
+        "area": "部位",
+        "clinic": "诊所"
+      },
+      "area": {
+        "forehead": "额头",
+        "full_face": "全脸",
+        "jawline": "下颌线"
+      }
     },
     "calendar": {
       "title": "日历",
@@ -408,7 +418,9 @@
       "title": "我的护理计划",
       "lead": "将记录与各项目的建议周期对比，告诉你下一步该做什么。",
       "showAll": "查看全部护理卡片 ({n})",
-      "showLess": "收起"
+      "showLess": "收起",
+      "findClinic": "查找诊所",
+      "findIntent": "帮我找有{procedure}活动的诊所 ({range})"
     },
     "cycle": {
       "course": "建议: 每隔{interval}天做{count}次，之后{every}",
@@ -430,6 +442,12 @@
       "total": "共 {amount}",
       "prev": "上一个",
       "next": "下一个"
+    },
+    "alerts": {
+      "label": "重要提醒",
+      "late": "{procedure} 已超过建议周期{late}天",
+      "courseLate": "{procedure} 比建议间隔晚了{late}天",
+      "more": "另有{n}项"
     }
   },
   "recordsNew": {
@@ -459,7 +477,10 @@
       "another": "继续添加"
     },
     "month": "做项目的月份",
-    "dateUnknown": "不记得具体日期 (只记月份)"
+    "dateUnknown": "不记得具体日期 (只记月份)",
+    "note": "备注",
+    "notePlaceholder": "感受、副作用、下次想调整的地方等，随意填写。",
+    "noteHint": "只有你能看到这条备注。"
   },
   "outcomes": {
     "metaTitle": "施术记录",

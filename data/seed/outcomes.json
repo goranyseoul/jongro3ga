@@ -1,0 +1,902 @@
+[
+  {
+    "id": "out_seed_001",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_001",
+    "bookingId": "bkg_seed_001",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 369600,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Final price was higher than the quote.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-08-16T18:00:00+09:00",
+    "receivedAt": "2026-08-16T18:00:05+09:00",
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.12
+  },
+  {
+    "id": "out_seed_002",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_002",
+    "bookingId": "bkg_seed_002",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 376200,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "An extra fee was added at the clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-08-29T18:00:00+09:00",
+    "receivedAt": "2026-08-29T18:00:05+09:00",
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.14
+  },
+  {
+    "id": "out_seed_003",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_003",
+    "bookingId": "bkg_seed_003",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 382800,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Paid more than quoted.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-09-08T18:00:00+09:00",
+    "receivedAt": "2026-09-08T18:00:05+09:00",
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.16
+  },
+  {
+    "id": "out_seed_004",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_004",
+    "bookingId": "bkg_seed_004",
+    "clinicId": "cln_ara",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 389400,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": false,
+    "satisfaction": 3,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Numbing cream was charged separately.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "submittedAt": "2026-09-20T18:00:00+09:00",
+    "receivedAt": "2026-09-20T18:00:05+09:00",
+    "quotedKrw": 330000,
+    "quoteGapRatio": 0.18
+  },
+  {
+    "id": "out_seed_005",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_005",
+    "bookingId": "bkg_seed_005",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 5,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Explained everything in Japanese.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-07-20T18:00:00+09:00",
+    "receivedAt": "2026-07-20T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_006",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_006",
+    "bookingId": "bkg_seed_006",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 2,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Same price as the quote.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-07-29T18:00:00+09:00",
+    "receivedAt": "2026-07-29T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_007",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_007",
+    "bookingId": "bkg_seed_007",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 346800,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Smooth visit.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-08-06T18:00:00+09:00",
+    "receivedAt": "2026-08-06T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0.02
+  },
+  {
+    "id": "out_seed_008",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_008",
+    "bookingId": "bkg_seed_008",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Clear explanation.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-08-14T18:00:00+09:00",
+    "receivedAt": "2026-08-14T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_009",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_009",
+    "bookingId": "bkg_seed_009",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "A bit painful but fine.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "20-24"
+    },
+    "submittedAt": "2026-08-25T18:00:00+09:00",
+    "receivedAt": "2026-08-25T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_010",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_010",
+    "bookingId": "bkg_seed_010",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 350200,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Coordinator was helpful.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-09-03T18:00:00+09:00",
+    "receivedAt": "2026-09-03T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0.03
+  },
+  {
+    "id": "out_seed_011",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_011",
+    "bookingId": "bkg_seed_011",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Good.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-09-12T18:00:00+09:00",
+    "receivedAt": "2026-09-12T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_012",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_012",
+    "bookingId": "bkg_seed_012",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 2,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Would come back.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "35-39"
+    },
+    "submittedAt": "2026-09-22T18:00:00+09:00",
+    "receivedAt": "2026-09-22T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_013",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_013",
+    "bookingId": "bkg_seed_013",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 343400,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "On time.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-09-30T18:00:00+09:00",
+    "receivedAt": "2026-09-30T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0.01
+  },
+  {
+    "id": "out_seed_014",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_014",
+    "bookingId": "bkg_seed_014",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Same as quoted.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-10-08T18:00:00+09:00",
+    "receivedAt": "2026-10-08T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_015",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_015",
+    "bookingId": "bkg_seed_015",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 340000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Fine.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "40+"
+    },
+    "submittedAt": "2026-10-15T18:00:00+09:00",
+    "receivedAt": "2026-10-15T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_016",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_016",
+    "bookingId": "bkg_seed_016",
+    "clinicId": "cln_seoul_glow",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 346800,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 2,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Very kind staff.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-10-20T18:00:00+09:00",
+    "receivedAt": "2026-10-20T18:00:05+09:00",
+    "quotedKrw": 340000,
+    "quoteGapRatio": 0.02
+  },
+  {
+    "id": "out_seed_017",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_017",
+    "bookingId": "bkg_seed_017",
+    "clinicId": "cln_mint",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 102960,
+    "receivedAmount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Only 1cc was included.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-07-25T18:00:00+09:00",
+    "receivedAt": "2026-07-25T18:00:05+09:00",
+    "quotedKrw": 99000,
+    "quoteGapRatio": 0.04
+  },
+  {
+    "id": "out_seed_018",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_018",
+    "bookingId": "bkg_seed_018",
+    "clinicId": "cln_mint",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 100980,
+    "receivedAmount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Cheap event price.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "20-24"
+    },
+    "submittedAt": "2026-08-20T18:00:00+09:00",
+    "receivedAt": "2026-08-20T18:00:05+09:00",
+    "quotedKrw": 99000,
+    "quoteGapRatio": 0.02
+  },
+  {
+    "id": "out_seed_019",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_019",
+    "bookingId": "bkg_seed_019",
+    "clinicId": "cln_mint",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 103950,
+    "receivedAmount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Small dose.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-09-10T18:00:00+09:00",
+    "receivedAt": "2026-09-10T18:00:05+09:00",
+    "quotedKrw": 99000,
+    "quoteGapRatio": 0.05
+  },
+  {
+    "id": "out_seed_020",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_020",
+    "bookingId": "bkg_seed_020",
+    "clinicId": "cln_mint",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 101970,
+    "receivedAmount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "OK.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-09-28T18:00:00+09:00",
+    "receivedAt": "2026-09-28T18:00:05+09:00",
+    "quotedKrw": 99000,
+    "quoteGapRatio": 0.03
+  },
+  {
+    "id": "out_seed_021",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_021",
+    "bookingId": "bkg_seed_021",
+    "clinicId": "cln_mint",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 102960,
+    "receivedAmount": {
+      "value": 1,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 3,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": false,
+    "sideEffects": [],
+    "comment": "Busy clinic.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-10-12T18:00:00+09:00",
+    "receivedAt": "2026-10-12T18:00:05+09:00",
+    "quotedKrw": 99000,
+    "quoteGapRatio": 0.04
+  },
+  {
+    "id": "out_seed_022",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_022",
+    "bookingId": "bkg_seed_022",
+    "clinicId": "cln_hanbit",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 420000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Chinese speaking staff.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-07-27T18:00:00+09:00",
+    "receivedAt": "2026-07-27T18:00:05+09:00",
+    "quotedKrw": 420000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_023",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_023",
+    "bookingId": "bkg_seed_023",
+    "clinicId": "cln_hanbit",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 428400,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Good service.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "35-39"
+    },
+    "submittedAt": "2026-08-22T18:00:00+09:00",
+    "receivedAt": "2026-08-22T18:00:05+09:00",
+    "quotedKrw": 420000,
+    "quoteGapRatio": 0.02
+  },
+  {
+    "id": "out_seed_024",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_024",
+    "bookingId": "bkg_seed_024",
+    "clinicId": "cln_hanbit",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 436800,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 4,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Fine.",
+    "visitorProfile": {
+      "nationality": "JP",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-09-15T18:00:00+09:00",
+    "receivedAt": "2026-09-15T18:00:05+09:00",
+    "quotedKrw": 420000,
+    "quoteGapRatio": 0.04
+  },
+  {
+    "id": "out_seed_025",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_025",
+    "bookingId": "bkg_seed_025",
+    "clinicId": "cln_hanbit",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 420000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": true,
+    "satisfaction": 5,
+    "painScore": 2,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Easy to book.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-10-02T18:00:00+09:00",
+    "receivedAt": "2026-10-02T18:00:05+09:00",
+    "quotedKrw": 420000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_026",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_026",
+    "bookingId": "bkg_seed_026",
+    "clinicId": "cln_hanbit",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 424200,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Central location.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-10-18T18:00:00+09:00",
+    "receivedAt": "2026-10-18T18:00:05+09:00",
+    "quotedKrw": 420000,
+    "quoteGapRatio": 0.01
+  },
+  {
+    "id": "out_seed_027",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_027",
+    "bookingId": "bkg_seed_027",
+    "clinicId": "cln_dahye",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 360000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 5,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "English was perfect.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-08-02T18:00:00+09:00",
+    "receivedAt": "2026-08-02T18:00:05+09:00",
+    "quotedKrw": 360000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_028",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_028",
+    "bookingId": "bkg_seed_028",
+    "clinicId": "cln_dahye",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 367200,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "vial_shown",
+    "receiptAttached": false,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Good value.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "30-34"
+    },
+    "submittedAt": "2026-08-30T18:00:00+09:00",
+    "receivedAt": "2026-08-30T18:00:05+09:00",
+    "quotedKrw": 360000,
+    "quoteGapRatio": 0.02
+  },
+  {
+    "id": "out_seed_029",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_029",
+    "bookingId": "bkg_seed_029",
+    "clinicId": "cln_dahye",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 360000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": true,
+    "satisfaction": 4,
+    "painScore": 3,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Fine.",
+    "visitorProfile": {
+      "nationality": "CN",
+      "ageBand": "25-29"
+    },
+    "submittedAt": "2026-09-25T18:00:00+09:00",
+    "receivedAt": "2026-09-25T18:00:05+09:00",
+    "quotedKrw": 360000,
+    "quoteGapRatio": 0
+  },
+  {
+    "id": "out_seed_030",
+    "schema": "pibu/outcome@1",
+    "outcomeId": "out_seed_030",
+    "bookingId": "bkg_seed_030",
+    "clinicId": "cln_dahye",
+    "procedureId": "rejuran_healer",
+    "checkpoint": "D0",
+    "paidKrw": 360000,
+    "receivedAmount": {
+      "value": 2,
+      "unit": "cc"
+    },
+    "productVerified": "not_checked",
+    "receiptAttached": false,
+    "satisfaction": 5,
+    "painScore": 2,
+    "downtimeDaysActual": null,
+    "wouldReturn": true,
+    "sideEffects": [],
+    "comment": "Friendly.",
+    "visitorProfile": {
+      "nationality": "US",
+      "ageBand": "20-24"
+    },
+    "submittedAt": "2026-10-10T18:00:00+09:00",
+    "receivedAt": "2026-10-10T18:00:05+09:00",
+    "quotedKrw": 360000,
+    "quoteGapRatio": 0
+  }
+]

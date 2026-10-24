@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buttonStyles } from "@/components/ui";
+import { LocaleSwitcher } from "@/components/customer/locale-switcher";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/domain/common";
 import { focusRing } from "@/lib/ui";
@@ -13,10 +14,13 @@ const textLink = cn("inline-flex min-h-touch items-center text-label text-muted 
 export function SiteNav({ locale }: { locale: Locale }) {
   return (
     <header className="sticky top-0 z-10 border-b border-border-soft bg-bg">
-      <div className={cn(container, "flex items-center justify-between gap-sp-3 py-sp-2")}>
+      <div className={cn(container, "flex flex-wrap items-center justify-between gap-x-sp-3 py-sp-2")}>
         <Link href={`/${locale}`} className={cn("inline-flex min-h-touch items-center text-title font-semi", focusRing)}>
           PibooK
         </Link>
+        <div className="order-last flex w-full justify-center sm:order-none sm:w-auto sm:flex-1 sm:justify-end">
+          <LocaleSwitcher label={LANDING_COPY[locale].footer.languages} />
+        </div>
         <Link href={`/${locale}`} className={buttonStyles()}>
           {LANDING_COPY[locale].start}
         </Link>

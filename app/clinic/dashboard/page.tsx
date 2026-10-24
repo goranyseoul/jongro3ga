@@ -4,62 +4,46 @@ import { Card, CardHeader, Money, Stat, buttonStyles } from "@/components/ui";
 import { DeltaStat } from "@/components/clinic/delta-stat";
 import { formatCurrency } from "@/lib/money";
 import { PageHeader } from "@/components/clinic/page-header";
+import { SignedOut } from "@/components/clinic/signed-out";
 import { StateText } from "@/components/clinic/task-state";
-import { daysBetween, formatAmount, formatDate, formatDay, formatSlot, seoulDate } from "@/components/clinic/format";
-import {
-  CLINIC,
-  INBOX_TASKS,
-  NOW,
-  OFFERS,
-  OPERATION_MODE_TEXT,
-  PREVIOUS_PERIOD,
-  RESPONSE_STATS,
-  TODAY,
-  responseRatePercent,
-} from "@/lib/ui-data/clinic";
+import { daysBetween, formatAmount, formatDate, formatDay, formatSlot } from "@/components/clinic/format";
+import { getDashboard } from "@/lib/agents/clinic/console";
+import { OPERATION_MODE_TEXT } from "@/lib/ui-data/clinic";
+import { currentClinicId } from "../console-session";
 
 export const metadata: Metadata = { title: "대시보드" };
 
-const WEEK_MS = 7 * 86_400_000;
+export default async function ClinicDashboardPage() {
+  const clinicId = await currentClinicId();
+  if (!clinicId) return <SignedOut />;
 
-export default function ClinicDashboardPage() {
-  const now = Date.parse(NOW);
-  const bookings = INBOX_TASKS.filter((task) => task.kind === "booking");
-
-  const quotesToday = INBOX_TASKS.filter((task) => task.kind === "quote" && seoulDate(task.receivedAt) === TODAY);
-  const waiting = bookings.filter((task) => task.state === "TASK_STATE_WORKING");
-  const waitingGuest = bookings.filter((task) => task.state === "TASK_STATE_INPUT_REQUIRED");
-  const thisWeek = bookings
-    .filter((task) => {
-      if (task.state !== "TASK_STATE_COMPLETED" || !task.slot) return false;
-      const at = Date.parse(task.slot);
-      return at >= now && at < now + WEEK_MS;
-    })
-    .sort((a, b) => Date.parse(a.slot ?? "") - Date.parse(b.slot ?? ""));
-  const needsAction = bookings.filter(
-    (task) => task.state === "TASK_STATE_WORKING" || task.state === "TASK_STATE_INPUT_REQUIRED",
-  );
-  const offersNow = OFFERS.filter((offer) => offer.active && offer.validUntil >= TODAY);
-  const quotesByNow = quotesToday.filter((task) => Date.parse(task.receivedAt) <= now).length;
+  const data = await getDashboard(clinicId);
+  const { clinic, needsAction, thisWeek, offersNow, response } = data;
+  const today = data.today;
+  const responseValue = response.percent === null ? "·" : `${response.percent}%`;
+  const responseCaption =
+    response.quoteRequests === 0
+      ? `최근 ${response.windowDays}일 동안 받은 견적 요청이 없어요`
+      : `최근 ${response.windowDays}일 · ${response.quoteRequests}건 중 ${response.answeredWithin20s}건을 20초 안에 응답`;
 
   return (
     <div className="flex flex-col gap-sp-6">
-      <PageHeader title="대시보드" description={`${CLINIC.name} · ${formatDay(NOW)} 기준`} />
+      <PageHeader title="대시보드" description={`${clinic.name} · ${formatDay(data.now)} 기준`} />
 
       <section aria-label="오늘 현황" className="grid grid-cols-1 gap-sp-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <DeltaStat
             label="오늘 견적 요청"
-            value={`${quotesToday.length}건`}
+            value={`${data.quotesToday}건`}
             caption="에이전트가 자동으로 답했어요"
-            delta={{ diff: quotesByNow - PREVIOUS_PERIOD.quotesYesterdayByNow, unit: "건", against: "어제 이 시각" }}
+            delta={{ diff: data.quotesToday - data.quotesYesterdayByNow, unit: "건", against: "어제 이 시각" }}
           />
         </Card>
         <Card>
           <Stat
             label="예약 대기"
-            value={`${waiting.length}건`}
-            caption={waitingGuest.length > 0 ? `고객 응답 대기 ${waitingGuest.length}건 별도` : "확정이나 거절이 필요해요"}
+            value={`${data.waiting}건`}
+            caption={data.waitingGuest > 0 ? `고객 응답 대기 ${data.waitingGuest}건 별도` : "확정이나 거절이 필요해요"}
           />
         </Card>
         <Card>
@@ -67,16 +51,20 @@ export default function ClinicDashboardPage() {
             label="이번 주 예약"
             value={`${thisWeek.length}건`}
             caption="오늘부터 7일 안에 확정된 예약"
-            delta={{ diff: thisWeek.length - PREVIOUS_PERIOD.bookingsLastWeek, unit: "건", against: "지난주" }}
+            delta={{ diff: thisWeek.length - data.bookingsLastWeek, unit: "건", against: "지난주" }}
           />
         </Card>
         <Card>
-          <DeltaStat
-            label="응답률"
-            value={`${responseRatePercent()}%`}
-            caption={`최근 ${RESPONSE_STATS.windowDays}일 · ${RESPONSE_STATS.quoteRequests}건 중 ${RESPONSE_STATS.answeredWithin20s}건을 20초 안에 응답`}
-            delta={{ diff: responseRatePercent() - PREVIOUS_PERIOD.responseRateLastWeek, unit: "%p", against: "지난주" }}
-          />
+          {response.percent !== null && response.previousPercent !== null ? (
+            <DeltaStat
+              label="응답률"
+              value={responseValue}
+              caption={responseCaption}
+              delta={{ diff: response.percent - response.previousPercent, unit: "%p", against: "지난주" }}
+            />
+          ) : (
+            <Stat label="응답률" value={responseValue} caption={responseCaption} />
+          )}
         </Card>
       </section>
 
@@ -106,7 +94,7 @@ export default function ClinicDashboardPage() {
                       {task.from} · {task.product} {formatAmount(task.amount)}
                     </span>
                     <span className="text-label text-muted tabular-nums">
-                      희망 {task.slot ? formatSlot(task.slot) : "·"} · <Money krw={task.priceKrw} />
+                      희망 {task.slot ? formatSlot(task.slot) : "·"} · {task.priceKrw !== undefined ? <Money krw={task.priceKrw} /> : "·"}
                     </span>
                   </div>
                   <StateText task={task} className="shrink-0" />
@@ -155,8 +143,8 @@ export default function ClinicDashboardPage() {
           ) : (
             <ul className="flex flex-col">
               {offersNow.map((offer) => {
-                const started = offer.validFrom <= TODAY;
-                const daysLeft = daysBetween(TODAY, offer.validUntil);
+                const started = offer.validFrom <= today;
+                const daysLeft = daysBetween(today, offer.validUntil);
                 return (
                   <li
                     key={offer.id}
@@ -196,7 +184,7 @@ export default function ClinicDashboardPage() {
           <dl className="flex flex-col gap-sp-2">
             <div className="flex items-baseline justify-between gap-sp-3">
               <dt className="text-label text-muted">운영 모드</dt>
-              <dd className="text-body font-med">{OPERATION_MODE_TEXT[CLINIC.operationMode]}</dd>
+              <dd className="text-body font-med">{OPERATION_MODE_TEXT[clinic.operationMode]}</dd>
             </div>
             <div className="flex items-baseline justify-between gap-sp-3">
               <dt className="text-label text-muted">견적 응답</dt>
@@ -204,7 +192,9 @@ export default function ClinicDashboardPage() {
             </div>
             <div className="flex items-baseline justify-between gap-sp-3">
               <dt className="text-label text-muted">예약 확정</dt>
-              <dd className="text-body font-med">요청함에서 직접</dd>
+              <dd className="text-body font-med">
+                {clinic.operationMode === "proxy" ? "PibooK이 병원 확인 후" : clinic.autoConfirm ? "빈 시간이면 자동" : "요청함에서 직접"}
+              </dd>
             </div>
           </dl>
         </Card>

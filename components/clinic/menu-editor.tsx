@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Card, CardHeader, Money, Table, type TableColumn } from "@/components/ui";
-import { MENU_ITEMS, OFFERS, TODAY, ZK_PRESET_TEXT, zkPresetOf, type MenuItem, type Offer } from "@/lib/ui-data/clinic";
+import { clinicApi, type MenuData, type MenuItem, type Offer } from "@/lib/ui-data/clinic";
 import { formatCurrency } from "@/lib/money";
 import { ConfirmSheet } from "./confirm-sheet";
 import { EventSheet, type EventTarget } from "./event-sheet";
@@ -10,50 +10,65 @@ import { formatAmount, formatDate } from "./format";
 import { PriceSheet } from "./price-sheet";
 import { Switch } from "./switch";
 
-function offerStatus(offer: Offer): { text: string; tone: string } {
+function offerStatus(offer: Offer, today: string): { text: string; tone: string } {
   if (!offer.active) return { text: "노출 중지", tone: "text-muted" };
-  if (offer.validUntil < TODAY) return { text: "종료", tone: "text-muted" };
-  if (offer.validFrom > TODAY) return { text: "시작 전", tone: "text-muted" };
+  if (offer.validUntil < today) return { text: "종료", tone: "text-muted" };
+  if (offer.validFrom > today) return { text: "시작 전", tone: "text-muted" };
   return { text: "진행 중", tone: "text-success" };
 }
 
 const discountPercent = (offer: Offer) => Math.round((1 - offer.priceKrw / offer.regularPriceKrw) * 100);
 
-export function MenuEditor() {
-  const [items, setItems] = useState<MenuItem[]>(MENU_ITEMS);
-  const [offers, setOffers] = useState<Offer[]>(OFFERS);
+// Every save goes to the clinic agent's store (app/api/clinic/menu, offers): the next clinic.quote and
+// clinic.offers answer with it.
+export function MenuEditor({ initial }: { initial: MenuData }) {
+  const [items, setItems] = useState<MenuItem[]>(initial.items);
+  const [offers, setOffers] = useState<Offer[]>(initial.offers);
+  const today = initial.today;
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [eventTarget, setEventTarget] = useState<EventTarget | null>(null);
   const [deleting, setDeleting] = useState<Offer | null>(null);
   const [notice, setNotice] = useState("");
 
-  const saveItem = (next: MenuItem) => {
-    setItems((current) => current.map((item) => (item.id === next.id ? next : item)));
+  const run = async (request: Promise<MenuData>, message: string): Promise<boolean> => {
+    try {
+      const next = await request;
+      setItems(next.items);
+      setOffers(next.offers);
+      setNotice(message);
+      return true;
+    } catch (error) {
+      setNotice(`저장하지 못했어요: ${(error as Error).message}`);
+      return false;
+    }
+  };
+
+  const saveItem = async (next: MenuItem) => {
     setEditingItem(null);
-    setNotice(`${next.nameKo} ${formatAmount(next.amount)} 가격 저장: ${formatCurrency(next.priceKrw, "KRW")}`);
+    await run(
+      clinicApi.saveMenuItem(next),
+      `${next.nameKo} ${formatAmount(next.amount)} 가격 저장: ${formatCurrency(next.priceKrw, "KRW")}`,
+    );
   };
 
-  const saveOffer = (next: Offer) => {
+  const saveOffer = async (next: Offer) => {
     const exists = offers.some((offer) => offer.id === next.id);
-    setOffers((current) => (exists ? current.map((offer) => (offer.id === next.id ? next : offer)) : [...current, next]));
     setEventTarget(null);
-    setNotice(`이벤트 "${next.title}" ${exists ? "수정" : "추가"}했어요`);
+    await run(clinicApi.saveOffer(next), `이벤트 "${next.title}" ${exists ? "수정" : "추가"}했어요`);
   };
 
-  const removeOffer = (offer: Offer) => {
-    setOffers((current) => current.filter((candidate) => candidate.id !== offer.id));
+  const removeOffer = async (offer: Offer) => {
     setDeleting(null);
-    setNotice(`이벤트 "${offer.title}" 삭제했어요`);
+    await run(clinicApi.deleteOffer(offer.id), `이벤트 "${offer.title}" 삭제했어요`);
   };
 
-  const toggleOffer = (offer: Offer, active: boolean) => {
-    setOffers((current) => current.map((candidate) => (candidate.id === offer.id ? { ...candidate, active } : candidate)));
-    setNotice(
+  const toggleOffer = (offer: Offer, active: boolean) =>
+    run(
+      clinicApi.saveOffer({ ...offer, active }),
       active
         ? `이벤트 "${offer.title}" 노출을 다시 켰어요`
         : `이벤트 "${offer.title}" 노출을 껐어요. 고객 에이전트에게 전달되지 않아요`,
     );
-  };
 
   const nameOf = (procedureId: string) => items.find((item) => item.procedureId === procedureId)?.nameKo ?? procedureId;
 
@@ -125,23 +140,7 @@ export function MenuEditor() {
         </span>
       ),
     },
-    {
-      key: "conditions",
-      header: "조건",
-      cell: (offer) => {
-        const proof = zkPresetOf(offer.zkClauses, offer.procedureId);
-        return (
-          <div className="flex flex-col gap-sp-1">
-            <span>{offer.conditions}</span>
-            {proof !== "none" ? (
-              <span className="text-caption text-subtle">
-                증명 조건: {proof === "custom" ? "직접 정의" : ZK_PRESET_TEXT[proof].short}
-              </span>
-            ) : null}
-          </div>
-        );
-      },
-    },
+    { key: "conditions", header: "조건", cell: (offer) => offer.conditions },
     {
       key: "active",
       header: "노출",
@@ -151,7 +150,7 @@ export function MenuEditor() {
       key: "status",
       header: "상태",
       cell: (offer) => {
-        const status = offerStatus(offer);
+        const status = offerStatus(offer, today);
         return <span className={`text-body font-semi ${status.tone}`}>{status.text}</span>;
       },
     },
@@ -206,7 +205,7 @@ export function MenuEditor() {
         />
       </Card>
 
-      <p className="text-caption text-subtle">데모 데이터예요. 변경은 이 화면을 닫을 때까지만 유지돼요</p>
+      <p className="text-caption text-subtle">저장하면 바로 병원 에이전트에 반영돼요. 다음 견적부터 새 가격과 이벤트로 답해요</p>
 
       <PriceSheet item={editingItem} onClose={() => setEditingItem(null)} onSave={saveItem} />
       <ConfirmSheet

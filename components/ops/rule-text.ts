@@ -1,10 +1,11 @@
+import { getProcedure } from "@/lib/domain/procedure-master";
 import { formatCurrency } from "@/lib/money";
 import {
   AREA_LABEL,
   LOCALE_LABEL,
   NATIONALITY_LABEL,
-  PROCEDURE_LABEL,
-  clinicName,
+  clinicName as clinicLabel,
+  type ClinicNames,
   type RuleAction,
   type RuleCondition,
 } from "@/lib/ui-data/ops";
@@ -15,7 +16,7 @@ const names = <T,>(items: T[], label: (item: T) => string) => items.map(label).j
 export function describeCondition(when: RuleCondition): string {
   const parts: string[] = [];
   if (when.nationalities?.length) parts.push(`국적 ${names(when.nationalities, (code) => NATIONALITY_LABEL[code] ?? code)}`);
-  if (when.procedureIds?.length) parts.push(`시술 ${names(when.procedureIds, (id) => PROCEDURE_LABEL[id] ?? id)}`);
+  if (when.procedureIds?.length) parts.push(`시술 ${names(when.procedureIds, (id) => getProcedure(id)?.name.ko ?? id)}`);
   if (when.languages?.length) parts.push(`언어 ${names(when.languages, (locale) => LOCALE_LABEL[locale])}`);
   if (when.areas?.length) parts.push(`지역 ${names(when.areas, (area) => AREA_LABEL[area])}`);
   if (when.ageBands?.length) parts.push(`연령대 ${when.ageBands.join(", ")}`);
@@ -27,7 +28,8 @@ export function describeCondition(when: RuleCondition): string {
 const signed = (delta: number) => `${delta >= 0 ? "+" : "-"}${Math.abs(delta)}`;
 
 /** What the rule does to the shortlist once the condition matches. */
-export function describeAction(then: RuleAction): string {
+export function describeAction(then: RuleAction, clinics: ClinicNames = {}): string {
+  const clinicName = (id: string) => clinicLabel(id, clinics);
   switch (then.kind) {
     case "exclude_clinic":
       return `${names(then.clinicIds, clinicName)} 매칭 제외`;

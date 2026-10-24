@@ -20,8 +20,11 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { AgentWindow } from "@/components/customer/agent-window";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { ClinicCarousel } from "@/components/customer/clinic-carousel";
+import { LocaleSwitcher } from "@/components/customer/locale-switcher";
+import { SpotlightTour } from "@/components/customer/spotlight-tour";
 import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
@@ -37,9 +40,10 @@ import {
   procedureLabel,
   type DirectoryTopic,
 } from "@/lib/ui-data/directory";
+import type { LandingCopy } from "../landing-copy";
 import { LandingHome } from "../landing-home";
 import { LOCALES, LOCALE_NAME } from "../locales";
-import { FaceParticles } from "../hero/face-particles";
+import { ParticleField } from "../hero/particle-field";
 import { Splash } from "../hero/splash";
 import { COPY, type OnboardingCopy } from "./copy";
 import {
@@ -140,8 +144,22 @@ export type OnboardingIntro = {
   suggestions: string[];
   startPlain: string;
   suggestionsLabel: string;
+  /** Accessible name of the language switch in the header. */
+  languageLabel: string;
   signup: AuthCopy & { toggle: string; personas: string[] };
+  agentWindow: LandingCopy["agentWindow"];
+  tour: LandingCopy["tour"];
 };
+
+// Each tour step points at the element carrying this data-tour value; the order matches the copy.
+const TOUR_TARGETS = ["input", "topics", "signup", "agent"] as const;
+const TOUR_SEEN_KEY = "pibook.tour.v1";
+// A language switch reloads the page in the new locale; the draft travels through sessionStorage for a moment.
+const HANDOFF_KEY = "pibook.onboarding.handoff";
+const HANDOFF_MAX_AGE_MS = 120_000;
+// the entry splash plays 1.5s and fades; the tour and the first greeting wait for it
+const SPLASH_MS = 2600;
+const WINDOW_WIDTH_QUERY = "(min-width: 768px)";
 
 export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intro: OnboardingIntro; footer: ReactNode }) {
   const c = COPY[locale];
@@ -157,6 +175,13 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const [returnToSummary, setReturnToSummary] = useState(false);
   const [pickingEdit, setPickingEdit] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  // The conversation lives in a window over the landing; "full" is the old whole-screen view of it.
+  const [surface, setSurface] = useState<"window" | "full">("window");
+  const [windowOpen, setWindowOpen] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [splashOver, setSplashOver] = useState(false);
+  const full = started && surface === "full";
+  const resumed = useRef(false);
 
   // widget values that are only committed when the customer presses next
   const [range, setRange] = useState<DateRange>({ start: "", end: "" });
@@ -170,6 +195,10 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSplashOver(true), SPLASH_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" });
   }, [messages, typing, step, pickingEdit]);
@@ -242,6 +271,8 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
   // First message from the landing: keep it as firstIntent, answer from the directory when the message names
   // a procedure, group or area, then start onboarding at the locale step.
   const start = (intent?: string, topic?: DirectoryTopic) => {
+    setWindowOpen(true);
+    if (started && !intent) return; // already talking: just bring the window back
     setStarted(true);
     if (!intent) {
       agentSays([c.say.locale]);
@@ -253,6 +284,15 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     agentSays(resolved ? [directoryAnswer(resolved), c.say.locale] : [c.say.intentAck(intent), c.say.locale]);
   };
 
+  // A tap or a typed line on the landing: the first one starts the conversation, later ones join it.
+  const ask = (text: string, topic?: DirectoryTopic) => {
+    if (!started) return start(text, topic);
+    setWindowOpen(true);
+    setMessages((prev) => [...prev, message("user", text)]);
+    const resolved = topic ?? topicFromText(text);
+    agentSays([resolved ? directoryAnswer(resolved) : c.say.intentAck(text)]);
+  };
+
   const nudge = (userText: string, line: string) => {
     setMessages((prev) => [...prev, message("user", userText)]);
     agentSays([line]);
@@ -260,6 +300,15 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
 
   const chooseLocale = (value: Locale) => {
     if (value !== locale) {
+      // the page reloads in the new language: hand the answers over so the conversation goes on there
+      try {
+        sessionStorage.setItem(
+          HANDOFF_KEY,
+          JSON.stringify({ draft: { ...draft, locale: value, languages: [value] }, at: Date.now() }),
+        );
+      } catch {
+        /* storage blocked: the conversation restarts in the new language */
+      }
       router.push(`/${value}`);
       return;
     }
@@ -327,6 +376,66 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     }
     const agreed = CONSENTS.filter((type) => draft.consents[type]).map((type) => c.consents[type].title);
     advance(draft, agreed.join(" · "), draft.consents.sensitiveHealth ? [] : [c.say.sensitiveDeclined]);
+  };
+
+  // Picks the conversation up after a language switch, in the new locale and with the window open.
+  useEffect(() => {
+    let handoff: { draft: Draft; at: number } | null = null;
+    try {
+      const raw = sessionStorage.getItem(HANDOFF_KEY);
+      handoff = raw ? JSON.parse(raw) : null;
+    } catch {
+      handoff = null;
+    }
+    if (!handoff || Date.now() - handoff.at > HANDOFF_MAX_AGE_MS || handoff.draft.locale !== locale) return;
+    resumed.current = true;
+    const next = handoff.draft;
+    const target = nextStep("locale", next);
+    setStarted(true);
+    setWindowOpen(true);
+    // replaces instead of appending, so a repeated effect run (React strict mode) never doubles the line
+    setMessages([message("user", LOCALE_NAME[locale])]);
+    setDraft(next);
+    agentSays([question(target, next, c)], () => {
+      setStep(target);
+      try {
+        sessionStorage.removeItem(HANDOFF_KEY);
+      } catch {
+        /* nothing to clean up */
+      }
+    });
+    // runs once per page load
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // First visit: a spotlight tour, and on a wide screen the agent window opens beside it and greets right away.
+  // ?tour replays it. When storage is blocked there is no tour, so nobody gets it on every load.
+  useEffect(() => {
+    if (resumed.current) return;
+    let skip = true;
+    try {
+      skip = localStorage.getItem(TOUR_SEEN_KEY) !== null && !new URLSearchParams(window.location.search).has("tour");
+    } catch {
+      skip = true;
+    }
+    if (skip) return;
+    const timer = window.setTimeout(() => {
+      setTourOpen(true);
+      if (window.matchMedia(WINDOW_WIDTH_QUERY).matches) start();
+    }, SPLASH_MS);
+    return () => window.clearTimeout(timer);
+    // runs once per page load
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const finishTour = () => {
+    try {
+      localStorage.setItem(TOUR_SEEN_KEY, "1");
+    } catch {
+      /* the tour may show again */
+    }
+    setTourOpen(false);
+    start();
   };
 
   const percent = progressPercent(draft);
@@ -453,9 +562,15 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
         return (
           <ChipGroup
             label={c.slots.history}
-            options={[{ value: "none", label: c.historyNone }]}
+            options={[
+              { value: "yes", label: c.historyYes },
+              { value: "none", label: c.historyNone },
+            ]}
             value={null}
-            onChange={() => advance({ ...draft, history: c.historyNone }, c.historyNone)}
+            // "yes" asks for the details; the typed answer then fills the history slot
+            onChange={(value) =>
+              value === "yes" ? nudge(c.historyYes, c.say.historyDetail) : advance({ ...draft, history: c.historyNone }, c.historyNone)
+            }
           />
         );
       case "pregnant":
@@ -639,7 +754,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     </div>
   );
 
-  // One screen for both phases: the sunrise backdrop and the face stay mounted, the hero copy turns into
+  // One screen for both phases: the sunrise backdrop and the particle field stay mounted, the hero copy turns into
   // the conversation in place, and the input stays where it was.
   const heroMain = (
     <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-12">
@@ -654,16 +769,19 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setEngaged(false);
         }}
       >
-        <ChatInput
-          onSend={(text) => start(text)}
-          label={c.inputLabel}
-          sendLabel={c.send}
-          placeholder={c.placeholder}
-          hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-        />
+        <div data-tour="input">
+          <ChatInput
+            collapsible
+            onSend={(text) => ask(text)}
+            label={c.inputLabel}
+            sendLabel={c.send}
+            placeholder={c.placeholder}
+            hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+          />
+        </div>
         <div role="group" aria-label={intro.suggestionsLabel} className="flex flex-wrap justify-center gap-sp-2">
           {intro.suggestions.map((suggestion) => (
-            <Chip key={suggestion} onClick={() => start(suggestion)}>
+            <Chip key={suggestion} onClick={() => ask(suggestion)}>
               {suggestion}
             </Chip>
           ))}
@@ -675,61 +793,74 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     </main>
   );
 
+  // The conversation itself, shown in the agent window over the landing or, expanded, on the whole screen.
+  const conversationLog = (
+    <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
+      {messages.map((m) => (
+        <div key={m.id} className="flex flex-col gap-sp-2">
+          <ChatBubble from={m.from}>{m.text}</ChatBubble>
+          {m.clinics ? (
+            <ClinicCarousel
+              clinics={m.clinics.ids.flatMap((id) => DIRECTORY.filter((clinic) => clinic.id === id))}
+              focus={m.clinics.focus}
+              locale={locale}
+              areaName={(area) => c.area[area]}
+              labels={c.clinicCard}
+            />
+          ) : null}
+        </div>
+      ))}
+      {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
+      {!typing ? widget() : null}
+      <div ref={endRef} />
+    </div>
+  );
+
+  const composer = (
+    <ChatInput
+      onSend={handleText}
+      label={c.inputLabel}
+      sendLabel={c.send}
+      placeholder={c.placeholder}
+      disabled={typing || done}
+      hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+    />
+  );
+
   const chatMain = (
     <main className="relative flex min-h-0 flex-1 px-sp-4 lg:gap-sp-8 lg:px-sp-6">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col items-center">
         <h1 className="sr-only">{c.title}</h1>
-        <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">
-          <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
-            {messages.map((m) => (
-              <div key={m.id} className="flex flex-col gap-sp-2">
-                <ChatBubble from={m.from}>{m.text}</ChatBubble>
-                {m.clinics ? (
-                  <ClinicCarousel
-                    clinics={m.clinics.ids.flatMap((id) => DIRECTORY.filter((clinic) => clinic.id === id))}
-                    focus={m.clinics.focus}
-                    locale={locale}
-                    areaName={(area) => c.area[area]}
-                    labels={c.clinicCard}
-                  />
-                ) : null}
-              </div>
-            ))}
-            {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
-            {!typing ? widget() : null}
-            <div ref={endRef} />
-          </div>
-        </div>
-        <div className="w-full max-w-2xl pb-sp-6 pt-sp-2">
-          <ChatInput
-            onSend={handleText}
-            label={c.inputLabel}
-            sendLabel={c.send}
-            placeholder={c.placeholder}
-            disabled={typing || done}
-            hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-          />
-        </div>
+        <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">{conversationLog}</div>
+        <div className="w-full max-w-2xl pb-sp-6 pt-sp-2">{composer}</div>
       </div>
       <aside className="hidden w-full max-w-xs shrink-0 overflow-y-auto py-sp-4 lg:block">{checklist}</aside>
     </main>
   );
 
   return (
-    <div lang={locale} className={cn("flex flex-col", started ? "h-dvh" : "min-h-dvh")}>
-      {started ? null : <Splash wordmark={intro.wordmark} />}
-      <div className={cn("theme-sunrise relative flex flex-col", started && "min-h-0 flex-1 overflow-hidden")}>
-        <section className={cn("relative flex flex-col overflow-hidden", started && "min-h-0 flex-1")}>
-          <FaceParticles className="absolute inset-0" shrink={engaged || started} />
-          <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+    <div lang={locale} className={cn("flex flex-col", full ? "h-dvh" : "min-h-dvh")}>
+      {full || splashOver ? null : <Splash wordmark={intro.wordmark} />}
+      <div className={cn("theme-sunrise relative flex flex-col", full && "min-h-0 flex-1 overflow-hidden")}>
+        <section className={cn("relative flex flex-col overflow-hidden", full && "min-h-0 flex-1")}>
+          <ParticleField className="absolute inset-0" shrink={engaged || started} />
+          <header className="relative flex flex-wrap items-center justify-between gap-x-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
             <span className="type-hero">{intro.wordmark}</span>
-            {started ? (
+            {/* hidden once the customer has answered: this switch reloads the page and would drop the answers.
+                Inside the conversation the language chips carry them over. */}
+            {messages.some((m) => m.from === "user") ? null : (
+              <div className="order-last flex w-full justify-center sm:order-none sm:w-auto sm:flex-1 sm:justify-end">
+                <LocaleSwitcher label={intro.languageLabel} />
+              </div>
+            )}
+            {full ? (
               <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
                 <span className="tabular-nums">{c.progress(percent)}</span>
               </Button>
             ) : (
               <Button
                 variant="secondary"
+                data-tour="signup"
                 aria-expanded={signupOpen}
                 aria-haspopup="dialog"
                 onClick={() => setSignupOpen((open) => !open)}
@@ -738,11 +869,11 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
               </Button>
             )}
           </header>
-          {started ? chatMain : heroMain}
+          {full ? chatMain : heroMain}
         </section>
-        {started ? null : <LandingHome locale={locale} onAsk={(text, topic) => start(text, topic)} />}
+        {full ? null : <LandingHome locale={locale} onAsk={ask} />}
       </div>
-      {started ? null : footer}
+      {full ? null : footer}
       {/* dialogs sit outside the sunrise section so they keep the default dark tokens */}
       <AuthDialog
         open={signupOpen}
@@ -756,6 +887,38 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
           start();
         }}
       />
+      {full ? null : (
+        <AgentWindow
+          open={windowOpen}
+          onOpenChange={(open) => (open ? start() : setWindowOpen(false))}
+          labels={intro.agentWindow}
+          onExpand={() => {
+            setSurface("full");
+            setWindowOpen(false);
+          }}
+          focusOnOpen={!tourOpen}
+          inputReady={!typing && !done}
+          hideLauncher={tourOpen}
+          headerExtra={
+            started ? (
+              <Button variant="ghost" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
+                <span className="tabular-nums">{c.progress(percent)}</span>
+              </Button>
+            ) : null
+          }
+        >
+          <div className="min-h-0 flex-1 overflow-y-auto px-sp-4 py-sp-3">{conversationLog}</div>
+          <div className="px-sp-3 pb-sp-3 pt-sp-2">{composer}</div>
+        </AgentWindow>
+      )}
+      {tourOpen ? (
+        <SpotlightTour
+          steps={intro.tour.steps.map((step, i) => ({ ...step, target: TOUR_TARGETS[i] }))}
+          labels={intro.tour}
+          onStep={(target) => target === "agent" && start()}
+          onFinish={finishTour}
+        />
+      ) : null}
       <Sheet open={sheetOpen} onClose={() => setSheetOpen(false)} title={c.previewTitle} closeLabel={c.close}>
         {preview}
       </Sheet>

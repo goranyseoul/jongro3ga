@@ -373,10 +373,6 @@
       "session": "Session {n}",
       "shared": "Anonymous sharing: on",
       "notShared": "Anonymous sharing: off",
-      "anchored": "Confirmed by clinic · on-chain record v{version}",
-      "clinicConfirmed": "Confirmed by clinic",
-      "selfReported": "Entered by you · not used for offer proofs",
-      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
       "fromBooking": "Recorded from your booking",
       "rating": "Satisfaction {n}/5",
       "search": "Search procedures",
@@ -388,7 +384,21 @@
       "summary": "Since {first}: {count} sessions · total {total}",
       "pages": "Pages",
       "prevPage": "Previous page",
-      "nextPage": "Next page"
+      "nextPage": "Next page",
+      "anchored": "Confirmed by clinic · on-chain record v{version}",
+      "clinicConfirmed": "Confirmed by clinic",
+      "selfReported": "Entered by you · not used for offer proofs",
+      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
+      "preset": {
+        "procedure": "Procedure",
+        "area": "Area",
+        "clinic": "Clinic"
+      },
+      "area": {
+        "forehead": "Forehead",
+        "full_face": "Full face",
+        "jawline": "Jawline"
+      }
     },
     "calendar": {
       "title": "Calendar",
@@ -408,7 +418,9 @@
       "title": "My care plan",
       "lead": "Your records compared with each procedure's recommended cycle, so you know what to do next.",
       "showAll": "Show all care cards ({n})",
-      "showLess": "Show less"
+      "showLess": "Show less",
+      "findClinic": "Find clinics",
+      "findIntent": "Find clinics with a {procedure} event ({range})"
     },
     "cycle": {
       "course": "Recommended: {count} sessions {interval} days apart, then {every}",
@@ -430,6 +442,12 @@
       "total": "Total {amount}",
       "prev": "Previous",
       "next": "Next"
+    },
+    "alerts": {
+      "label": "Important alerts",
+      "late": "{procedure}: {late} days past the recommended cycle",
+      "courseLate": "{procedure}: {late} days past the recommended interval",
+      "more": "+{n} more"
     }
   },
   "recordsNew": {
@@ -459,7 +477,10 @@
       "another": "Add another"
     },
     "month": "Month of treatment",
-    "dateUnknown": "I only remember the month"
+    "dateUnknown": "I only remember the month",
+    "note": "Note",
+    "notePlaceholder": "How it felt, side effects, what to change next time.",
+    "noteHint": "Only you can see this note."
   },
   "outcomes": {
     "metaTitle": "Procedure record",

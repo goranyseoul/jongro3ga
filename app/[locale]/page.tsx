@@ -37,8 +37,11 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         body: c.hero.body,
         suggestions: c.suggestions,
         suggestionsLabel: c.suggestionsLabel,
+        languageLabel: c.footer.languages,
         startPlain: c.startPlain,
         signup: { ...c.signup, personas: DEMO_PERSONAS },
+        agentWindow: c.agentWindow,
+        tour: c.tour,
       }}
       // rendered on the server so the agency registration number is read from the environment there
       footer={<SiteFooter locale={locale} />}
