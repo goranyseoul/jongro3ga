@@ -8,6 +8,10 @@
 | --- | --- | --- |
 | `lib/a2a/contract.ts` | `AgentDefinition`, `SkillHandler`, `SkillContext`, `SkillResult`, `TaskCompleter` | 타입만 (모두 사용) |
 | `lib/a2a/client.ts` | `sendMessage`, `getTask`, `cardUrl` | A2A 코어 |
+| `lib/a2a/auth.ts` | `issueAgentToken`, `verifyReferralToken` | A2A 코어 |
+| `lib/a2a/tasks.ts` | `taskCompleter` (WORKING 태스크를 나중에 완료) | A2A 코어 |
+| `lib/agents/clinic/booking.ts` | `confirmBooking` (병원 콘솔·운영 대행 큐가 호출) | CLINIC |
+| `data/seed/load.ts` | `loadSeed(store)` (부팅·데모 리셋) | A2A 코어 |
 | `lib/agents/{platform,clinic,customer}/definition.ts` | 에이전트별 `AgentDefinition` (지금은 빈 스텁) | 각 에이전트 트랙 |
 | `lib/agents/platform/recipe.ts` | `platform.recipe` 핸들러 | LLM |
 | `lib/llm/index.ts` | `runClaude()` | LLM |
