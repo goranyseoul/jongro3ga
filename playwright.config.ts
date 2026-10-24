@@ -22,5 +22,7 @@ export default defineConfig({
         url: `http://localhost:${PORT}/en`,
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,
+        // the auth routes need a secret outside demo mode; tests run the demo with an in-memory database
+        env: { DEMO_MODE: "true", PGLITE_DIR: "memory" },
       },
 });
