@@ -2,11 +2,17 @@ import { describe, expect, it } from "vitest";
 import { procedureMaster } from "../domain/procedure-master";
 import { DIRECTORY, clinicsForTopic, findProcedure } from "./directory";
 import { DIRECTORY_PROFILES, clinicBySlug } from "./directory-profile";
+import { COURSE_PROCEDURES, FEATURED_PROCEDURES } from "../../app/[locale]/landing-home-copy";
 
 describe("mock clinic directory", () => {
   it("lists only procedures from the procedure master", () => {
     const ids = new Set(procedureMaster.map((p) => p.id));
     for (const clinic of DIRECTORY) for (const id of clinic.procedures) expect(ids.has(id), `${clinic.id}: ${id}`).toBe(true);
+  });
+
+  it("uses only master procedure ids on the landing rails", () => {
+    const ids = new Set(procedureMaster.map((p) => p.id));
+    for (const id of [...FEATURED_PROCEDURES, ...Object.values(COURSE_PROCEDURES).flat()]) expect(ids.has(id), id).toBe(true);
   });
 
   it("gives every clinic one profile with a unique slug that resolves back", () => {
@@ -32,8 +38,8 @@ describe("mock clinic directory", () => {
   });
 
   it("finds procedures typed in any language", () => {
-    expect(findProcedure("リジュラン受けたい")?.id).toBe("rejuran");
+    expect(findProcedure("リジュラン受けたい")?.id).toBe("rejuran_healer");
     expect(findProcedure("I want Ulthera")?.id).toBe("ulthera");
-    expect(findProcedure("써마지 맞고 싶어")?.id).toBe("thermage");
+    expect(findProcedure("써마지 맞고 싶어")?.id).toBe("thermage_flx");
   });
 });
