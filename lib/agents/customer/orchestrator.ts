@@ -266,9 +266,17 @@ export async function createDraft(
 }
 
 /** Applies the customer's edits from the condition card to a draft (or a finished request being rerun). */
-export async function updateDraft(deps: OrchestratorDeps, customerId: string, requestId: string, condition: ConditionInput): Promise<StoredRequest> {
+export async function updateDraft(
+  deps: OrchestratorDeps,
+  customerId: string,
+  requestId: string,
+  condition: Partial<ConditionInput> = {},
+): Promise<StoredRequest> {
   const existing = await loadRequest(deps.store, customerId, requestId);
   const profile = await loadProfile(deps.store, customerId);
+  const procedureId = condition.procedureId || existing.request.procedureId;
+  const procedureChanged = !sameProcedure(procedureId, existing.request.procedureId);
+  const amount = condition.amount ?? (procedureChanged ? fallbackAmount(procedureId) : existing.request.amount);
   const request = buildProcedureRequest({
     profile,
     condition: {
@@ -277,15 +285,35 @@ export async function updateDraft(deps: OrchestratorDeps, customerId: string, re
       dateWindow: existing.request.dateWindow,
       budgetKrw: existing.request.budgetKrw?.max,
       productPreference: existing.request.productPreference,
-      ...condition,
+      ...stripUndefined(condition),
+      procedureId,
     },
     requestId,
-    amount: condition.amount ?? existing.request.amount,
+    amount,
     firstKProcedure: existing.request.visitorProfile.firstKProcedure ?? true,
   });
   const next: StoredRequest = { ...existing, request, updatedAt: clock.nowIso() };
   await putOf(deps.store, C.requests, next);
   return next;
+}
+
+const RERUNNABLE = new Set<StoredRequest["status"]>(["draft", "comparing", "failed", "closed"]);
+
+/**
+ * [이 조건으로 찾기]: applies the card edits and marks the request as matching so the next poll already shows
+ * progress. The caller then runs runRequest in the background. A run in progress or a live booking is refused.
+ */
+export async function startRequest(deps: OrchestratorDeps, customerId: string, requestId: string, condition: Partial<ConditionInput> = {}): Promise<StoredRequest> {
+  const existing = await loadRequest(deps.store, customerId, requestId);
+  if (!RERUNNABLE.has(existing.status)) throw new OrchestratorError("invalid_state", `request is ${existing.status}`);
+  const active = (await listOf<StoredBooking>(deps.store, C.bookings, { requestId })).some((b) => ["requested", "pending_clinic", "confirmed"].includes(b.status));
+  if (active) throw new OrchestratorError("already_booked");
+  await updateDraft(deps, customerId, requestId, condition);
+  return setStatus(deps.store, requestId, "matching");
+}
+
+function stripUndefined<T extends object>(value: T): Partial<T> {
+  return Object.fromEntries(Object.entries(value).filter(([, v]) => v !== undefined)) as Partial<T>;
 }
 
 async function setStatus(store: Store, requestId: string, status: StoredRequest["status"], extra: Partial<StoredRequest> = {}): Promise<StoredRequest> {
