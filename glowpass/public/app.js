@@ -187,6 +187,7 @@ $('#visit-clinic').addEventListener('change', syncVisitProcs);
 $('#composer').addEventListener('submit', (e) => { e.preventDefault(); const v = $('#input').value; $('#input').value = ''; send(v); });
 $('#input').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#composer').requestSubmit(); } });
 
-new EventSource('/api/events').onmessage = (m) => logEvent(JSON.parse(m.data));
+// ?nosse=1 skips the live stream (headless screenshots never settle with an open EventSource)
+if (!new URLSearchParams(location.search).has('nosse')) new EventSource('/api/events').onmessage = (m) => logEvent(JSON.parse(m.data));
 setInterval(async () => { try { const s = await api(`/api/state?persona=${persona}`); state = s; const { wallet } = s; $('#chain-pill b').textContent = wallet.today; $('#records').innerHTML = wallet.records.length ? wallet.records.map((r) => `<li><div><div>${esc(r.name)}</div><div class="clinic">${esc(r.clinic)}</div></div><span class="ago">${r.daysAgo}일 전</span></li>`).join('') : '<li class="muted">기록 없음</li>'; } catch {} }, 15000);
 load();

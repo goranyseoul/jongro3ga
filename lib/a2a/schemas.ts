@@ -16,7 +16,7 @@ const prefixedId = (prefix: string) =>
 export const LocaleSchema = z.enum(["ja", "zh-CN", "en", "ko"]);
 export const AgeBandSchema = z.enum(["20-24", "25-29", "30-34", "35-39", "40+"]);
 export const AreaSchema = z.enum(["gangnam", "sinsa", "apgujeong", "myeongdong", "hongdae", "other"]);
-export const UnitSchema = z.enum(["cc", "shot", "unit", "line", "session"]);
+export const UnitSchema = z.enum(["cc", "shot", "unit", "line", "session", "vial"]);
 export const ConcernSchema = z.enum([
   "elasticity",
   "fine_lines",
