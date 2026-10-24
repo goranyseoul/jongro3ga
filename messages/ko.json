@@ -385,12 +385,10 @@
       "pages": "페이지",
       "prevPage": "이전 페이지",
       "nextPage": "다음 페이지",
-<<<<<<< HEAD
       "anchored": "병원 확인 · 체인 기록 v{version}",
       "clinicConfirmed": "병원 확인",
       "selfReported": "직접 입력 · 혜택 증명에는 쓰이지 않아요",
-      "txLabel": "Base Sepolia에서 거래 보기 (새 창)"
-=======
+      "txLabel": "Base Sepolia에서 거래 보기 (새 창)",
       "preset": {
         "procedure": "시술",
         "area": "부위",
@@ -401,7 +399,6 @@
         "full_face": "얼굴 전체",
         "jawline": "턱선"
       }
->>>>>>> origin/feat/records-presets
     },
     "calendar": {
       "title": "달력",

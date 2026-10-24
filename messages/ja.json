@@ -385,12 +385,10 @@
       "pages": "ページ",
       "prevPage": "前のページ",
       "nextPage": "次のページ",
-<<<<<<< HEAD
       "anchored": "クリニック確認済み · チェーン記録 v{version}",
       "clinicConfirmed": "クリニック確認済み",
       "selfReported": "自分で入力 · 特典の証明には使われません",
-      "txLabel": "Base Sepoliaで取引を見る(新しいタブ)"
-=======
+      "txLabel": "Base Sepoliaで取引を見る(新しいタブ)",
       "preset": {
         "procedure": "施術",
         "area": "部位",
@@ -401,7 +399,6 @@
         "full_face": "顔全体",
         "jawline": "フェイスライン"
       }
->>>>>>> origin/feat/records-presets
     },
     "calendar": {
       "title": "カレンダー",

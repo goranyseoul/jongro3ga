@@ -385,12 +385,10 @@
       "pages": "页码",
       "prevPage": "上一页",
       "nextPage": "下一页",
-<<<<<<< HEAD
       "anchored": "诊所确认 · 链上记录 v{version}",
       "clinicConfirmed": "诊所确认",
       "selfReported": "自行录入 · 不用于优惠证明",
-      "txLabel": "在 Base Sepolia 查看交易(新标签页)"
-=======
+      "txLabel": "在 Base Sepolia 查看交易(新标签页)",
       "preset": {
         "procedure": "项目",
         "area": "部位",
@@ -401,7 +399,6 @@
         "full_face": "全脸",
         "jawline": "下颌线"
       }
->>>>>>> origin/feat/records-presets
     },
     "calendar": {
       "title": "日历",

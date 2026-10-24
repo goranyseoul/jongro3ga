@@ -385,12 +385,10 @@
       "pages": "Pages",
       "prevPage": "Previous page",
       "nextPage": "Next page",
-<<<<<<< HEAD
       "anchored": "Confirmed by clinic · on-chain record v{version}",
       "clinicConfirmed": "Confirmed by clinic",
       "selfReported": "Entered by you · not used for offer proofs",
-      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)"
-=======
+      "txLabel": "View the transaction on Base Sepolia (opens in a new tab)",
       "preset": {
         "procedure": "Procedure",
         "area": "Area",
@@ -401,7 +399,6 @@
         "full_face": "Full face",
         "jawline": "Jawline"
       }
->>>>>>> origin/feat/records-presets
     },
     "calendar": {
       "title": "Calendar",
