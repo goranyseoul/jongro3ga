@@ -24,6 +24,7 @@ import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
+import { cn } from "@/lib/cn";
 import { DEMO_TODAY } from "@/lib/ui-data/customer";
 import { LOCALES, LOCALE_NAME } from "../locales";
 import { FaceParticles } from "../hero/face-particles";
@@ -561,118 +562,112 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     </div>
   );
 
-  if (!started) {
-    return (
-      <div lang={locale} className="flex min-h-dvh flex-col">
-        <Splash wordmark={intro.wordmark} />
-        <section className="theme-sunrise relative flex min-h-dvh flex-col overflow-hidden">
-        <FaceParticles className="absolute inset-0" shrink={engaged} />
-        <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
-          <span className="type-hero">{intro.wordmark}</span>
-          <Button
-            variant="secondary"
-            aria-expanded={signupOpen}
-            aria-haspopup="dialog"
-            onClick={() => setSignupOpen((open) => !open)}
-          >
-            {intro.signup.toggle}
-          </Button>
-        </header>
-        {/* only the chat on the first screen (owner reference: jahed/ai-chat-input); the face floats above it
-            and shrinks into particles while the chat has focus */}
-        <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-16">
-          <h1 className="sr-only">
-            {intro.wordmark} · {intro.title}
-          </h1>
-          <p className="sr-only">{intro.body}</p>
-          <div
-            className="flex w-full max-w-2xl flex-col gap-sp-6"
-            onFocus={() => setEngaged(true)}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setEngaged(false);
-            }}
-          >
-            <ChatInput
-              onSend={(text) => start(text)}
-              label={c.inputLabel}
-              sendLabel={c.send}
-              placeholder={c.placeholder}
-              hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-            />
-            <div role="group" aria-label={intro.suggestionsLabel} className="flex flex-wrap justify-center gap-sp-2">
-              {intro.suggestions.map((suggestion) => (
-                <Chip key={suggestion} onClick={() => start(suggestion)}>
-                  {suggestion}
-                </Chip>
-              ))}
-            </div>
-            <Button variant="ghost" className="self-center" onClick={() => start()}>
-              {intro.startPlain}
-            </Button>
-          </div>
-        </main>
-        </section>
-        {footer}
-        <AuthDialog
-          open={signupOpen}
-          onClose={() => setSignupOpen(false)}
-          brand={intro.wordmark}
-          copy={intro.signup}
-          personas={intro.signup.personas}
-          // mock: no account backend yet, signing up or in simply starts the conversation
-          onDone={() => {
-            setSignupOpen(false);
-            start();
-          }}
+  // One screen for both phases: the sunrise backdrop and the face stay mounted, the hero copy turns into
+  // the conversation in place, and the input stays where it was.
+  const heroMain = (
+    <main className="relative flex flex-1 flex-col items-center justify-center px-sp-4 pb-sp-12 pt-sp-16">
+      <h1 className="sr-only">
+        {intro.wordmark} · {intro.title}
+      </h1>
+      <p className="sr-only">{intro.body}</p>
+      <div
+        className="flex w-full max-w-2xl flex-col gap-sp-6"
+        onFocus={() => setEngaged(true)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setEngaged(false);
+        }}
+      >
+        <ChatInput
+          onSend={(text) => start(text)}
+          label={c.inputLabel}
+          sendLabel={c.send}
+          placeholder={c.placeholder}
+          hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+        />
+        <div role="group" aria-label={intro.suggestionsLabel} className="flex flex-wrap justify-center gap-sp-2">
+          {intro.suggestions.map((suggestion) => (
+            <Chip key={suggestion} onClick={() => start(suggestion)}>
+              {suggestion}
+            </Chip>
+          ))}
+        </div>
+        <Button variant="ghost" className="self-center" onClick={() => start()}>
+          {intro.startPlain}
+        </Button>
+      </div>
+    </main>
+  );
+
+  const chatMain = (
+    <main className="relative flex min-h-0 flex-1 flex-col items-center px-sp-4">
+      <h1 className="sr-only">{c.title}</h1>
+      <div className="min-h-0 w-full max-w-2xl flex-1 overflow-y-auto py-sp-4">
+        <div role="log" aria-live="polite" className="flex flex-col gap-sp-3">
+          {messages.map((m) => (
+            <ChatBubble key={m.id} from={m.from}>
+              {m.text}
+            </ChatBubble>
+          ))}
+          {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
+          {!typing ? widget() : null}
+          <div ref={endRef} />
+        </div>
+      </div>
+      <div className="w-full max-w-2xl pb-sp-6 pt-sp-2">
+        <ChatInput
+          onSend={handleText}
+          label={c.inputLabel}
+          sendLabel={c.send}
+          placeholder={c.placeholder}
+          disabled={typing || done}
+          hint={<span className="hidden sm:inline">{c.inputHint}</span>}
         />
       </div>
-    );
-  }
+    </main>
+  );
 
   return (
-    <main lang={locale} className="mx-auto flex h-dvh max-w-screen-xl flex-col lg:grid lg:grid-cols-5 lg:grid-rows-1">
-      <section className="flex min-h-0 flex-1 flex-col lg:col-span-3 lg:border-e lg:border-border-soft">
-        <header className="flex items-center justify-between gap-sp-3 border-b border-border-soft px-sp-4 py-sp-2">
-          <h1 className="text-title font-semi">{c.title}</h1>
-          <Button variant="secondary" className="lg:hidden" onClick={() => setSheetOpen(true)}>
-            <span className="tabular-nums">{c.progress(percent)}</span>
-          </Button>
-          <span className="hidden text-label text-muted tabular-nums lg:inline">{c.progress(percent)}</span>
+    <div lang={locale} className={cn("flex flex-col", started ? "h-dvh" : "min-h-dvh")}>
+      {started ? null : <Splash wordmark={intro.wordmark} />}
+      <section className={cn("theme-sunrise relative flex flex-col overflow-hidden", started ? "min-h-0 flex-1" : "min-h-dvh")}>
+        <FaceParticles className="absolute inset-0" shrink={engaged || started} />
+        <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+          <span className="type-hero">{intro.wordmark}</span>
+          {started ? (
+            <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
+              <span className="tabular-nums">{c.progress(percent)}</span>
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              aria-expanded={signupOpen}
+              aria-haspopup="dialog"
+              onClick={() => setSignupOpen((open) => !open)}
+            >
+              {intro.signup.toggle}
+            </Button>
+          )}
         </header>
-
-        <div className="min-h-0 flex-1 overflow-y-auto px-sp-4 py-sp-4">
-          <div role="log" aria-live="polite" className="mx-auto flex max-w-2xl flex-col gap-sp-3">
-            {messages.map((m) => (
-              <ChatBubble key={m.id} from={m.from}>
-                {m.text}
-              </ChatBubble>
-            ))}
-            {typing ? <ChatBubble from="agent">{`${c.typing}...`}</ChatBubble> : null}
-            {!typing ? widget() : null}
-            <div ref={endRef} />
-          </div>
-        </div>
-
-        <div className="border-t border-border-soft px-sp-4 py-sp-3">
-          <div className="mx-auto max-w-2xl">
-            <ChatInput
-              onSend={handleText}
-              label={c.inputLabel}
-              sendLabel={c.send}
-              placeholder={c.placeholder}
-              disabled={typing || done}
-              hint={<span className="hidden sm:inline">{c.inputHint}</span>}
-            />
-          </div>
-        </div>
+        {started ? chatMain : heroMain}
       </section>
-
-      <aside className="hidden min-h-0 overflow-y-auto p-sp-6 lg:col-span-2 lg:block">{preview}</aside>
-
+      {started ? null : footer}
+      {/* dialogs sit outside the sunrise section so they keep the default dark tokens */}
+      <AuthDialog
+        open={signupOpen}
+        onClose={() => setSignupOpen(false)}
+        brand={intro.wordmark}
+        copy={intro.signup}
+        personas={intro.signup.personas}
+        // mock: no account backend yet, signing up or in simply starts the conversation
+        onDone={() => {
+          setSignupOpen(false);
+          start();
+        }}
+      />
       <Sheet open={sheetOpen} onClose={() => setSheetOpen(false)} title={c.previewTitle} closeLabel={c.close}>
         {preview}
       </Sheet>
-    </main>
+    </div>
   );
 }
 
