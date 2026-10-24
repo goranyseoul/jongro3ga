@@ -1,5 +1,6 @@
-// PiBoo-K ZK privacy layer: HTTP API for the A2A agents + demo console UI + SSE event stream.
-// Usage: node server.mjs   (relayer key for /api/records/visit comes from chain/.env)
+// Pibu ZK record layer: HTTP API for the A2A agents + demo console UI + SSE event stream.
+// Usage: cd glowpass && npm start   (port 4000 so it can run next to the Next.js app on 3000;
+// the relayer key for /api/records/visit comes from chain/.env)
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -10,7 +11,7 @@ import { seedReviewBoard } from './reviews-seed.mjs';
 const chainEnv = new URL('../chain/.env', import.meta.url);
 if (existsSync(chainEnv)) process.loadEnvFile(chainEnv);
 
-const PORT = Number(process.env.PORT ?? 3000);
+const PORT = Number(process.env.PORT ?? 4000);
 const { board, ready } = seedReviewBoard();
 ready.then(() => console.log('seed reviews proven'));
 
@@ -133,4 +134,4 @@ const server = createServer(async (req, res) => {
     json(res, 500, { error: e.message.split('\n')[0] });
   }
 });
-server.listen(PORT, () => console.log(`PiBoo-K ZK layer on http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Pibu ZK record layer on http://localhost:${PORT}`));

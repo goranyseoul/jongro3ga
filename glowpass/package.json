@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "glowpass",
   "private": true,
   "type": "module",
   "scripts": {
