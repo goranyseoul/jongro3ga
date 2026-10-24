@@ -53,7 +53,7 @@ export function SiteFooter({ locale, path = "" }: { locale: Locale; path?: strin
                   href={`/${l}${path}`}
                   lang={l}
                   aria-current={l === locale ? "page" : undefined}
-                  className={cn(textLink, l === locale && "text-text")}
+                  className={cn(textLink, "min-w-touch justify-center", l === locale && "text-text")}
                 >
                   {LOCALE_NAME[l]}
                 </Link>
