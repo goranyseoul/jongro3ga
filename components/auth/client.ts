@@ -31,8 +31,9 @@ export function signUpEmail(email: string, password: string): Promise<AuthResult
   return post("/sign-up/email", { email: email.trim(), password, name: "" });
 }
 
-export function signInEmail(email: string, password: string): Promise<AuthResult> {
-  return post("/sign-in/email", { email: email.trim(), password });
+// rememberMe false keeps the session for this browser session only (better-auth default: true).
+export function signInEmail(email: string, password: string, rememberMe = true): Promise<AuthResult> {
+  return post("/sign-in/email", { email: email.trim(), password, rememberMe });
 }
 
 export function signOut(): Promise<AuthResult> {

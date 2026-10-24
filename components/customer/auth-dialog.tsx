@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useLocale } from "next-intl";
 import { FcGoogle } from "react-icons/fc";
+import { FiLock, FiMail } from "react-icons/fi";
 import { Button, Chip, Input } from "@/components/ui";
 import { authCopy } from "@/components/auth/copy";
 import {
@@ -51,8 +52,8 @@ type Mode = "signup" | "login";
 
 const NO_OPTIONS: AuthOptions = { google: false, demo: false, demoAccounts: [] };
 
-// The login block of the sign-in design (logo, heading, email, password, primary button, Google button,
-// switch link) built from this project's primitives and tokens. Opens in sign-up mode; the link at
+// The login block of the sign-in design (logo, heading, email and password fields with line icons, remember me
+// on log-in, primary button, Google button, switch link) built from this project's primitives and tokens. Opens in sign-up mode; the link at
 // the bottom switches to log-in and back. It also opens by itself when the page URL carries
 // ?auth=login|signup (proxy.ts sends signed-out visitors of app routes here with ?next=).
 export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: AuthDialogProps) {
@@ -66,6 +67,7 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
   const [options, setOptions] = useState<AuthOptions>(NO_OPTIONS);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -119,7 +121,7 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
     if (pending) return;
     setPending(true);
     setError(null);
-    const result = isSignup ? await signUpEmail(email, password) : await signInEmail(email, password);
+    const result = isSignup ? await signUpEmail(email, password) : await signInEmail(email, password, remember);
     setPending(false);
     if (!result.ok) {
       setError(errorMessage(result.code, result.status, ui));
@@ -158,9 +160,9 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
       onClick={(event) => {
         if (event.target === event.currentTarget) close();
       }}
-      className="m-auto max-h-dvh w-full max-w-sm overflow-y-auto bg-transparent p-sp-4 text-text backdrop:animate-fade-in backdrop:bg-scrim"
+      className="m-auto max-h-dvh w-full max-w-md overflow-y-auto bg-transparent p-sp-4 text-text backdrop:animate-fade-in backdrop:bg-scrim"
     >
-      <div className="relative flex flex-col items-center gap-sp-8 rounded-card border border-border-soft bg-popover px-sp-6 py-sp-12 shadow-pop">
+      <div className="relative flex flex-col items-center gap-sp-6 rounded-card border border-border-soft bg-popover px-sp-6 pb-sp-8 pt-sp-12 shadow-pop">
         <Button variant="ghost" className="absolute end-sp-2 top-sp-2" onClick={close}>
           {copy.close}
         </Button>
@@ -179,6 +181,8 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
             name="email"
             autoComplete="email"
             inputMode="email"
+            icon={<FiMail className="size-sp-5" />}
+            className="min-h-sp-12"
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -188,22 +192,35 @@ export function AuthDialog({ open, onClose, brand, copy, personas, onDone }: Aut
             type="password"
             name="password"
             autoComplete={isSignup ? "new-password" : "current-password"}
+            icon={<FiLock className="size-sp-5" />}
+            className="min-h-sp-12"
             required
             minLength={isSignup ? 8 : undefined}
             hint={isSignup ? ui.passwordHint : undefined}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
+          {isSignup ? null : (
+            <label className="flex min-h-touch cursor-pointer items-center gap-sp-2 self-start text-label text-muted">
+              <input
+                type="checkbox"
+                className="size-sp-5 accent-brand"
+                checked={remember}
+                onChange={(event) => setRemember(event.target.checked)}
+              />
+              {ui.rememberMe}
+            </label>
+          )}
           {error ? (
             <p role="alert" className="text-caption text-danger">
               {error}
             </p>
           ) : null}
-          <Button type="submit" fullWidth className="mt-sp-2" disabled={pending} aria-busy={pending || undefined}>
+          <Button type="submit" fullWidth className="mt-sp-2 min-h-sp-12" disabled={pending} aria-busy={pending || undefined}>
             {pending ? ui.pending : isSignup ? copy.submit : copy.loginSubmit}
           </Button>
           {options.google ? (
-            <Button type="button" variant="secondary" fullWidth onClick={google} disabled={pending}>
+            <Button type="button" variant="secondary" fullWidth className="min-h-sp-12" onClick={google} disabled={pending}>
               <FcGoogle aria-hidden className="size-sp-5" />
               {isSignup ? copy.googleSignup : copy.googleLogin}
             </Button>
