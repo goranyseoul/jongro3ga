@@ -55,7 +55,7 @@ describe("wire fixtures", () => {
         "schema", "quoteId", "requestId", "clinicId", "procedureId", "product", "amount", "priceKrw",
         "vatIncluded", "includes", "excludes", "slots", "languages", "indicative", "validUntil", "operationMode",
       ],
-      optional: ["event"],
+      optional: ["event", "offerApplied"],
     },
     "pibu/judge-request@1": { required: ["schema", "requestId", "matchId", "quotes"], optional: [] },
     "pibu/fairness-verdict-list@1": { required: ["schema", "requestId", "verdicts"], optional: [] },
@@ -87,6 +87,18 @@ describe("wire fixtures", () => {
     "pibu/offers@1": { required: ["schema", "clinicId", "month", "items"], optional: [] },
     "pibu/availability-query@1": { required: ["schema", "procedureId", "from", "to"], optional: [] },
     "pibu/availability@1": { required: ["schema", "clinicId", "slots", "indicative"], optional: [] },
+    "pibu/offer-proof@1": {
+      required: ["schema", "offerId", "clinicId", "subjectId", "chainId", "registry", "today", "proofs"],
+      optional: [],
+    },
+    "pibu/record-anchor@1": {
+      required: [
+        "schema", "bookingId", "clinicId", "procedureId", "subjectId", "record", "oldCommitment", "newCommitment",
+        "recordHash", "proof",
+      ],
+      optional: [],
+    },
+    "pibu/review@1": { required: ["schema", "clinicId", "procedureId", "rating", "visitProof"], optional: ["text"] },
   };
 
   it("declares exactly the documented fields, no more and no fewer", () => {
@@ -141,6 +153,46 @@ describe("field rules", () => {
     }
   });
 
+  it("still requires all five event fields when zkClauses is present", () => {
+    for (const key of ["title", "regularPriceKrw", "validFrom", "validUntil", "conditions"]) {
+      const quote = fixture("pibu/quote@1", "proxy clinic quote with proven event") as { event: Record<string, unknown> };
+      expect(quote.event.zkClauses).toBeDefined();
+      delete quote.event[key];
+      expect(PIBU_SCHEMAS["pibu/quote@1"].safeParse(quote).success, `proven event without ${key}`).toBe(false);
+    }
+  });
+
+  it("rejects an invalid zk clause, offerApplied, reviewStats, subjectId and visitProof", () => {
+    const quoteSchema = PIBU_SCHEMAS["pibu/quote@1"];
+    const withClause = (clause: Record<string, unknown>) => {
+      const quote = fixture("pibu/quote@1", "proxy clinic quote with proven event") as { event: Record<string, unknown> };
+      quote.event.zkClauses = [clause];
+      return quoteSchema.safeParse(quote).success;
+    };
+    expect(withClause({ clinicId: "cln_mint", maxCount: 0 })).toBe(true);
+    expect(withClause({ clinicId: "cln_mint" })).toBe(false);
+    expect(withClause({ type: "rejuran_healer", minCount: 2, maxCount: 1 })).toBe(false);
+    expect(withClause({ minCount: 0, minDays: 5, maxDays: 1 })).toBe(false);
+    expect(withClause({ clinicId: "mint", maxCount: 0 })).toBe(false);
+    expect(withClause({ maxCount: -1 })).toBe(false);
+
+    const quote = fixture("pibu/quote@1", "proxy clinic quote with proven event") as Record<string, unknown>;
+    expect(quoteSchema.safeParse({ ...quote, offerApplied: { offerId: "ofr_x", verified: false } }).success).toBe(false);
+
+    const shortlist = fixture("pibu/clinic-shortlist@1") as { candidates: Array<Record<string, unknown>> };
+    for (const avgRating of [0, 6]) {
+      shortlist.candidates[0]!.reviewStats = { n: 5, avgRating };
+      expect(PIBU_SCHEMAS["pibu/clinic-shortlist@1"].safeParse(shortlist).success, `avgRating ${avgRating}`).toBe(false);
+    }
+
+    const proof = fixture("pibu/offer-proof@1") as Record<string, unknown>;
+    expect(PIBU_SCHEMAS["pibu/offer-proof@1"].safeParse({ ...proof, subjectId: "0x1234" }).success).toBe(false);
+
+    const review = fixture("pibu/review@1") as { visitProof: { points: string[] } };
+    review.visitProof.points = review.visitProof.points.slice(0, 7);
+    expect(PIBU_SCHEMAS["pibu/review@1"].safeParse(review).success).toBe(false);
+  });
+
   it("enforces formats: ids, whole won, offset datetimes, ordered date ranges, ISO country codes", () => {
     const quote = fixture("pibu/quote@1", "direct clinic quote without event") as Record<string, unknown>;
     const parse = (patch: Record<string, unknown>) => PIBU_SCHEMAS["pibu/quote@1"].safeParse({ ...quote, ...patch }).success;
@@ -188,6 +240,8 @@ describe("parsePibuData routing", () => {
         "platform.report_booking",
         "platform.report_signal",
         "platform.submit_outcome",
+        "platform.anchor_record",
+        "platform.submit_review",
       ].sort(),
     );
     for (const id of SKILL_IDS) {
@@ -205,6 +259,8 @@ describe("parsePibuData routing", () => {
       ["platform.report_booking", fixture("pibu/booking@1")],
       ["platform.submit_outcome", fixture("pibu/outcome@1")],
       ["platform.report_signal", fixture("pibu/signal-report@1")],
+      ["platform.anchor_record", fixture("pibu/record-anchor@1")],
+      ["platform.submit_review", fixture("pibu/review@1")],
       ["clinic.offers", fixture("pibu/offers-query@1")],
       ["clinic.quote", clinicCopy()],
       ["clinic.availability", fixture("pibu/availability-query@1")],
