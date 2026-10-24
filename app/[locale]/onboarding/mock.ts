@@ -62,6 +62,8 @@ export type Draft = {
   languages: Locale[];
   channel?: Channel;
   handle?: string;
+  /** What the customer typed on the landing before onboarding started (04 slot `firstIntent`). */
+  firstIntent?: string;
 };
 
 export const EMPTY_DRAFT: Draft = { consents: {}, trip: {}, concerns: [], languages: [] };
@@ -125,7 +127,7 @@ export const EDITABLE_STEPS: StepId[] = [
   "handle",
 ];
 
-export type SlotKey = Exclude<StepId, "consent" | "summary" | "done"> | "consents";
+export type SlotKey = Exclude<StepId, "consent" | "summary" | "done"> | "consents" | "firstIntent";
 
 export const STEP_SLOT: Partial<Record<StepId, SlotKey>> = {
   locale: "locale",

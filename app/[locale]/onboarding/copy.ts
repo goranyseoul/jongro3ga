@@ -49,6 +49,8 @@ export type OnboardingCopy = {
     summary: string;
     editPick: string;
     done: (name: string) => string;
+    intentAck: (text: string) => string;
+    intentReady: (text: string) => string;
   };
   summary: { title: string; create: string; edit: string };
   doneTitle: string;
@@ -116,6 +118,8 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       summary: "이 내용으로 에이전트를 만들까요?",
       editPick: "어느 항목을 고칠까요?",
       done: (n) => `${n}님의 에이전트가 만들어졌어요. 이제 받고 싶은 시술을 말씀해 주세요.`,
+      intentAck: (t) => `'${t}' 말씀이군요. 도와드리기 전에 먼저 전용 에이전트를 만들게요. 3분이면 돼요.`,
+      intentReady: (t) => `'${t}' 요청을 정리할 준비가 됐어요.`,
     },
     summary: { title: "에이전트 요약", create: "만들기", edit: "수정하기" },
     doneTitle: "에이전트 활성화됨",
@@ -136,6 +140,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       languages: "필요 언어",
       channel: "알림 채널",
       handle: "연락처",
+      firstIntent: "첫 요청",
     },
     consents: {
       terms: { title: "이용약관", description: "Pibu 서비스 이용 조건에 동의해요." },
@@ -214,6 +219,8 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       summary: "この内容でエージェントを作りますか？",
       editPick: "どの項目を修正しますか？",
       done: (n) => `${n}さんのエージェントができました。受けたい施術を教えてください。`,
+      intentAck: (t) => `「${t}」ですね。お手伝いする前に、あなた専用のエージェントを作ります。3分ほどです。`,
+      intentReady: (t) => `「${t}」の条件を整理する準備ができました。`,
     },
     summary: { title: "エージェントの内容", create: "作成する", edit: "修正する" },
     doneTitle: "エージェント有効",
@@ -234,6 +241,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       languages: "必要な言語",
       channel: "通知先",
       handle: "連絡先",
+      firstIntent: "最初の依頼",
     },
     consents: {
       terms: { title: "利用規約", description: "Pibuのサービス利用条件に同意します。" },
@@ -312,6 +320,8 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       summary: "Shall I create your agent with these details?",
       editPick: "Which item would you like to change?",
       done: (n) => `Your agent is ready, ${n}. Tell me which procedure you'd like.`,
+      intentAck: (t) => `"${t}", got it. Before I help, let's set up your own agent. It takes about 3 minutes.`,
+      intentReady: (t) => `I'm ready to turn "${t}" into a request.`,
     },
     summary: { title: "Agent summary", create: "Create", edit: "Edit" },
     doneTitle: "Agent active",
@@ -332,6 +342,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       languages: "Languages needed",
       channel: "Notifications",
       handle: "Contact",
+      firstIntent: "First request",
     },
     consents: {
       terms: { title: "Terms of use", description: "I agree to the Pibu terms of service." },
@@ -416,6 +427,8 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       summary: "用这些内容创建代理吗？",
       editPick: "要修改哪一项？",
       done: (n) => `${n}，你的代理已创建。告诉我你想做的项目吧。`,
+      intentAck: (t) => `「${t}」，明白了。在帮你之前，先创建你的专属代理，大约 3 分钟。`,
+      intentReady: (t) => `已准备好整理「${t}」的需求。`,
     },
     summary: { title: "代理概要", create: "创建", edit: "修改" },
     doneTitle: "代理已启用",
@@ -436,6 +449,7 @@ export const COPY: Record<Locale, OnboardingCopy> = {
       languages: "所需语言",
       channel: "通知渠道",
       handle: "联系方式",
+      firstIntent: "首个需求",
     },
     consents: {
       terms: { title: "使用条款", description: "同意 Pibu 服务使用条件。" },

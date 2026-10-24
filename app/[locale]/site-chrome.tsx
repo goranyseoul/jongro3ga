@@ -17,7 +17,7 @@ export function SiteNav({ locale }: { locale: Locale }) {
         <Link href={`/${locale}`} className={cn("inline-flex min-h-touch items-center text-title font-semi", focusRing)}>
           Pibu
         </Link>
-        <Link href={`/${locale}/onboarding`} className={buttonStyles()}>
+        <Link href={`/${locale}`} className={buttonStyles()}>
           {LANDING_COPY[locale].start}
         </Link>
       </div>

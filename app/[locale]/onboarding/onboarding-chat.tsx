@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import {
   AgentCardView,
@@ -9,6 +9,7 @@ import {
   CardHeader,
   ChatBubble,
   ChatInput,
+  Chip,
   ChipGroup,
   ConsentCard,
   Money,
@@ -21,7 +22,8 @@ import {
 } from "@/components/ui";
 import type { Locale } from "@/lib/domain/common";
 import type { ReferenceCurrency } from "@/lib/money";
-import { LOCALES, LOCALE_NAME } from "../locales";
+import { cn } from "@/lib/cn";
+import { LOCALES, LOCALE_NAME, wordBreak } from "../locales";
 import { COPY, type OnboardingCopy } from "./copy";
 import {
   AGE_BANDS,
@@ -112,13 +114,24 @@ function question(step: StepId, d: Draft, c: OnboardingCopy): string {
   }
 }
 
-export function OnboardingChat({ locale }: { locale: Locale }) {
+/** Landing hero shown before the first message; the conversation then takes over the same page. */
+export type OnboardingIntro = {
+  wordmark: string;
+  title: string;
+  body: string;
+  suggestions: string[];
+  startPlain: string;
+  suggestionsLabel: string;
+};
+
+export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intro: OnboardingIntro; footer: ReactNode }) {
   const c = COPY[locale];
   const router = useRouter();
 
+  const [started, setStarted] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [step, setStep] = useState<StepId>("locale");
-  const [messages, setMessages] = useState<Message[]>([{ id: "m0", from: "agent", text: c.say.locale }]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [typing, setTyping] = useState(false);
   const [returnToSummary, setReturnToSummary] = useState(false);
   const [pickingEdit, setPickingEdit] = useState(false);
@@ -166,7 +179,21 @@ export function OnboardingChat({ locale }: { locale: Locale }) {
     if (target === "trip") setRange({ start: next.trip.arrival ?? "", end: next.trip.departure ?? "" });
     if (target === "budget") setBudget(next.budget ?? { currency: defaultCurrency(next.nationality), amount: null });
 
-    agentSays([...notes, question(target, next, c)], () => setStep(target));
+    const lines = [...notes, question(target, next, c)];
+    if (target === "done" && next.firstIntent) lines.push(c.say.intentReady(next.firstIntent));
+    agentSays(lines, () => setStep(target));
+  };
+
+  // First message from the landing: keep it as firstIntent, then start onboarding at the locale step.
+  const start = (intent?: string) => {
+    setStarted(true);
+    if (!intent) {
+      agentSays([c.say.locale]);
+      return;
+    }
+    setMessages([message("user", intent)]);
+    setDraft({ ...EMPTY_DRAFT, firstIntent: intent });
+    agentSays([c.say.intentAck(intent), c.say.locale]);
   };
 
   const nudge = (userText: string, line: string) => {
@@ -176,7 +203,7 @@ export function OnboardingChat({ locale }: { locale: Locale }) {
 
   const chooseLocale = (value: Locale) => {
     if (value !== locale) {
-      router.push(`/${value}/onboarding`);
+      router.push(`/${value}`);
       return;
     }
     advance({ ...draft, locale: value, languages: [value] }, LOCALE_NAME[value]);
@@ -515,6 +542,44 @@ export function OnboardingChat({ locale }: { locale: Locale }) {
     </div>
   );
 
+  if (!started) {
+    const kw = wordBreak(locale);
+    return (
+      <div lang={locale} className="flex min-h-dvh flex-col">
+        <header className="border-b border-border-soft px-sp-4 py-sp-2 md:px-sp-6">
+          <span className="inline-flex min-h-touch items-center text-title font-semi">Pibu</span>
+        </header>
+        <main className="flex flex-1 flex-col items-center justify-center px-sp-4 py-sp-12">
+          <div className="flex w-full max-w-2xl flex-col gap-sp-6">
+            <div className="flex flex-col items-center gap-sp-3 text-center">
+              <h1 className="text-h1 font-semi md:text-display">{intro.wordmark}</h1>
+              <p className={cn(kw, "text-title font-med md:text-h2")}>{intro.title}</p>
+              <p className={cn(kw, "text-body text-muted")}>{intro.body}</p>
+            </div>
+            <ChatInput
+              onSend={(text) => start(text)}
+              label={c.inputLabel}
+              sendLabel={c.send}
+              placeholder={c.placeholder}
+              hint={<span className="hidden sm:inline">{c.inputHint}</span>}
+            />
+            <div role="group" aria-label={intro.suggestionsLabel} className="flex flex-wrap justify-center gap-sp-2">
+              {intro.suggestions.map((suggestion) => (
+                <Chip key={suggestion} onClick={() => start(suggestion)}>
+                  {suggestion}
+                </Chip>
+              ))}
+            </div>
+            <Button variant="ghost" className="self-center" onClick={() => start()}>
+              {intro.startPlain}
+            </Button>
+          </div>
+        </main>
+        {footer}
+      </div>
+    );
+  }
+
   return (
     <main lang={locale} className="mx-auto flex h-dvh max-w-screen-xl flex-col lg:grid lg:grid-cols-5 lg:grid-rows-1">
       <section className="flex min-h-0 flex-1 flex-col lg:col-span-3 lg:border-e lg:border-border-soft">
@@ -620,6 +685,12 @@ function SlotList({ draft, copy: c, locale }: { draft: Draft; copy: OnboardingCo
           <dd className="min-w-0 break-words text-end text-body">{value(step) ?? <span className="text-subtle">·</span>}</dd>
         </div>
       ))}
+      {draft.firstIntent ? (
+        <div className="flex items-baseline justify-between gap-sp-3">
+          <dt className="shrink-0 text-label text-muted">{c.slots.firstIntent}</dt>
+          <dd className="min-w-0 break-words text-end text-body">{draft.firstIntent}</dd>
+        </div>
+      ) : null}
     </dl>
   );
 }
