@@ -66,3 +66,21 @@
 | C8 | 견적 유효기간 | 03 예시만 | 오늘 + 7일, 이벤트 종료일이 더 빠르면 종료일 | |
 | C9 | 콘솔 되돌리기 | 목업: 확정 후 8초 되돌리기 | 제거 | 확정은 A2A 태스크 완료, 플랫폼 보고, 고객 알림까지 실제로 일어나서 되돌릴 수 없다 |
 | C10 | 테스트 alias | | vitest 설정이 없어 `@/` alias가 테스트에서 안 풀린다. `lib/agents/clinic/**`는 상대 경로 import | 오케스트레이터가 `vitest.config.ts`(tsconfig paths)를 추가하면 다른 트랙도 편해진다 |
+## 트랙 OPS (2026-10-24, `feat/track-ops`)
+
+개선 루프(07 4절), 운영 API, 데모 컨트롤. 스펙과 다르거나 스펙이 정하지 않은 것만 적는다.
+
+| # | 영역 | 스펙 | 구현 | 다음 할 일 |
+| --- | --- | --- | --- | --- |
+| O1 | 저장소 컬렉션 이름 | 06에 없음 | `platform`: `clinic_registry`, `outcomes`, `signals`, `routing_rules`, `routing_rule_history`, `match_logs`, `attributions`, `price_records` (`lib/agents/platform/signals.ts`의 `PLATFORM_COLLECTIONS`). `clinic`: `bookings`, `profiles` (`app/api/ops/_lib/bookings.ts`) | 시드 로더(A2A)와 병원 에이전트(CLINIC)가 같은 이름을 써야 운영 화면에 데이터가 보인다. 합칠 때 한 곳으로 모은다 |
+| O2 | 규칙 버전 | 07 가드레일 5: 변경마다 버전 증가 + 이력 | 상태가 바뀔 때마다 `version + 1`, 전체 사본을 `routing_rule_history`(`<id>@v<n>`)에 저장. `exclude_clinic`은 승인 시 `expiresAt = 승인 + 90일`, 지나면 다음 조회나 제안 실행 때 `system`이 `retired`로 바꾼다 | 매칭(`rules.ts`)은 `status = active`만 읽으면 된다 |
+| O3 | 국적 가드레일 해석 | 07 가드레일 1 | 국적 조건이 있으면 `boost_clinic` 금지, `exclude_clinic`·`demote_clinic`은 그 병원·그 국적의 피해 근거(실결제 +10% 초과, 만족도 2 이하, 부작용, 또는 그 병원의 피해 신호)가 있어야 통과. `require_language`·`prefer_area`는 근거 없이 허용. 건강 정보 키나 가격 관련 키·행동은 어디에 있어도 버린다 | |
+| O4 | Claude 출력 | 07: 사유·요약 작성, 추가 제안 2개 | 후보의 `when`/`then`을 바꾼 초안은 버리고, 요약이 트리거의 숫자(예: 31, 20)를 그대로 담지 않으면 템플릿 요약을 쓴다. 픽스처 키 `proposer`, 도구 `propose_rules({ rules: [{ candidateKey?, when, then, reason, evidence }] })`, 후보 키 형식 `quote_gap:cln_ara:JP` | LLM 트랙 픽스처가 이 모양을 따라야 `mode: "claude"`가 된다. 다르면 템플릿으로 떨어진다 |
+| O5 | 긴급 정지 | 07 가드레일 4 | 부작용 트리거는 레지스트리 `verificationStatus`를 즉시 `suspended`로 바꾸고 긴급 제안(`urgent: true`)을 만든다. 운영자가 반려하거나 폐기하면 이전 상태로 되돌린다. 같은 근거로 반려된 규칙은 다시 제안하지 않는다 | |
+| O6 | 응답 없음 비율 | 07: 시간초과 비율 | 분모는 A2A 로그의 `clinic.quote` 호출 수(국적은 요청 `visitorProfile.nationality`), 분자는 `response_timeout` 신호(국적이 없으면 `taskId`로 로그에서 찾음) | |
+| O7 | 결과 주입 | 06: `outcomes-ara-burst.json` | 파일이 있으면 필드를 쓰되 날짜·간격·실결제는 주입 시점 `clock.now()` 기준으로 다시 계산. 없으면 코드에서 같은 20건을 만든다(`procedureId: "rejuran"`, 견적 330,000원 VAT 포함 기준). 신호 `quote_gap` 20건도 함께, `PriceRecord`는 만들지 않는다 | |
+| O8 | 예약 거절 | 계약에 `confirmBooking`만 있음 | 병원 모듈이 `rejectBooking(clinicId, bookingId, by, reason)`을 내보내면 그것을 부르고, 없으면 `taskCompleter.complete(..., REJECTED)` 후 예약을 `canceled`로 저장 | CLINIC 트랙에 `rejectBooking` 추가 요청 |
+| O9 | 운영 접근 | 운영자만 | `getSessionUser()`가 `operator`면 통과. `DEMO_MODE=true`면 로그인 여부와 관계없이 `demo_operator`로 통과(데모 iframe이 고객으로 로그인해 같은 쿠키를 쓰기 때문). 데모가 아니면 비로그인 401, 다른 역할 403 | |
+| O10 | 데모 시계 프리셋 | 05·10: 11/12, 11/14 | `lib/clock.ts` 기본값(10/24) 기준으로 10/24 시작, 11/10 13:00(유키 시술, BUILD-LOG 13), 11/14 13:00(10의 6행), 12/10 10:00 | 10의 시나리오 표가 BUILD-LOG 13으로 갱신되면 프리셋도 맞춘다 |
+| O11 | 데모 오른쪽 패널 | 05: 병원 요청함 [확정] [시간 제안] [거절] | 직접 운영 병원은 [확정]만 두고 시간 제안·거절은 `/clinic/inbox` 링크로 보낸다(그 API는 CLINIC 트랙). 가운데 로그는 재생 목업 대신 `GET /api/ops/a2a-log`를 2초마다 읽는다 | |
+| O12 | 테스트 import | | vitest 설정에 `@/` 별칭이 없어 이 트랙의 서버 코드와 테스트는 상대 경로를 쓴다 | `vitest.config.ts`에 tsconfig 경로를 넣으면 정리 가능 |

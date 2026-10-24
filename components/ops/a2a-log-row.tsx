@@ -1,7 +1,7 @@
 import { Button, JsonViewer } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
-import { TASK_STATE_LABEL, TASK_STATE_TONE, agentLabel, formatClock, type A2ALogEntry } from "@/lib/ui-data/ops";
+import { TASK_STATE_LABEL, TASK_STATE_TONE, agentLabel, formatClock, koText, type A2ALogEntry, type ClinicNames } from "@/lib/ui-data/ops";
 import { StatusText } from "./status-text";
 
 export type A2ALogRowProps = {
@@ -12,13 +12,15 @@ export type A2ALogRowProps = {
   onFilterContext?: (contextId: string) => void;
   /** Smaller type and no endpoint line, for the demo's middle column. */
   compact?: boolean;
+  /** clinic id -> display name from the API. */
+  clinics?: ClinicNames;
 };
 
 const shortDate = (iso: string) => iso.slice(5, 10).replace("-", "/");
 
 // One call as a toggle row: time, skill, route and state on the first line, the human sentence below.
 // Details (contextId, endpoint, request and response JSON) open under the row.
-export function A2ALogRow({ entry, expanded, onToggle, onFilterContext, compact = false }: A2ALogRowProps) {
+export function A2ALogRow({ entry, expanded, onToggle, onFilterContext, compact = false, clinics = {} }: A2ALogRowProps) {
   const detailsId = `${entry.id}-details`;
 
   return (
@@ -37,18 +39,20 @@ export function A2ALogRow({ entry, expanded, onToggle, onFilterContext, compact 
           <span className="text-caption text-subtle tabular-nums">
             {shortDate(entry.at)} {formatClock(entry.at)}
           </span>
-          <span className={cn("font-med", compact ? "text-label" : "text-body")}>{entry.skillId}</span>
-          <StatusText tone={TASK_STATE_TONE[entry.state]} className="text-label">
-            {TASK_STATE_LABEL[entry.state]}
-          </StatusText>
+          <span className={cn("font-med", compact ? "text-label" : "text-body")}>{entry.skillId ?? entry.method}</span>
+          {entry.state ? (
+            <StatusText tone={TASK_STATE_TONE[entry.state] ?? "muted"} className="text-label">
+              {TASK_STATE_LABEL[entry.state] ?? entry.state}
+            </StatusText>
+          ) : null}
           {entry.latencyMs !== undefined ? (
             <span className="text-caption text-subtle tabular-nums">{entry.latencyMs.toLocaleString("en-US")}ms</span>
           ) : null}
         </span>
         <span className="text-label text-muted">
-          {agentLabel(entry.from)} → {agentLabel(entry.to)}
+          {agentLabel(entry.from, clinics)} → {agentLabel(entry.to, clinics)}
         </span>
-        <span className={cn("text-muted", compact ? "text-caption" : "text-label")}>{entry.humanSummary}</span>
+        <span className={cn("text-muted", compact ? "text-caption" : "text-label")}>{koText(entry.humanSummary)}</span>
       </button>
 
       {expanded ? (
@@ -56,10 +60,10 @@ export function A2ALogRow({ entry, expanded, onToggle, onFilterContext, compact 
           <dl className="flex flex-col gap-sp-2 text-label">
             <div className="flex flex-wrap items-center gap-x-sp-4 gap-y-sp-1">
               <dt className="text-muted">contextId</dt>
-              <dd className="tabular-nums">{entry.contextId}</dd>
-              {onFilterContext ? (
+              <dd className="tabular-nums">{entry.contextId ?? "없음"}</dd>
+              {onFilterContext && entry.contextId ? (
                 <dd>
-                  <Button variant="ghost" onClick={() => onFilterContext(entry.contextId)}>
+                  <Button variant="ghost" onClick={() => onFilterContext(entry.contextId as string)}>
                     이 요청만 보기
                   </Button>
                 </dd>
@@ -67,7 +71,7 @@ export function A2ALogRow({ entry, expanded, onToggle, onFilterContext, compact 
             </div>
             <div className="flex flex-wrap gap-x-sp-4 gap-y-sp-1">
               <dt className="text-muted">taskId</dt>
-              <dd className="tabular-nums">{entry.taskId}</dd>
+              <dd className="tabular-nums">{entry.taskId ?? "없음"}</dd>
               <dt className="text-muted">method</dt>
               <dd>{entry.method}</dd>
             </div>

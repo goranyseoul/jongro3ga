@@ -2,18 +2,15 @@
 
 import { useState } from "react";
 import { ChipGroup, Stat, Table, type TableColumn } from "@/components/ui";
-import { StatusText, type StatusTone } from "@/components/ops";
+import { LoadState, StatusText, useApi, type StatusTone } from "@/components/ops";
 import {
   AREA_LABEL,
   DATA_SOURCE_LABEL,
   LANGUAGE_MODE_LABEL,
   LOCALE_LABEL,
   OPERATION_MODE_LABEL,
-  OPS_CLINICS,
-  STALE_AFTER_DAYS,
   VERIFICATION_LABEL,
-  daysSince,
-  isStale,
+  fetchClinics,
   type OpsClinic,
   type VerificationStatus,
 } from "@/lib/ui-data/ops";
@@ -26,14 +23,14 @@ const VERIFICATION_TONE: Record<VerificationStatus, StatusTone> = {
   suspended: "danger",
 };
 
-const columns: TableColumn<OpsClinic>[] = [
+const columnsFor = (staleAfterDays: number): TableColumn<OpsClinic>[] => [
   {
     key: "name",
     header: "병원",
     card: "title",
     cell: (clinic) => (
       <div className="flex flex-col gap-sp-1">
-        <span className="font-med">{clinic.name}</span>
+        <span className="font-med">{clinic.displayName}</span>
         <span className="text-caption font-reg text-subtle">{AREA_LABEL[clinic.area]}</span>
       </div>
     ),
@@ -61,11 +58,11 @@ const columns: TableColumn<OpsClinic>[] = [
     cell: (clinic) => (
       <div className="flex flex-col gap-sp-1 md:items-start">
         <span>
-          {clinic.lastVerifiedAt} <span className="text-muted">({daysSince(clinic.lastVerifiedAt)}일 전)</span>
+          {clinic.lastVerifiedAt} <span className="text-muted">({clinic.daysSinceVerified}일 전)</span>
         </span>
-        {isStale(clinic) ? (
+        {clinic.stale ? (
           <StatusText tone="warning" className="text-caption">
-            {STALE_AFTER_DAYS}일 넘게 확인하지 않았어요. 가격과 이벤트를 다시 확인해 주세요.
+            {staleAfterDays}일 넘게 확인하지 않았어요. 가격과 이벤트를 다시 확인해 주세요.
           </StatusText>
         ) : null}
       </div>
@@ -87,19 +84,23 @@ const columns: TableColumn<OpsClinic>[] = [
 
 export function ClinicsView() {
   const [mode, setMode] = useState<ModeFilter>("all");
+  const { data, error, loading, reload } = useApi(fetchClinics);
 
-  const proxyCount = OPS_CLINICS.filter((clinic) => clinic.operationMode === "proxy").length;
-  const directCount = OPS_CLINICS.length - proxyCount;
-  const staleCount = OPS_CLINICS.filter(isStale).length;
-  const rows = mode === "all" ? OPS_CLINICS : OPS_CLINICS.filter((clinic) => clinic.operationMode === mode);
+  const clinics = data?.clinics ?? [];
+  const staleAfterDays = data?.staleAfterDays ?? 30;
+  const proxyCount = clinics.filter((clinic) => clinic.operationMode === "proxy").length;
+  const directCount = clinics.length - proxyCount;
+  const staleCount = clinics.filter((clinic) => clinic.stale).length;
+  const rows = mode === "all" ? clinics : clinics.filter((clinic) => clinic.operationMode === mode);
 
   return (
     <>
+      <LoadState what="병원 레지스트리" loading={loading && !data} error={error} onRetry={reload} />
       <section aria-label="요약" className="grid grid-cols-2 gap-sp-4 lg:grid-cols-4">
-        <Stat label="등록 병원" value={OPS_CLINICS.length} />
+        <Stat label="등록 병원" value={clinics.length} caption={data ? `기준일 ${data.today}` : undefined} />
         <Stat label="대행 운영" value={proxyCount} caption="운영자가 가격과 시간을 관리" />
         <Stat label="직접 운영" value={directCount} caption="병원이 직접 입력" />
-        <Stat label="신선도 경고" value={staleCount} caption={`${STALE_AFTER_DAYS}일 넘게 확인하지 않음`} />
+        <Stat label="신선도 경고" value={staleCount} caption={`${staleAfterDays}일 넘게 확인하지 않음`} />
       </section>
 
       <section aria-label="병원 목록" className="flex flex-col gap-sp-3">
@@ -108,12 +109,18 @@ export function ClinicsView() {
           value={mode}
           onChange={setMode}
           options={[
-            { value: "all", label: `전체 ${OPS_CLINICS.length}` },
+            { value: "all", label: `전체 ${clinics.length}` },
             { value: "proxy", label: `대행 ${proxyCount}` },
             { value: "clinic", label: `직접 ${directCount}` },
           ]}
         />
-        <Table caption="병원 레지스트리" columns={columns} rows={rows} rowKey={(clinic) => clinic.id} />
+        <Table
+          caption="병원 레지스트리"
+          columns={columnsFor(staleAfterDays)}
+          rows={rows}
+          rowKey={(clinic) => clinic.id}
+          empty="등록된 병원이 없어요. 데모라면 시드 리셋으로 병원 시드를 불러와 주세요."
+        />
       </section>
     </>
   );

@@ -2,26 +2,21 @@
 
 import type { ReactNode } from "react";
 import { Button, Card, ChipGroup, Stat } from "@/components/ui";
-import {
-  DEMO_CLOCK_PRESETS,
-  DEMO_PERSONAS,
-  OPERATION_MODE_LABEL,
-  clinicName,
-  formatMonthDayTime,
-  type DemoBooking,
-} from "@/lib/ui-data/ops";
+import { DEMO_CLOCK_PRESETS, OPERATION_MODE_LABEL, bookingSummary, formatMonthDayTime, type DemoPersona, type OpsBooking } from "@/lib/ui-data/ops";
 
 export type ControlsProps = {
+  personas: DemoPersona[];
   personaId: string;
   onPersona: (id: string) => void;
+  /** Server demo clock, ISO with offset; empty until the first state load. */
   clock: string;
   onClock: (value: string) => void;
-  injected: boolean;
+  injected: number;
   onInject: () => void;
   onReset: () => void;
   /** Bookings waiting for a confirmation, proxy and direct. */
-  pending: DemoBooking[];
-  onConfirm: (booking: DemoBooking) => void;
+  pending: OpsBooking[];
+  onConfirm: (booking: OpsBooking) => void;
   /** Key of the action in flight, or null. Buttons are disabled while one runs. */
   busy: string | null;
   message: ReactNode;
@@ -37,6 +32,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function DemoControls({
+  personas,
   personaId,
   onPersona,
   clock,
@@ -49,8 +45,8 @@ export function DemoControls({
   busy,
   message,
 }: ControlsProps) {
-  const persona = DEMO_PERSONAS.find((item) => item.id === personaId) ?? DEMO_PERSONAS[0];
-  const preset = DEMO_CLOCK_PRESETS.find((item) => item.value === clock);
+  const persona = personas.find((item) => item.id === personaId);
+  const preset = DEMO_CLOCK_PRESETS.find((item) => Date.parse(item.value) === Date.parse(clock));
 
   return (
     <Card className="flex flex-col gap-sp-6">
@@ -63,17 +59,17 @@ export function DemoControls({
           label="페르소나 전환"
           value={personaId}
           onChange={onPersona}
-          options={DEMO_PERSONAS.map((item) => ({ value: item.id, label: item.label }))}
+          options={personas.map((item) => ({ value: item.id, label: item.label }))}
         />
-        <p className="text-label text-muted">{persona.hint}</p>
+        <p className="text-label text-muted">{persona ? `${persona.hint} · ${persona.path}` : "페르소나 목록을 불러오는 중이에요."}</p>
       </Section>
 
       <div className="grid gap-sp-6 lg:grid-cols-3">
         <Section title="시계">
-          <Stat label="현재 시계" value={preset ? preset.label : clock} caption={preset?.hint} />
+          <Stat label="현재 시계" value={clock ? formatMonthDayTime(clock) : "불러오는 중"} caption={preset?.hint ?? (clock ? clock.slice(0, 4) : undefined)} />
           <ChipGroup
             label="시계 이동"
-            value={clock}
+            value={preset?.value ?? null}
             onChange={onClock}
             options={DEMO_CLOCK_PRESETS.map((item) => ({ value: item.value, label: item.label }))}
           />
@@ -89,7 +85,7 @@ export function DemoControls({
             </Button>
           </div>
           <p className="text-label text-muted">
-            {injected ? "아라의원 일본 고객 결과 20건이 들어 있어요." : "아라의원 일본 고객 결과 20건을 아직 주입하지 않았어요."}
+            {injected > 0 ? `아라의원 일본 고객 결과 ${injected}건이 들어 있어요.` : "아라의원 일본 고객 결과 20건을 아직 주입하지 않았어요."}
           </p>
         </Section>
 
@@ -99,13 +95,13 @@ export function DemoControls({
           ) : (
             <ul className="flex flex-col">
               {pending.map((booking) => (
-                <li key={booking.id} className="flex flex-col gap-sp-2 border-b border-border-soft py-sp-3 first:pt-0 last:border-b-0 last:pb-0">
+                <li key={booking.bookingId} className="flex flex-col gap-sp-2 border-b border-border-soft py-sp-3 first:pt-0 last:border-b-0 last:pb-0">
                   <div className="flex flex-col gap-sp-1">
                     <span className="text-body">
-                      <span className="font-med">{OPERATION_MODE_LABEL[booking.mode]}</span> · {clinicName(booking.clinicId)} · {booking.guestName}
+                      <span className="font-med">{OPERATION_MODE_LABEL[booking.operationMode]}</span> · {booking.clinicName} · {booking.guest.displayName}
                     </span>
                     <span className="text-caption text-subtle tabular-nums">
-                      {booking.summary} · {formatMonthDayTime(booking.slot)}
+                      {bookingSummary(booking)} · {formatMonthDayTime(booking.slot)}
                     </span>
                   </div>
                   <Button variant="secondary" onClick={() => onConfirm(booking)} disabled={busy !== null}>
