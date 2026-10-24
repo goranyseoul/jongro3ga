@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GlowPass — 같은 기록, 두 개의 시선</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    body { overflow: auto; }
+    .page { max-width: 1320px; margin: 0 auto; padding: 22px 24px 40px; width: 100%; }
+    .hero h1 { font-size: 28px; letter-spacing: -0.03em; margin: 0; }
+    .hero p { color: var(--muted); margin: 6px 0 18px; font-size: 14px; }
+    .split { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; align-items: start; }
+    .pane { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .pane-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .pane-head h2 { margin: 0; font-size: 17px; }
+    .pane-head .sub { color: var(--muted); font-size: 12px; margin-left: auto; }
+    .pub { border-top: 4px solid var(--violet); }
+    .dev { border-top: 4px solid var(--rose); }
+    table.ledger { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .ledger th { text-align: left; font-size: 11px; color: var(--muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+    .ledger td { padding: 9px 8px; border-bottom: 1px solid #f3ede8; font-family: var(--mono); font-size: 11.5px; }
+    .ledger tr { cursor: pointer; transition: background 0.15s; }
+    .ledger tr:hover td, .ledger tr.sel td { background: #f6f4ff; }
+    .ledger tr.mine td:first-child { box-shadow: inset 3px 0 0 var(--rose); }
+    .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .ledger a { color: var(--violet); }
+    .what { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .what div { border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.6; }
+    .what .can { background: var(--violet-soft); }
+    .what .cannot { background: #f4f1ee; }
+    .what b { display: block; font-size: 12px; margin-bottom: 2px; }
+    .phone { background: #1f1a1d; border-radius: 30px; padding: 14px; }
+    .screen { background: #fffdfb; border-radius: 20px; padding: 14px; min-height: 420px; }
+    .screen .who { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .screen .who .nm { font-weight: 800; font-size: 16px; }
+    .pchips { display: flex; gap: 4px; }
+    .pchip { border: 1px solid var(--line); background: #fff; border-radius: 999px; font-size: 12px; padding: 4px 9px; cursor: pointer; }
+    .pchip.on { background: var(--ink); color: #fff; }
+    .rec { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; transition: all 0.2s; }
+    .rec.sel { border-color: var(--rose); box-shadow: 0 0 0 3px var(--rose-soft); }
+    .rec .rtop { display: flex; justify-content: space-between; font-weight: 700; }
+    .rec .ago { color: var(--rose); }
+    .rec .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .rec .link { font-family: var(--mono); font-size: 10.5px; color: var(--violet); margin-top: 6px; }
+    .detail { margin-top: 14px; border: 1px dashed #d6d3f5; border-radius: 12px; padding: 12px; font-size: 12.5px; background: #fbfaff; }
+    .detail .kv { display: grid; grid-template-columns: 120px 1fr; gap: 4px 10px; font-family: var(--mono); font-size: 11.5px; }
+    .detail .kv span:nth-child(odd) { color: var(--muted); font-family: inherit; }
+    .detail .unk { color: var(--red); font-weight: 700; font-family: inherit; }
+    .locked { text-align: center; color: var(--muted); padding: 30px 10px; font-size: 13px; line-height: 1.6; }
+    .locked .big { font-size: 34px; }
+    .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; font-size: 12px; }
+    .bar a { color: var(--violet); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div class="bar"><a href="/">← 데모 앱</a><span class="muted" id="contract"></span></div>
+      <h1>같은 기록, 두 개의 시선</h1>
+      <p>왼쪽은 블록체인에 올라간 <b>공개 원장</b> — 누구나 실시간으로 읽을 수 있습니다. 오른쪽은 같은 기록이 <b>환자 본인의 폰</b>에서 보이는 모습입니다.</p>
+    </div>
+    <div class="split">
+      <section class="pane pub">
+        <div class="pane-head"><span class="badge public">PUBLIC · BASE SEPOLIA</span><h2>🌐 누구나 보는 공개 원장</h2><span class="sub" id="count"></span></div>
+        <table class="ledger">
+          <thead><tr><th>시각</th><th>가명 (subjectId)</th><th>차트 해시</th><th>버전</th><th>tx</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div id="detail" class="detail"><span class="muted">줄을 클릭하면 이 트랜잭션에서 공개된 전부를 보여줍니다.</span></div>
+        <div class="what">
+          <div class="can"><b>관찰자가 알 수 있는 것</b>· 어떤 가명의 기록이 언제 1건 늘었다<br>· 그 기록이 ZK 증명을 통과했다 (위조·소급 불가)<br>· 가명별 누적 기록 수</div>
+          <div class="cannot"><b>관찰자가 알 수 없는 것</b>· 누구인지 (이름·여권·국적)<br>· 무슨 시술인지 · 어느 병원인지<br>· 과거 차트 내용 (해시는 무작위 salt로 봉인)</div>
+        </div>
+      </section>
+      <section>
+        <div class="phone"><div class="screen" id="phone"></div></div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="/ledger.js"></script>
+</body>
+</html>
