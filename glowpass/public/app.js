@@ -74,8 +74,8 @@ function renderRanking() {
     <p class="explain">"피북 사용자 N명 받음" = 병원이 시술을 확인해 발급한 방문 티켓 수. 후기는 티켓 보유자만 익명으로, 시술당 1회 (Semaphore). 플랫폼도 후기를 고칠 수 없고, 공개 피드 없이 집계만 비교 화면에 들어갑니다.</p>` +
     s.clinics.map((c, i) => `<div class="rank-card"><div class="head"><span class="pos">${i + 1}</span>
       <div><div class="nm">${esc(c.clinic)}</div><div class="muted">${esc(c.area)} · ${c.languages.join('/')}</div></div>
-      <div class="stats"><b>${c.verifiedVisits.toLocaleString()}</b> 검증 방문<br>${c.avgRating ? `★ ${c.avgRating}` : '—'} · 리뷰 ${c.reviews.length}</div></div>
-      ${c.reviews.slice(0, 2).map((v) => `<div class="review"><div class="meta">✓ 검증된 방문자 · ${esc(v.procedure)} · ${'★'.repeat(v.rating)}</div>${esc(v.text)}</div>`).join('')}</div>`).join('');
+      <div class="stats"><b>${c.verifiedVisits.toLocaleString()}</b> 검증 방문<br>${c.avgRating ? `★ ${c.avgRating}` : '—'} · 검증 후기 ${c.reviewCount}건</div></div>
+      ${Object.entries(c.reviewStats).filter(([, v]) => v.n).map(([p, v]) => `<div class="review"><div class="meta">✓ ${esc(procName(p))} · 검증 후기 ${v.n}건 · 평점 ${v.avgRating}${v.pending ? ` · 공개 대기 ${v.pending}` : ''}</div><span class="muted">후기 원문은 공개 피드에 싣지 않습니다 (08). 로그인 고객의 1:1 상담 요약에서만 씁니다.</span></div>`).join('')}</div>`).join('');
 }
 
 // ---------------- scenes (docs/spec demo scenario + ZK extension) ----------------
