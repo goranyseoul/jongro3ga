@@ -8,7 +8,8 @@ import { toCircuitClause } from "../clauses";
 // compiled to WASM. Everything heavy is behind dynamic import(), so only the page that proves downloads it:
 //   noir_js (witness generation, about 3 MB of WASM) for the chart hash,
 //   bb.js (UltraHonk prover, about 3.7 MB of inlined WASM plus a worker) only when a proof is requested.
-// Single-threaded by default so no COOP/COEP headers are needed; multithreading needs crossOriginIsolated.
+// Single-threaded by default so no COOP/COEP headers are needed. Multithreading needs crossOriginIsolated:
+// COOP same-origin + COEP require-corp on the page and on /_next/static/* (or the worker chunks are blocked).
 
 export type OfferProof = OfferProofV1["proofs"][number];
 
@@ -33,6 +34,12 @@ export interface ProverInfo {
  * 2^15 gates, so 2^16 points (4 MB) leave headroom; bb.js would otherwise fetch 2^20 points (64 MB).
  */
 const SRS_POINTS = 2 ** 16;
+
+/**
+ * bb.js waits for a "ready" message from its worker with no timeout, so a worker the browser refuses to start
+ * (for example COEP blocking the worker chunk) would hang forever. Generous enough for a slow CRS download.
+ */
+const ENGINE_LOAD_TIMEOUT_MS = 120_000;
 
 interface Circuits {
   commit: Noir;
@@ -86,7 +93,16 @@ function loadBackend(options: ProverOptions): Promise<Backend> {
     bb.Barretenberg.prototype.getDefaultSrsSize = () => SRS_POINTS;
     const threads =
       options.multithread && window.crossOriginIsolated ? Math.max(1, navigator.hardwareConcurrency || 1) : 1;
-    const api = await bb.Barretenberg.new({ backend: bb.BackendType.WasmWorker, threads });
+    const pending = bb.Barretenberg.new({ backend: bb.BackendType.WasmWorker, threads });
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        // if the engine shows up after all, release its worker instead of leaking it
+        void pending.then((late) => late.destroy()).catch(() => undefined);
+        reject(new Error(`증명 엔진이 ${ENGINE_LOAD_TIMEOUT_MS / 1000}초 안에 준비되지 않았어요 (Worker 또는 CRS 다운로드 확인)`));
+      }, ENGINE_LOAD_TIMEOUT_MS);
+    });
+    const api = await Promise.race([pending, timeout]).finally(() => clearTimeout(timer));
     return {
       api,
       eligibility: new bb.UltraHonkBackend(loaded.eligibilityBytecode, api),
