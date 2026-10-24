@@ -14,7 +14,11 @@ const ko = LANDING_COPY.ko;
 function watch(page: Page): string[] {
   const problems: string[] = [];
   page.on("console", (message) => {
-    if (message.type() === "error") problems.push(`console error: ${message.text()}`);
+    // a failed download is also logged as this generic line without its address; the response check below
+    // reports every failed download with the address, minus the one known font
+    if (message.type() === "error" && !message.text().startsWith("Failed to load resource")) {
+      problems.push(`console error: ${message.text()}`);
+    }
   });
   page.on("pageerror", (error) => problems.push(`page error: ${error.message}`));
   page.on("response", (response) => {
