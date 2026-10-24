@@ -20,6 +20,7 @@ import {
   type CurrencyAmount,
   type DateRange,
 } from "@/components/ui";
+import { useAgent } from "@/components/customer/agent-context";
 import { AgentWindow } from "@/components/customer/agent-window";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
 import { ClinicCarousel } from "@/components/customer/clinic-carousel";
@@ -292,6 +293,16 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     const resolved = topic ?? topicFromText(text);
     agentSays([resolved ? directoryAnswer(resolved) : c.say.intentAck(text)]);
   };
+
+  // Requests handed over from other screens (clinic list, clinic detail) through the agent context:
+  // they arrive here after AgentDock brings the customer back to the landing.
+  const { pending, clearPending } = useAgent();
+  useEffect(() => {
+    if (!pending) return;
+    ask(pending.text, pending.topic);
+    clearPending(pending.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
 
   const nudge = (userText: string, line: string) => {
     setMessages((prev) => [...prev, message("user", userText)]);

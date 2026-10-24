@@ -1,10 +1,19 @@
 "use client";
 
-// Floating agent window, mounted once in app/[locale]/layout.tsx. Placeholder until the dock UI lands;
-// it reads the agent context so the provider wiring is already exercised.
+import { useEffect } from "react";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { useAgent } from "./agent-context";
 
+// The conversation window lives on the landing (onboarding-chat.tsx renders it). A request made on any
+// other screen of the customer app brings the customer back there, where the window picks it up.
 export function AgentDock() {
-  useAgent();
+  const { pending } = useAgent();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (pending && pathname !== "/") router.push("/");
+  }, [pending, pathname, router]);
+
   return null;
 }
