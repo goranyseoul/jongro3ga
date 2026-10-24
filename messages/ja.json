@@ -144,6 +144,164 @@
       "add": "3秒で記録する"
     }
   },
+  "me": {
+    "metaTitle": "マイページ",
+    "signedOut": {
+      "title": "ログインしてマイページを見る",
+      "body": "ログインすると、施術の記録、次回の目安、エージェントの設定をここで確認できます。",
+      "login": "ログイン"
+    },
+    "header": {
+      "greeting": "{name}さん、こんにちは",
+      "agentActive": "エージェント有効",
+      "agentInactive": "エージェント停止中",
+      "agentId": "エージェント {id}",
+      "startRequest": "新しく相談する",
+      "addRecord": "記録を追加"
+    },
+    "kpi": {
+      "label": "サマリー",
+      "treatments": "記録した施術",
+      "treatmentsCaption": "継続中の施術 {count}件",
+      "treatmentsEmpty": "まだ記録がありません",
+      "nextDue": "次回の目安",
+      "nextDueEmpty": "予定はありません",
+      "dueIn": "あと{days}日",
+      "dueToday": "今日",
+      "overdue": "{days}日過ぎています",
+      "status": "相談と予約",
+      "plans": "継続中の施術",
+      "plansCaption": "続けている施術の数",
+      "plansEmpty": "継続中の施術はありません",
+      "spent": "支払い合計",
+      "spentCaption": "金額のある記録 {count}件",
+      "spentEmpty": "金額の記録はありません"
+    },
+    "status": {
+      "none": "相談はまだありません",
+      "comparing": "見積もりを比較中"
+    },
+    "upcoming": {
+      "title": "次回の施術",
+      "description": "施術ごとの一般的な間隔から計算しています",
+      "session": "{n}回目",
+      "empty": "予定はまだありません。記録を追加すると表示されます。",
+      "all": "記録を開く"
+    },
+    "journey": {
+      "title": "相談と予約の進み具合",
+      "description": "{total}ステップ中 {done}完了",
+      "steps": {
+        "request": "相談を送信",
+        "quotes": "見積もりを比較",
+        "booking": "予約確定",
+        "visit": "来院と結果"
+      },
+      "stepStatus": {
+        "pending": "未着手",
+        "active": "進行中",
+        "done": "完了",
+        "error": "中止"
+      },
+      "quotesCount": "見積もり {count}件",
+      "empty": "チャットで受けたい施術を伝えると、エージェントがクリニックに見積もりを依頼します。",
+      "start": "チャットで始める",
+      "openRequest": "相談を開く",
+      "openBooking": "予約を開く",
+      "lockedTitle": "クリニックのご紹介",
+      "lockedBody": "クリニックのご紹介と予約は、外国籍で短期滞在の方のみが対象です。施術の記録と次回の目安は、すべてご利用いただけます。",
+      "lockedAction": "記録を追加"
+    },
+    "recent": {
+      "title": "最近の記録",
+      "description": "新しい順に5件",
+      "session": "{n}回目",
+      "empty": "まだ記録がありません。数秒で追加できます。",
+      "all": "記録をすべて見る",
+      "add": "記録を追加"
+    },
+    "agent": {
+      "title": "わたしのエージェント",
+      "status": "状態",
+      "languages": "必要な言語",
+      "stay": "滞在",
+      "contact": "連絡先",
+      "edit": "プロフィールを編集",
+      "card": "エージェントカードを見る"
+    },
+    "consents": {
+      "title": "同意の状況",
+      "description": "{total}件中 {granted}件に同意",
+      "on": "同意",
+      "off": "未同意",
+      "manage": "わたしのデータで管理",
+      "types": {
+        "terms": "利用規約",
+        "privacy": "個人情報の取り扱い",
+        "sensitiveHealth": "健康に関する情報",
+        "crossBorder": "韓国への情報移転",
+        "shareAnonymizedRecords": "記録の匿名共有",
+        "shareWithClinic": "クリニックへの提供"
+      }
+    },
+    "links": {
+      "title": "よく使う機能",
+      "records": "記録",
+      "newRecord": "記録を追加",
+      "chat": "チャット",
+      "data": "わたしのデータ",
+      "profile": "プロフィール"
+    },
+    "channel": {
+      "email": "メール",
+      "line": "LINE",
+      "wechat": "WeChat",
+      "whatsapp": "WhatsApp"
+    },
+    "profile": {
+      "metaTitle": "プロフィール編集",
+      "back": "マイページに戻る",
+      "title": "プロフィール編集",
+      "description": "エージェントがクリニックとやり取りするときに、この情報を使います。",
+      "basics": "基本情報",
+      "nickname": "ニックネーム",
+      "nicknameHint": "マイページに表示されます。20文字まで",
+      "languages": "必要な言語",
+      "languagesHint": "このいずれかに対応するクリニックを優先します",
+      "trip": "旅行の日程",
+      "tripHint": "この期間内で施術の日程を組みます",
+      "arrival": "到着日",
+      "departure": "出発日",
+      "stayArea": "滞在エリア",
+      "contact": "連絡先",
+      "contactHint": "予約のお知らせはここに届きます",
+      "channel": "連絡方法",
+      "handle": "IDまたはアドレス",
+      "identity": "国籍と在留資格",
+      "identityNote": "韓国の法律上、クリニックをご紹介できるかどうかを決める情報のため、ここでは変更できません。誤りがある場合はサポートにご連絡ください。",
+      "nationality": "国籍",
+      "residency": "在留資格",
+      "nationalityValue": {
+        "JP": "日本",
+        "CN": "中国",
+        "US": "アメリカ",
+        "KR": "韓国"
+      },
+      "residencyValue": {
+        "short_term_visitor": "短期滞在",
+        "resident": "韓国に在住"
+      },
+      "save": "保存する",
+      "saved": "保存しました。これからはこの情報でエージェントが動きます。",
+      "backToMe": "マイページに戻る",
+      "errors": {
+        "nickname": "ニックネームを入力してください",
+        "languages": "言語を1つ以上選んでください",
+        "handle": "連絡先を入力してください",
+        "trip": "到着日と出発日を入力してください"
+      }
+    }
+  },
   "chat": {
     "metaTitle": "相談",
     "title": "担当エージェントに相談",

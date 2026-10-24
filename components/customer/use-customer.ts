@@ -12,7 +12,7 @@ import {
   type CustomerProfile,
   type TreatmentRecord,
 } from "@/lib/ui-data/customer";
-import { useDemoState, type DemoState } from "./demo-state";
+import { applyProfileEdits, useDemoState, type DemoState } from "./demo-state";
 
 /** Seed records plus what this browser added, with the customer's continue / pause / stop choices applied. */
 export function mergeRecords(customerId: string, demo: DemoState): TreatmentRecord[] {
@@ -26,13 +26,16 @@ export function mergeRecords(customerId: string, demo: DemoState): TreatmentReco
 export function useCustomer(): { locale: Locale; profile: CustomerProfile; demo: DemoState; records: TreatmentRecord[]; name: string } {
   const locale = useLocale() as Locale;
   const demo = useDemoState();
-  const profile = getCustomer(locale);
+  const seed = getCustomer(locale);
+  const edits = demo.profileEdits?.[seed.id];
+  const profile = applyProfileEdits(seed, edits);
   return {
     locale,
     profile,
     demo,
     records: mergeRecords(profile.id, demo),
-    name: demo.nickname ?? profile.nickname,
+    // a nickname saved on /me/profile wins over the one typed in onboarding
+    name: edits?.nickname ?? demo.nickname ?? profile.nickname,
   };
 }
 

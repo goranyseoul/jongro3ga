@@ -144,6 +144,164 @@
       "add": "3초 기록"
     }
   },
+  "me": {
+    "metaTitle": "마이페이지",
+    "signedOut": {
+      "title": "로그인하고 마이페이지 보기",
+      "body": "로그인하면 시술 기록, 다음 시술 시기, 에이전트 설정을 여기서 볼 수 있어요.",
+      "login": "로그인"
+    },
+    "header": {
+      "greeting": "{name}님, 안녕하세요",
+      "agentActive": "에이전트 사용 중",
+      "agentInactive": "에이전트 꺼짐",
+      "agentId": "에이전트 {id}",
+      "startRequest": "새로 상담하기",
+      "addRecord": "기록 추가"
+    },
+    "kpi": {
+      "label": "요약",
+      "treatments": "기록한 시술",
+      "treatmentsCaption": "관리 중인 시술 {count}개",
+      "treatmentsEmpty": "아직 기록이 없어요",
+      "nextDue": "다음 시술",
+      "nextDueEmpty": "예정된 시술이 없어요",
+      "dueIn": "D-{days}",
+      "dueToday": "D-day",
+      "overdue": "{days}일 지남",
+      "status": "상담과 예약",
+      "plans": "관리 중인 시술",
+      "plansCaption": "꾸준히 받고 있는 시술 수",
+      "plansEmpty": "관리 중인 시술이 없어요",
+      "spent": "누적 결제",
+      "spentCaption": "금액이 있는 기록 {count}건",
+      "spentEmpty": "금액 기록이 없어요"
+    },
+    "status": {
+      "none": "아직 상담이 없어요",
+      "comparing": "견적 비교 중"
+    },
+    "upcoming": {
+      "title": "다가오는 시술",
+      "description": "시술별 보통 간격으로 계산했어요",
+      "session": "{n}회차",
+      "empty": "예정된 시술이 없어요. 기록을 추가하면 여기 보여요.",
+      "all": "기록 열기"
+    },
+    "journey": {
+      "title": "상담과 예약 진행",
+      "description": "{total}단계 중 {done}단계 완료",
+      "steps": {
+        "request": "상담 보냄",
+        "quotes": "견적 비교",
+        "booking": "예약 확정",
+        "visit": "방문과 결과"
+      },
+      "stepStatus": {
+        "pending": "시작 전",
+        "active": "진행 중",
+        "done": "완료",
+        "error": "중단"
+      },
+      "quotesCount": "견적 {count}건",
+      "empty": "채팅에서 받고 싶은 시술을 말하면 에이전트가 병원에 견적을 요청해요.",
+      "start": "채팅으로 시작",
+      "openRequest": "상담 보기",
+      "openBooking": "예약 보기",
+      "lockedTitle": "병원 연결",
+      "lockedBody": "병원 소개와 예약은 외국 국적의 단기 방문자만 이용할 수 있어요. 시술 기록과 다음 시술 알림은 모두 쓸 수 있어요.",
+      "lockedAction": "기록 추가"
+    },
+    "recent": {
+      "title": "최근 기록",
+      "description": "최신순 5건",
+      "session": "{n}회차",
+      "empty": "아직 기록이 없어요. 몇 초면 추가할 수 있어요.",
+      "all": "기록 전체 보기",
+      "add": "기록 추가"
+    },
+    "agent": {
+      "title": "내 에이전트",
+      "status": "상태",
+      "languages": "필요한 언어",
+      "stay": "체류",
+      "contact": "연락처",
+      "edit": "프로필 수정",
+      "card": "에이전트 카드 보기"
+    },
+    "consents": {
+      "title": "동의 현황",
+      "description": "{total}개 중 {granted}개 동의",
+      "on": "동의",
+      "off": "미동의",
+      "manage": "내 데이터에서 관리",
+      "types": {
+        "terms": "이용약관",
+        "privacy": "개인정보 처리",
+        "sensitiveHealth": "건강 관련 정보",
+        "crossBorder": "국외 이전",
+        "shareAnonymizedRecords": "기록 익명 공유",
+        "shareWithClinic": "병원 제공"
+      }
+    },
+    "links": {
+      "title": "바로가기",
+      "records": "기록",
+      "newRecord": "기록 추가",
+      "chat": "채팅",
+      "data": "내 데이터",
+      "profile": "프로필"
+    },
+    "channel": {
+      "email": "이메일",
+      "line": "LINE",
+      "wechat": "WeChat",
+      "whatsapp": "WhatsApp"
+    },
+    "profile": {
+      "metaTitle": "프로필 수정",
+      "back": "마이페이지로 돌아가기",
+      "title": "프로필 수정",
+      "description": "에이전트가 병원과 이야기할 때 이 정보를 써요.",
+      "basics": "기본 정보",
+      "nickname": "닉네임",
+      "nicknameHint": "마이페이지에 보여요. 20자까지",
+      "languages": "필요한 언어",
+      "languagesHint": "이 중 하나를 지원하는 병원을 우선해요",
+      "trip": "여행 일정",
+      "tripHint": "이 기간 안에서 시술 일정을 잡아요",
+      "arrival": "도착일",
+      "departure": "출발일",
+      "stayArea": "숙소 지역",
+      "contact": "연락처",
+      "contactHint": "예약 소식은 여기로 보내요",
+      "channel": "연락 방법",
+      "handle": "아이디 또는 주소",
+      "identity": "국적과 체류 자격",
+      "identityNote": "의료법상 병원 소개 가능 여부를 정하는 정보라 여기서는 바꿀 수 없어요. 잘못되었다면 고객센터로 알려 주세요.",
+      "nationality": "국적",
+      "residency": "체류 자격",
+      "nationalityValue": {
+        "JP": "일본",
+        "CN": "중국",
+        "US": "미국",
+        "KR": "대한민국"
+      },
+      "residencyValue": {
+        "short_term_visitor": "단기 방문",
+        "resident": "국내 거주"
+      },
+      "save": "저장",
+      "saved": "저장했어요. 이제부터 에이전트가 새 정보를 써요.",
+      "backToMe": "마이페이지로 돌아가기",
+      "errors": {
+        "nickname": "닉네임을 입력해 주세요",
+        "languages": "언어를 하나 이상 골라 주세요",
+        "handle": "연락처를 입력해 주세요",
+        "trip": "도착일과 출발일을 모두 입력해 주세요"
+      }
+    }
+  },
   "chat": {
     "metaTitle": "상담",
     "title": "담당 에이전트와 상담",
