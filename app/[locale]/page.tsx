@@ -37,6 +37,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         body: c.hero.body,
         suggestions: c.suggestions,
         suggestionsLabel: c.suggestionsLabel,
+        languageLabel: c.footer.languages,
         startPlain: c.startPlain,
         signup: { ...c.signup, personas: DEMO_PERSONAS },
       }}

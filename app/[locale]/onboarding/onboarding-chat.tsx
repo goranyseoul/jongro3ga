@@ -21,6 +21,7 @@ import {
   type DateRange,
 } from "@/components/ui";
 import { AuthDialog, type AuthCopy } from "@/components/customer/auth-dialog";
+import { LocaleSwitcher } from "@/components/customer/locale-switcher";
 import { TaskSteps, type TaskStep } from "@/components/customer/task-steps";
 import { updateDemoState } from "@/components/customer/demo-state";
 import type { Locale } from "@/lib/domain/common";
@@ -128,6 +129,8 @@ export type OnboardingIntro = {
   suggestions: string[];
   startPlain: string;
   suggestionsLabel: string;
+  /** Accessible name of the language switch in the header. */
+  languageLabel: string;
   signup: AuthCopy & { toggle: string; personas: string[] };
 };
 
@@ -663,8 +666,14 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
       {started ? null : <Splash wordmark={intro.wordmark} />}
       <section className={cn("theme-sunrise relative flex flex-col overflow-hidden", started ? "min-h-0 flex-1" : "min-h-dvh")}>
         <FaceParticles className="absolute inset-0" shrink={engaged || started} />
-        <header className="relative flex items-center justify-between gap-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
+        <header className="relative flex flex-wrap items-center justify-between gap-x-sp-3 px-sp-4 py-sp-2 md:px-sp-6">
           <span className="type-hero">{intro.wordmark}</span>
+          {/* hidden once the conversation starts: switching remounts the page and would drop the answers */}
+          {started ? null : (
+            <div className="order-last flex w-full justify-center sm:order-none sm:w-auto sm:flex-1 sm:justify-end">
+              <LocaleSwitcher label={intro.languageLabel} />
+            </div>
+          )}
           {started ? (
             <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
               <span className="tabular-nums">{c.progress(percent)}</span>
