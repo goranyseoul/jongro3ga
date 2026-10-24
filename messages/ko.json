@@ -136,5 +136,47 @@
       "all": "기록 전체 보기",
       "add": "3초 기록"
     }
+  },
+  "chat": {
+    "metaTitle": "상담",
+    "title": "담당 에이전트와 상담",
+    "inputLabel": "메시지",
+    "placeholder": "예: 리쥬란 받고 싶어요",
+    "send": "보내기",
+    "typing": "입력 중",
+    "agent": {
+      "greeting": "안녕하세요, Pibu 담당 에이전트예요. 받고 싶은 시술을 말씀해 주세요.",
+      "askProcedure": "어떤 시술이 궁금하세요? 아래에서 고르거나 그대로 입력해 주세요.",
+      "summary": "알겠어요. {procedure} 조건을 정리했어요. 바꾸고 싶은 항목은 눌러서 고쳐 주세요.",
+      "updated": "조건을 {procedure}에 맞게 바꿨어요."
+    },
+    "locked": {
+      "title": "병원 매칭과 예약 안내",
+      "body": "병원 매칭과 예약은 외국 국적의 단기 방문자에게만 제공돼요. 시술 기록과 다음 회차 알림은 쓸 수 있어요.",
+      "records": "기록 보기"
+    },
+    "condition": {
+      "title": "조건 카드",
+      "hint": "항목을 누르면 고칠 수 있어요.",
+      "rows": {
+        "procedure": "시술",
+        "amount": "용량",
+        "budget": "예산",
+        "area": "지역",
+        "language": "언어",
+        "dates": "날짜"
+      },
+      "amountNote": "보통 {range}예요. 최솟값을 넣어 두었어요.",
+      "budgetValue": "{amount} 이하",
+      "budgetNone": "제한 없음",
+      "privacy": "병원에는 시술, 용량, 지역, 언어, 날짜만 보내요. 예산은 보내지 않아요.",
+      "find": "이 조건으로 찾기",
+      "done": "완료",
+      "currency": "통화",
+      "amountInput": "금액",
+      "rateNote": "참고 환율",
+      "from": "시작일",
+      "to": "종료일"
+    }
   }
 }

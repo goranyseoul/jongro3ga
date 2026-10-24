@@ -136,5 +136,47 @@
       "all": "記録をすべて見る",
       "add": "3秒で記録する"
     }
+  },
+  "chat": {
+    "metaTitle": "相談",
+    "title": "担当エージェントに相談",
+    "inputLabel": "メッセージ",
+    "placeholder": "例: リジュランを受けたい",
+    "send": "送信",
+    "typing": "入力中",
+    "agent": {
+      "greeting": "こんにちは、Pibuの担当エージェントです。受けたい施術を教えてください。",
+      "askProcedure": "どの施術のご相談でしょうか。下から選ぶか、そのまま入力してください。",
+      "summary": "{procedure}ですね。条件を整理しました。変えたい項目はタップして直せます。",
+      "updated": "{procedure}に条件を更新しました。"
+    },
+    "locked": {
+      "title": "クリニックのご紹介と予約について",
+      "body": "クリニックのご紹介と予約は、外国籍で短期滞在の方のみが対象です。施術の記録と次回の目安はご利用いただけます。",
+      "records": "記録を見る"
+    },
+    "condition": {
+      "title": "条件カード",
+      "hint": "項目をタップすると修正できます。",
+      "rows": {
+        "procedure": "施術",
+        "amount": "量",
+        "budget": "予算",
+        "area": "エリア",
+        "language": "言語",
+        "dates": "日程"
+      },
+      "amountNote": "通常は{range}です。最小値を入れています。",
+      "budgetValue": "{amount}以下",
+      "budgetNone": "指定なし",
+      "privacy": "クリニックに送るのは、施術・量・エリア・言語・日程だけです。予算は送られません。",
+      "find": "この条件で探す",
+      "done": "完了",
+      "currency": "通貨",
+      "amountInput": "金額",
+      "rateNote": "参考レート",
+      "from": "開始日",
+      "to": "終了日"
+    }
   }
 }

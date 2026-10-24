@@ -1,5 +1,6 @@
 import type { IsoDate, Locale } from "@/lib/domain/common";
-import type { IsoDateTime } from "@/lib/ui-data/customer";
+import { APPROX_PREFIX, formatCurrency } from "@/lib/money";
+import { referenceFor, type IsoDateTime } from "@/lib/ui-data/customer";
 
 // Dates are formatted by hand, not with Intl, so the server and the browser always print the same
 // text. Slot times are Korean local time (+09:00) and are shown as written.
@@ -41,4 +42,12 @@ export function formatSlot(dateTime: IsoDateTime, locale: Locale): string {
 export function formatRange(from: IsoDate, to: IsoDate): string {
   const short = (d: IsoDate) => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
   return `${short(from)}~${short(to)}`;
+}
+
+// Text-only money for sentences: "₩450,000 (約 ¥49,000)". Components use <Money> instead.
+
+export function moneyText(krw: number, locale: Locale): string {
+  const reference = referenceFor(krw, locale);
+  const base = formatCurrency(krw, "KRW");
+  return reference ? `${base} (${APPROX_PREFIX[locale]} ${formatCurrency(reference.amount, reference.currency)})` : base;
 }

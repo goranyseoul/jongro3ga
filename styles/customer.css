@@ -34,3 +34,16 @@
 .cu-wrap {
   overflow-wrap: anywhere;
 }
+
+/* Chat input stays above the phone tab bar while the transcript scrolls */
+.cu-chat-input {
+  position: sticky;
+  bottom: calc(var(--touch) + env(safe-area-inset-bottom));
+  padding-block: var(--sp-3);
+  background: var(--bg);
+}
+@media (min-width: 768px) {
+  .cu-chat-input {
+    bottom: 0;
+  }
+}

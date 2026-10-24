@@ -136,5 +136,47 @@
       "all": "View all records",
       "add": "Log in 3 seconds"
     }
+  },
+  "chat": {
+    "metaTitle": "Chat",
+    "title": "Talk to your agent",
+    "inputLabel": "Message",
+    "placeholder": "For example: I want Rejuran",
+    "send": "Send",
+    "typing": "Typing",
+    "agent": {
+      "greeting": "Hello, I'm your Pibu agent. Tell me which procedure you'd like.",
+      "askProcedure": "Which procedure is it about? Pick one below or just type it.",
+      "summary": "Got it, {procedure}. I organized your conditions. Tap any item to change it.",
+      "updated": "I updated the conditions for {procedure}."
+    },
+    "locked": {
+      "title": "About clinic matching and booking",
+      "body": "Clinic matching and booking are available only to foreign nationals on a short stay. Procedure records and next-session reminders are available.",
+      "records": "View records"
+    },
+    "condition": {
+      "title": "Condition card",
+      "hint": "Tap an item to change it.",
+      "rows": {
+        "procedure": "Procedure",
+        "amount": "Amount",
+        "budget": "Budget",
+        "area": "Area",
+        "language": "Language",
+        "dates": "Dates"
+      },
+      "amountNote": "Usually {range}. The lowest amount is filled in.",
+      "budgetValue": "Up to {amount}",
+      "budgetNone": "No limit",
+      "privacy": "Only the procedure, amount, area, language and dates are sent to clinics. Your budget is not sent.",
+      "find": "Find with these conditions",
+      "done": "Done",
+      "currency": "Currency",
+      "amountInput": "Amount",
+      "rateNote": "Reference rate",
+      "from": "From",
+      "to": "To"
+    }
   }
 }

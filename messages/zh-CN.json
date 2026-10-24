@@ -136,5 +136,47 @@
       "all": "查看全部记录",
       "add": "3秒记录"
     }
+  },
+  "chat": {
+    "metaTitle": "咨询",
+    "title": "向专属代理咨询",
+    "inputLabel": "消息",
+    "placeholder": "例如: 想做丽珠兰",
+    "send": "发送",
+    "typing": "正在输入",
+    "agent": {
+      "greeting": "您好,我是 Pibu 的专属代理。请告诉我您想做的项目。",
+      "askProcedure": "您想咨询哪个项目?可以从下方选择,也可以直接输入。",
+      "summary": "好的,是{procedure}。我已整理好条件,想修改的项目点一下即可。",
+      "updated": "已把条件更新为{procedure}。"
+    },
+    "locked": {
+      "title": "关于诊所介绍与预约",
+      "body": "诊所介绍与预约仅面向外国籍短期停留的用户。施术记录和下次时间提醒可以使用。",
+      "records": "查看记录"
+    },
+    "condition": {
+      "title": "条件卡",
+      "hint": "点击各项即可修改。",
+      "rows": {
+        "procedure": "项目",
+        "amount": "用量",
+        "budget": "预算",
+        "area": "地区",
+        "language": "语言",
+        "dates": "日期"
+      },
+      "amountNote": "常见用量为{range}。已填入最小值。",
+      "budgetValue": "{amount}以内",
+      "budgetNone": "不限",
+      "privacy": "发给诊所的只有项目、用量、地区、语言和日期。预算不会发送。",
+      "find": "按此条件查找",
+      "done": "完成",
+      "currency": "币种",
+      "amountInput": "金额",
+      "rateNote": "参考汇率",
+      "from": "开始日",
+      "to": "结束日"
+    }
   }
 }
