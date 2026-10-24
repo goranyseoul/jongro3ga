@@ -191,3 +191,91 @@ export function clinicName(id: string): string {
 export function isStale(clinic: OpsClinic): boolean {
   return daysSince(clinic.lastVerifiedAt) > STALE_AFTER_DAYS;
 }
+
+/** "19분 전" style elapsed time against the demo clock. */
+export function formatElapsed(iso: string): string {
+  const minutes = Math.max(0, Math.round((Date.parse(OPS_NOW) - Date.parse(iso)) / 60_000));
+  if (minutes < 60) return `${minutes}분 전`;
+  if (minutes < 60 * 24) return `${Math.floor(minutes / 60)}시간 전`;
+  return `${Math.floor(minutes / (60 * 24))}일 전`;
+}
+
+// ---- Proxy queue: booking requests to proxy-operated clinics (clinic.book, 02-agents.md) ----
+
+export type ProxyBookingState = "waiting_clinic" | "confirmed" | "rejected";
+
+export const PROXY_STATE_LABEL: Record<ProxyBookingState, string> = {
+  waiting_clinic: "병원 확인 대기",
+  confirmed: "확정",
+  rejected: "병원 거절",
+};
+
+export type ProxyBooking = {
+  id: string;
+  clinicId: string;
+  /** What a proxy operator sees when acting as the clinic: display name and pseudonymous agent id. */
+  guest: { displayName: string; agentId: string; language: Locale };
+  procedure: string;
+  amountText: string;
+  priceKrw: number;
+  vatIncluded: boolean;
+  slot: string;
+  requestedAt: string;
+  state: ProxyBookingState;
+  resolvedAt?: string;
+  note?: string;
+};
+
+export const PROXY_BOOKINGS: ProxyBooking[] = [
+  {
+    id: "pq_201",
+    clinicId: "cln_hanbit",
+    guest: { displayName: "Lin W.", agentId: "cag_2m8x9", language: "zh-CN" },
+    procedure: "리쥬란 힐러",
+    amountText: "2cc",
+    priceKrw: 420_000,
+    vatIncluded: true,
+    slot: "2026-11-16T14:00:00+09:00",
+    requestedAt: "2026-11-12T09:41:00+09:00",
+    state: "waiting_clinic",
+  },
+  {
+    id: "pq_202",
+    clinicId: "cln_mint",
+    guest: { displayName: "Mika S.", agentId: "cag_4d8p7", language: "ja" },
+    procedure: "리쥬란 힐러 (이벤트)",
+    amountText: "1cc",
+    priceKrw: 99_000,
+    vatIncluded: true,
+    slot: "2026-11-13T11:00:00+09:00",
+    requestedAt: "2026-11-12T09:52:00+09:00",
+    state: "waiting_clinic",
+  },
+  {
+    id: "pq_203",
+    clinicId: "cln_ara",
+    guest: { displayName: "Aoi H.", agentId: "cag_6c3v8", language: "ja" },
+    procedure: "리쥬란 힐러",
+    amountText: "2cc",
+    priceKrw: 300_000,
+    vatIncluded: false,
+    slot: "2026-11-14T15:00:00+09:00",
+    requestedAt: "2026-11-11T16:40:00+09:00",
+    state: "confirmed",
+    resolvedAt: "2026-11-11T17:20:00+09:00",
+  },
+  {
+    id: "pq_204",
+    clinicId: "cln_hanbit",
+    guest: { displayName: "Chen L.", agentId: "cag_1r9k5", language: "zh-CN" },
+    procedure: "울쎄라",
+    amountText: "300샷",
+    priceKrw: 1_200_000,
+    vatIncluded: true,
+    slot: "2026-11-15T10:00:00+09:00",
+    requestedAt: "2026-11-11T11:05:00+09:00",
+    state: "rejected",
+    resolvedAt: "2026-11-11T13:30:00+09:00",
+    note: "해당 시간 예약 마감",
+  },
+];
