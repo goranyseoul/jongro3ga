@@ -336,9 +336,21 @@ export function RecordsView() {
       <RecordsCalendar records={records} latest={latest} locale={locale} />
 
       <section aria-labelledby="rec-history" className="flex scroll-mt-sp-16 flex-col gap-sp-3">
-        <h2 id="rec-history" className="text-title font-semi">
-          {t("history.title")}
-        </h2>
+        <div className="flex items-center justify-between gap-sp-2">
+          <h2 id="rec-history" className="text-title font-semi">
+            {t("history.title")}
+          </h2>
+          {history.length > 0 ? (
+            <button
+              type="button"
+              aria-pressed={!filter && needle === ""}
+              onClick={() => choosePreset(null)}
+              className={cn(smallChip, chipState(!filter && needle === ""), focusRing)}
+            >
+              {t("history.all")}
+            </button>
+          ) : null}
+        </div>
         {history.length === 0 ? (
           <p className="text-body text-muted">{t("history.empty")}</p>
         ) : (
@@ -355,14 +367,6 @@ export function RecordsView() {
               }}
             />
             <div className="flex flex-col gap-sp-2">
-              <button
-                type="button"
-                aria-pressed={!filter && needle === ""}
-                onClick={() => choosePreset(null)}
-                className={cn(smallChip, "self-start", chipState(!filter && needle === ""), focusRing)}
-              >
-                {t("history.all")}
-              </button>
               {PRESET_KINDS.map((kind) => {
                 const values = topValues(records, presetValue[kind]);
                 if (values.length === 0) return null;
@@ -394,7 +398,16 @@ export function RecordsView() {
               const point = carePoint(summary.last, DEMO_TODAY);
               return (
                 <Card key={summary.procedureId} className="flex flex-col gap-sp-1">
-                  <p className="text-title font-semi">{label.procedure(summary.procedureId)}</p>
+                  <div className="flex flex-wrap items-center justify-between gap-sp-2">
+                    <p className="text-title font-semi">{label.procedure(summary.procedureId)}</p>
+                    <Link
+                      href={findHref(summary.procedureId)}
+                      className={cn(smallChip, "border-danger bg-elev text-danger hover:bg-sunken", focusRing)}
+                    >
+                      <FiSearch aria-hidden />
+                      {t("plan.findClinic")}
+                    </Link>
+                  </div>
                   <p className="text-body tabular-nums">
                     {t("history.summary", {
                       first: recordDate(summary.first),
@@ -441,6 +454,7 @@ export function RecordsView() {
                           {record.priceKrw ? <li className="tabular-nums">{moneyText(record.priceKrw, locale)}</li> : null}
                           {record.rating ? <li>{t("history.rating", { n: record.rating })}</li> : null}
                           {record.source === "booking" ? <li>{t("history.fromBooking")}</li> : null}
+                          {record.note ? <li className="whitespace-pre-line text-text">{record.note}</li> : null}
                           <Provenance record={record} />
                           <li>{record.sharedToPlatform ? t("history.shared") : t("history.notShared")}</li>
                         </ul>
@@ -489,10 +503,7 @@ export function RecordsView() {
   );
 }
 
-/**
- * Where a record comes from, as plain text: a clinic-confirmed record (with its chain version once anchored)
- * can back an offer proof, a self-reported one cannot.
- */
+/** Where a record came from: clinic confirmed and anchored on chain, clinic confirmed, or typed in by the customer. */
 function Provenance({ record }: { record: TreatmentRecord }) {
   const t = useTranslations("records.history");
   if (record.source === "booking" && record.anchor) {

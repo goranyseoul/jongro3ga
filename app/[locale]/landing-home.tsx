@@ -48,7 +48,7 @@ export function LandingHome({ locale, onAsk }: { locale: Locale; onAsk: LandingA
 
   return (
     <div className="relative flex flex-col gap-sp-12 pb-sp-16 pt-sp-8">
-      <section aria-labelledby="home-categories" className={section}>
+      <section aria-labelledby="home-categories" data-tour="topics" className={section}>
         <SectionHead id="home-categories" title={c.categories.title} sub={c.categories.sub} />
         <ul className="mt-sp-4 grid grid-cols-2 gap-sp-3 md:grid-cols-3 lg:grid-cols-5">
           {CATEGORY_ORDER.map((area) => {

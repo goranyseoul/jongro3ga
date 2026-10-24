@@ -477,7 +477,10 @@
       "another": "계속 추가"
     },
     "month": "시술한 달",
-    "dateUnknown": "날짜는 기억 안 나요 (월만 기록)"
+    "dateUnknown": "날짜는 기억 안 나요 (월만 기록)",
+    "note": "메모",
+    "notePlaceholder": "느낀 점, 부작용, 다음에 바꾸고 싶은 점 등을 자유롭게 적어 주세요.",
+    "noteHint": "나만 보는 메모예요."
   },
   "outcomes": {
     "metaTitle": "시술 기록",

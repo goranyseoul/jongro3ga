@@ -477,7 +477,10 @@
       "another": "続けて追加"
     },
     "month": "施術した月",
-    "dateUnknown": "日付は覚えていない (月のみ記録)"
+    "dateUnknown": "日付は覚えていない (月のみ記録)",
+    "note": "メモ",
+    "notePlaceholder": "感想、副作用、次に変えたいことなどを自由に書いてください。",
+    "noteHint": "自分だけが見られるメモです。"
   },
   "outcomes": {
     "metaTitle": "施術の記録",
