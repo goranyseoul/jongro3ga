@@ -40,3 +40,53 @@
 - 접근성: 푸터 언어 링크 폭을 44px로 맞췄다.
 - 알려진 남은 것: 병원 콘솔 `/clinic/inbox` 데스크톱 폭의 체크박스 20px (병원 콘솔 세션 영역). 채팅 입력창은 바 전체가 터치 영역이다.
 - 검사: CI와 같은 순서(`npm ci`, `typecheck`, `test` 112개, `build`와 가드 3종, `verify-spec`) 통과. 55개 라우트를 3개 폭으로 연 브라우저 검사에서 pageerror 0, 가로 넘침 0.
+
+## 트랙 AUTH (계정·DB, `feat/track-auth`, 2026-10-24)
+
+### 만든 것
+
+- DB: Drizzle ORM. `DATABASE_URL`이 있으면 `@neondatabase/serverless` Pool(트랜잭션 가능), 없으면 PGlite를 `.data/pglite`에 저장. Vercel에서 `DATABASE_URL`이 없으면 메모리 PGlite + 경고 로그(인스턴스가 바뀌면 계정이 사라짐). 스키마 `lib/db/schema.ts`, 마이그레이션 `drizzle/`, 첫 사용 때 자동 적용(`lib/db/migrate.ts`, 기록 테이블 `__pibook_migrations`, advisory lock으로 동시 콜드 스타트 직렬화). 서버 번들이 폴더를 못 실을 수 있어 SQL을 `lib/db/migrations.gen.ts`에 임베드한다. 스키마를 바꾸면 `npx drizzle-kit generate` 다음 `node lib/db/embed-migrations.mjs`(검사: `--check`).
+- 저장소: `lib/store/pg.ts`가 `Store` 계약을 JSONB 테이블 `store_items(namespace, collection, id, data, position)` 위에 구현. `getStore()`는 테스트(vitest)와 `next build`에선 메모리, 그 외(next start, next dev, Vercel)엔 Postgres. `PIBOOK_STORE=memory|pg`로 강제 가능. `resetStore()`는 시그니처 그대로 동기: Postgres에선 초기화를 큐에 넣고 이후 호출이 그걸 기다린다. 두 구현을 같은 계약 테스트로 돌린다(`lib/store/pg-contract.test.ts`).
+- 계정: Better Auth 1.7.12, 이메일+비밀번호(8~128자), Google은 `GOOGLE_CLIENT_ID`와 `GOOGLE_CLIENT_SECRET`가 둘 다 있을 때만(버튼도 그때만 보임). 라우트 `/api/auth/*`, UI용 `/api/auth/options`. 쿠키 접두사 `pibook`. 가입하면 `cag_` + 10자 가명 에이전트 id를 만들고 역할 `customer`로 묶는다(가입 본문의 role·agent id는 무시). `customer/accounts/{userId}`에 `CustomerAccount`를 쓴다.
+- 데모(`DEMO_MODE=true`): 계정 Yuki `cus_yuki`/`cag_7f3k2`, Lin `cus_lin`/`cag_4n8vd`, Emily `cus_emily`/`cag_2q9wk`, 지수 `cus_jisoo`/`cag_8h3tb`(UI 목데이터·A2A 픽스처와 같은 id), 병원 직원 `stf_seoul_glow`(clinic_staff, `cln_seoul_glow`), 운영자 `opr_demo`. 이메일은 전부 `*.demo@example.com`. 비밀번호 없는 데모 로그인 `POST /api/auth/demo/sign-in { "persona": "Yuki" | "lin" | "seoul_glow_staff" | "operator" ... }`, DEMO_MODE가 아니면 404.
+- 화면: 랜딩 가입 모달(`components/customer/auth-dialog.tsx`, props 그대로), `/[locale]/signup`(비밀번호 칸 추가), 새 `/[locale]/login`. 문구는 `components/auth/copy.ts`(4개 언어). 브라우저 헬퍼 `components/auth/client.ts`(`signOut()`, `fetchMe()` 등 다른 트랙도 사용 가능).
+- `proxy.ts`(Next 16): 로그아웃 상태로 고객 앱 경로(`/{locale}/home|chat|requests|bookings|records|outcomes|settings/**`)에 오면 `/{locale}?auth=login&next=...`로 보내고, 모달이 그 쿼리로 스스로 열려 로그인 뒤 `next`로 돌아간다. DEMO_MODE에서도 같다(데모 버튼이 비밀번호 없이 바로 로그인). `/clinic/**`·`/api/clinic/**`는 clinic_staff, `/ops/**`·`/demo/**`·`/api/ops/**`·`/api/demo/**`는 operator. 페이지는 `/ko/login?next=...`(역할이 틀리면 `&denied=1`), API는 401/403. DEMO_MODE면 열어 두고 요청에 `x-pibook-demo-as` 헤더를 붙여 `getSessionUser()`가 데모 직원·운영자를 돌려준다. 이 헤더는 모든 요청에서 먼저 지운다. proxy는 DB를 열지 않는다(Next 문서: proxy는 렌더 코드와 따로 돈다): Better Auth의 서명된 쿠키 캐시(5분)로 역할을 읽고, 만료됐으면 `/api/auth/get-session`에 묻는다.
+
+### 다른 트랙용 계약
+
+- `getSessionUser(headers?)`(`lib/auth/session.ts`, 시그니처 그대로): 인자 없으면 `next/headers`의 현재 요청 헤더. DB 세션을 직접 확인한다(쿠키 캐시 미사용이라 계정 삭제·로그아웃이 즉시 반영). DEMO_MODE의 콘솔 대체 사용자는 위 proxy 헤더가 있을 때만.
+- `GET /api/me` → `{ account: { id, email, name, customerAgentId, role, clinicId?, createdAt }, profile: CustomerProfile | null }`, 로그아웃이면 401.
+- `PUT /api/me/profile` 본문 = 06의 `CustomerProfile`(strict zod, `lib/auth/profile.ts`). `id`·`agentId`는 서버가 계정에서 채운다(보내려면 계정 값과 같아야 하고 다르면 403). 오타 필드·잘못된 enum·출국일<입국일은 400 + `issues`. customer 역할만. 저장 위치 `customer/profiles/{userId}`. **LLM 트랙: 온보딩 완료 시 여기로 저장한다.** 동의 원장·과거 시술은 이 API가 받지 않으니 고객 에이전트 쪽에서 `customer/consents`, `customer/records` 등에 `customerId = account.id`로 쓴다. `GET /api/me/profile` → `{ profile }`.
+- `DELETE /api/me`: 세션 종료 쿠키 + 사용자·세션·로그인 연결 삭제 + `customer` 네임스페이스에서 이 고객 것 전부 삭제(`lib/auth/purge.ts`): `id == userId`, `customerId == userId`, `agentId`/`customerAgentId == cag`, 그리고 `requestId`·`bookingId`로 연결된 문서(견적·예약·결과 초안). **CUSTOMER 트랙: 고객 문서에는 `customerId`(계정 id)를 넣어야 삭제 대상에 잡힌다.** 다른 네임스페이스(플랫폼 익명 표본 등)는 건드리지 않는다.
+- 데모 리셋(OPS): `resetStore()` 뒤 `loadSeed(getStore())`. Postgres에서도 동작한다. 계정 테이블은 리셋 대상이 아니다(데모 계정은 로그인할 때 없으면 다시 만든다).
+
+### 환경 변수 (새로 씀, `.env.example`은 공용이라 여기만 적음)
+
+| 이름 | 용도 |
+| --- | --- |
+| `DATABASE_URL` | Neon Postgres 연결 문자열. 없으면 PGlite |
+| `PGLITE_DIR` | PGlite 폴더(기본 `.data/pglite`), `memory`면 메모리 |
+| `BETTER_AUTH_SECRET` | 세션 서명 비밀값(32바이트 이상, `openssl rand -base64 32`). 비어 있으면 DEMO_MODE나 개발에서만 코드의 dev 전용 값을 쓰고 경고, 프로덕션+DEMO_MODE 아님이면 시작 시 에러 |
+| `BETTER_AUTH_URL` | 공개 주소(예: `https://pibook.vercel.app`). 비우면 요청에서 추론(로컬은 그대로 둬도 됨). Google 콜백이 정확하려면 배포에선 설정 |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | 둘 다 있을 때만 Google 로그인 |
+| `PIBOOK_STORE` | `memory` 또는 `pg`로 저장소 강제(디버그용) |
+
+### 오너가 할 일: Google OAuth 클라이언트 만들기
+
+1. https://console.cloud.google.com/ 에서 프로젝트 선택(없으면 생성).
+2. "API 및 서비스" > "OAuth 동의 화면": 사용자 유형 외부, 앱 이름 `PibooK`, 지원 이메일, 범위는 기본(`openid`, `email`, `profile`). 테스트 단계면 테스트 사용자에 시연 계정 추가.
+3. "사용자 인증 정보" > "사용자 인증 정보 만들기" > "OAuth 클라이언트 ID" > 애플리케이션 유형 "웹 애플리케이션".
+4. 승인된 자바스크립트 원본: `http://localhost:3000`(로컬), 배포 주소(예: `https://pibook.vercel.app`).
+5. 승인된 리디렉션 URI: `http://localhost:3000/api/auth/callback/google`, `https://<배포 주소>/api/auth/callback/google`. 포트를 바꿔 띄우면 그 포트도 추가.
+6. 발급된 클라이언트 ID·보안 비밀을 `.env`(로컬)와 Vercel 환경 변수에 `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`로 넣고, 배포에는 `BETTER_AUTH_URL`도 넣는다. 저장소·문서에는 값을 쓰지 않는다.
+
+### 스펙과 다른 점·결정
+
+| # | 내용 | 결정 |
+| --- | --- | --- |
+| A1 | 06: Postgres는 P1 | 지금 붙임. 메모리 저장소는 테스트·빌드 전용 |
+| A2 | 05: `/[locale]/signup`은 이메일만 | 실제 계정이라 비밀번호 칸 추가. 로그인 화면 `/[locale]/login` 신설(콘솔 직원 로그인 겸용) |
+| A3 | 랜딩 문구 `demoNote`("실제 계정은 만들지 않음", `landing-copy.ts`)가 이제 틀림 | 모달은 내 문구(`components/auth/copy.ts`)를 쓴다. `landing-copy.ts`의 `demoNote`는 남는 값이라 소유 트랙이 지워도 됨 |
+| A4 | 저장값 | JSON 왕복이라 `undefined` 값 키는 저장되지 않는다(메모리 저장소는 남김). 필터 결과는 같다. Date 객체 대신 ISO 문자열을 쓴다(스펙 타입이 이미 그렇다) |
+| A5 | Better Auth 시간 | 세션 만료는 실제 시간(Date.now). 데모 고정 시계(`lib/clock.ts`)는 도메인 데이터에만 쓴다. `CustomerAccount.createdAt`은 `clock.nowIso()` |
+| A6 | 검증 범위 | Neon 경로는 타입·코드만 확인했고 실제 Neon DB로는 돌려보지 못했다(연결 문자열 없음). Vercel 서버리스에서 PGlite wasm 파일 추적도 미확인: 배포는 `DATABASE_URL` 설정을 권장 |
