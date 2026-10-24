@@ -6,7 +6,9 @@ import { COOKIE_PREFIX, DEMO_AS_HEADER, authSecret, isDemoMode, useSecureCookies
 // from route code, so it decides from cookies only and route handlers re-check with getSessionUser().
 //
 // - Customer app routes (/{locale}/home|chat|requests|bookings|records|outcomes|settings/**):
-//   no session cookie -> the landing with the auth dialog open (?auth=login&next=...).
+//   no session cookie -> the landing with the auth dialog open (?auth=login&next=...), except with
+//   DEMO_MODE=true: the screens then fall back to the demo customer, so a visitor mid-conversation on the
+//   landing is never bounced away when the agent links to a customer screen.
 // - Clinic console (/clinic/**, /api/clinic/**) needs role clinic_staff; ops and demo control
 //   (/ops/**, /demo/**, /api/ops/**, /api/demo/**) need role operator. Pages redirect to /ko/login,
 //   APIs answer 401/403. With DEMO_MODE=true they stay open: the request is marked with
@@ -79,7 +81,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   const hasSession = Boolean(getSessionCookie(request, { cookiePrefix: COOKIE_PREFIX }));
 
   if (rule.kind === "customer") {
-    if (hasSession) return withoutMarker(request);
+    if (hasSession || isDemoMode()) return withoutMarker(request);
     const url = new URL(`/${rule.locale}`, request.url);
     url.searchParams.set("auth", "login");
     url.searchParams.set("next", nextParam(request));
