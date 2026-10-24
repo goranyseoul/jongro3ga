@@ -145,20 +145,35 @@ function RuleCard({ rule, confirmingRetire, onApprove, onReject, onAskRetire, on
   );
 }
 
+/** RoutingRule from /api/ops/rules as the screen's OpsRule (dates trimmed to YYYY-MM-DD where the card shows a day). */
+function toOpsRule(rule: OpsRule & { expiresAt?: string }): OpsRule {
+  return { ...rule, expiresAt: rule.expiresAt?.slice(0, 10) };
+}
+
+async function opsCall<T>(path: string, method: "GET" | "POST" = "GET"): Promise<T> {
+  const response = await fetch(path, { method, cache: "no-store" });
+  const json = (await response.json().catch(() => ({}))) as T & { error?: string };
+  if (!response.ok) throw new Error(json.error ?? `${path} failed (${response.status})`);
+  return json;
+}
+
 export function RulesView() {
   const [rules, setRules] = useState<OpsRule[]>(SEED_RULES);
   const [tab, setTab] = useState<RulesTab>("active");
   const [result, setResult] = useState<ReactNode>(null);
   const [running, setRunning] = useState(false);
   const [retiring, setRetiring] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
+  const reload = async (): Promise<OpsRule[]> => {
+    const body = await opsCall<{ rules: OpsRule[] }>("/api/ops/rules");
+    const next = body.rules.map(toOpsRule);
+    setRules(next);
+    return next;
+  };
+
+  useEffect(() => {
+    reload().catch((error: unknown) => setResult(`규칙을 불러오지 못했어요: ${error instanceof Error ? error.message : String(error)}`));
+  }, []);
 
   const byTab: Record<RulesTab, OpsRule[]> = {
     proposed: rules.filter((rule) => rule.status === "proposed"),
@@ -166,44 +181,34 @@ export function RulesView() {
     closed: rules.filter((rule) => rule.status === "rejected" || rule.status === "retired"),
   };
 
-  const update = (id: string, patch: Partial<OpsRule>, message: string, nextTab?: RulesTab) => {
-    setRules((current) => current.map((rule) => (rule.id === id ? { ...rule, ...patch } : rule)));
+  const act = async (rule: OpsRule, action: "activate" | "reject" | "retire", message: string, nextTab?: RulesTab) => {
     setRetiring(null);
-    setResult(message);
-    if (nextTab) setTab(nextTab);
+    try {
+      await opsCall(`/api/ops/rules/${rule.id}/${action}`, "POST");
+      await reload();
+      setResult(message);
+      if (nextTab) setTab(nextTab);
+    } catch (error) {
+      setResult(`처리하지 못했어요: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 
-  const approve = (rule: OpsRule) =>
-    update(
-      rule.id,
-      {
-        status: "active",
-        approvedBy: "운영자",
-        activatedAt: OPS_NOW,
-        expiresAt: rule.then.kind === "exclude_clinic" ? addDays(OPS_TODAY, EXCLUDE_RULE_TTL_DAYS) : undefined,
-      },
-      `${rule.id} 규칙을 승인했어요. 다음 매칭부터 적용돼요.`,
-      "active",
-    );
+  const approve = (rule: OpsRule) => act(rule, "activate", `${rule.id} 규칙을 승인했어요. 다음 매칭부터 적용돼요.`, "active");
+  const reject = (rule: OpsRule) => act(rule, "reject", `${rule.id} 제안을 반려했어요. 폐기 탭에서 이력을 볼 수 있어요.`);
+  const retire = (rule: OpsRule) => act(rule, "retire", `${rule.id} 규칙을 폐기했어요. 이력은 폐기 탭에 남아요.`);
 
-  const reject = (rule: OpsRule) =>
-    update(rule.id, { status: "rejected", closedAt: OPS_NOW }, `${rule.id} 제안을 반려했어요. 폐기 탭에서 이력을 볼 수 있어요.`);
-
-  const retire = (rule: OpsRule) =>
-    update(rule.id, { status: "retired", closedAt: OPS_NOW }, `${rule.id} 규칙을 폐기했어요. 이력은 폐기 탭에 남아요.`);
-
-  // Stands in for the proposer (07-platform-intelligence.md section 4): it only finds a candidate
-  // once the demo has injected the 20 burst outcomes, like the real triggers would.
-  const runProposal = () => {
+  // [규칙 제안 실행]: the platform's deterministic triggers (07-platform-intelligence.md section 4).
+  const runProposal = async () => {
     setRunning(true);
     setResult(null);
-    timer.current = setTimeout(() => {
-      setRunning(false);
-      if (!readOutcomesInjected()) {
+    try {
+      const body = await opsCall<{ proposed: OpsRule[] }>("/api/ops/rules/propose", "POST");
+      await reload();
+      if (body.proposed.length === 0) {
         setResult(
           <>
-            지금은 제안할 규칙이 없어요. 최근 30일 결과가 기준(표본 5건 이상, 견적 대비 실결제 평균 +20% 초과)에 못 미쳐요. 데모에서 결과 20건을
-            주입한 뒤 다시 실행해 보세요.{" "}
+            지금은 제안할 규칙이 없어요. 최근 30일 결과가 기준(표본 5건 이상, 견적 대비 실결제 평균 +20% 초과)에 못 미치거나 이미 제안된 규칙이에요. 데모에서
+            결과 20건을 주입한 뒤 다시 실행해 보세요.{" "}
             <Link href="/demo" className={cn("text-text underline", focusRing)}>
               데모 컨트롤 열기
             </Link>
@@ -211,15 +216,14 @@ export function RulesView() {
         );
         return;
       }
-      const proposal = buildAraProposal();
-      if (rules.some((rule) => rule.id === proposal.id)) {
-        setResult("이미 제안한 규칙이에요. 제안 또는 폐기 탭에서 확인해 주세요.");
-        return;
-      }
-      setRules((current) => [...current, proposal]);
       setTab("proposed");
-      setResult(`규칙 1건을 제안했어요: ${describeAction(proposal.then)} (${proposal.evidence.summary}). 근거를 확인한 뒤 승인하거나 반려해 주세요.`);
-    }, PROPOSE_DELAY_MS);
+      const first = body.proposed[0];
+      setResult(`규칙 ${body.proposed.length}건을 제안했어요: ${describeAction(first.then)} (${first.reason}). 근거를 확인한 뒤 승인하거나 반려해 주세요.`);
+    } catch (error) {
+      setResult(`제안을 만들지 못했어요: ${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+      setRunning(false);
+    }
   };
 
   const visible = byTab[tab];

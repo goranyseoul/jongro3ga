@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Money, Table, type TableColumn } from "@/components/ui";
 import { StatusText, Tabs, panelId, tabId, type StatusTone } from "@/components/ops";
 import {
   LOCALE_LABEL,
-  PROXY_BOOKINGS,
   PROXY_STATE_LABEL,
-  OPS_NOW,
   clinicName,
   formatElapsed,
   formatMonthDayTime,
@@ -26,18 +24,52 @@ const STATE_TONE: Record<ProxyBookingState, StatusTone> = {
 const ID_PREFIX = "proxy-queue";
 
 export function ProxyQueueView() {
-  const [bookings, setBookings] = useState<ProxyBooking[]>(PROXY_BOOKINGS);
+  const [bookings, setBookings] = useState<ProxyBooking[]>([]);
   const [tab, setTab] = useState<QueueTab>("waiting");
   const [result, setResult] = useState<string | null>(null);
+
+  // Live queue from the clinic agents (/api/ops/proxy-queue), polled so a new booking shows up during the demo.
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      try {
+        const response = await fetch("/api/ops/proxy-queue", { cache: "no-store" });
+        const body = (await response.json()) as { rows: ProxyBooking[] };
+        if (!alive) return;
+        setBookings((current) => {
+          const done = current.filter((item) => item.state !== "waiting_clinic" && !body.rows.some((row) => row.id === item.id));
+          return [...body.rows, ...done];
+        });
+      } catch {
+        if (alive) setResult("대행 큐를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.");
+      }
+    };
+    void load();
+    const timer = setInterval(load, 3000);
+    return () => {
+      alive = false;
+      clearInterval(timer);
+    };
+  }, []);
 
   const waiting = bookings.filter((booking) => booking.state === "waiting_clinic");
   const done = bookings.filter((booking) => booking.state !== "waiting_clinic");
 
-  const resolve = (booking: ProxyBooking, state: "confirmed" | "rejected") => {
+  const resolve = async (booking: ProxyBooking, state: "confirmed" | "rejected") => {
+    const action = state === "confirmed" ? "confirm" : "reject";
+    const response = await fetch(`/api/ops/proxy-queue/${booking.id}/${action}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ reason: "clinic_declined" }),
+    });
+    if (!response.ok) {
+      setResult("처리하지 못했어요. 이미 처리된 예약인지 확인해 주세요.");
+      return;
+    }
     setBookings((current) =>
       current.map((item) =>
         item.id === booking.id
-          ? { ...item, state, resolvedAt: OPS_NOW, note: state === "rejected" ? "병원 거절" : undefined }
+          ? { ...item, state, resolvedAt: new Date().toISOString(), note: state === "rejected" ? "병원 거절" : undefined }
           : item,
       ),
     );
