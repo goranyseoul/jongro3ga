@@ -22,6 +22,8 @@ import {
 
 const STATUSES: RecordStatus[] = ["active", "paused", "stopped"];
 const TOP_COUNT = 3;
+const PLAN_COUNT = 4;
+const PAGE_SIZE = 10;
 const ALL = "all";
 
 /** The newest record of each procedure; its nextDue is the date the customer is waiting for. */
@@ -39,6 +41,8 @@ export function RecordsView() {
   const [filter, setFilter] = useState<string>(ALL);
   const [query, setQuery] = useState("");
   const [showAllTop, setShowAllTop] = useState(false);
+  const [showAllPlan, setShowAllPlan] = useState(false);
+  const [page, setPage] = useState(0);
 
   const latest = latestPerProcedure(records);
   const summaries = procedureSummaries(records);
@@ -51,6 +55,9 @@ export function RecordsView() {
       ? id === filter
       : needle === "" || label.procedure(id).toLowerCase().includes(needle) || detectProcedure(needle)?.id === id;
   const shown = history.filter((record) => matches(record.procedureId));
+  const pageCount = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pageRecords = shown.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
   const focused = filter !== ALL || needle !== "" ? summaries.filter((s) => matches(s.procedureId)) : [];
 
   const setStatus = (record: TreatmentRecord, status: RecordStatus) =>
@@ -59,6 +66,7 @@ export function RecordsView() {
   const openProcedure = (procedureId: string) => {
     setFilter(procedureId);
     setQuery("");
+    setPage(0);
     document.getElementById("rec-history")?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -76,6 +84,13 @@ export function RecordsView() {
       : t("cycle.maintenance", { every });
   };
 
+  // Month headers count the whole month even when a page shows only part of it.
+  const monthText = (month: string) => {
+    const inMonth = shown.filter((r) => r.date.startsWith(month));
+    const total = inMonth.reduce((sum, r) => sum + (r.priceKrw ?? 0), 0);
+    return t("history.month", { count: inMonth.length, total: moneyText(total, locale) });
+  };
+
   const pointText = (point: CarePoint) => {
     const { kind, ...values } = point;
     return t(`point.${kind}`, values);
@@ -90,6 +105,41 @@ export function RecordsView() {
         </Link>
       </div>
 
+      {summaries.length > 0 ? (
+        <section aria-labelledby="rec-top" className="flex flex-col gap-sp-3">
+          <h2 id="rec-top" className="text-title font-semi">
+            {t("top.title")}
+          </h2>
+          <ul className="grid grid-cols-1 gap-sp-3 sm:grid-cols-3">
+            {(showAllTop ? summaries : summaries.slice(0, TOP_COUNT)).map((summary) => (
+              <li key={summary.procedureId}>
+                <button
+                  type="button"
+                  onClick={() => openProcedure(summary.procedureId)}
+                  className={cn("h-full w-full rounded-card text-start", focusRing)}
+                >
+                  <Card className="flex h-full flex-col gap-sp-1 hover:bg-sunken">
+                    <p className="text-title font-semi">{label.procedure(summary.procedureId)}</p>
+                    <p className="text-body tabular-nums">{t("top.count", { n: summary.count })}</p>
+                    <p className="text-label text-muted tabular-nums">{t("top.last", { date: recordDate(summary.last) })}</p>
+                    {summary.totalKrw > 0 ? (
+                      <p className="text-label text-muted tabular-nums">
+                        {t("top.total", { amount: moneyText(summary.totalKrw, locale) })}
+                      </p>
+                    ) : null}
+                  </Card>
+                </button>
+              </li>
+            ))}
+          </ul>
+          {summaries.length > TOP_COUNT ? (
+            <Button variant="ghost" className="self-start" onClick={() => setShowAllTop(!showAllTop)}>
+              {showAllTop ? t("top.less") : t("top.more", { n: summaries.length - TOP_COUNT })}
+            </Button>
+          ) : null}
+        </section>
+      ) : null}
+
       <section aria-labelledby="rec-plan" className="flex flex-col gap-sp-3">
         <div className="flex flex-col gap-sp-1">
           <h2 id="rec-plan" className="text-title font-semi">
@@ -101,7 +151,7 @@ export function RecordsView() {
           <p className="text-body text-muted">{t("next.empty")}</p>
         ) : (
           <ul className="grid grid-cols-1 gap-sp-3 md:grid-cols-2">
-            {latest.map((record) => {
+            {(showAllPlan ? latest : latest.slice(0, PLAN_COUNT)).map((record) => {
               const point = carePoint(record, DEMO_TODAY);
               return (
                 <li key={record.id}>
@@ -142,42 +192,12 @@ export function RecordsView() {
             })}
           </ul>
         )}
+        {latest.length > PLAN_COUNT ? (
+          <Button variant="ghost" className="self-start" onClick={() => setShowAllPlan(!showAllPlan)}>
+            {showAllPlan ? t("top.less") : t("top.more", { n: latest.length - PLAN_COUNT })}
+          </Button>
+        ) : null}
       </section>
-
-      {summaries.length > 0 ? (
-        <section aria-labelledby="rec-top" className="flex flex-col gap-sp-3">
-          <h2 id="rec-top" className="text-title font-semi">
-            {t("top.title")}
-          </h2>
-          <ul className="grid grid-cols-1 gap-sp-3 sm:grid-cols-3">
-            {(showAllTop ? summaries : summaries.slice(0, TOP_COUNT)).map((summary) => (
-              <li key={summary.procedureId}>
-                <button
-                  type="button"
-                  onClick={() => openProcedure(summary.procedureId)}
-                  className={cn("h-full w-full rounded-card text-start", focusRing)}
-                >
-                  <Card className="flex h-full flex-col gap-sp-1 hover:bg-sunken">
-                    <p className="text-title font-semi">{label.procedure(summary.procedureId)}</p>
-                    <p className="text-body tabular-nums">{t("top.count", { n: summary.count })}</p>
-                    <p className="text-label text-muted tabular-nums">{t("top.last", { date: recordDate(summary.last) })}</p>
-                    {summary.totalKrw > 0 ? (
-                      <p className="text-label text-muted tabular-nums">
-                        {t("top.total", { amount: moneyText(summary.totalKrw, locale) })}
-                      </p>
-                    ) : null}
-                  </Card>
-                </button>
-              </li>
-            ))}
-          </ul>
-          {summaries.length > TOP_COUNT ? (
-            <Button variant="ghost" className="self-start" onClick={() => setShowAllTop(!showAllTop)}>
-              {showAllTop ? t("top.less") : t("top.more", { n: summaries.length - TOP_COUNT })}
-            </Button>
-          ) : null}
-        </section>
-      ) : null}
 
       <RecordsCalendar records={records} latest={latest} locale={locale} />
 
@@ -197,6 +217,7 @@ export function RecordsView() {
               onChange={(event) => {
                 setQuery(event.target.value);
                 setFilter(ALL);
+                setPage(0);
               }}
             />
             <ChipGroup
@@ -209,6 +230,7 @@ export function RecordsView() {
               onChange={(value) => {
                 setFilter(value);
                 setQuery("");
+                setPage(0);
               }}
             />
 
@@ -235,12 +257,12 @@ export function RecordsView() {
             {shown.length === 0 ? (
               <p className="text-body text-muted">{t("history.noMatch")}</p>
             ) : (
-              monthGroups(shown).map((group) => (
+              monthGroups(pageRecords).map((group) => (
                 <div key={group.month} className="flex flex-col gap-sp-2">
                   <div className="flex flex-wrap items-baseline justify-between gap-sp-2 border-b border-border pb-sp-1">
                     <h3 className="text-body font-semi tabular-nums">{formatMonth(group.month, locale)}</h3>
                     <p className="text-label text-muted tabular-nums">
-                      {t("history.month", { count: group.records.length, total: moneyText(group.totalKrw, locale) })}
+                      {monthText(group.month)}
                     </p>
                   </div>
                   <Timeline
@@ -271,6 +293,38 @@ export function RecordsView() {
                 </div>
               ))
             )}
+
+            {pageCount > 1 ? (
+              <nav aria-label={t("history.pages")} className="flex flex-wrap items-center justify-center gap-sp-1">
+                <Button
+                  variant="ghost"
+                  aria-label={t("history.prevPage")}
+                  disabled={currentPage === 0}
+                  onClick={() => setPage(currentPage - 1)}
+                >
+                  {"<"}
+                </Button>
+                {Array.from({ length: pageCount }, (_, i) => (
+                  <Button
+                    key={i}
+                    variant={i === currentPage ? "secondary" : "ghost"}
+                    aria-current={i === currentPage ? "page" : undefined}
+                    className="tabular-nums"
+                    onClick={() => setPage(i)}
+                  >
+                    {i + 1}
+                  </Button>
+                ))}
+                <Button
+                  variant="ghost"
+                  aria-label={t("history.nextPage")}
+                  disabled={currentPage === pageCount - 1}
+                  onClick={() => setPage(currentPage + 1)}
+                >
+                  {">"}
+                </Button>
+              </nav>
+            ) : null}
           </>
         )}
       </section>

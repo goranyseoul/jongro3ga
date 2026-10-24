@@ -370,7 +370,10 @@
       "noMatch": "没有该项目的记录。",
       "month": "{count}条 · 共 {total}",
       "unknownDay": "{month} (日期不记得)",
-      "summary": "自{first}起{count}次 · 共 {total}"
+      "summary": "自{first}起{count}次 · 共 {total}",
+      "pages": "页码",
+      "prevPage": "上一页",
+      "nextPage": "下一页"
     },
     "calendar": {
       "title": "日历",

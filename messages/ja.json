@@ -370,7 +370,10 @@
       "noMatch": "該当する施術の記録はありません。",
       "month": "{count}件 · 合計 {total}",
       "unknownDay": "{month} (日付は不明)",
-      "summary": "{first}から{count}回 · 合計 {total}"
+      "summary": "{first}から{count}回 · 合計 {total}",
+      "pages": "ページ",
+      "prevPage": "前のページ",
+      "nextPage": "次のページ"
     },
     "calendar": {
       "title": "カレンダー",

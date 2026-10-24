@@ -370,7 +370,10 @@
       "noMatch": "No records for that procedure.",
       "month": "{count} · total {total}",
       "unknownDay": "{month} (day not remembered)",
-      "summary": "Since {first}: {count} sessions · total {total}"
+      "summary": "Since {first}: {count} sessions · total {total}",
+      "pages": "Pages",
+      "prevPage": "Previous page",
+      "nextPage": "Next page"
     },
     "calendar": {
       "title": "Calendar",

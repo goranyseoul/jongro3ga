@@ -370,7 +370,10 @@
       "noMatch": "찾는 시술의 기록이 없어요.",
       "month": "{count}건 · 총 {total}",
       "unknownDay": "{month} (날짜 기억 안 남)",
-      "summary": "{first}부터 {count}회 · 총 {total}"
+      "summary": "{first}부터 {count}회 · 총 {total}",
+      "pages": "페이지",
+      "prevPage": "이전 페이지",
+      "nextPage": "다음 페이지"
     },
     "calendar": {
       "title": "달력",
