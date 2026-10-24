@@ -22,6 +22,7 @@
 | 14 | 다운타임과 출국일 | 06: 출국 전 다운타임 미종료는 경고만. `PLANNING.md` 8-8: 제외 | **결정됨 (2026-10-24, 오너): 출국일을 넘으면 체류 연장이 가능한지 확인하라고 안내.** 필터는 가장 빠른 경우(도착일 시술, 최소 다운타임)에도 안 끝나면 제외하고 `extendDays`(연장해야 가능한 날수)를, 최대값 기준으로만 겹치면 경고와 `daysOver`를 돌려줌. `lib/agents/platform/procedure-filter-copy.ts`가 ko, ja, en, zh-CN 문장으로 바꿈 | 일본어와 중국어 문구는 원어민 검수 필요 |
 | 15 | 시술 필터 | 스펙 02, 03, 07에 없음 (`PLANNING.md` 8-8 신규) | `lib/agents/platform/procedure-filter.ts`: 영역 40, 부위 20, 한국 여성 선택률 20, 예산 10, 통증 10 | 선택률 데이터(`kr-patterns`)는 아직 없어 호출자가 함수로 주입. 03에 해당 A2A 스킬이 없음: `platform.recipe`를 확장할지 새 스킬로 둘지 결정 필요 |
 | 16 | 데모 시계 | 09: `lib/clock.ts` 하나, `DEMO_NOW` | `lib/clock.ts` 구현 완료(기본 2026-10-24T10:00+09:00). 화면 쪽 상수는 아직 따로: 고객 `DEMO_TODAY` 2026-11-12, 운영 `OPS_TODAY` 2026-11-12, 병원 `TODAY` 2026-10-24 | UI 세션이 세 상수를 `clock`과 같은 값으로 맞추고, 목데이터를 `DEMO.md` 시나리오(유키 쥬베룩 볼륨, 지수 메모장, 그레이스, 린)와 가상 병원으로 바꿔야 함. 지금 화면의 목데이터는 스펙 10의 리쥬란 데모 기준. **2026-10-24 재결정에 따라 UI 목데이터는 당분간 스펙 시나리오(리쥬란, 스펙 id) 그대로 둔다** |
+| 17 | 후기 공개 | 08 38행·42행: 후기 비공개 | glowpass는 원문 공개 (11fe512에서 잠시 집계만으로 바뀌었다가 복원) | **결정됨 (2026-10-24 13:23 KST 오너, 14:18 재확인): 후기 공개.** 로그인 고객·비교 화면에 원문과 집계, 랜딩 제외, 익명 집합 3명 이상, 보상 없음. 같은 날 docs/spec-zk-extension이 '집계만'으로 적은 것은 서브에이전트의 보수적 해석이었고 오너 결정이 아니었음 |
 
 ## 통합 기록
 
@@ -30,7 +31,7 @@
 - 팀원 GlowPass 서버는 `app/`(Next.js App Router 디렉토리와 충돌)에서 `glowpass/`로 이동. 경로가 `import.meta.url` 기준이라 동작 동일.
 - 2026-10-24 재통합 (`feat/integration-r2`): `feat/integration-2` 위에 BUILD-LOG 기록, `feat/backend-skeleton` 최신(시술 마스터, 시술 필터, 데모 시계, 체류 연장 안내), `origin/main`(배포 메모), 브랜드 치환(`PibooK`)과 옛 표기 가드를 얹음. 게이트: typecheck, test, build, `verify-spec all`, 전 경로 스모크.
 
-- 2026-10-24 스펙 개정 (`docs/spec-zk-extension`): ZK 기록 레이어를 스펙에 반영 (02, 03, 05, 06, 07, 08, 09, 10에 "ZK 확장": 새 스킬 `platform.anchor_record`·`platform.submit_review`, 확장 `zk-offer-proof/v1`, 스키마 3종, T16~T18). 시나리오·id의 정본은 docs/spec으로 재결정 (13행). 후기는 집계(n >= 5)와 1:1 요약만. 코드는 건드리지 않았다.
+- 2026-10-24 스펙 개정 (`docs/spec-zk-extension`): ZK 기록 레이어를 스펙에 반영 (02, 03, 05, 06, 07, 08, 09, 10에 "ZK 확장": 새 스킬 `platform.anchor_record`·`platform.submit_review`, 확장 `zk-offer-proof/v1`, 스키마 3종, T16~T18). 시나리오·id의 정본은 docs/spec으로 재결정 (13행). 후기는 원문과 집계를 로그인 고객·비교 화면에 공개 (익명 집합 3명 이상, 오너 결정). 코드는 건드리지 않았다.
 
 ## 릴리스 브랜치 `feat/release` (2026-10-24 오후)
 
