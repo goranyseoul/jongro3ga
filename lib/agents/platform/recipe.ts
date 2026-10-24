@@ -57,6 +57,16 @@ export function buildRecipe(patterns: readonly KrPattern[], query: RecipeQueryV1
   };
 }
 
+/** Thrown when the pattern data is not loaded at all; the executor answers TASK_STATE_FAILED (03 "플랫폼 장애"). */
+export class RecipeDataMissingError extends Error {
+  constructor() {
+    super("kr_patterns_not_loaded");
+    this.name = "RecipeDataMissingError";
+  }
+}
+
 export async function recipe(query: RecipeQueryV1): Promise<RecipeV1> {
-  return buildRecipe(await platformStore.krPatterns(), query);
+  const patterns = await platformStore.krPatterns();
+  if (patterns.length === 0) throw new RecipeDataMissingError();
+  return buildRecipe(patterns, query);
 }

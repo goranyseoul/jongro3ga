@@ -42,7 +42,7 @@ async function runSkill(skillId: SkillId, data: unknown, caller: SkillCaller): P
       return { kind: "data", data: await recipe(parsed.data) };
     case "platform.match_clinics": {
       const result = await matchClinics(parsed.data, caller.agentId);
-      return result.state === "completed" ? { kind: "data", data: result.shortlist } : { kind: "text", result: { state: "rejected", text: result.reason } };
+      return result.state === "completed" ? { kind: "data", data: result.shortlist } : { kind: "text", result: { state: result.state, text: result.reason } };
     }
     case "platform.judge_quote":
       return { kind: "data", data: await judgeQuotes(parsed.data) };

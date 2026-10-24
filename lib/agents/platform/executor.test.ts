@@ -4,7 +4,7 @@ import { sendMessage, type AgentRef } from "../../a2a/client";
 import { listA2ALog } from "../../a2a/log";
 import { PIBU_SCHEMAS, type SkillId } from "../../a2a/schemas";
 import { taskArtifactData } from "../../a2a/wire";
-import { getStore } from "../../store";
+import { COLLECTIONS, getStore } from "../../store";
 import { TEST_BASE, setupPlatformTest, teardownPlatformTest } from "./__fixtures__/offer-cache";
 import { YUKI_AGENT, yukiRequest } from "./__fixtures__/requests";
 import { platformStore } from "./store";
@@ -43,6 +43,19 @@ describe("platform executor over A2A", () => {
     const task = await call("platform.match_clinics", yukiRequest(), { agentId: "cag_2m8x9", role: "customer" });
     expect(task.status.state).toBe("TASK_STATE_REJECTED");
     expect(task.status.message?.parts[0].text).toBe("customer_agent_mismatch");
+  });
+
+  it("fails, not answers empty, while the platform has no offer cache or pattern data (03 플랫폼 장애)", async () => {
+    const store = getStore();
+    for (const c of await platformStore.offerCaches()) await store.remove("platform", COLLECTIONS.platform.offerCache, c.id);
+    for (const p of await platformStore.krPatterns()) await store.remove("platform", COLLECTIONS.platform.krPatterns, p.id);
+    const match = await call("platform.match_clinics", yukiRequest());
+    expect(match.status.state).toBe("TASK_STATE_FAILED");
+    expect(match.status.message?.parts[0].text).toBe("offer_cache_empty");
+    const recipe = await call("platform.recipe", { schema: "pibu/recipe-query@1", concerns: ["elasticity"], ageBand: "25-29" });
+    expect(recipe.status.state).toBe("TASK_STATE_FAILED");
+    expect(recipe.status.message?.parts[0].text).toContain("kr_patterns_not_loaded");
+    expect(await platformStore.matchLogs()).toEqual([]);
   });
 
   it("answers platform.recipe and platform.judge_quote with their data schemas", async () => {

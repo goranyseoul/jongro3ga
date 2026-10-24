@@ -222,7 +222,9 @@ function requestRegion(request: ProcedureRequestV1): RegionGroup | "seoul" {
 
 export type MatchResult =
   | { state: "completed"; shortlist: ClinicShortlistV1; log: MatchLog }
-  | { state: "rejected"; reason: typeof NOT_ELIGIBLE | "customer_agent_mismatch" };
+  | { state: "rejected"; reason: typeof NOT_ELIGIBLE | "customer_agent_mismatch" }
+  /** No clinic.offers cache at all: the platform cannot match yet (03 "플랫폼 장애"), not "no clinic fits". */
+  | { state: "failed"; reason: "offer_cache_empty" };
 
 const newMatchId = () => `mt_${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`;
 
@@ -247,6 +249,7 @@ export async function matchClinics(request: ProcedureRequestV1, callerAgentId: s
     platformStore.verifiedVisits(),
     platformStore.reviewStats(),
   ]);
+  if (caches.length === 0) return { state: "failed", reason: "offer_cache_empty" };
   const referrals: Record<string, number> = {};
   for (const log of logs) {
     if (!withinDays(log.at, now, RELIABILITY_WINDOW_DAYS)) continue;
