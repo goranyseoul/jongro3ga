@@ -1,0 +1,6 @@
+[package]
+name = "record_hash"
+type = "bin"
+authors = [""]
+
+[dependencies]
