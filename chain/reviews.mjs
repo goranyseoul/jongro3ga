@@ -68,6 +68,7 @@ export function createReviewBoard() {
 
 /** Patient wallet side: a fresh identity per visit; the private key stays on the device. */
 export const newVisitIdentity = () => new Identity();
+export const importVisitIdentity = (exported) => Identity.import(exported);
 export async function writeReview(identity, group, clinicId, procedure, { rating, text }) {
   const proof = await generateProof(identity, group, messageOf({ rating, text }), scopeOf(clinicId, procedure));
   return { clinicId, procedure, rating, text, proof };

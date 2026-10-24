@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GlowPass — private beauty concierge for Seoul</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo">◐</span>
+      <div>
+        <div class="brand-name">GlowPass</div>
+        <div class="brand-sub">에이전트는 차트를 보지 않고, 증명만 본다</div>
+      </div>
+    </div>
+    <nav id="personas" class="personas"></nav>
+    <div class="chain-pill" id="chain-pill">Base Sepolia</div>
+  </header>
+
+  <main class="grid">
+    <!-- LEFT: the patient's device -->
+    <section class="col device">
+      <div class="col-head"><span class="badge private">ON-DEVICE · PRIVATE</span><h2>내 시술 지갑</h2></div>
+      <div id="profile" class="card profile"></div>
+      <div class="card">
+        <div class="card-title">시술 기록 <span class="muted">(병원 서명 · 원본은 기기에만)</span></div>
+        <ul id="records" class="records"></ul>
+      </div>
+      <div class="card anchor">
+        <div class="card-title">블록체인 앵커 <span class="muted">(공개되는 전부)</span></div>
+        <div id="anchor"></div>
+      </div>
+      <details class="card sim">
+        <summary>데모: 시술 완료 → 병원이 기록 발급</summary>
+        <div class="row">
+          <select id="visit-clinic"></select>
+          <select id="visit-proc"></select>
+        </div>
+        <button id="visit-btn" class="btn ghost">기록 발급 (append proof → on-chain)</button>
+      </details>
+      <div id="review-box"></div>
+    </section>
+
+    <!-- CENTER: concierge chat -->
+    <section class="col chat">
+      <div class="col-head"><span class="badge agent">CLAUDE · CONCIERGE AGENT</span><h2 id="chat-title">컨시어지</h2>
+        <button id="reset-btn" class="btn tiny ghost">새 대화</button></div>
+      <div id="messages" class="messages"></div>
+      <div id="chips" class="chips"></div>
+      <form id="composer" class="composer">
+        <textarea id="input" rows="2" placeholder="What are you looking for on this trip?"></textarea>
+        <button class="btn primary" id="send">Send</button>
+      </form>
+    </section>
+
+    <!-- RIGHT: what crosses the network -->
+    <section class="col net">
+      <div class="col-head">
+        <span class="badge public">A2A NETWORK · WHAT CLINICS SEE</span>
+        <div class="tabs"><button data-tab="log" class="tab active">A2A 로그</button><button data-tab="rank" class="tab">랭킹 · 리뷰</button></div>
+      </div>
+      <div id="log" class="log tabpane"></div>
+      <div id="rank" class="rank tabpane hidden"></div>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
