@@ -56,6 +56,35 @@
       "completed": "시술 완료"
     }
   },
+  "account": {
+    "logIn": "로그인",
+    "signUp": "회원가입",
+    "menuLabel": "계정",
+    "menuFor": "{name}님의 계정 메뉴",
+    "myPage": "마이페이지",
+    "records": "시술 기록",
+    "data": "데이터와 동의",
+    "logOut": "로그아웃",
+    "guestName": "게스트",
+    "demoAccount": "데모 계정",
+    "login": {
+      "metaTitle": "로그인",
+      "title": "로그인",
+      "lead": "다시 오셨네요. 에이전트와 기록은 그대로 있어요.",
+      "emailLabel": "이메일 주소",
+      "passwordLabel": "비밀번호",
+      "emailError": "이메일 주소를 입력해 주세요.",
+      "passwordError": "비밀번호를 입력해 주세요.",
+      "submit": "로그인",
+      "noAccount": "PibooK이 처음이신가요?",
+      "signupLink": "회원가입",
+      "demoTitle": "데모 계정으로 둘러보기",
+      "demoLead": "가상의 인물이에요. 기록이 미리 채워져 있어요.",
+      "demoNote": "데모라서 아무 이메일과 비밀번호로나 로그인돼요. 메일은 보내지 않아요.",
+      "signedIn": "{name}님으로 로그인되어 있어요.",
+      "continue": "계속하기"
+    }
+  },
   "landing": {
     "metaTitle": "에이전트가 대신 한국 병원과 이야기해요",
     "metaDescription": "받고 싶은 시술만 말해 주세요. 조건 정리, 견적 받기, 가격 확인, 예약과 기록까지 내 에이전트가 진행해요.",

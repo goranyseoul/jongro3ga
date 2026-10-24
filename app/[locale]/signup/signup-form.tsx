@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button, Input } from "@/components/ui";
 import { resetDemoState } from "@/components/customer/demo-state";
+import { signIn } from "@/components/customer/session";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
@@ -24,6 +25,7 @@ export function SignupForm() {
       return;
     }
     resetDemoState();
+    signIn({ email: email.trim() });
     router.push("/onboarding");
   };
 
@@ -64,6 +66,7 @@ export function SignupForm() {
                 type="button"
                 onClick={() => {
                   resetDemoState();
+                  signIn({ accountId: account.id });
                   router.push(account.start === "onboarding" ? "/onboarding" : "/home", { locale: account.locale });
                 }}
                 className={cn(

@@ -197,6 +197,8 @@
   --border: oklch(0.22 0.04 310 / 14%);
   --border-soft: oklch(0.22 0.04 310 / 10%);
   --input: oklch(0.22 0.04 310 / 16%);
+  /* menus opened from the hero header (account menu) need a solid light surface under dark text */
+  --popover: oklch(0.98 0.008 310);
   --sh-card: 0 1px 2px rgb(60 30 80 / 10%), 0 8px 24px rgb(60 30 80 / 8%);
   background: var(--hero-gradient);
   color: var(--text);

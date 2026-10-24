@@ -56,6 +56,35 @@
       "completed": "施術済み"
     }
   },
+  "account": {
+    "logIn": "ログイン",
+    "signUp": "会員登録",
+    "menuLabel": "アカウント",
+    "menuFor": "{name}さんのアカウントメニュー",
+    "myPage": "マイページ",
+    "records": "施術の記録",
+    "data": "データと同意",
+    "logOut": "ログアウト",
+    "guestName": "ゲスト",
+    "demoAccount": "デモアカウント",
+    "login": {
+      "metaTitle": "ログイン",
+      "title": "ログイン",
+      "lead": "おかえりなさい。エージェントも記録も、前回のまま残っています。",
+      "emailLabel": "メールアドレス",
+      "passwordLabel": "パスワード",
+      "emailError": "メールアドレスを入力してください。",
+      "passwordError": "パスワードを入力してください。",
+      "submit": "ログイン",
+      "noAccount": "はじめてご利用ですか？",
+      "signupLink": "会員登録はこちら",
+      "demoTitle": "デモアカウントでログイン",
+      "demoLead": "架空の人物です。記録があらかじめ入っています。",
+      "demoNote": "デモのため、どのメールアドレスとパスワードでもログインできます。メールは送信されません。",
+      "signedIn": "{name}さんとしてログイン中です。",
+      "continue": "続ける"
+    }
+  },
   "landing": {
     "metaTitle": "あなたの代わりに、エージェントが韓国のクリニックと話します",
     "metaDescription": "施術の希望を伝えるだけ。条件の整理から見積もりの確認、予約、記録まで、あなたのエージェントが進めます。",
