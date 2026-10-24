@@ -2,6 +2,8 @@
    1024px is the lg breakpoint from docs/spec/05-screens.md (media queries cannot read variables). */
 
 .clinic-shell {
+  /* native date pickers follow the dark surface */
+  color-scheme: dark;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
