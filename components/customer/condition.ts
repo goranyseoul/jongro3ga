@@ -3,8 +3,6 @@ import {
   getProcedure,
   type Amount,
   type Area,
-  type CustomerProfile,
-  type Procedure,
   type Unit,
 } from "@/lib/ui-data/customer";
 
@@ -25,32 +23,10 @@ export const AMOUNT_STEPS: Record<Unit, number[]> = {
   unit: [20, 30, 40, 50, 60],
   line: [200, 300, 400, 600],
   session: [1, 2, 3],
+  vial: [1, 2, 3, 4],
 };
 
 export const AREAS: Area[] = ["gangnam", "sinsa", "apgujeong", "myeongdong", "hongdae", "other"];
-
-// Area groups of 07-platform-intelligence.md: the stay area stands for its whole group.
-const AREA_GROUP: Record<Area, Area[]> = {
-  gangnam: ["sinsa", "gangnam", "apgujeong"],
-  sinsa: ["sinsa", "gangnam", "apgujeong"],
-  apgujeong: ["sinsa", "gangnam", "apgujeong"],
-  myeongdong: ["myeongdong"],
-  hongdae: ["hongdae"],
-  other: [],
-};
-
-/** Defaults of 02-agents.md "요청 정리": usual minimum amount, the stay area's group, profile budget, stay dates, profile languages. */
-export function buildCondition(profile: CustomerProfile, procedure: Procedure): Condition {
-  const stay = profile.trip;
-  return {
-    procedureId: procedure.id,
-    amount: { value: procedure.typicalAmount.min, unit: procedure.unit },
-    budgetKrw: profile.prefs.budgetKrw?.max,
-    areas: stay?.stayArea ? AREA_GROUP[stay.stayArea] : [],
-    languages: profile.prefs.languagesNeeded,
-    dateWindow: { from: stay?.arrival ?? "", to: stay?.departure ?? "" },
-  };
-}
 
 export function isTypicalMinimum(condition: Condition): boolean {
   const procedure = getProcedure(condition.procedureId);

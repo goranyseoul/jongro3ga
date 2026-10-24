@@ -8,7 +8,9 @@ import { useLabels } from "@/components/customer/use-customer";
 import type { Locale } from "@/lib/domain/common";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
-import { DEMO_TODAY, upcomingSessionNumber, type TreatmentRecord } from "@/lib/ui-data/customer";
+import type { TreatmentRecord } from "@/lib/ui-data/customer";
+
+const upcomingSessionNumber = (record: TreatmentRecord) => record.sessionNumber + 1;
 
 type CalendarEvent = { id: string; kind: "done" | "planned"; record: TreatmentRecord; session: number };
 
@@ -45,15 +47,18 @@ export function RecordsCalendar({
   records,
   latest,
   locale,
+  today,
 }: {
   records: TreatmentRecord[];
   latest: TreatmentRecord[];
   locale: Locale;
+  /** Today on the demo clock, from the BFF. */
+  today: string;
 }) {
   const t = useTranslations("records.calendar");
   const label = useLabels();
-  const [month, setMonth] = useState(DEMO_TODAY.slice(0, 7));
-  const [selected, setSelected] = useState(DEMO_TODAY);
+  const [month, setMonth] = useState(today.slice(0, 7));
+  const [selected, setSelected] = useState(today);
 
   const events = calendarEvents(records, latest);
   const monthTitle = formatMonth(month, locale);
@@ -90,7 +95,7 @@ export function RecordsCalendar({
             if (!date) return <span key={`pad-${i}`} />;
             const dayEvents = events.get(date) ?? [];
             const isSelected = date === selected;
-            const isToday = date === DEMO_TODAY;
+            const isToday = date === today;
             return (
               <button
                 key={date}
@@ -113,7 +118,7 @@ export function RecordsCalendar({
                       className={cn(
                         "size-sp-1 rounded-pill",
                         event.kind === "planned"
-                          ? date < DEMO_TODAY
+                          ? date < today
                             ? "bg-warning"
                             : "bg-success"
                           : isSelected

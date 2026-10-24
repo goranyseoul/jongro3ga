@@ -77,6 +77,7 @@ export function MenuEditor({ initial }: { initial: MenuData }) {
       key: "procedure",
       header: "시술",
       card: "title",
+      sort: (item) => `${item.nameKo} ${String(item.amount.value).padStart(4, "0")}`,
       cell: (item) => (
         <div className="flex flex-col gap-sp-1">
           <span className="text-body font-med">
@@ -86,7 +87,7 @@ export function MenuEditor({ initial }: { initial: MenuData }) {
         </div>
       ),
     },
-    { key: "price", header: "가격", align: "end", cell: (item) => <Money krw={item.priceKrw} /> },
+    { key: "price", header: "가격", align: "end", sort: (item) => item.priceKrw, cell: (item) => <Money krw={item.priceKrw} /> },
     { key: "vat", header: "부가세", cell: (item) => (item.vatIncluded ? "포함" : "별도") },
     { key: "includes", header: "포함 항목", cell: (item) => (item.includes.length > 0 ? item.includes.join(", ") : "·") },
     {
@@ -122,6 +123,7 @@ export function MenuEditor({ initial }: { initial: MenuData }) {
       key: "price",
       header: "이벤트가",
       align: "end",
+      sort: (offer) => offer.priceKrw,
       cell: (offer) => (
         <div className="flex flex-col gap-sp-1 md:items-end">
           <Money krw={offer.priceKrw} />
@@ -134,6 +136,7 @@ export function MenuEditor({ initial }: { initial: MenuData }) {
     {
       key: "period",
       header: "기간",
+      sort: (offer) => offer.validFrom,
       cell: (offer) => (
         <span className="tabular-nums">
           {formatDate(offer.validFrom)} ~ {formatDate(offer.validUntil)}

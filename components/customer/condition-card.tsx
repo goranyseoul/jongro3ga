@@ -35,9 +35,11 @@ export type ConditionCardProps = {
   onFind: () => void;
   /** Today in the demo clock, the earliest selectable date. */
   today: string;
+  /** True while the request is being sent. */
+  busy?: boolean;
 };
 
-export function ConditionCard({ locale, value, onChange, onFind, today }: ConditionCardProps) {
+export function ConditionCard({ locale, value, onChange, onFind, today, busy = false }: ConditionCardProps) {
   const t = useTranslations("chat.condition");
   const common = useTranslations("common");
   const label = useLabels();
@@ -163,7 +165,7 @@ export function ConditionCard({ locale, value, onChange, onFind, today }: Condit
         ))}
       </ul>
       <p className="text-caption text-subtle">{t("privacy")}</p>
-      <Button size="lg" fullWidth onClick={onFind}>
+      <Button size="lg" fullWidth onClick={onFind} disabled={busy}>
         {t("find")}
       </Button>
 

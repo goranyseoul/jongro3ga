@@ -34,7 +34,7 @@ export function isLate(point: CarePoint | undefined): boolean {
 }
 
 export type ProcedureSummary = {
-  procedureId: ProcedureId;
+  procedureId: string;
   count: number;
   totalKrw: number;
   first: TreatmentRecord;
@@ -43,7 +43,7 @@ export type ProcedureSummary = {
 
 /** One row per procedure, most sessions first, then most recent. */
 export function procedureSummaries(records: TreatmentRecord[]): ProcedureSummary[] {
-  const byProcedure = new Map<ProcedureId, TreatmentRecord[]>();
+  const byProcedure = new Map<string, TreatmentRecord[]>();
   for (const record of [...records].sort((a, b) => a.date.localeCompare(b.date))) {
     byProcedure.set(record.procedureId, [...(byProcedure.get(record.procedureId) ?? []), record]);
   }
@@ -85,8 +85,9 @@ const PROCEDURE_AREA: Record<ProcedureId, BodyArea> = {
   skin_booster_juvelook: "full_face",
 };
 
-export function recordArea(record: TreatmentRecord): BodyArea {
-  return PROCEDURE_AREA[record.procedureId];
+/** Undefined for master procedures outside the six screen procedures (no area preset for them). */
+export function recordArea(record: TreatmentRecord): BodyArea | undefined {
+  return PROCEDURE_AREA[record.procedureId as ProcedureId];
 }
 
 /** Clinic key of a record: the registry id, or the typed name for clinics outside the registry. */

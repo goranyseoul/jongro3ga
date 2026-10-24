@@ -1,8 +1,9 @@
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
+// Design system card: a flat surface with a one-pixel line, no shadow, 20px of room (primitives/code/card, PA and CA dashboards).
 export function Card({ className, ...rest }: ComponentProps<"div">) {
-  return <div className={cn("rounded-card border border-border-soft bg-elev p-sp-4 shadow-card", className)} {...rest} />;
+  return <div className={cn("rounded-card border border-border bg-elev p-sp-5", className)} {...rest} />;
 }
 
 export type CardHeaderProps = {
@@ -17,7 +18,7 @@ export function CardHeader({ title, description, action, as: Heading = "h3" }: C
   return (
     <div className="flex items-start justify-between gap-sp-3">
       <div className="flex min-w-0 flex-col gap-sp-1">
-        <Heading className="text-title font-semi">{title}</Heading>
+        <Heading className="text-title font-semi tracking-tight">{title}</Heading>
         {description ? <p className="text-label text-muted">{description}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

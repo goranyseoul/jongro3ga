@@ -20,7 +20,12 @@ export default defineConfig({
     : {
         command: `npx next start -p ${PORT}`,
         url: `http://localhost:${PORT}/en`,
+        // the deployed site runs in demo mode too: console pages open without a login, customers use a demo account
+        // PGLITE_DIR=memory: the database of a local build opens in memory like on Vercel (the file mode is broken in a built app)
+        env: { DEMO_MODE: "true", PGLITE_DIR: "memory" },
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,
+        // the auth routes need a secret outside demo mode; tests run the demo with an in-memory database
+        env: { DEMO_MODE: "true", PGLITE_DIR: "memory" },
       },
 });

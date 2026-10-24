@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FiAlertCircle, FiMinus, FiPlus, FiSearch } from "react-icons/fi";
 import { Button, buttonStyles, Card, Input, Timeline } from "@/components/ui";
 import { formatMonth, formatRange, moneyText } from "@/components/customer/format";
-import { updateDemoState } from "@/components/customer/demo-state";
-import { useCustomer, useLabels } from "@/components/customer/use-customer";
+import { api, useApi } from "@/components/customer/api";
+import { ApiStatus } from "@/components/customer/api-state";
+import { useLabels } from "@/components/customer/use-customer";
+import type { Locale } from "@/lib/domain/common";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { focusRing } from "@/lib/ui";
@@ -22,18 +24,19 @@ import {
 } from "./care-plan";
 import { RecordsCalendar } from "./records-calendar";
 import {
-  DEMO_TODAY,
   addDays,
   detectProcedure,
   getProcedure,
   shortHex,
   txUrl,
-  upcomingSessionNumber,
   type RecordStatus,
   type TreatmentRecord,
 } from "@/lib/ui-data/customer";
 
+type RecordsResponse = { records: TreatmentRecord[]; due: TreatmentRecord[]; today: string };
+
 const STATUSES: RecordStatus[] = ["active", "paused", "stopped"];
+const upcomingSessionNumber = (record: TreatmentRecord) => record.sessionNumber + 1;
 const PLAN_COUNT = 4;
 const ALERT_COUNT = 2;
 const PAGE_SIZE = 10;
@@ -65,9 +68,35 @@ function latestPerProcedure(records: TreatmentRecord[]): TreatmentRecord[] {
 
 export function RecordsView() {
   const t = useTranslations("records");
+  const locale = useLocale() as Locale;
+  const { data, error, loading, reload } = useApi<RecordsResponse>("/api/customer/records");
+
+  if (!data) {
+    return (
+      <>
+        <h1 className="text-h2 font-semi">{t("title")}</h1>
+        <ApiStatus error={error} loading={loading} onRetry={reload} />
+      </>
+    );
+  }
+  return <RecordsContent records={data.records} today={data.today} locale={locale} reload={reload} />;
+}
+
+function RecordsContent({
+  records,
+  today,
+  locale,
+  reload,
+}: {
+  records: TreatmentRecord[];
+  /** Today on the demo clock, from the BFF. */
+  today: string;
+  locale: Locale;
+  reload: () => Promise<void>;
+}) {
+  const t = useTranslations("records");
   const common = useTranslations("common");
   const label = useLabels();
-  const { locale, records } = useCustomer();
   const [filter, setFilter] = useState<{ kind: PresetKind; value: string } | null>(null);
   const [query, setQuery] = useState("");
   const topRail = useRef<HTMLUListElement>(null);
@@ -78,7 +107,7 @@ export function RecordsView() {
   const latest = latestPerProcedure(records);
   // Urgent alerts by the page title: active procedures past their recommended interval, most overdue first.
   const alerts = latest
-    .map((record) => ({ record, point: carePoint(record, DEMO_TODAY) }))
+    .map((record) => ({ record, point: carePoint(record, today) }))
     .flatMap(({ record, point }) =>
       point && (point.kind === "late" || point.kind === "courseLate") ? [{ record, kind: point.kind, late: point.late }] : [],
     )
@@ -117,14 +146,16 @@ export function RecordsView() {
   // "Find clinics" opens the agent chat with the procedure and the next month. Shown to every customer
   // (records owner decision 2026-10-24); the chat itself still refuses matching for Korean nationals and
   // residents (08-compliance.md section 2) and shows its notice instead.
-  const findTo = addDays(DEMO_TODAY, FIND_DAYS);
+  const findTo = addDays(today, FIND_DAYS);
   const findHref = (procedureId: string) =>
     `/chat?intent=${encodeURIComponent(
-      t("plan.findIntent", { procedure: label.procedure(procedureId), range: formatRange(DEMO_TODAY, findTo) }),
+      t("plan.findIntent", { procedure: label.procedure(procedureId), range: formatRange(today, findTo) }),
     )}`;
 
-  const setStatus = (record: TreatmentRecord, status: RecordStatus) =>
-    updateDemoState((state) => ({ ...state, recordStatus: { ...state.recordStatus, [record.id]: status } }));
+  const setStatus = async (record: TreatmentRecord, status: RecordStatus) => {
+    await api(`/api/customer/records/${record.id}`, { method: "PATCH", json: { status } }).catch(() => undefined);
+    await reload();
+  };
 
   // The top procedures rail scrolls sideways (swipe on phones, arrows next to the heading).
   const updateTopEdges = () => {
@@ -273,7 +304,7 @@ export function RecordsView() {
         ) : (
           <ul className="grid grid-cols-1 gap-sp-3 md:grid-cols-2">
             {(showAllPlan ? latest : latest.slice(0, PLAN_COUNT)).map((record) => {
-              const point = carePoint(record, DEMO_TODAY);
+              const point = carePoint(record, today);
               return (
                 <li key={record.id}>
                   <Card className="flex h-full flex-col gap-sp-3">
@@ -284,7 +315,9 @@ export function RecordsView() {
                           {common("session", { n: upcomingSessionNumber(record), date: record.nextDue })}
                         </p>
                       ) : (
-                        <p className="text-body text-muted">{t(`next.${record.status === "paused" ? "paused" : "stopped"}`)}</p>
+                        <p className="text-body text-muted">
+                          {t(`next.${record.status === "paused" ? "paused" : record.status === "stopped" ? "stopped" : "noNext"}`)}
+                        </p>
                       )}
                       {point ? (
                         <p
@@ -307,7 +340,7 @@ export function RecordsView() {
                               key={value}
                               type="button"
                               aria-pressed={record.status === value}
-                              onClick={() => setStatus(record, value)}
+                              onClick={() => void setStatus(record, value)}
                               className={cn(smallChip, chipState(record.status === value), focusRing)}
                             >
                               {t(`next.status.${value}`)}
@@ -333,7 +366,7 @@ export function RecordsView() {
         )}
       </section>
 
-      <RecordsCalendar records={records} latest={latest} locale={locale} />
+      <RecordsCalendar records={records} latest={latest} locale={locale} today={today} />
 
       <section aria-labelledby="rec-history" className="flex scroll-mt-sp-16 flex-col gap-sp-3">
         <div className="flex items-center justify-between gap-sp-2">
@@ -395,7 +428,7 @@ export function RecordsView() {
             </div>
 
             {focused.map((summary) => {
-              const point = carePoint(summary.last, DEMO_TODAY);
+              const point = carePoint(summary.last, today);
               return (
                 <Card key={summary.procedureId} className="flex flex-col gap-sp-1">
                   <div className="flex flex-wrap items-center justify-between gap-sp-2">
