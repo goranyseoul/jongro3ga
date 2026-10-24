@@ -392,5 +392,62 @@
       "all": "기록 보기",
       "another": "계속 추가"
     }
+  },
+  "outcomes": {
+    "metaTitle": "시술 기록",
+    "title": "시술 당일 기록",
+    "lead": "시술이 끝나면 실제 결제액과 받은 용량을 기록해요.",
+    "wait": {
+      "title": "예약이 확정되면 기록할 수 있어요",
+      "body": "병원 확인이 끝날 때까지 기다려 주세요.",
+      "open": "예약 보기"
+    },
+    "summary": {
+      "clinic": "병원",
+      "when": "시술일",
+      "quoted": "견적 금액"
+    },
+    "fields": {
+      "currency": "통화",
+      "paid": "실제 결제액",
+      "rateNote": "참고 환율",
+      "received": "실제로 받은 용량",
+      "verified": "정품 확인 방식",
+      "satisfaction": "만족도",
+      "pain": "통증",
+      "comment": "한 줄(선택)"
+    },
+    "verified": {
+      "vial_shown": "약제 바이알을 보여줬어요",
+      "packaging_shown": "포장을 확인했어요",
+      "explained_verbally": "말로 설명을 들었어요",
+      "not_checked": "확인하지 않았어요"
+    },
+    "scale": {
+      "low": "낮음",
+      "high": "높음",
+      "satisfactionLow": "불만족",
+      "satisfactionHigh": "만족"
+    },
+    "gap": {
+      "same": "견적과 같은 금액이에요.",
+      "higher": "견적보다 {amount} 높아요.",
+      "lower": "견적보다 {amount} 낮아요."
+    },
+    "share": "이 결과는 가격 판정과 병원 연결에 쓰여요. 개별 답변이 병원에 전달되지는 않아요.",
+    "submit": "기록 보내기",
+    "saved": {
+      "title": "기록을 보냈어요",
+      "body": "고마워요. 다음 회차를 기록에 추가했어요.",
+      "next": "다음 회차",
+      "records": "기록 보기"
+    },
+    "later": {
+      "title": "이후 체크인",
+      "note": "다음 버전에서 지원할 예정이에요.",
+      "d7": "7일 뒤",
+      "d30": "30일 뒤",
+      "questions": "실제 다운타임 · 효과 체감 · 다시 받을 의향"
+    }
   }
 }

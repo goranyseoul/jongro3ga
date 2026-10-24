@@ -392,5 +392,62 @@
       "all": "View records",
       "another": "Add another"
     }
+  },
+  "outcomes": {
+    "metaTitle": "Procedure record",
+    "title": "Record the procedure day",
+    "lead": "After the procedure, record what you actually paid and the amount you received.",
+    "wait": {
+      "title": "You can record once the booking is confirmed",
+      "body": "Please wait until the clinic has confirmed.",
+      "open": "View booking"
+    },
+    "summary": {
+      "clinic": "Clinic",
+      "when": "Procedure date",
+      "quoted": "Quoted price"
+    },
+    "fields": {
+      "currency": "Currency",
+      "paid": "Amount you actually paid",
+      "rateNote": "Reference rate",
+      "received": "Amount you received",
+      "verified": "How the product was checked",
+      "satisfaction": "Satisfaction",
+      "pain": "Pain",
+      "comment": "One line (optional)"
+    },
+    "verified": {
+      "vial_shown": "Shown the vial",
+      "packaging_shown": "Checked the packaging",
+      "explained_verbally": "Explained verbally",
+      "not_checked": "Not checked"
+    },
+    "scale": {
+      "low": "Low",
+      "high": "High",
+      "satisfactionLow": "Unhappy",
+      "satisfactionHigh": "Happy"
+    },
+    "gap": {
+      "same": "Same as the quote.",
+      "higher": "{amount} more than the quote.",
+      "lower": "{amount} less than the quote."
+    },
+    "share": "These results are used to check prices and to connect you with clinics. Your individual answers are not passed to the clinic.",
+    "submit": "Send record",
+    "saved": {
+      "title": "Record sent",
+      "body": "Thank you. Your next session has been added to your records.",
+      "next": "Next session",
+      "records": "View records"
+    },
+    "later": {
+      "title": "Check-ins to come",
+      "note": "Planned for a later version.",
+      "d7": "In 7 days",
+      "d30": "In 30 days",
+      "questions": "Actual downtime · how it feels · whether you would return"
+    }
   }
 }

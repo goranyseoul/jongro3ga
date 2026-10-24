@@ -392,5 +392,62 @@
       "all": "查看记录",
       "another": "继续添加"
     }
+  },
+  "outcomes": {
+    "metaTitle": "施术记录",
+    "title": "施术当天的记录",
+    "lead": "施术后,记录实际支付金额和用量。",
+    "wait": {
+      "title": "预约确认后才能记录",
+      "body": "请等待诊所确认完成。",
+      "open": "查看预约"
+    },
+    "summary": {
+      "clinic": "诊所",
+      "when": "施术日",
+      "quoted": "报价金额"
+    },
+    "fields": {
+      "currency": "币种",
+      "paid": "实际支付金额",
+      "rateNote": "参考汇率",
+      "received": "实际用量",
+      "verified": "药剂确认方式",
+      "satisfaction": "满意度",
+      "pain": "疼痛程度",
+      "comment": "一句话(选填)"
+    },
+    "verified": {
+      "vial_shown": "看到了药剂瓶",
+      "packaging_shown": "确认了包装",
+      "explained_verbally": "口头说明",
+      "not_checked": "未确认"
+    },
+    "scale": {
+      "low": "低",
+      "high": "高",
+      "satisfactionLow": "不满意",
+      "satisfactionHigh": "满意"
+    },
+    "gap": {
+      "same": "与报价金额相同。",
+      "higher": "比报价高 {amount}。",
+      "lower": "比报价低 {amount}。"
+    },
+    "share": "这些结果将用于价格核对和诊所对接。个人的回答不会传达给诊所。",
+    "submit": "提交记录",
+    "saved": {
+      "title": "已提交记录",
+      "body": "谢谢。下次时间已加入您的记录。",
+      "next": "下次时间",
+      "records": "查看记录"
+    },
+    "later": {
+      "title": "之后的回访",
+      "note": "计划后续支持。",
+      "d7": "7天后",
+      "d30": "30天后",
+      "questions": "实际恢复期 · 效果感受 · 是否愿意再做"
+    }
   }
 }

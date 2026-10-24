@@ -392,5 +392,62 @@
       "all": "記録を見る",
       "another": "続けて追加"
     }
+  },
+  "outcomes": {
+    "metaTitle": "施術の記録",
+    "title": "施術当日の記録",
+    "lead": "施術のあとに、実際のお支払い額と量を記録します。",
+    "wait": {
+      "title": "予約が確定すると記録できます",
+      "body": "クリニックの確認が終わるまでお待ちください。",
+      "open": "予約を見る"
+    },
+    "summary": {
+      "clinic": "クリニック",
+      "when": "施術日",
+      "quoted": "見積もり金額"
+    },
+    "fields": {
+      "currency": "通貨",
+      "paid": "実際のお支払い額",
+      "rateNote": "参考レート",
+      "received": "実際に受けた量",
+      "verified": "薬剤の確認方法",
+      "satisfaction": "満足度",
+      "pain": "痛み",
+      "comment": "ひとこと(任意)"
+    },
+    "verified": {
+      "vial_shown": "薬剤のバイアルを見せてもらった",
+      "packaging_shown": "パッケージを確認した",
+      "explained_verbally": "口頭で説明を受けた",
+      "not_checked": "確認していない"
+    },
+    "scale": {
+      "low": "低い",
+      "high": "高い",
+      "satisfactionLow": "不満",
+      "satisfactionHigh": "満足"
+    },
+    "gap": {
+      "same": "見積もりと同じ金額です。",
+      "higher": "見積もりより{amount}高い金額です。",
+      "lower": "見積もりより{amount}低い金額です。"
+    },
+    "share": "この結果は、価格の判定とクリニックの連携に使われます。個別の回答がクリニックに伝わることはありません。",
+    "submit": "記録を送る",
+    "saved": {
+      "title": "記録を送りました",
+      "body": "ありがとうございます。次回の目安を記録に追加しました。",
+      "next": "次回の目安",
+      "records": "記録を見る"
+    },
+    "later": {
+      "title": "このあとのチェックイン",
+      "note": "今後対応する予定です。",
+      "d7": "7日後",
+      "d30": "30日後",
+      "questions": "実際のダウンタイム · 効果の実感 · また受けたいか"
+    }
   }
 }
