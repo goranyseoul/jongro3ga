@@ -284,5 +284,59 @@
       "send": "发送预约请求",
       "back": "返回"
     }
+  },
+  "bookings": {
+    "metaTitle": "预约详情",
+    "title": "预约详情",
+    "statusNote": {
+      "pending_clinic_clinic": "诊所正在确认预约。确认后会显示在这里。",
+      "pending_clinic_proxy": "Pibu 正在通过电话或消息向诊所确认。确认后会显示在这里。",
+      "confirmed": "预约已确认。",
+      "completed": "已收到您的施术记录。"
+    },
+    "info": {
+      "title": "预约内容",
+      "clinic": "诊所",
+      "when": "日期时间",
+      "address": "地址",
+      "map": "在地图中打开",
+      "procedure": "项目",
+      "price": "报价金额",
+      "priceNote": "这是报价金额。实际支付金额可在施术当天记录。",
+      "id": "预约编号",
+      "confirmedBy": "确认方",
+      "by": {
+        "clinic_staff": "诊所工作人员",
+        "pibu_operator": "Pibu 运营",
+        "auto": "自动确认"
+      }
+    },
+    "steps": {
+      "title": "预约进度",
+      "requested": "已发送预约请求",
+      "pending": "等待诊所确认",
+      "confirmed": "预约已确认"
+    },
+    "notes": {
+      "title": "诊所的提示",
+      "empty": "确认后,到诊前的提示会显示在这里。"
+    },
+    "explain": {
+      "title": "施术前诊所会说明的内容",
+      "diagnosis": "诊断名称、治疗方法、可能的副作用",
+      "contract": "诊疗合同的内容",
+      "cost": "预计的诊疗费用",
+      "dispute": "发生纠纷时的解决程序",
+      "doctor": "诊断及能否施术由医生判断。Pibu 不会代替诊所进行说明。"
+    },
+    "downtime": "离境前恢复期可能尚未结束。",
+    "actions": {
+      "simulate": "演示: 模拟诊所确认",
+      "simulateNote": "实际服务中由诊所或运营方确认。",
+      "record": "记录施术当天",
+      "recordNote": "施术后可以记录实际支付金额和用量。",
+      "viewRecords": "查看记录",
+      "requests": "返回报价"
+    }
   }
 }

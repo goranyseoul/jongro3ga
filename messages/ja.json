@@ -284,5 +284,59 @@
       "send": "予約リクエストを送る",
       "back": "戻る"
     }
+  },
+  "bookings": {
+    "metaTitle": "予約の詳細",
+    "title": "予約の詳細",
+    "statusNote": {
+      "pending_clinic_clinic": "クリニックが予約を確認しています。確定するとここに表示されます。",
+      "pending_clinic_proxy": "Pibuがクリニックに電話やメッセージで確認しています。確定するとここに表示されます。",
+      "confirmed": "予約が確定しました。",
+      "completed": "施術の記録を受け付けました。"
+    },
+    "info": {
+      "title": "予約の内容",
+      "clinic": "クリニック",
+      "when": "日時",
+      "address": "住所",
+      "map": "地図で開く",
+      "procedure": "施術",
+      "price": "見積もり金額",
+      "priceNote": "見積もりの金額です。実際のお支払い額は、施術の当日に記録できます。",
+      "id": "予約番号",
+      "confirmedBy": "確定した人",
+      "by": {
+        "clinic_staff": "クリニックのスタッフ",
+        "pibu_operator": "Pibu運営",
+        "auto": "自動確定"
+      }
+    },
+    "steps": {
+      "title": "予約の進み具合",
+      "requested": "予約リクエストを送りました",
+      "pending": "クリニックの確認待ち",
+      "confirmed": "予約確定"
+    },
+    "notes": {
+      "title": "クリニックからの案内",
+      "empty": "確定すると、来院前の案内がここに届きます。"
+    },
+    "explain": {
+      "title": "施術の前にクリニックが説明する内容",
+      "diagnosis": "診断名、治療方法、考えられる副作用",
+      "contract": "診療契約の内容",
+      "cost": "予想される診療費",
+      "dispute": "トラブルが起きたときの解決手続き",
+      "doctor": "診断と施術の可否は医師が判断します。Pibuが代わりに説明することはありません。"
+    },
+    "downtime": "出国前にダウンタイムが終わらない可能性があります。",
+    "actions": {
+      "simulate": "デモ: クリニックの確認を再現する",
+      "simulateNote": "実際のサービスでは、クリニックまたは運営が確定します。",
+      "record": "施術当日の記録をつける",
+      "recordNote": "施術のあとに、お支払い額と量を記録できます。",
+      "viewRecords": "記録を見る",
+      "requests": "見積もりに戻る"
+    }
   }
 }

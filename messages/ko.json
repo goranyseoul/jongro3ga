@@ -284,5 +284,59 @@
       "send": "예약 요청 보내기",
       "back": "뒤로"
     }
+  },
+  "bookings": {
+    "metaTitle": "예약 상세",
+    "title": "예약 상세",
+    "statusNote": {
+      "pending_clinic_clinic": "병원이 예약을 확인하고 있어요. 확정되면 여기에 보여요.",
+      "pending_clinic_proxy": "Pibu가 병원에 전화나 메시지로 확인하고 있어요. 확정되면 여기에 보여요.",
+      "confirmed": "예약이 확정됐어요.",
+      "completed": "시술 기록을 받았어요."
+    },
+    "info": {
+      "title": "예약 내용",
+      "clinic": "병원",
+      "when": "일시",
+      "address": "주소",
+      "map": "지도에서 열기",
+      "procedure": "시술",
+      "price": "견적 금액",
+      "priceNote": "견적 금액이에요. 실제 결제액은 시술 당일에 기록할 수 있어요.",
+      "id": "예약 번호",
+      "confirmedBy": "확정한 곳",
+      "by": {
+        "clinic_staff": "병원 직원",
+        "pibu_operator": "Pibu 운영",
+        "auto": "자동 확정"
+      }
+    },
+    "steps": {
+      "title": "예약 진행 상황",
+      "requested": "예약 요청을 보냈어요",
+      "pending": "병원 확인 대기",
+      "confirmed": "예약 확정"
+    },
+    "notes": {
+      "title": "병원 안내",
+      "empty": "확정되면 방문 전 안내가 여기에 도착해요."
+    },
+    "explain": {
+      "title": "시술 전에 병원이 설명하는 내용",
+      "diagnosis": "진단명, 치료 방법, 가능한 부작용",
+      "contract": "진료 계약 내용",
+      "cost": "예상 진료비",
+      "dispute": "분쟁이 생겼을 때의 해결 절차",
+      "doctor": "진단과 시술 가능 여부는 의사가 판단해요. Pibu가 병원을 대신해 설명하지 않아요."
+    },
+    "downtime": "출국 전에 다운타임이 끝나지 않을 수 있어요.",
+    "actions": {
+      "simulate": "데모: 병원 확인 시뮬레이션",
+      "simulateNote": "실제 서비스에서는 병원 또는 운영이 예약을 확정해요.",
+      "record": "시술 당일 기록하기",
+      "recordNote": "시술 뒤에 실제 결제액과 받은 용량을 기록할 수 있어요.",
+      "viewRecords": "기록 보기",
+      "requests": "견적으로 돌아가기"
+    }
   }
 }

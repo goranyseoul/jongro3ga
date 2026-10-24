@@ -284,5 +284,59 @@
       "send": "Send booking request",
       "back": "Back"
     }
+  },
+  "bookings": {
+    "metaTitle": "Booking details",
+    "title": "Booking details",
+    "statusNote": {
+      "pending_clinic_clinic": "The clinic is checking your booking. It will show here once confirmed.",
+      "pending_clinic_proxy": "Pibu is checking with the clinic by phone or message. It will show here once confirmed.",
+      "confirmed": "Your booking is confirmed.",
+      "completed": "Your procedure record has been received."
+    },
+    "info": {
+      "title": "Booking",
+      "clinic": "Clinic",
+      "when": "Date and time",
+      "address": "Address",
+      "map": "Open in maps",
+      "procedure": "Procedure",
+      "price": "Quoted price",
+      "priceNote": "This is the quoted amount. You can record what you actually paid on the day of the procedure.",
+      "id": "Booking no.",
+      "confirmedBy": "Confirmed by",
+      "by": {
+        "clinic_staff": "Clinic staff",
+        "pibu_operator": "Pibu operations",
+        "auto": "Automatic"
+      }
+    },
+    "steps": {
+      "title": "Booking progress",
+      "requested": "Booking request sent",
+      "pending": "Waiting for the clinic",
+      "confirmed": "Booking confirmed"
+    },
+    "notes": {
+      "title": "Notes from the clinic",
+      "empty": "Instructions for your visit will arrive here once the booking is confirmed."
+    },
+    "explain": {
+      "title": "What the clinic explains before the procedure",
+      "diagnosis": "The diagnosis, the treatment method and possible side effects",
+      "contract": "The terms of the treatment agreement",
+      "cost": "The expected treatment cost",
+      "dispute": "How a dispute is resolved",
+      "doctor": "The doctor decides on diagnosis and whether the procedure suits you. Pibu does not explain these on the clinic's behalf."
+    },
+    "downtime": "Recovery may not be over before you leave Korea.",
+    "actions": {
+      "simulate": "Demo: simulate the clinic's confirmation",
+      "simulateNote": "In the real service the clinic or Pibu operations confirm the booking.",
+      "record": "Record the procedure day",
+      "recordNote": "After the procedure you can record what you paid and the amount you received.",
+      "viewRecords": "View records",
+      "requests": "Back to quotes"
+    }
   }
 }
