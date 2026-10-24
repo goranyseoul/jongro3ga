@@ -304,7 +304,8 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
       try {
         sessionStorage.setItem(
           HANDOFF_KEY,
-          JSON.stringify({ draft: { ...draft, locale: value, languages: [value] }, at: Date.now() }),
+          // the messages go too, so the first request and the clinic cards stay on screen after the switch
+          JSON.stringify({ draft: { ...draft, locale: value, languages: [value] }, messages, at: Date.now() }),
         );
       } catch {
         /* storage blocked: the conversation restarts in the new language */
@@ -380,7 +381,7 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
 
   // Picks the conversation up after a language switch, in the new locale and with the window open.
   useEffect(() => {
-    let handoff: { draft: Draft; at: number } | null = null;
+    let handoff: { draft: Draft; at: number; messages?: Message[] } | null = null;
     try {
       const raw = sessionStorage.getItem(HANDOFF_KEY);
       handoff = raw ? JSON.parse(raw) : null;
@@ -393,8 +394,11 @@ export function OnboardingChat({ locale, intro, footer }: { locale: Locale; intr
     const target = nextStep("locale", next);
     setStarted(true);
     setWindowOpen(true);
-    // replaces instead of appending, so a repeated effect run (React strict mode) never doubles the line
-    setMessages([message("user", LOCALE_NAME[locale])]);
+    // replaces instead of appending, so a repeated effect run (React strict mode) never doubles the line;
+    // ids continue after the carried messages so React keys stay unique
+    const carried = Array.isArray(handoff.messages) ? handoff.messages : [];
+    nextId.current = carried.reduce((max, m) => Math.max(max, Number(m.id.slice(1)) || 0), 0) + 1;
+    setMessages([...carried, message("user", LOCALE_NAME[locale])]);
     setDraft(next);
     agentSays([question(target, next, c)], () => {
       setStep(target);
