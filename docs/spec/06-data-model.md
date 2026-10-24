@@ -271,7 +271,7 @@ export interface AttributionEntry {
   referralTokenJti: string; status: BookingV1["status"]; priceKrw: Krw; nationality?: Nationality; reportedAt: IsoDateTime;
 }
 
-// ZK 확장: 검증 방문 수와 후기 집계. 후기 원문은 저장하지 않는다 (1:1 요약 때만 쓰고 폐기, 08)
+// ZK 확장: 검증 방문 수와 후기 집계. 후기 원문은 저장하고 로그인 고객 화면과 비교 화면에 공개한다 (익명 집합 3명 이상일 때만, 08)
 export interface VerifiedVisitStat { id: string; clinicId: string; procedureId: string; count: number }
 export interface ReviewStat { id: string; clinicId: string; procedureId: string; n: number; avgRating: number; nullifiers: string[] }
 export interface AnchorLog { id: string; bookingId: string; subjectId: string; tx: string; day: number; at: IsoDateTime }
@@ -345,6 +345,6 @@ export interface AgentIdentity { agentId: string; role: "customer" | "platform" 
 | `rules.json` | 활성 2개, 제안 0개. `rule_001`: when `{ nationalities: ["CN"] }` then `require_language ["zh-CN"]` · `rule_002`: when `{ procedureIds: ["ulthera"] }` then `demote_clinic ["cln_dahye"] 0.1`. 둘 다 Yuki 리쥬란 요청에는 매치되지 않는다 (`appliedRuleIds = []`) | 2개 |
 | `kr-patterns.json` | 나이대·고민별 한국 여성 시술 조합 (PLANNING의 Pibu Recipe) | `demo_assumption` |
 | `fx.json` | 참고 환율 (JPY, CNY, USD) | 고정값 |
-| `verified-visits.json` | ZK 확장: 병원 × 시술별 `VerifiedVisitStat` 시드 (데모용 가상 통계. 예: 서울글로우 리쥬란 1,240명). 후기 시드 `ReviewStat`은 같은 방식으로 n >= 5인 병원에만 둔다 | 병원 5곳 × 시술 |
+| `verified-visits.json` | ZK 확장: 병원 × 시술별 `VerifiedVisitStat` 시드 (데모용 가상 통계. 예: 서울글로우 리쥬란 1,240명). 후기 시드 `ReviewStat`(원문 포함)은 같은 방식으로 익명 집합이 3명 이상인 병원에만 둔다 | 병원 5곳 × 시술 |
 
 모든 시드 병원·인물·통계는 **가상**이다 (README 규칙).

@@ -309,7 +309,7 @@ TypeScript 정의와 zod 스키마의 정본은 `lib/a2a/schemas.ts` ([06-data-m
 }
 ```
 
-ZK 확장: 각 `candidates[]`에 선택 필드 `verifiedVisits?`(피북 사용자 방문 수)와 `reviewStats?`(`{ "n": 18, "avgRating": 4.6 }`)를 플랫폼이 넣는다. `reviewStats`는 `n >= 5`일 때만 넣고 평점은 집계값뿐이다 (후기 원문 없음, [08-compliance.md](08-compliance.md)). 두 값은 매칭 점수에 들어가지 않는다 ([07-platform-intelligence.md](07-platform-intelligence.md)).
+ZK 확장: 각 `candidates[]`에 선택 필드 `verifiedVisits?`(피북 사용자 방문 수)와 `reviewStats?`(`{ "n": 18, "avgRating": 4.6 }`)를 플랫폼이 넣는다. `reviewStats`는 (병원, 시술) 익명 집합이 3명 이상일 때만 넣고, 후기 원문은 별도 조회 경로로 공개한다 ([08-compliance.md](08-compliance.md)). 두 값은 매칭 점수에 들어가지 않는다 ([07-platform-intelligence.md](07-platform-intelligence.md)).
 
 ```json
 { "clinicId": "cln_seoul_glow", "verifiedVisits": 1240, "reviewStats": { "n": 18, "avgRating": 4.6 } }
@@ -530,7 +530,7 @@ ZK 확장 필드 (`pibu/offers@1`과 `pibu/quote@1`의 `event`):
 
 - `visitProof`는 Semaphore v4 증명(`@semaphore-protocol/core`의 `generateProof` 결과 그대로)이다. `scope = hash("review:<clinicId>:<procedureId>")`, `message = hash({rating, text})`.
 - 플랫폼 검사: 그룹 멤버십, nullifier 미사용(방문 1회 = 후기 1회), 증명 검증. 통과하면 `ReviewStat`에 집계하고, 거부 사유는 text로 돌려준다.
-- 후기 텍스트는 공개 피드에 내지 않는다. 고객 화면에는 `reviewStats`(n, 평점)만 보이고, 텍스트는 로그인 고객의 1:1 상담 응답에서 Claude 요약으로만 쓴다 ([08-compliance.md](08-compliance.md), 오너 결정 2026-10-24).
+- 후기 텍스트와 `reviewStats`(n, 평점)는 로그인 고객 화면과 비교 화면에 공개한다. 랜딩에는 싣지 않고, 익명 집합 3명 이상일 때만 보인다. 제출 시 "공개됨 + 익명(Semaphore)"을 고지한다 ([08-compliance.md](08-compliance.md), 오너 결정 2026-10-24).
 - 한계: A2A 호출은 bearer 토큰이 있어 플랫폼은 발신 에이전트를 안다. 플랫폼에 대한 익명성은 P1(릴레이 제출)이고, P0에서 보장하는 것은 "검증된 방문자, 1회"다.
 
 ### 나머지 스키마
