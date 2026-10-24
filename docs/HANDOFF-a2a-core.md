@@ -55,7 +55,7 @@
 
 없는 것은 팀원 핸드오프 2.2절 표 그대로다. 추가로 `scripts/check-boundaries.mjs`, `npm run gate`, `.env.example`, `@a2a-js/sdk`·`jose`·`@anthropic-ai/sdk`·`@playwright/test`가 없다.
 
-기준선: `feat/zk-integration` 7ef0306에서 `npm run typecheck` 0 에러, `npx vitest run` 12파일 151개, `node scripts/verify-spec.mjs all` 통과, `npm run build` 69페이지(prebuild 가드 4종 포함)였고, ZK 세션이 main 머지(#19, #16) 때 게이트를 다시 통과시켰다. 브라우저 지갑(#16)이 테스트를 더했을 수 있으니 `npm ci` 후 숫자를 다시 재서 이 줄을 갱신한다. 이 워크트리는 `node_modules`가 없으니 `npm ci`부터.
+기준선 (2026-10-24 저녁 재측정, 이 워크트리 `npm ci` 후, WP0 전 77fda3e): `npm run typecheck` 0 에러, `npx vitest run` 14파일 159개, `node scripts/verify-spec.mjs all` 통과. WP0 뒤: vitest 15파일 164개(경계 검사 양성 대조 5개 추가), `npm run gate` 통과(lint 경고 10건은 UI 세션 파일의 React Compiler 규칙, BUILD-LOG 18행), `npm run build` 70페이지. 이전 기록: `feat/zk-integration` 7ef0306에서 12파일 151개, 69페이지. 메인 체크아웃에서 재면 `.claude/worktrees/**`까지 긁혀 숫자가 뛴다 (5절).
 
 ## 4. 해야 할 일 (순서)
 
@@ -98,8 +98,9 @@
 cd /Users/junggonkim/orca/workspaces/jongro3ga/a2a-core
 npm ci
 npm run typecheck                       # 0 에러
-npx vitest run                          # 12 files, 151 tests
+npx vitest run                          # 15 files, 164 tests (WP0 뒤)
 node scripts/verify-spec.mjs all        # 6개 통과
+npm run gate                            # WP0 뒤 존재, 통과
 git fetch origin && git log --oneline -1 origin/main   # ba2855c 이후면 git merge origin/main (팀원 UI PR)
 ```
 
@@ -110,7 +111,7 @@ git fetch origin && git log --oneline -1 origin/main   # ba2855c 이후면 git m
 ```
 docs/HANDOFF-a2a-core.md를 처음부터 끝까지 읽고, 그다음 docs/HANDOFF-backend-a2a.md의 6절과 8절,
 docs/spec/09-architecture.md의 "SDK 함정", docs/spec/03-a2a-protocol.md 전체, docs/INTEGRATION.md 3~4절을 읽어.
-npm ci 후 기준선(typecheck, vitest 12/151, verify-spec)을 확인하고 WP0부터 시작해.
+npm ci 후 기준선(typecheck, vitest, verify-spec)을 확인하고 3절의 기준선 숫자를 갱신한 뒤 WP0부터 시작해.
 너는 코디네이터다: 작은 건 직접 하고, 묶음 단위 구현은 5절 규칙대로 모델을 골라 워커에 위임해.
 feat/zk-integration과 main에는 커밋하지 말고 이 브랜치에만 커밋해. 스펙과 다르면 BUILD-LOG 18행부터 적어.
 열린 결정은 1절의 기본값으로 진행하고 어떤 안으로 갔는지 보고에 적어.
