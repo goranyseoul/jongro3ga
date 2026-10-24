@@ -1,0 +1,8 @@
+{
+  "chainId": 84532,
+  "verifier": "0x6b552a5f074ffd2e32149cc8faeb64b755972b80",
+  "registry": "0x8f9d9665d7bc1a19606a1f1302d29df353e6f241",
+  "relayer": "0x4727A140c6A93dC91Eb29bfC0FDF3D8262946Ba4",
+  "secondsPerDay": 60,
+  "deployedAt": "2026-10-24T03:31:46.355Z"
+}

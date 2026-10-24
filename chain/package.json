@@ -5,6 +5,7 @@
   "dependencies": {
     "@aztec/bb.js": "^5.0.0-nightly.20260324",
     "@noir-lang/noir_js": "^1.0.0-beta.20",
+    "@semaphore-protocol/core": "^4.14.5",
     "solc": "^0.8.28",
     "viem": "^2.57.10"
   }
