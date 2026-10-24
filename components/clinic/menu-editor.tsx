@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Card, CardHeader, Money, Table, type TableColumn } from "@/components/ui";
-import { MENU_ITEMS, OFFERS, TODAY, type MenuItem, type Offer } from "@/lib/ui-data/clinic";
+import { MENU_ITEMS, OFFERS, TODAY, ZK_PRESET_TEXT, zkPresetOf, type MenuItem, type Offer } from "@/lib/ui-data/clinic";
 import { formatCurrency } from "@/lib/money";
 import { ConfirmSheet } from "./confirm-sheet";
 import { EventSheet, type EventTarget } from "./event-sheet";
@@ -125,7 +125,23 @@ export function MenuEditor() {
         </span>
       ),
     },
-    { key: "conditions", header: "조건", cell: (offer) => offer.conditions },
+    {
+      key: "conditions",
+      header: "조건",
+      cell: (offer) => {
+        const proof = zkPresetOf(offer.zkClauses, offer.procedureId);
+        return (
+          <div className="flex flex-col gap-sp-1">
+            <span>{offer.conditions}</span>
+            {proof !== "none" ? (
+              <span className="text-caption text-subtle">
+                증명 조건: {proof === "custom" ? "직접 정의" : ZK_PRESET_TEXT[proof].short}
+              </span>
+            ) : null}
+          </div>
+        );
+      },
+    },
     {
       key: "active",
       header: "노출",

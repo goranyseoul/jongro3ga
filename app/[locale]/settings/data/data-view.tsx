@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { AgentCardView, Button, Card, CardHeader, ConsentCard, Sheet, buttonStyles } from "@/components/ui";
 import { resetDemoState, updateDemoState } from "@/components/customer/demo-state";
@@ -9,7 +10,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { COPY } from "../../onboarding/copy";
 import { buildAgentCard } from "../../onboarding/mock";
-import { consentsFor, type ConsentType } from "@/lib/ui-data/customer";
+import { ZK_CHAIN, consentsFor, shortHex, walletFor, type ConsentType } from "@/lib/ui-data/customer";
 
 const REQUIRED: ConsentType[] = ["terms", "privacy"];
 
@@ -23,6 +24,7 @@ export function DataView() {
 
   const consents = consentsFor(profile);
   const granted = (type: ConsentType, seed: boolean) => demo.consents[type] ?? seed;
+  const wallet = walletFor(profile.id, records);
 
   // The onboarding card carries the demo agent id; the customer's own id replaces it here
   const card = (() => {
@@ -38,7 +40,12 @@ export function DataView() {
   })();
 
   const exportJson = () => {
-    const data = { profile, consents: consents.map((c) => ({ ...c, granted: granted(c.type, c.granted) })), records };
+    const data = {
+      profile,
+      consents: consents.map((c) => ({ ...c, granted: granted(c.type, c.granted) })),
+      records,
+      wallet: wallet ? { ...wallet, chainId: ZK_CHAIN.chainId, registry: ZK_CHAIN.registry } : null,
+    };
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
     const link = document.createElement("a");
     link.href = url;
@@ -80,6 +87,34 @@ export function DataView() {
         </div>
         <AgentCardView card={card} labels={copy.agentCard} />
       </section>
+
+      {wallet ? (
+        <section aria-labelledby="set-wallet" className="flex flex-col gap-sp-3">
+          <div className="flex flex-col gap-sp-1">
+            <h2 id="set-wallet" className="text-title font-semi">
+              {t("wallet.title")}
+            </h2>
+            <p className="text-label text-muted">{t("wallet.lead")}</p>
+          </div>
+          <Card className="flex flex-col gap-sp-4">
+            <dl className="flex flex-col gap-sp-2">
+              <WalletRow term={t("wallet.subject")}>
+                <span title={wallet.subjectId}>{shortHex(wallet.subjectId)}</span>
+              </WalletRow>
+              <WalletRow term={t("wallet.commitment")}>
+                {wallet.commitment ? <span title={wallet.commitment}>{shortHex(wallet.commitment)}</span> : t("wallet.none")}
+              </WalletRow>
+              <WalletRow term={t("wallet.version")}>{wallet.version}</WalletRow>
+              <WalletRow term={t("wallet.anchored")}>{t("wallet.anchoredValue", { n: wallet.anchoredRecords })}</WalletRow>
+            </dl>
+            <p className="text-caption text-subtle">{t("wallet.network", { network: ZK_CHAIN.name })}</p>
+            {/* /demo/ledger sits outside the locale segment, so the plain Next.js link is used here */}
+            <NextLink href="/demo/ledger" className={cn(buttonStyles({ variant: "secondary" }), "self-start")}>
+              {t("wallet.ledger")}
+            </NextLink>
+          </Card>
+        </section>
+      ) : null}
 
       <section aria-labelledby="set-consents" className="flex flex-col gap-sp-3">
         <div className="flex flex-col gap-sp-1">
@@ -147,5 +182,14 @@ export function DataView() {
         </div>
       </Sheet>
     </>
+  );
+}
+
+function WalletRow({ term, children }: { term: string; children: ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-sp-3">
+      <dt className="shrink-0 text-label text-muted">{term}</dt>
+      <dd className="min-w-0 break-all text-end text-body tabular-nums">{children}</dd>
+    </div>
   );
 }
